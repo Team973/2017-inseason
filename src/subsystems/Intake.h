@@ -22,40 +22,11 @@ namespace frc973 {
 
 class Intake : public CoopTask {
 public:
-	enum class IntakeMode {
-		off,
-		forward,
-		reverse,
-		manual
-	};
-
-	enum class IntakePosition {
-		extended,
-		retracted
-	};
-
 	Intake(TaskMgr *scheduler);
 	virtual ~Intake();
-
-	void SetIntakeMode(IntakeMode mode);
-
-	void SetIntakePosition(IntakePosition newPos);
-
-	void SetIntakePower(double pow);
-
 	void TaskPeriodic(RobotMode mode);
 private:
-	VictorSP *m_intakeMotor;
-	VictorSP *m_intakeMotorB;
-	Solenoid *m_intakeSolenoid;
-
-	IntakeMode m_intakeMode;
-	IntakePosition m_intakePosition;
-
 	TaskMgr *m_scheduler;
-
-	static constexpr int INTAKE_FORWARD_SPEED = 1.0;
-	static constexpr int INTAKE_REVERSE_SPEED = -1.0;
 };
 
 }

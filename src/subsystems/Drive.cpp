@@ -5,28 +5,19 @@
 #include "subsystems/Drive.h"
 #include "WPILib.h"
 #include "lib/util/Util.h"
-#include "lib/SPIGyro.h"
 
 #include "lib/filters/RampedOutput.h"
 
 #include "lib/logging/LogSpreadsheet.h"
 
 #include "controllers/ArcadeDriveController.h"
-#include "controllers/CheesyDriveController.h"
-#include "controllers/PIDDriveController.h"
-#include "controllers/RampedPIDDriveController.h"
-#include "controllers/PixyVisionDriveController.h"
-#include "controllers/VelocityTurnPID.h"
 
 namespace frc973 {
 
 Drive::Drive(TaskMgr *scheduler, VictorSP *left, VictorSP *right,
-			Encoder *leftEncoder, Encoder *rightEncoder,
-#ifdef PROTO_BOT_PINOUT
+			Encoder *leftEncoder,
+            Encoder *rightEncoder,
 			Encoder *gyro,
-#else
-			SPIGyro *gyro,
-#endif
 			LogSpreadsheet *logger
 			)
 		 : DriveBase(scheduler, this, this, nullptr)
@@ -42,11 +33,6 @@ Drive::Drive(TaskMgr *scheduler, VictorSP *left, VictorSP *right,
 		 , m_leftMotorPowerFilter(dynamic_cast<FilterBase*>(new RampedOutput(10.0)))
 		 , m_rightMotorPowerFilter(dynamic_cast<FilterBase*>(new RampedOutput(10.0)))
 		 , m_arcadeDriveController(nullptr)
-		 , m_cheesyDriveController(nullptr)
-		 , m_pidDriveController(nullptr)
-		 , m_rampPidDriveController(nullptr)
-		 , m_visionDriveController(nullptr)
-		 , m_velocityTurnController(nullptr)
 		 , m_spreadsheet(logger)
 		 , m_angleLog(new LogCell("Angle"))
 		 , m_angularRateLog(new LogCell("Angular Rate"))
@@ -63,19 +49,7 @@ Drive::Drive(TaskMgr *scheduler, VictorSP *left, VictorSP *right,
 		m_leftEncoder->SetDistancePerPulse(1.0);
 	}
 
-	fprintf(stderr, "starting arcade drive\n");
 	m_arcadeDriveController = new ArcadeDriveController();
-	fprintf(stderr, "starting cheesy\n");
-	m_cheesyDriveController = new CheesyDriveController();
-	fprintf(stderr, "starting pid\n");
-	m_pidDriveController = new PIDDriveController();
-	fprintf(stderr, "starting ramped pid\n");
-	m_rampPidDriveController = new RampPIDDriveController();
-	fprintf(stderr, "starting pixy\n");
-	m_visionDriveController = new PixyVisionDriveController();
-	fprintf(stderr, "starting velocity turn\n");
-	m_velocityTurnController = new VelocityTurnPID();
-
 	this->SetDriveController(m_arcadeDriveController);
 
 	bool loggingEnabled = true;
@@ -105,7 +79,6 @@ void Drive::SetGearing(DriveGearing newGearing) {
 }
 
 void Drive::Zero() {
-	m_pidDriveController->Zero();
 	if (m_leftEncoder)
 		m_leftEncoder->Reset();
 	if (m_rightEncoder)
@@ -115,52 +88,9 @@ void Drive::Zero() {
 	m_leftEncoder->SetDistancePerPulse(1.0);
 }
 
-void Drive::CheesyDrive(double throttle, double turn) {
-	this->SetDriveController(m_cheesyDriveController);
-	m_cheesyDriveController->SetJoysticks(throttle, turn);
-}
-
-void Drive::SetCheesyQuickTurn(bool quickturn) {
-	m_cheesyDriveController->SetQuickTurn(quickturn);
-}
-
-void Drive::SetVisionTargeting() {
-	this->SetDriveController(m_visionDriveController);
-}
-
 void Drive::ArcadeDrive(double throttle, double turn) {
 	this->SetDriveController(m_arcadeDriveController);
 	m_arcadeDriveController->SetJoysticks(throttle, turn);
-}
-
-void Drive::PIDDrive(double distance, RelativeTo relativity, double powerCap) {
-	this->SetDriveController(m_pidDriveController);
-	m_pidDriveController->SetCap(powerCap);
-	m_pidDriveController->EnableDist();
-	m_pidDriveController->SetTarget(distance, 0.0, relativity, this);
-}
-
-void Drive::PIDTurn(double degrees, RelativeTo relativity) {
-	this->SetDriveController(m_pidDriveController);
-	m_pidDriveController->DisableDist();
-	m_pidDriveController->SetTarget(0.0, degrees, relativity, this);
-}
-
-void Drive::VelocityPIDTurn(double angle, RelativeTo relativity) {
-	this->SetDriveController(m_velocityTurnController);
-	m_velocityTurnController->SetTarget(angle, relativity, this);
-}
-
-void Drive::RampPIDDrive(double distance, RelativeTo relativity) {
-	this->SetDriveController(m_rampPidDriveController);
-	m_rampPidDriveController->EnableDist();
-	m_rampPidDriveController->SetTarget(distance, 0.0);
-}
-
-void Drive::RampPIDTurn(double angle, RelativeTo relativity) {
-	this->SetDriveController(m_rampPidDriveController);
-	m_rampPidDriveController->DisableDist();
-	m_rampPidDriveController->SetTarget(0.0, angle);
 }
 
 double Drive::GetLeftDist() {
@@ -190,19 +120,11 @@ double Drive::GetRate() {
 }
 
 double Drive::GetAngle() {
-#ifdef PROTO_BOT_PINOUT
 	return -m_gyro->Get();
-#else
-	return -m_gyro->GetDegrees();
-#endif
 }
 
 double Drive::GetAngularRate() {
-#ifdef PROTO_BOT_PINOUT
 	return -m_gyro->GetRate();
-#else
-	return -m_gyro->GetDegreesPerSec();
-#endif
 }
 
 void Drive::SetDriveOutput(double left, double right) {

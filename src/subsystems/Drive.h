@@ -16,7 +16,6 @@ class PIDDriveController;
 class RampPIDDriveController;
 class PixyVisionDriveController;
 class VelocityTurnPID;
-class SPIGyro;
 class LogSpreadsheet;
 class LogCell;
 
@@ -42,11 +41,7 @@ class Drive :
 public:
     Drive(TaskMgr *scheduler, VictorSP *left, VictorSP *right,
     		Encoder *leftEncoder, Encoder *rightEncoder,
-#ifdef PROTO_BOT_PINOUT
 			Encoder *gyro,
-#else
-			SPIGyro *gyro,
-#endif
 			LogSpreadsheet *logger
 			);
 
@@ -148,11 +143,7 @@ private:
 	Encoder *m_leftEncoder;
 	Encoder *m_rightEncoder;
 
-#ifdef PROTO_BOT_PINOUT
 	Encoder *m_gyro;
-#else
-	SPIGyro *m_gyro;
-#endif
 
 	DriveGearing m_gearing;
 	Solenoid *m_gearingSolenoid;

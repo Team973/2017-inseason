@@ -12,7 +12,6 @@ namespace frc973 {
 
 void Robot::TestStart(void) {
     printf("***test start\n");
-    m_shooter->SetFlywheelStop();
 }
 
 void Robot::TestStop(void) {
