@@ -19,7 +19,7 @@ set(SOURCE_FILES src/Robot.cpp src/lib/CoopMTRobot.cpp
     src/lib/filters/DelaySwitch.cpp src/lib/filters/FilterBase.cpp
     src/lib/filters/MedianFilter.cpp src/lib/filters/MovingAverageFilter.cpp
     src/lib/filters/PID.cpp src/lib/filters/RampedOutput.cpp
-    src/controllers/ArcadeDriveController.cpp 
+    src/controllers/ArcadeDriveController.cpp
     src/subsystems/Intake.cpp src/subsystems/Drive.cpp src/subsystems/Hanger.cpp
     src/subsystems/Shooter.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
@@ -39,7 +39,8 @@ ExternalProject_Add(check
 set_target_properties(check PROPERTIES EXCLUDE_FROM_ALL TRUE)
 
 # Deploy target
-find_file(ROBOTCOMMAND ant/robotCommand "${CMAKE_SYSROOT}/usr/share/wpilib")
+find_file(ROBOTCOMMAND ant/robotCommand PATHS "${CMAKE_SYSROOT}/usr/share/wpilib"
+                                              "${CMAKE_SYSROOT}/wpilib")
 add_custom_target(deploy
   COMMAND sh -c "${CMAKE_CURRENT_SOURCE_DIR}/deploy ${TEAM_NUMBER} $<TARGET_FILE:${PROJECT_NAME}> ${ROBOTCOMMAND}"
   DEPENDS ${PROJECT_NAME})

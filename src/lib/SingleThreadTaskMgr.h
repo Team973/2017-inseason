@@ -11,8 +11,8 @@
 #include "pthread.h"
 #include "TaskMgr.h"
 #include <stdio.h>
-
-class RobotStateInterface;
+#include "WPILib.h"
+using namespace frc;
 
 namespace frc973 {
 

@@ -18,13 +18,8 @@ namespace frc973 {
 /**
  * PWM pin-out
  */
-#ifdef PRACTICE_BOT_PINOUT
-constexpr int DRIVE_RIGHT_PWM = 0;
-constexpr int DRIVE_LEFT_PWM = 1;
-#else
 constexpr int DRIVE_RIGHT_PWM = 1;
 constexpr int DRIVE_LEFT_PWM = 0;
-#endif
 
 constexpr int FRONT_SHOOTER_PWM = 9;
 constexpr int BACK_SHOOTER_PWM = 3;

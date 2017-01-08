@@ -15,7 +15,7 @@ if [ $? -eq 0 ]; then
     scp "$PROGRAM" "$TARGET_USER@$TARGET:$TARGET_DIR/FRCUserProgram" > /dev/null 2>&1
     echo "Stoping netconsole-host..."
     ssh "$TARGET_USER@$TARGET" "killall -q netconsole-host || :" > /dev/null 2>&1
-    echo "Copying over robotCommand..." 
+    echo "Copying over robotCommand..."
     scp "$ROBOTCOMMAND" "$TARGET_USER@$TARGET:$TARGET_DIR" > /dev/null 2>&1
     echo "Cleaning up..."
     ssh "$TARGET_USER@$TARGET" ". /etc/profile.d/natinst-path.sh;
@@ -37,7 +37,7 @@ if [ $? -eq 0 ]; then
     scp "$PROGRAM" "$TARGET_USER@$TARGET:$TARGET_DIR/FRCUserProgram" > /dev/null 2>&1
     echo "Stoping netconsole-host..."
     ssh "$TARGET_USER@$TARGET" "killall -q netconsole-host || :" > /dev/null 2>&1
-    echo "Copying over robotCommand..." 
+    echo "Copying over robotCommand..."
     scp "$ROBOTCOMMAND" "$TARGET_USER@$TARGET:$TARGET_DIR" > /dev/null 2>&1
     echo "Cleaning up..."
     ssh "$TARGET_USER@$TARGET" ". /etc/profile.d/natinst-path.sh;

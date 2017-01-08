@@ -146,12 +146,6 @@ void Drive::SetDriveOutput(double left, double right) {
 }
 
 void Drive::TaskPeriodic(RobotMode mode) {
-	m_angleLog->LogDouble(this->GetAngle());
-	m_angularRateLog->LogDouble(this->GetAngularRate());
-	m_leftDistLog->LogDouble(this->GetLeftDist());
-	m_leftDistRateLog->LogDouble(this->GetLeftRate());
-	m_leftPowerLog->LogDouble(m_leftPower);
-	m_rightPowerLog->LogDouble(m_rightPower);
 }
 
 }

@@ -28,6 +28,8 @@
 #define TASK_PERIODIC			0x00000008
 #define TASK_POST_PERIODIC		0x00000010
 
+using namespace frc;
+
 namespace frc973 {
 
 class CoopTask;

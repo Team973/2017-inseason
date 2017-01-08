@@ -15,9 +15,8 @@
 
 #include "TaskMgr.h"
 #include "CoopTask.h"
-
-class Relay;
-class DigitalInput;
+#include "WPILib.h"
+using namespace frc;
 
 namespace frc973 {
 

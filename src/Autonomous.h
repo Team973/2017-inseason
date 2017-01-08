@@ -1,3 +1,5 @@
+using namespace frc;
+
 namespace frc973 {
 
 void Robot::AutonomousStart(void) {

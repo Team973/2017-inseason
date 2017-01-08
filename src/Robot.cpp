@@ -10,6 +10,8 @@
 #include "subsystems/Drive.h"
 #include "subsystems/Hanger.h"
 
+using namespace frc;
+
 namespace frc973 {
 
 Robot::Robot(void
@@ -27,7 +29,6 @@ Robot::Robot(void
 	m_intake(nullptr),
 	m_shooter(nullptr),
 	m_hanger(nullptr),
-	m_compressor(nullptr),
 	m_autoState(0),
 	m_autoTimer(0),
 	m_battery(nullptr),
@@ -39,9 +40,10 @@ Robot::Robot(void
 	m_driverJoystick = new ObservableJoystick(DRIVER_JOYSTICK_PORT, this, this);
 	m_operatorJoystick = new ObservableJoystick(OPERATOR_JOYSTICK_PORT, this, this);
 	m_tuningJoystick = new ObservableJoystick(2, this, this);
+	fprintf(stderr, "Joystick Initialized...\n");
 
-	m_leftDriveVictor = new VictorSP(DRIVE_LEFT_PWM);
-	m_rightDriveVictor = new VictorSP(DRIVE_RIGHT_PWM);
+	m_leftDriveVictor = new frc::VictorSP(DRIVE_LEFT_PWM);
+	m_rightDriveVictor = new frc::VictorSP(DRIVE_RIGHT_PWM);
 	fprintf(stderr, "Initialized drive victors\n");
 
 	m_logger = new LogSpreadsheet(this);
@@ -49,8 +51,6 @@ Robot::Robot(void
 			nullptr, nullptr, nullptr, m_logger);
 
 	m_intake = new Intake(this);
-
-	m_compressor = new GreyCompressor(new DigitalInput(AIR_PRESSURE_DIN), new Relay(COMPRESSOR_RELAY, Relay::kForwardOnly), this);
 
 	m_battery = new LogCell("Battery voltage");
 
@@ -72,7 +72,6 @@ Robot::~Robot(void) {
 }
 
 void Robot::Initialize(void) {
-	m_compressor->Enable();
 	m_logger->InitializeTable();
 }
 

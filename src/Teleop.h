@@ -1,6 +1,8 @@
 #include "lib/JoystickHelper.h"
 #include "lib/WrapDash.h"
 
+using namespace frc;
+
 namespace frc973 {
 
 void Robot::TeleopStart(void) {
@@ -20,7 +22,7 @@ void Robot::TeleopContinuous(void) {
         x *= 0.4;
     }
 
-    m_drive->ArcadeDrive(y, -x);
+    m_drive->ArcadeDrive(y, x);
 }
 
 void Robot::HandleTeleopButton(uint32_t port, uint32_t button,

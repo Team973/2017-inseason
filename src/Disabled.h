@@ -1,5 +1,7 @@
 #include "lib/JoystickHelper.h"
 
+using namespace frc;
+
 namespace frc973 {
 
 void Robot::DisabledStart(void) {

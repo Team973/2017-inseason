@@ -11,9 +11,9 @@
 #include "lib/TaskMgr.h"
 #include "lib/CoopTask.h"
 #include "lib/util/Util.h"
+#include "WPILib.h"
 
-class VictorSP;
-class Encoder;
+using namespace frc;
 
 namespace frc973 {
 

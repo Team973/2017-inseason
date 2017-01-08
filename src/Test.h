@@ -8,6 +8,8 @@
 #ifndef SRC_TEST_H_
 #define SRC_TEST_H_
 
+using namespace frc;
+
 namespace frc973 {
 
 void Robot::TestStart(void) {

@@ -19,6 +19,8 @@
 #include "CoopTask.h"
 #include "TaskMgr.h"
 
+using namespace frc;
+
 namespace frc973 {
 
 class SimpleControlSystem;

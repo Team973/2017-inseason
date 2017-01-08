@@ -3,9 +3,8 @@
 
 #include "lib/DriveBase.h"
 #include "RobotInfo.h"
-
-class Solenoid;
-class DoubleSolenoid;
+#include "WPILib.h"
+using namespace frc;
 
 namespace frc973 {
 

@@ -18,6 +18,8 @@
 #include "WPILib.h"
 #include "lib/CoopTask.h"
 
+using namespace frc;
+
 namespace frc973 {
 
 class Intake : public CoopTask {

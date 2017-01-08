@@ -3,10 +3,8 @@
 
 #include <stdint.h>
 #include <math.h>
-
-class RobotStateInterface;
-
-uint64_t GetFPGATime();
+#include "WPILib.h"
+using namespace frc;
 
 namespace frc973 {
 

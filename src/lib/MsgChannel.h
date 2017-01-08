@@ -4,6 +4,8 @@
 #include <queue>
 #include <pthread.h>
 
+using namespace frc;
+
 namespace frc973 {
 
 // Channel is a bounded concurrent FIFO queue.  It's roughly equivalent
@@ -13,12 +15,12 @@ template <class T> class Channel {
     Channel(int size) : m(PTHREAD_MUTEX_INITIALIZER), cond(PTHREAD_COND_INITIALIZER), sz(size) {
       // TODO: prealloc space in queue?
     }
- 
+
     ~Channel() {
       pthread_cond_destroy(&cond);
       pthread_mutex_destroy(&m);
     }
- 
+
     bool send(const T &val) {
       bool success = false;
       pthread_mutex_lock(&m);
@@ -53,7 +55,7 @@ template <class T> class Channel {
     	pthread_mutex_unlock(&m);
     	return sz;
     }
- 
+
     T recv() {
       pthread_mutex_lock(&m);
       while (q.empty()) {
@@ -75,14 +77,14 @@ template <class T> class Channel {
       pthread_mutex_unlock(&m);
       return val;
     }
- 
+
   private:
     pthread_mutex_t m;
     pthread_cond_t cond;
     std::queue<T> q;
     unsigned int sz;
 };
-    
+
 }
 
 #endif

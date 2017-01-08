@@ -11,6 +11,8 @@
 #include "lib/CoopTask.h"
 #include "lib/TaskMgr.h"
 
+using namespace frc;
+
 namespace frc973 {
 
 class Hanger : public CoopTask {

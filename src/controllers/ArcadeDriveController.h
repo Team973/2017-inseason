@@ -11,6 +11,8 @@
 #include "lib/DriveBase.h"
 #include <stdio.h>
 
+using namespace frc;
+
 namespace frc973 {
 
 class ArcadeDriveController : public DriveController {

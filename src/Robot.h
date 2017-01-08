@@ -2,11 +2,8 @@
 #include "lib/JoystickHelper.h"
 #include "RobotInfo.h"
 
-class VictorSP;
-class Accelerometer;
-class Encoder;
-class DigitalInput;
-class PowerDistributionPanel;
+using namespace frc;
+#include "WPILib.h"
 
 namespace frc973 {
 
@@ -57,8 +54,7 @@ private:
 	 */
 	DigitalInput	*m_airPressureSwitch;
 	Relay			*m_compressorRelay;
-	GreyCompressor	*m_compressor;
-
+	
 	/**
 	 * Auto
 	 */

@@ -28,6 +28,8 @@
 #define PROGRAM_NAME "(unspecified)"
 #endif
 
+using namespace frc;
+
 namespace frc973 {
 
 static constexpr int MAXHOSTNAMELEN = 128;
@@ -35,7 +37,7 @@ static constexpr int MAXHOSTNAMELEN = 128;
 class CoopMTRobot:
 	public IterativeRobot,
 	public TaskMgr,
-	public RobotStateInterface
+	public frc::RobotStateInterface
 {
 public:
 	CoopMTRobot();

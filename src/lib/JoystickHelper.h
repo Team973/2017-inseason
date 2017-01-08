@@ -12,7 +12,7 @@
 #include "CoopTask.h"
 #include "WPILib.h"
 
-class DriverStation;
+using namespace frc;
 
 namespace frc973 {
 
