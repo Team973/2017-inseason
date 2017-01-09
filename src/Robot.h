@@ -38,8 +38,8 @@ private:
 	/**
 	 * Outputs (motors, solenoids, etc...)
 	 */
-	VictorSP		*m_leftDriveVictor;
-	VictorSP		*m_rightDriveVictor;
+	Talon		*m_leftDriveTalon;
+	Talon		*m_rightDriveTalon;
 	Drive			*m_drive;
 
 	/**
@@ -54,7 +54,7 @@ private:
 	 */
 	DigitalInput	*m_airPressureSwitch;
 	Relay			*m_compressorRelay;
-	
+
 	/**
 	 * Auto
 	 */

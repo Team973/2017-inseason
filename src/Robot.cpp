@@ -23,8 +23,8 @@ Robot::Robot(void
 	m_driverJoystick(nullptr),
 	m_operatorJoystick(nullptr),
 	m_tuningJoystick(nullptr),
-	m_leftDriveVictor(nullptr),
-	m_rightDriveVictor(nullptr),
+	m_leftDriveTalon(nullptr),
+	m_rightDriveTalon(nullptr),
 	m_drive(nullptr),
 	m_intake(nullptr),
 	m_shooter(nullptr),
@@ -42,12 +42,12 @@ Robot::Robot(void
 	m_tuningJoystick = new ObservableJoystick(2, this, this);
 	fprintf(stderr, "Joystick Initialized...\n");
 
-	m_leftDriveVictor = new frc::VictorSP(DRIVE_LEFT_PWM);
-	m_rightDriveVictor = new frc::VictorSP(DRIVE_RIGHT_PWM);
+	m_leftDriveTalon = new frc::Talon(DRIVE_LEFT_PWM);
+	m_rightDriveTalon = new frc::Talon(DRIVE_RIGHT_PWM);
 	fprintf(stderr, "Initialized drive victors\n");
 
 	m_logger = new LogSpreadsheet(this);
-	m_drive = new Drive(this, m_leftDriveVictor, m_rightDriveVictor,
+	m_drive = new Drive(this, m_leftDriveTalon, m_rightDriveTalon,
 			nullptr, nullptr, nullptr, m_logger);
 
 	m_intake = new Intake(this);

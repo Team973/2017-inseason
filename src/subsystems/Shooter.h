@@ -28,8 +28,29 @@ public:
 	Shooter(TaskMgr *scheduler, LogSpreadsheet *logger);
 	virtual ~Shooter();
 	void TaskPeriodic(RobotMode mode);
+	void SetFlywheelPow(double pow);
+	void SetFlywheelStop();
+
+	double GetFlywheelRate();
+
+enum FlywheelState {
+	running,
+	notRunning
+};
+
 private:
 	TaskMgr *m_scheduler;
+
+	Talon *m_flywheelMotor;
+
+	double m_flywheelPow;
+
+	FlywheelState m_flywheelState;
+
+	LogCell *m_shooterRate;
+	LogCell *m_shooterPow;
+
+	Encoder *m_flywheelEncoder;
 };
 
 }

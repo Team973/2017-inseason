@@ -38,7 +38,7 @@ class Drive :
 		public DriveControlSignalReceiver
 {
 public:
-    Drive(TaskMgr *scheduler, VictorSP *left, VictorSP *right,
+    Drive(TaskMgr *scheduler, Talon *left, Talon *right,
     		Encoder *leftEncoder, Encoder *rightEncoder,
 			Encoder *gyro,
 			LogSpreadsheet *logger
@@ -150,8 +150,8 @@ private:
 	double m_leftPower;
 	double m_rightPower;
 
-	VictorSP *m_leftMotor;
-	VictorSP *m_rightMotor;
+	Talon *m_leftMotor;
+	Talon *m_rightMotor;
 
 	/* Filter to apply to left and right motor power so we don't tip or
 	 * break chains.

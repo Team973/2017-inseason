@@ -31,6 +31,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 		switch (button) {
 		case DualAction::BtnA:
 			if (pressedP) {
+				m_shooter->SetFlywheelPow(1.0);
 			}
 			break;
 		case DualAction::BtnB:
