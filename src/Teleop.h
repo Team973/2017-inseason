@@ -5,6 +5,8 @@ using namespace frc;
 
 namespace frc973 {
 
+static bool turretManualControl = false;
+
 void Robot::TeleopStart(void) {
 	m_teleopTimeSec = GetSecTime();
 	m_drive->ArcadeDrive(0.0, 0.0);
@@ -17,11 +19,19 @@ void Robot::TeleopContinuous(void) {
 	double y = m_driverJoystick->GetRawAxis(DualAction::LeftYAxis);
 	double x = -m_driverJoystick->GetRawAxis(DualAction::RightXAxis);
 
-    if (m_driverJoystick->GetRawButton(DualAction::LeftBumper)) {
+	double turretControlPos = m_operatorJoystick->GetRawAxis(DualAction::RightXAxis);
+
+		if (m_driverJoystick->GetRawButton(DualAction::LeftBumper)) {
         y *= 0.4;
         x *= 0.4;
     }
 
+		if (turretManualControl == true) {
+			m_turret->SetTurretPosition(turretControlPos * 0.5);
+		}
+		else {
+			m_turret->SetTurretPosition(0.0);
+		}
     m_drive->ArcadeDrive(y, x);
 }
 
@@ -36,10 +46,12 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::BtnB:
 			if (pressedP) {
+				turretManualControl = true;
 			}
 			break;
 		case DualAction::BtnX:
 			if (pressedP) {
+				turretManualControl = false;
 			}
 			break;
 		case DualAction::BtnY:

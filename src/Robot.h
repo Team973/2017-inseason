@@ -4,6 +4,7 @@
 
 using namespace frc;
 #include "WPILib.h"
+#include "CANTalon.h"
 
 namespace frc973 {
 
@@ -18,6 +19,7 @@ class SPIGyro;
 class PoseManager;
 class Debouncer;
 class Hanger;
+class Turret;
 
 class Robot:
 		public CoopMTRobot,
@@ -40,6 +42,7 @@ private:
 	 */
 	Talon		*m_leftDriveTalon;
 	Talon		*m_rightDriveTalon;
+	CANTalon *m_turretMotor;
 	Drive			*m_drive;
 
 	/**
@@ -48,6 +51,7 @@ private:
 	Intake			*m_intake;
 	Shooter			*m_shooter;
 	Hanger			*m_hanger;
+	Turret			*m_turret;
 
 	/*
 	 * Compressor

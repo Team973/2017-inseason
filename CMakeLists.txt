@@ -17,12 +17,24 @@ set(SOURCE_FILES src/Robot.cpp src/lib/CoopMTRobot.cpp
     src/lib/logging/LogSpreadsheet.cpp src/lib/logging/AsynchLogCell.cpp
     src/lib/filters/BullshitFilter.cpp src/lib/filters/CascadingFilter.cpp
     src/lib/filters/DelaySwitch.cpp src/lib/filters/FilterBase.cpp
+    src/subsystems/Turret.cpp
     src/lib/filters/MedianFilter.cpp src/lib/filters/MovingAverageFilter.cpp
     src/lib/filters/PID.cpp src/lib/filters/RampedOutput.cpp
     src/controllers/ArcadeDriveController.cpp
     src/subsystems/Intake.cpp src/subsystems/Drive.cpp src/subsystems/Hanger.cpp
     src/subsystems/Shooter.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+
+# Example: adding CTRE library
+# Make sure this goes before WPILib
+find_package(CTRE)
+include_directories(${CTRE_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME} ${CTRE_LIBRARIES})
+
+find_package(WPILib)
+include_directories(${WPILIB_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME} ${WPILIB_LIBRARIES})
+
 find_package(WPILib)
 include_directories(${WPILIB_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} ${WPILIB_LIBRARIES})

@@ -9,6 +9,9 @@
 #include "subsystems/Shooter.h"
 #include "subsystems/Drive.h"
 #include "subsystems/Hanger.h"
+#include "subsystems/Turret.h"
+
+#include "CANTalon.h"
 
 using namespace frc;
 
@@ -29,6 +32,7 @@ Robot::Robot(void
 	m_intake(nullptr),
 	m_shooter(nullptr),
 	m_hanger(nullptr),
+	m_turret(nullptr),
 	m_autoState(0),
 	m_autoTimer(0),
 	m_battery(nullptr),
@@ -44,6 +48,7 @@ Robot::Robot(void
 
 	m_leftDriveTalon = new frc::Talon(DRIVE_LEFT_PWM);
 	m_rightDriveTalon = new frc::Talon(DRIVE_RIGHT_PWM);
+	m_turretMotor = new CANTalon(SHOOTER_TURRET_CAN_ID);
 	fprintf(stderr, "Initialized drive victors\n");
 
 	m_logger = new LogSpreadsheet(this);
@@ -65,6 +70,7 @@ Robot::Robot(void
 
 	m_shooter = new Shooter(this, m_logger);
 	m_hanger = new Hanger(this);
+	m_turret = new Turret(this, m_logger);
 
 }
 

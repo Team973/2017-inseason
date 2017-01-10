@@ -23,6 +23,8 @@ constexpr int DRIVE_LEFT_PWM = 0;
 
 constexpr int SHOOTER_PWM = 9;
 
+constexpr int TURRET_PWM = 8;
+
 //constexpr int UNUSED_PWM = 4;
 constexpr int RIGHT_DRIVE_ENCODER_A_DIN = 12;
 constexpr int RIGHT_DRIVE_ENCODER_B_DIN = 13;
@@ -31,6 +33,7 @@ constexpr int LEFT_DRIVE_ENCODER_B_DIN = 25;
 
 constexpr int SHOOTER_ENCODER_A_DIN = 15;
 constexpr int SHOOTER_ENCODER_B_DIN = 16;
+
 /**
  * USB port-out (driver-station)
  */
@@ -39,6 +42,9 @@ constexpr int OPERATOR_JOYSTICK_PORT = 1;
 
 //solenoids
 constexpr int DRIVE_SHIFT_SOL = 0;
+
+//CANTalon
+constexpr int SHOOTER_TURRET_CAN_ID = 2;
 /**
  * Distance (in inches) of the drive per click of the encoder
  */
