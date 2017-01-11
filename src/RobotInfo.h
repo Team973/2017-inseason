@@ -25,6 +25,9 @@ constexpr int SHOOTER_PWM = 9;
 
 constexpr int TURRET_PWM = 8;
 
+constexpr int BALL_INTAKE_B_PWM = 4;
+constexpr int BALL_INTAKE_PWM = 5;
+constexpr int GEAR_INTAKE_PWM = 6;
 //constexpr int UNUSED_PWM = 4;
 constexpr int RIGHT_DRIVE_ENCODER_A_DIN = 12;
 constexpr int RIGHT_DRIVE_ENCODER_B_DIN = 13;

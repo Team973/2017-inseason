@@ -1,11 +1,13 @@
 #include "RobotInfo.h"
 #include "Robot.h"
 
+#include "WPILib.h"
+
 #include "lib/GreyCompressor.h"
 #include "lib/logging/LogSpreadsheet.h"
 #include "lib/WrapDash.h"
 
-#include "subsystems/Intake.h"
+#include "subsystems/BallIntake.h"
 #include "subsystems/Shooter.h"
 #include "subsystems/Drive.h"
 #include "subsystems/Hanger.h"
@@ -28,10 +30,12 @@ Robot::Robot(void
 	m_tuningJoystick(nullptr),
 	m_leftDriveTalon(nullptr),
 	m_rightDriveTalon(nullptr),
+	m_ballIntakeMotor(nullptr),
+	m_ballIntakeMotorB(nullptr),
 	m_drive(nullptr),
-	m_intake(nullptr),
 	m_shooter(nullptr),
 	m_hanger(nullptr),
+	m_ballIntake(nullptr),
 	m_turret(nullptr),
 	m_autoState(0),
 	m_autoTimer(0),
@@ -48,14 +52,18 @@ Robot::Robot(void
 
 	m_leftDriveTalon = new frc::Talon(DRIVE_LEFT_PWM);
 	m_rightDriveTalon = new frc::Talon(DRIVE_RIGHT_PWM);
-	m_turretMotor = new CANTalon(SHOOTER_TURRET_CAN_ID);
 	fprintf(stderr, "Initialized drive victors\n");
+
+	m_ballIntakeMotor = new VictorSP(BALL_INTAKE_PWM);
+	m_ballIntakeMotorB = new VictorSP(BALL_INTAKE_B_PWM);
+
+	m_turretMotor = new CANTalon(SHOOTER_TURRET_CAN_ID);
 
 	m_logger = new LogSpreadsheet(this);
 	m_drive = new Drive(this, m_leftDriveTalon, m_rightDriveTalon,
 			nullptr, nullptr, nullptr, m_logger);
 
-	m_intake = new Intake(this);
+	m_ballIntake = new BallIntake(this);
 
 	m_battery = new LogCell("Battery voltage");
 

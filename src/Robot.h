@@ -20,6 +20,7 @@ class PoseManager;
 class Debouncer;
 class Hanger;
 class Turret;
+class BallIntake;
 
 class Robot:
 		public CoopMTRobot,
@@ -40,6 +41,8 @@ private:
 	/**
 	 * Outputs (motors, solenoids, etc...)
 	 */
+	VictorSP *m_ballIntakeMotor;
+	VictorSP *m_ballIntakeMotorB;
 	Talon		*m_leftDriveTalon;
 	Talon		*m_rightDriveTalon;
 	CANTalon *m_turretMotor;
@@ -48,7 +51,7 @@ private:
 	/**
 	 * Subsystems
 	 */
-	Intake			*m_intake;
+	BallIntake			*m_ballIntake;
 	Shooter			*m_shooter;
 	Hanger			*m_hanger;
 	Turret			*m_turret;
