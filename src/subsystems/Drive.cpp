@@ -14,7 +14,7 @@
 
 namespace frc973 {
 
-Drive::Drive(TaskMgr *scheduler, Talon *left, Talon *right,
+Drive::Drive(TaskMgr *scheduler,  SpeedController *left, SpeedController *right,
 			Encoder *leftEncoder,
             Encoder *rightEncoder,
 			Encoder *gyro,

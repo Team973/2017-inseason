@@ -38,7 +38,7 @@ class Drive :
 		public DriveControlSignalReceiver
 {
 public:
-    Drive(TaskMgr *scheduler, Talon *left, Talon *right,
+    Drive(TaskMgr *scheduler, SpeedController *left, SpeedController *right,
     		Encoder *leftEncoder, Encoder *rightEncoder,
 			Encoder *gyro,
 			LogSpreadsheet *logger
@@ -52,7 +52,7 @@ public:
      */
     enum DriveGearing {
     	HighGear,
-		LowGear
+			LowGear
     };
 
     void SetGearing(DriveGearing newGearing);
@@ -150,8 +150,8 @@ private:
 	double m_leftPower;
 	double m_rightPower;
 
-	Talon *m_leftMotor;
-	Talon *m_rightMotor;
+	SpeedController *m_leftMotor;
+	SpeedController *m_rightMotor;
 
 	/* Filter to apply to left and right motor power so we don't tip or
 	 * break chains.
