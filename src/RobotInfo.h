@@ -34,9 +34,6 @@ constexpr int RIGHT_DRIVE_ENCODER_B_DIN = 13;
 constexpr int LEFT_DRIVE_ENCODER_A_DIN = 24;
 constexpr int LEFT_DRIVE_ENCODER_B_DIN = 25;
 
-constexpr int SHOOTER_ENCODER_A_DIN = 15;
-constexpr int SHOOTER_ENCODER_B_DIN = 16;
-
 /**
  * USB port-out (driver-station)
  */
@@ -48,6 +45,11 @@ constexpr int DRIVE_SHIFT_SOL = 0;
 
 //CANTalon
 constexpr int SHOOTER_TURRET_CAN_ID = 2;
+
+constexpr int FLYWHEEL_PRIMARY_CAN_ID = 0;
+constexpr int FLYWHEEL_REPLICA_CAN_ID = 1;
+
+constexpr int FLYWHEEL_CONTROL_PERIOD_MS = 1;
 /**
  * Distance (in inches) of the drive per click of the encoder
  */

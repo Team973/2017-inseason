@@ -10,6 +10,7 @@
 
 #include "WPILib.h"
 #include "lib/CoopTask.h"
+#include "CANTalon.h"
 
 using namespace frc;
 
@@ -30,27 +31,30 @@ public:
 	void TaskPeriodic(RobotMode mode);
 	void SetFlywheelPow(double pow);
 	void SetFlywheelStop();
+	void SetFLywheelSpeed(double speed);
 
 	double GetFlywheelRate();
 
 enum FlywheelState {
 	running,
-	notRunning
+	notRunning,
+	speed
 };
 
 private:
 	TaskMgr *m_scheduler;
 
-	Talon *m_flywheelMotor;
+	CANTalon *m_flywheelMotorPrimary;
+	CANTalon *m_flywheelMotorReplica;
 
 	double m_flywheelPow;
+	double m_flywheelSpeed;
 
 	FlywheelState m_flywheelState;
 
-	LogCell *m_shooterRate;
-	LogCell *m_shooterPow;
+	LogCell *m_flywheelRate;
+	LogCell *m_flywheelPowLog;
 
-	Encoder *m_flywheelEncoder;
 };
 
 }
