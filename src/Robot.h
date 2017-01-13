@@ -41,8 +41,6 @@ private:
 	/**
 	 * Outputs (motors, solenoids, etc...)
 	 */
-	VictorSP *m_ballIntakeMotor;
-	VictorSP *m_ballIntakeMotorB;
 	Talon		*m_leftDriveTalon;
 	Talon		*m_rightDriveTalon;
 	CANTalon *m_turretMotor;

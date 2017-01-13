@@ -21,18 +21,18 @@ void Robot::TeleopContinuous(void) {
 
 	double turretControlPos = m_operatorJoystick->GetRawAxis(DualAction::RightXAxis);
 
-		if (m_driverJoystick->GetRawButton(DualAction::LeftBumper)) {
-        y *= 0.4;
-        x *= 0.4;
-    }
+	if (m_driverJoystick->GetRawButton(DualAction::LeftBumper)) {
+      y *= 0.4;
+      x *= 0.4;
+  }
 
-		if (turretManualControl == true) {
-			m_turret->SetTurretPosition(turretControlPos * 0.5);
-		}
-		else {
-			m_turret->SetTurretPosition(0.0);
-		}
-    m_drive->ArcadeDrive(y, x);
+	if (turretManualControl == true) {
+		m_turret->SetTurretPosition(turretControlPos * 0.5);
+	}
+	else {
+		m_turret->SetTurretPosition(0.0);
+	}
+  m_drive->ArcadeDrive(y, x);
 }
 
 void Robot::HandleTeleopButton(uint32_t port, uint32_t button,

@@ -30,8 +30,6 @@ Robot::Robot(void
 	m_tuningJoystick(nullptr),
 	m_leftDriveTalon(nullptr),
 	m_rightDriveTalon(nullptr),
-	m_ballIntakeMotor(nullptr),
-	m_ballIntakeMotorB(nullptr),
 	m_drive(nullptr),
 	m_shooter(nullptr),
 	m_hanger(nullptr),
@@ -53,9 +51,6 @@ Robot::Robot(void
 	m_leftDriveTalon = new frc::Talon(DRIVE_LEFT_PWM);
 	m_rightDriveTalon = new frc::Talon(DRIVE_RIGHT_PWM);
 	fprintf(stderr, "Initialized drive victors\n");
-
-	m_ballIntakeMotor = new VictorSP(BALL_INTAKE_PWM);
-	m_ballIntakeMotorB = new VictorSP(BALL_INTAKE_B_PWM);
 
 	m_turretMotor = new CANTalon(SHOOTER_TURRET_CAN_ID);
 

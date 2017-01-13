@@ -24,24 +24,24 @@ namespace frc973 {
       manual,
       reverse
     };
-      BallIntake(TaskMgr *scheduler);
-      virtual ~BallIntake();
-      void BallIntakeStart();
-      void BallIntakeStop();
-      void SetIntakePower(double power);
-      void TaskPeriodic();
+    BallIntake(TaskMgr *scheduler);
+    virtual ~BallIntake();
+    void BallIntakeStart();
+    void BallIntakeStop();
+    void SetIntakePower(double power);
+    void TaskPeriodic();
 
   private:
-      TaskMgr *m_scheduler;
-      VictorSP *m_ballIntakeMotor;
-      VictorSP *m_ballIntakeMotorB;
+    TaskMgr *m_scheduler;
+    VictorSP *m_ballIntakeMotor;
+    VictorSP *m_ballIntakeMotorB;
 
-      BallIntakeState m_ballIntakeState;
+    BallIntakeState m_ballIntakeState;
 
-      double m_ballIntakePow;
+    double m_ballIntakePow;
 
-      static constexpr int BALL_INTAKE_RUNNING_SPEED = 1.0;
-      static constexpr int BALL_INTAKE_REVERSE_SPEED = -1.0;
+    static constexpr int BALL_INTAKE_RUNNING_SPEED = 1.0;
+    static constexpr int BALL_INTAKE_REVERSE_SPEED = -1.0;
   };
 }
 
