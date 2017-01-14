@@ -71,7 +71,7 @@ Robot::Robot(void
 	m_logger->RegisterCell(m_time);
 	m_logger->RegisterCell(m_buttonPresses);
 
-	m_shooter = new Shooter(this, m_logger);
+	//m_shooter = new Shooter(this, m_logger);
 	m_hanger = new Hanger(this);
 	m_turret = new Turret(this, m_logger);
 

@@ -34,7 +34,7 @@ namespace frc973{
   void Turret::SetTurretPosition(double position){
   	m_turretMotor->SetControlMode(CANTalon::ControlMode::kPosition);
     m_turretMotor->Set(position);
-    m_turretState = TurretState::running;
+    m_turretState = TurretState::runningPos;
   }
   double Turret::GetTurretPosition(){
     return m_turretPos;
@@ -42,11 +42,13 @@ namespace frc973{
   void Turret::StopTurret(){
   	m_turretMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
     m_turretMotor->Set(0.0);
+    m_turretState = TurretState::notRunning;
     m_turretPower = 0.0;
   }
   void Turret::SetTurretPower(double power){
   	m_turretMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
     m_turretMotor->Set(power);
+    m_turretState = TurretState::runningPow;
     m_turretPower = power;
   }
   void Turret::SetTurretMode(TurretState turretState){
@@ -55,9 +57,15 @@ namespace frc973{
   void Turret::SetTurretAutoTarget(){
     m_turretState = TurretState::vision;
   }
-  void Turret::TaskPeriodic(){
+  void Turret::TaskPeriodic(RobotMode mode){
+    DBStringPrintf(DB_LINE3, "%f encoder", m_turretMotor->GetEncPosition());
     switch (m_turretState) {
-      case running:
+      case runningPow:
+        m_turretMotor->Set(m_turretPower);
+        DBStringPrintf(DB_LINE0, "%f pow", m_turretPower);
+        break;
+      case runningPos:
+        m_turretMotor->Set(m_turretPos);
         break;
       case notRunning:
         m_turretMotor->Set(0.0);

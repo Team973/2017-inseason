@@ -20,6 +20,8 @@ void Robot::TeleopContinuous(void) {
 	double x = -m_driverJoystick->GetRawAxis(DualAction::RightXAxis);
 
 	double turretControlPos = m_operatorJoystick->GetRawAxis(DualAction::RightXAxis);
+	DBStringPrintf(DB_LINE1, "%f joystick", turretControlPos);
+
 
 	if (m_driverJoystick->GetRawButton(DualAction::LeftBumper)) {
       y *= 0.4;
@@ -30,8 +32,10 @@ void Robot::TeleopContinuous(void) {
 		m_turret->SetTurretPosition(turretControlPos * 0.5);
 	}
 	else {
-		m_turret->SetTurretPosition(0.0);
+		m_turret->SetTurretPower(0.0);
 	}
+	DBStringPrintf(DB_LINE2, "%d", turretManualControl);
+
   m_drive->ArcadeDrive(y, x);
 }
 
@@ -46,12 +50,10 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::BtnB:
 			if (pressedP) {
-				turretManualControl = true;
 			}
 			break;
 		case DualAction::BtnX:
 			if (pressedP) {
-				turretManualControl = false;
 			}
 			break;
 		case DualAction::BtnY:
@@ -88,10 +90,12 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 		switch (button) {
 		case DualAction::BtnY:
 			if (pressedP) {
+				turretManualControl = true;
 			}
 			break;
 		case DualAction::BtnA:
 			if (pressedP) {
+				turretManualControl = false;
 			}
 			break;
 		case DualAction::BtnX:

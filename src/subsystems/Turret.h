@@ -18,7 +18,8 @@ namespace frc973 {
       virtual ~Turret();
 
       enum TurretState{
-        running,
+        runningPow,
+        runningPos,
         notRunning,
         vision
       };
@@ -29,7 +30,7 @@ namespace frc973 {
       void SetTurretMode(TurretState turretState);
       void SetTurretAutoTarget();
 
-      void TaskPeriodic();
+      void TaskPeriodic(RobotMode mode) override;
 
     private:
       CANTalon *m_turretMotor;
