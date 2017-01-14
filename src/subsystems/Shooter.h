@@ -35,8 +35,10 @@ public:
 
 	double GetFlywheelRate();
 
+	static constexpr int DEFAULT_FLYWHEEL_SPEED_SETPOINT = 2700;
+
 enum FlywheelState {
-	running,
+	power,
 	notRunning,
 	speed
 };
@@ -48,12 +50,14 @@ private:
 	CANTalon *m_flywheelMotorReplica;
 
 	double m_flywheelPow;
-	double m_flywheelSpeed;
 
 	FlywheelState m_flywheelState;
 
 	LogCell *m_flywheelRate;
 	LogCell *m_flywheelPowLog;
+	LogCell *m_flywheelStateLog;
+	LogCell *m_speedSetpoint;
+
 
 };
 

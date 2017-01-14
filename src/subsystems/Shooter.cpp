@@ -19,8 +19,7 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger) :
 		m_flywheelState(FlywheelState::notRunning),
 		m_flywheelMotorPrimary(new CANTalon(FLYWHEEL_PRIMARY_CAN_ID, FLYWHEEL_CONTROL_PERIOD_MS)),
 		m_flywheelMotorReplica(new CANTalon(FLYWHEEL_REPLICA_CAN_ID)),
-		m_flywheelPow(0.0),
-		m_flywheelSpeed(0.0)
+		m_flywheelPow(0.0)
 {
 	m_flywheelMotorPrimary->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
 	m_flywheelMotorPrimary->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
@@ -38,8 +37,10 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger) :
 	m_flywheelMotorReplica->SetControlMode(CANSpeedController::ControlMode::kFollower);
 	m_flywheelMotorReplica->Set(m_flywheelMotorPrimary->GetDeviceID());
 	m_scheduler->RegisterTask("Shooter", this, TASK_PERIODIC);
-	m_flywheelRate = new LogCell("FlywheelRate", 32, 0);
-	m_flywheelPowLog = new LogCell("FlywheelPower", 32, 0);
+	m_flywheelRate = new LogCell("FlywheelRate", 32);
+	m_flywheelPowLog = new LogCell("FlywheelPower", 32);
+	m_flywheelStateLog = new LogCell("FlywheelState", 32);
+	m_speedSetpoint = new LogCell("SpeedSetpoint", 32);
 	logger->RegisterCell(m_flywheelRate);
 	logger->RegisterCell(m_flywheelPowLog);
 }
@@ -51,7 +52,7 @@ Shooter::~Shooter() {
 void Shooter::SetFlywheelPow(double pow){
 	m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
 	m_flywheelMotorReplica->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
-	m_flywheelState = FlywheelState::running;
+	m_flywheelState = FlywheelState::power;
 	m_flywheelPow = pow;
 }
 
@@ -59,7 +60,6 @@ void Shooter::SetFLywheelSpeed(double speed){
 	m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kSpeed);
 	m_flywheelMotorReplica->SetControlMode(CANSpeedController::ControlMode::kSpeed);
 	m_flywheelState = FlywheelState::speed;
-	m_flywheelSpeed = speed;
 }
 
 void Shooter::SetFlywheelStop(){
@@ -74,15 +74,17 @@ double Shooter::GetFlywheelRate(){
 void Shooter::TaskPeriodic(RobotMode mode) {
 	m_flywheelRate->LogDouble(GetFlywheelRate());
 	m_flywheelPowLog->LogDouble(m_flywheelMotorPrimary->GetOutputVoltage());
+	m_flywheelStateLog->LogPrintf("%d", m_flywheelState);
+	m_speedSetpoint->LogDouble(DEFAULT_FLYWHEEL_SPEED_SETPOINT);
 	switch(m_flywheelState){
-		case running:
+		case power:
 			m_flywheelMotorPrimary->Set(m_flywheelPow);
 			break;
 		case notRunning:
 			m_flywheelMotorPrimary->Set(0.0);
 			break;
 		case speed:
-			m_flywheelMotorPrimary->Set(m_flywheelSpeed);
+			m_flywheelMotorPrimary->Set(DEFAULT_FLYWHEEL_SPEED_SETPOINT);
 			break;
 	}
 }
