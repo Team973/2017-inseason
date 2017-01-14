@@ -37,10 +37,10 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger) :
 	m_flywheelMotorReplica->SetControlMode(CANSpeedController::ControlMode::kFollower);
 	m_flywheelMotorReplica->Set(m_flywheelMotorPrimary->GetDeviceID());
 	m_scheduler->RegisterTask("Shooter", this, TASK_PERIODIC);
-	m_flywheelRate = new LogCell("FlywheelRate", 32, 0);
-	m_flywheelPowLog = new LogCell("FlywheelPower", 32, 0);
-	m_flywheelStateLog = new LogCell("FlywheelState", 32, 0);
-	m_speedSetpoint = new LogCell("SpeedSetpoint", 32, 0);
+	m_flywheelRate = new LogCell("FlywheelRate", 32);
+	m_flywheelPowLog = new LogCell("FlywheelPower", 32);
+	m_flywheelStateLog = new LogCell("FlywheelState", 32);
+	m_speedSetpoint = new LogCell("SpeedSetpoint", 32);
 	logger->RegisterCell(m_flywheelRate);
 	logger->RegisterCell(m_flywheelPowLog);
 }
