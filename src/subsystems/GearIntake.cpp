@@ -25,5 +25,5 @@ namespace frc973{
   }
 
   void GearIntake::TaskPeriodic(RobotMode mode){
-    }
+  }
 }

@@ -18,7 +18,6 @@ namespace frc973{
     m_turretMotor(new CANTalon(SHOOTER_TURRET_CAN_ID)),
     m_scheduler(scheduler),
     m_turretState(TurretState::notRunning),
-    m_greenFlashlight(new Solenoid(1,7)),
     m_turretPos(0.0),
     m_turretPower(0.0)
   {
@@ -27,7 +26,6 @@ namespace frc973{
     	m_turretMotor->SetSensorDirection(true);
     	m_turretMotor->ConfigForwardLimit(80.0 * CLICKS_PER_DEGREE);
     	m_turretMotor->ConfigReverseLimit(-80.0 * CLICKS_PER_DEGREE);
-      m_greenFlashlight->Set(true);
   }
   Turret::~Turret(){
     m_scheduler->UnregisterTask(this);

@@ -36,8 +36,6 @@ namespace frc973 {
       CANTalon *m_turretMotor;
       TaskMgr *m_scheduler;
 
-      Solenoid *m_greenFlashlight;
-
       TurretState m_turretState;
 
       double m_turretPos;
