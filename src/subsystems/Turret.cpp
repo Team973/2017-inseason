@@ -18,6 +18,7 @@ namespace frc973{
     m_turretMotor(new CANTalon(SHOOTER_TURRET_CAN_ID)),
     m_scheduler(scheduler),
     m_turretState(TurretState::notRunning),
+    m_greenFlashlight(new Solenoid(1,7)),
     m_turretPos(0.0),
     m_turretPower(0.0)
   {
@@ -26,6 +27,7 @@ namespace frc973{
     	m_turretMotor->SetSensorDirection(true);
     	m_turretMotor->ConfigForwardLimit(80.0 * CLICKS_PER_DEGREE);
     	m_turretMotor->ConfigReverseLimit(-80.0 * CLICKS_PER_DEGREE);
+      m_greenFlashlight->Set(true);
   }
   Turret::~Turret(){
     m_scheduler->UnregisterTask(this);
@@ -33,7 +35,8 @@ namespace frc973{
 
   void Turret::SetTurretPosition(double position){
   	m_turretMotor->SetControlMode(CANTalon::ControlMode::kPosition);
-    m_turretMotor->Set(position);
+    m_turretMotor->Set(position * CLICKS_PER_DEGREE);
+    m_turretPos = position * CLICKS_PER_DEGREE;
     m_turretState = TurretState::runningPos;
   }
   double Turret::GetTurretPosition(){
@@ -58,7 +61,7 @@ namespace frc973{
     m_turretState = TurretState::vision;
   }
   void Turret::TaskPeriodic(RobotMode mode){
-    DBStringPrintf(DB_LINE3, "%f encoder", m_turretMotor->GetEncPosition());
+    DBStringPrintf(DB_LINE3, "%f encoder", m_turretMotor->GetPosition() / CLICKS_PER_DEGREE);
     switch (m_turretState) {
       case runningPow:
         m_turretMotor->Set(m_turretPower);

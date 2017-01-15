@@ -2,25 +2,33 @@
 #define GEAR_INTAKE_SUBSYSTEM_H
 #include "WPILib.h"
 #include "Solenoid.h"
-#include "Robot.h"
+#include "lib/CoopTask.h"
+#include "lib/TaskMgr.h"
 
 using namespace frc;
 
-class GearIntake : public CoopTask{
-  public:
-    enum GearIntakeState{
-      released,
-      grabbed
-    }
+namespace frc973{
+  class TaskMgr;
 
-    void GearIntake();
-    virtual void ~GearIntake();
+  class GearIntake : public CoopTask{
+    public:
+      enum GearIntakeState{
+        released,
+        grabbed
+      };
 
-    void GrabGears();
-    void ReleaseGears();
+      GearIntake(TaskMgr *scheduler);
+      virtual ~GearIntake();
 
-  private:
-    GearIntakeState m_gearIntakeState;
+      void GrabGears();
+      void ReleaseGears();
+
+      void TaskPeriodic(RobotMode mode) override;
+
+    private:
+      TaskMgr *m_scheduler;
+      GearIntakeState m_gearIntakeState;
+      Solenoid *m_gearIntakeSol;
+  };
 }
-
 #endif /*GEAR_INTAKE_SUBSYSTEM_H*/

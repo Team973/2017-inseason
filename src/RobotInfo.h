@@ -42,6 +42,7 @@ constexpr int OPERATOR_JOYSTICK_PORT = 1;
 
 //solenoids
 constexpr int DRIVE_SHIFT_SOL = 0;
+constexpr int GEAR_INTAKE_SOL = 1;
 
 //CANTalon
 constexpr int SHOOTER_TURRET_CAN_ID = 2;

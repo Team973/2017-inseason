@@ -11,7 +11,7 @@ namespace frc973 {
 class LogSpreadsheet;
 class SingleThreadTaskMgr;
 class Drive;
-class Intake;
+class GearIntake;
 class Shooter;
 class GreyCompressor;
 class LogCell;
@@ -50,6 +50,7 @@ private:
 	 * Subsystems
 	 */
 	BallIntake			*m_ballIntake;
+	GearIntake	*m_gearIntake;
 	Shooter			*m_shooter;
 	Hanger			*m_hanger;
 	Turret			*m_turret;

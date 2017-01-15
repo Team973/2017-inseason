@@ -29,7 +29,7 @@ void Robot::TeleopContinuous(void) {
   }
 
 	if (turretManualControl == true) {
-		m_turret->SetTurretPosition(turretControlPos * 0.5);
+		m_turret->SetTurretPosition(turretControlPos * 50.0);
 	}
 	else {
 		m_turret->SetTurretPower(0.0);

@@ -7,6 +7,7 @@
 #include "lib/logging/LogSpreadsheet.h"
 #include "lib/WrapDash.h"
 
+#include "subsystems/GearIntake.h"
 #include "subsystems/BallIntake.h"
 #include "subsystems/Shooter.h"
 #include "subsystems/Drive.h"
@@ -34,6 +35,7 @@ Robot::Robot(void
 	m_shooter(nullptr),
 	m_hanger(nullptr),
 	m_ballIntake(nullptr),
+	m_gearIntake(nullptr),
 	m_turret(nullptr),
 	m_autoState(0),
 	m_autoTimer(0),
@@ -58,8 +60,6 @@ Robot::Robot(void
 	m_drive = new Drive(this, m_leftDriveTalon, m_rightDriveTalon,
 			nullptr, nullptr, nullptr, m_logger);
 
-	m_ballIntake = new BallIntake(this);
-
 	m_battery = new LogCell("Battery voltage");
 
 	m_time = new LogCell("Time (ms)");
@@ -73,6 +73,8 @@ Robot::Robot(void
 
 	//m_shooter = new Shooter(this, m_logger);
 	m_hanger = new Hanger(this);
+	m_ballIntake = new BallIntake(this);
+	m_gearIntake = new GearIntake(this);
 	m_turret = new Turret(this, m_logger);
 
 }
