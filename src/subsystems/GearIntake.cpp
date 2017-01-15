@@ -15,21 +15,15 @@ namespace frc973{
   }
 
   void GearIntake::GrabGears(){
+    m_gearIntakeSol->Set(false);
     m_gearIntakeState = GearIntakeState::grabbed;
   }
 
   void GearIntake::ReleaseGears(){
+    m_gearIntakeSol->Set(true);
     m_gearIntakeState  = GearIntakeState::released;
   }
 
   void GearIntake::TaskPeriodic(RobotMode mode){
-    switch (m_gearIntakeState) {
-      case released:
-        m_gearIntakeSol->Set(false);
-      break;
-      case grabbed:
-        m_gearIntakeSol->Set(true);
-      break;
     }
-  }
 }
