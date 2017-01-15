@@ -11,6 +11,7 @@
 #include "lib/logging/LogSpreadsheet.h"
 
 #include "controllers/ArcadeDriveController.h"
+#include "controllers/PIDDrive.h"
 
 namespace frc973 {
 
@@ -50,6 +51,7 @@ Drive::Drive(TaskMgr *scheduler,  SpeedController *left, SpeedController *right,
 	}
 
 	m_arcadeDriveController = new ArcadeDriveController();
+	m_pidDriveController = new PIDDriveController();
 	this->SetDriveController(m_arcadeDriveController);
 
 	bool loggingEnabled = true;
@@ -91,6 +93,12 @@ void Drive::Zero() {
 void Drive::ArcadeDrive(double throttle, double turn) {
 	this->SetDriveController(m_arcadeDriveController);
 	m_arcadeDriveController->SetJoysticks(throttle, turn);
+}
+
+void Drive::PIDDrive(double dist, double turn, RelativeTo relativity, double powerCap = 1.0) {
+	this->SetDriveController(m_pidDriveController);
+	m_pidDriveController->SetCap(powerCap);
+	m_pidDriveController->SetTarget(dist, turn, relativity, this);
 }
 
 double Drive::GetLeftDist() {

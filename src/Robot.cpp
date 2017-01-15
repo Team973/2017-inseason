@@ -37,6 +37,8 @@ Robot::Robot(void
 	m_ballIntake(nullptr),
 	m_gearIntake(nullptr),
 	m_turret(nullptr),
+	m_autoRoutine(AutonomousRoutine::NoAuto),
+	m_autoDirection(0.0),
 	m_autoState(0),
 	m_autoTimer(0),
 	m_battery(nullptr),
@@ -77,6 +79,12 @@ Robot::Robot(void
 	m_gearIntake = new GearIntake(this);
 	m_turret = new Turret(this, m_logger);
 
+	if(DriverStation::GetInstance().GetAlliance() == DriverStation::Alliance::kRed){
+		m_autoDirection = 1.0;
+	}
+	else{
+		m_autoDirection = -1.0;
+	}
 }
 
 Robot::~Robot(void) {
@@ -91,6 +99,7 @@ void Robot::AllStateContinuous(void) {
 	m_time->LogDouble(GetSecTime());
 	m_state->LogPrintf("%s", GetRobotModeString());
 }
+
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
 			bool pressedP) {
 	fprintf(stderr, "joystick state change port %d button %d state %d\n", port, button, pressedP);
