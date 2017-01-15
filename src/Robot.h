@@ -29,7 +29,7 @@ class Robot:
 {
 private:
 	enum AutonomousRoutine {
-		GearLefttPeg,
+		GearLeftPeg,
 		GearMiddlePeg,
 		GearRightPeg,
 		FuelBallToBoiler,

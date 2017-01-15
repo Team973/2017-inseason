@@ -95,7 +95,7 @@ void Drive::ArcadeDrive(double throttle, double turn) {
 	m_arcadeDriveController->SetJoysticks(throttle, turn);
 }
 
-void Drive::PIDDrive(double dist, double turn, RelativeTo relativity, double powerCap = 1.0) {
+void Drive::PIDDrive(double dist, double turn, RelativeTo relativity, double powerCap) {
 	this->SetDriveController(m_pidDriveController);
 	m_pidDriveController->SetCap(powerCap);
 	m_pidDriveController->SetTarget(dist, turn, relativity, this);
