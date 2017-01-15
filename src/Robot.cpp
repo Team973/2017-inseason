@@ -15,6 +15,8 @@
 
 #include "CANTalon.h"
 
+#include "lib/PixySerial.h"
+
 using namespace frc;
 
 namespace frc973 {
