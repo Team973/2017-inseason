@@ -1,5 +1,8 @@
 #pragma once
 
+//unapolegetically copied from https://github.com/Team5593/pixy/tree/master/src/host/roborio/C%2B%2B
+//with many memory leaks solved
+
 #include "WPILib.h"
 
 using namespace frc;
@@ -36,26 +39,23 @@ class LinkI2C
 {
 public:
 	LinkI2C(uint8_t address=PIXY_I2C_DEFAULT_ADDR, I2C::Port port=PIXY_I2C_DEFAULT_PORT):
-		Wire(port, address)
-	{
-
+		Wire(port, address) {
 	}
-	uint16_t getWord()
-	{
+
+	uint16_t getWord() {
 		uint8_t c[2];
 		Wire.ReadOnly(2, c);
 		uint16_t w = (c[1] << 8) + c[0];
 		return w;
 	}
-	uint8_t getByte()
-	{
-		uint8_t *c;
-		Wire.ReadOnly(1, c);
-		return *c;
+
+	uint8_t getByte() {
+		uint8_t c;
+		Wire.ReadOnly(1, &c);
+		return c;
 	}
 
-	int8_t send(uint8_t *data, uint8_t len)
-	{
+	int8_t send(uint8_t *data, uint8_t len) {
 		Wire.WriteBulk(data, len);
 		return len;
 	}
@@ -107,27 +107,21 @@ private:
 #define PIXY_RCS_CENTER_POS         ((PIXY_RCS_MAX_POS-PIXY_RCS_MIN_POS)/2)
 
  
-enum BlockType
-{
+enum BlockType {
   NORMAL_BLOCK,
   CC_BLOCK
 };
 
-struct Block 
-{
-    // print block structure!
-    void print()
-    {
+struct Block {
+    void print() {
         int i, j;
         char buf[128], sig[6], d;
         bool flag;  
-        if (signature>PIXY_MAX_SIGNATURE) // color code! (CC)
-        {
+        if (signature > PIXY_MAX_SIGNATURE) {
             // convert signature number to an octal string
-            for (i=12, j=0, flag=false; i>=0; i-=3)
-            {
-                d = (signature>>i)&0x07;
-                if (d>0 && !flag)
+            for (i = 12, j = 0, flag = false; i >= 0; i -= 3) {
+                d = (signature >> i) &0x07;
+                if (d > 0 && !flag)
                     flag = true;
                 if (flag)
                     sig[j++] = d + '0';
@@ -151,12 +145,9 @@ struct Block
     uint16_t angle;
 };
 
-
-
-class TPixy
-{
+class TPixy {
 public:
-    TPixy();
+    TPixy(LinkI2C *_link);
     ~TPixy();
 
     uint16_t GetBlocks(uint16_t maxBlocks=1000);
@@ -165,43 +156,38 @@ public:
     int8_t SetLED(uint8_t r, uint8_t g, uint8_t b);
 
     Block *blocks;
-  
 private:
     bool GetStart();
     void Resize();
 
-    LinkI2C link;
-    bool  skipStart;
+    LinkI2C *link;
+    bool skipStart;
     BlockType blockType;
     uint16_t blockCount;
     uint16_t blockArraySize;
 };
 
 
-TPixy::TPixy()
-{
+TPixy::TPixy(LinkI2C *_link) {
     skipStart = false;
     blockCount = 0;
     blockArraySize = PIXY_INITIAL_ARRAYSIZE;
     blocks = (Block *)malloc(sizeof(Block)*blockArraySize);
+    link = _link;
 }
 
-TPixy::~TPixy()
-{
+TPixy::~TPixy() {
     free(blocks);
 }
 
-bool TPixy::GetStart()
-{
+bool TPixy::GetStart() {
     uint16_t w, lastw;
 
     lastw = 0xffff;
 
-    while(true)
-    {
-        w = link.getWord();
-        if (w==0 && lastw==0)
-        {
+    while(true) {
+        w = link->getWord();
+        if (w == 0 && lastw == 0) {
             Timer* delay = new Timer();
             delay->Start();
             while (!delay->HasPeriodPassed(0.00005)) {
@@ -210,57 +196,48 @@ bool TPixy::GetStart()
 
             return false;
         }   
-        else if (w==PIXY_START_WORD && lastw==PIXY_START_WORD)
-        {
+        else if (w == PIXY_START_WORD && lastw == PIXY_START_WORD) {
             blockType = NORMAL_BLOCK;
             return true;
         }
-        else if (w==PIXY_START_WORD_CC && lastw==PIXY_START_WORD)
-        {
+        else if (w == PIXY_START_WORD_CC && lastw == PIXY_START_WORD) {
             blockType = CC_BLOCK;
             return true;
         }
-        else if (w==PIXY_START_WORDX)
-        {
+        else if (w==PIXY_START_WORDX) {
             printf("reorder");
-            link.getByte(); // resync
+            link->getByte(); // resync
         }
         lastw = w; 
     }
 }
 
-void TPixy::Resize()
-{
+void TPixy::Resize() {
     blockArraySize += PIXY_INITIAL_ARRAYSIZE;
     blocks = (Block *)realloc(blocks, sizeof(Block)*blockArraySize);
 }  
     
-uint16_t TPixy::GetBlocks(uint16_t maxBlocks)
-{
+uint16_t TPixy::GetBlocks(uint16_t maxBlocks) {
     uint8_t i;
     uint16_t w, checksum, sum;
     Block *block;
   
-    if (!skipStart)
-    {
-        if (GetStart()==false)
+    if (!skipStart) {
+        if (GetStart() == false)
             return 0;
     }
     else
         skipStart = false;
   
-    for(blockCount=0; blockCount<maxBlocks && blockCount<PIXY_MAXIMUM_ARRAYSIZE;)
-    {
-        checksum = link.getWord();
-        if (checksum==PIXY_START_WORD) // we've reached the beginning of the next frame
-        {
+    for(blockCount = 0; blockCount < maxBlocks && blockCount < PIXY_MAXIMUM_ARRAYSIZE; ) {
+        checksum = link->getWord();
+        if (checksum == PIXY_START_WORD) {
             skipStart = true;
             blockType = NORMAL_BLOCK;
             //Serial.println("skip");
             return blockCount;
         }
-        else if (checksum==PIXY_START_WORD_CC)
-        {
+        else if (checksum == PIXY_START_WORD_CC) {
             skipStart = true;
             blockType = CC_BLOCK;
             return blockCount;
@@ -273,14 +250,12 @@ uint16_t TPixy::GetBlocks(uint16_t maxBlocks)
 
         block = blocks + blockCount;
 
-        for (i=0, sum=0; i<sizeof(Block)/sizeof(uint16_t); i++)
-        {
-            if (blockType==NORMAL_BLOCK && i>=5) // skip 
-            {
+        for (i=0, sum=0; i<sizeof(Block)/sizeof(uint16_t); i++) {
+            if (blockType==NORMAL_BLOCK && i>=5) {
                 block->angle = 0;
                 break;
             }
-            w = link.getWord();
+            w = link->getWord();
             sum += w;
             *((uint16_t *)block + i) = w;
         }
@@ -289,8 +264,10 @@ uint16_t TPixy::GetBlocks(uint16_t maxBlocks)
             blockCount++;
         else
             printf("cs error");
+
+        block->print();
   
-        w = link.getWord();
+        w = link->getWord();
         if (w==PIXY_START_WORD)
             blockType = NORMAL_BLOCK;
         else if (w==PIXY_START_WORD_CC)
@@ -300,8 +277,7 @@ uint16_t TPixy::GetBlocks(uint16_t maxBlocks)
     }
 }
 
-int8_t TPixy::SetServos(uint16_t s0, uint16_t s1)
-{
+int8_t TPixy::SetServos(uint16_t s0, uint16_t s1) {
     uint8_t outBuf[6];
 
     outBuf[0] = 0x00;
@@ -309,22 +285,20 @@ int8_t TPixy::SetServos(uint16_t s0, uint16_t s1)
     *(uint16_t *)(outBuf + 2) = s0;
     *(uint16_t *)(outBuf + 4) = s1;
 
-    return link.send(outBuf, 6);
+    return link->send(outBuf, 6);
 }
 
-int8_t TPixy::SetBrightness(uint8_t brightness)
-{
+int8_t TPixy::SetBrightness(uint8_t brightness) {
     uint8_t outBuf[3];
 
     outBuf[0] = 0x00;
     outBuf[1] = 0xfe; 
     outBuf[2] = brightness;
 
-    return link.send(outBuf, 3);
+    return link->send(outBuf, 3);
 }
 
-int8_t TPixy::SetLED(uint8_t r, uint8_t g, uint8_t b)
-{
+int8_t TPixy::SetLED(uint8_t r, uint8_t g, uint8_t b) {
     uint8_t outBuf[5];
 
     outBuf[0] = 0x00;
@@ -333,7 +307,7 @@ int8_t TPixy::SetLED(uint8_t r, uint8_t g, uint8_t b)
     outBuf[3] = g;
     outBuf[4] = b;
 
-    return link.send(outBuf, 5);
+    return link->send(outBuf, 5);
 }
 
 }
