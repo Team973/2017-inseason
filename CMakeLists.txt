@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 include(${CMAKE_TOOLCHAIN_FILE})
 
 project(greybots-skeleton)
-set(TEAM_NUMBER 973)
+set(TEAM_NUMBER 9973)
 
 # Robot target
 # For quick list of files run

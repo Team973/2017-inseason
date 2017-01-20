@@ -82,16 +82,13 @@ Robot::Robot(void
 	m_gearIntake = new GearIntake(this);
 	m_turret = new Turret(this, m_logger);
 
-<<<<<<< HEAD
 	if(DriverStation::GetInstance().GetAlliance() == DriverStation::Alliance::kRed){
 		m_autoDirection = 1.0;
 	}
 	else{
 		m_autoDirection = -1.0;
 	}
-=======
     m_pixyI2C = new TPixy(new LinkI2C());
->>>>>>> abdab2fd80832a663ec237b634b14f2625ea3ed7
 }
 
 Robot::~Robot(void) {
@@ -106,7 +103,25 @@ void Robot::AllStateContinuous(void) {
 	m_time->LogDouble(GetSecTime());
 	m_state->LogPrintf("%s", GetRobotModeString());
 
-    printf("blocks %d\n", m_pixyI2C->GetBlocks(4));
+	int aveX;
+	int numBlocks = m_pixyI2C->GetBlocks();
+	if (numBlocks >= 2){
+		aveX = (m_pixyI2C->blocks[0].x + m_pixyI2C->blocks[1].x) / 2;
+		if (m_pixyI2C->blocks[0].x <= m_pixyI2C->blocks[1].x ){
+			aveX = m_pixyI2C->blocks[0].x;
+		}
+		else if (m_pixyI2C->blocks[0].x > m_pixyI2C->blocks[1].x) {
+			aveX = m_pixyI2C->blocks[1].x;
+		}
+	}
+	else if (numBlocks == 1){
+		aveX = m_pixyI2C->blocks[0].x;
+	}
+	else if (numBlocks == 0){
+		aveX = 0;
+	}
+
+    printf("blocks %d aveX %d\n", m_pixyI2C->GetBlocks(4), aveX);
 }
 
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
