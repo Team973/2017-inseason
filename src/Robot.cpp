@@ -106,7 +106,6 @@ void Robot::AllStateContinuous(void) {
 	int aveX;
 	int numBlocks = m_pixyI2C->GetBlocks();
 	if (numBlocks >= 2){
-		aveX = (m_pixyI2C->blocks[0].x + m_pixyI2C->blocks[1].x) / 2;
 		if (m_pixyI2C->blocks[0].x <= m_pixyI2C->blocks[1].x ){
 			aveX = m_pixyI2C->blocks[0].x;
 		}
