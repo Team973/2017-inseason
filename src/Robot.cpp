@@ -16,6 +16,8 @@
 
 #include "CANTalon.h"
 
+#include "lib/PixyI2C.h"
+
 using namespace frc;
 
 namespace frc973 {
@@ -45,7 +47,8 @@ Robot::Robot(void
 	m_time(nullptr),
 	m_state(nullptr),
 	m_messages(nullptr),
-	m_buttonPresses(nullptr)
+	m_buttonPresses(nullptr),
+    m_pixyI2C(nullptr)
 {
 	m_driverJoystick = new ObservableJoystick(DRIVER_JOYSTICK_PORT, this, this);
 	m_operatorJoystick = new ObservableJoystick(OPERATOR_JOYSTICK_PORT, this, this);
@@ -79,12 +82,16 @@ Robot::Robot(void
 	m_gearIntake = new GearIntake(this);
 	m_turret = new Turret(this, m_logger);
 
+<<<<<<< HEAD
 	if(DriverStation::GetInstance().GetAlliance() == DriverStation::Alliance::kRed){
 		m_autoDirection = 1.0;
 	}
 	else{
 		m_autoDirection = -1.0;
 	}
+=======
+    m_pixyI2C = new TPixy(new LinkI2C());
+>>>>>>> abdab2fd80832a663ec237b634b14f2625ea3ed7
 }
 
 Robot::~Robot(void) {
@@ -98,6 +105,8 @@ void Robot::AllStateContinuous(void) {
 	m_battery->LogPrintf("%f", DriverStation::GetInstance().GetBatteryVoltage());
 	m_time->LogDouble(GetSecTime());
 	m_state->LogPrintf("%s", GetRobotModeString());
+
+    printf("blocks %d\n", m_pixyI2C->GetBlocks(4));
 }
 
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,

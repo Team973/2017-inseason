@@ -22,6 +22,7 @@ class Debouncer;
 class Hanger;
 class Turret;
 class BallIntake;
+class TPixy;
 
 class Robot:
 		public CoopMTRobot,
@@ -90,6 +91,8 @@ private:
 	LogCell *m_buttonPresses;
 
 	double m_teleopTimeSec;
+
+    TPixy   *m_pixyI2C;
 public:
 	/**
 	 * Defined in Robot.cpp
