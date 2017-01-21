@@ -16,8 +16,6 @@
 
 #include "CANTalon.h"
 
-#include "lib/PixyI2C.h"
-
 using namespace frc;
 
 namespace frc973 {
@@ -47,8 +45,7 @@ Robot::Robot(void
 	m_time(nullptr),
 	m_state(nullptr),
 	m_messages(nullptr),
-	m_buttonPresses(nullptr),
-    m_pixyI2C(nullptr)
+	m_buttonPresses(nullptr)
 {
 	m_driverJoystick = new ObservableJoystick(DRIVER_JOYSTICK_PORT, this, this);
 	m_operatorJoystick = new ObservableJoystick(OPERATOR_JOYSTICK_PORT, this, this);
@@ -88,7 +85,6 @@ Robot::Robot(void
 	else{
 		m_autoDirection = -1.0;
 	}
-    m_pixyI2C = new TPixy(new LinkI2C());
 }
 
 Robot::~Robot(void) {
@@ -103,24 +99,6 @@ void Robot::AllStateContinuous(void) {
 	m_time->LogDouble(GetSecTime());
 	m_state->LogPrintf("%s", GetRobotModeString());
 
-	int aveX;
-	int numBlocks = m_pixyI2C->GetBlocks();
-	if (numBlocks >= 2){
-		if (m_pixyI2C->blocks[0].x <= m_pixyI2C->blocks[1].x ){
-			aveX = m_pixyI2C->blocks[0].x;
-		}
-		else if (m_pixyI2C->blocks[0].x > m_pixyI2C->blocks[1].x) {
-			aveX = m_pixyI2C->blocks[1].x;
-		}
-	}
-	else if (numBlocks == 1){
-		aveX = m_pixyI2C->blocks[0].x;
-	}
-	else if (numBlocks == 0){
-		aveX = 0;
-	}
-
-    printf("blocks %d aveX %d\n", m_pixyI2C->GetBlocks(4), aveX);
 }
 
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
