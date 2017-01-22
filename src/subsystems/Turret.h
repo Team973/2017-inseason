@@ -11,6 +11,7 @@ using namespace frc;
 namespace frc973 {
 
   class TaskMgr;
+  class TPixy;
 
   class Turret: public CoopTask{
     public:
@@ -18,7 +19,8 @@ namespace frc973 {
       virtual ~Turret();
 
       enum TurretState{
-        running,
+        runningPow,
+        runningPos,
         notRunning,
         vision
       };
@@ -26,14 +28,15 @@ namespace frc973 {
       double GetTurretPosition();
       void StopTurret();
       void SetTurretPower(double power);
-      void SetTurretMode(TurretState turretState);
       void SetTurretAutoTarget();
 
-      void TaskPeriodic();
+      void TaskPeriodic(RobotMode mode) override;
 
     private:
       CANTalon *m_turretMotor;
       TaskMgr *m_scheduler;
+      Solenoid *m_greenFlashlight;
+      TPixy *m_pixyI2C;
 
       TurretState m_turretState;
 

@@ -7,6 +7,7 @@
 #include "lib/logging/LogSpreadsheet.h"
 #include "lib/WrapDash.h"
 
+#include "subsystems/GearIntake.h"
 #include "subsystems/BallIntake.h"
 #include "subsystems/Shooter.h"
 #include "subsystems/Drive.h"
@@ -34,7 +35,10 @@ Robot::Robot(void
 	m_shooter(nullptr),
 	m_hanger(nullptr),
 	m_ballIntake(nullptr),
+	m_gearIntake(nullptr),
 	m_turret(nullptr),
+	m_autoRoutine(AutonomousRoutine::NoAuto),
+	m_autoDirection(0.0),
 	m_autoState(0),
 	m_autoTimer(0),
 	m_battery(nullptr),
@@ -58,8 +62,6 @@ Robot::Robot(void
 	m_drive = new Drive(this, m_leftDriveTalon, m_rightDriveTalon,
 			nullptr, nullptr, nullptr, m_logger);
 
-	m_ballIntake = new BallIntake(this);
-
 	m_battery = new LogCell("Battery voltage");
 
 	m_time = new LogCell("Time (ms)");
@@ -71,10 +73,18 @@ Robot::Robot(void
 	m_logger->RegisterCell(m_time);
 	m_logger->RegisterCell(m_buttonPresses);
 
-	m_shooter = new Shooter(this, m_logger);
+	//m_shooter = new Shooter(this, m_logger);
 	m_hanger = new Hanger(this);
+	m_ballIntake = new BallIntake(this);
+	m_gearIntake = new GearIntake(this);
 	m_turret = new Turret(this, m_logger);
 
+	if(DriverStation::GetInstance().GetAlliance() == DriverStation::Alliance::kRed){
+		m_autoDirection = 1.0;
+	}
+	else{
+		m_autoDirection = -1.0;
+	}
 }
 
 Robot::~Robot(void) {
@@ -88,7 +98,9 @@ void Robot::AllStateContinuous(void) {
 	m_battery->LogPrintf("%f", DriverStation::GetInstance().GetBatteryVoltage());
 	m_time->LogDouble(GetSecTime());
 	m_state->LogPrintf("%s", GetRobotModeString());
+
 }
+
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
 			bool pressedP) {
 	fprintf(stderr, "joystick state change port %d button %d state %d\n", port, button, pressedP);
