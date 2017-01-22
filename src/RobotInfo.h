@@ -44,8 +44,11 @@ constexpr int DRIVE_SHIFT_SOL = 0;
 constexpr int GEAR_INTAKE_GRIP = 1;
 constexpr int GEAR_INTAKE_POS = 2;
 
+constexpr int POWER_TAKEOFF_SOL_A = 3;
+constexpr int POWER_TAKEOFF_SOL_B = 4;
 //CANTalon
 constexpr int SHOOTER_TURRET_CAN_ID = 2;
+constexpr int HANGER_CAN_ID = 4;
 
 constexpr int FLYWHEEL_PRIMARY_CAN_ID = 0;
 constexpr int FLYWHEEL_REPLICA_CAN_ID = 1;
