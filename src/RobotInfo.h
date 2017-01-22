@@ -23,8 +23,6 @@ constexpr int DRIVE_LEFT_PWM = 0;
 
 constexpr int SHOOTER_PWM = 9;
 
-constexpr int TURRET_PWM = 8;
-
 constexpr int BALL_INTAKE_B_PWM = 4;
 constexpr int BALL_INTAKE_PWM = 5;
 constexpr int GEAR_INTAKE_PWM = 6;
@@ -45,8 +43,6 @@ constexpr int DRIVE_SHIFT_SOL = 0;
 constexpr int GEAR_INTAKE_SOL = 1;
 
 //CANTalon
-constexpr int SHOOTER_TURRET_CAN_ID = 2;
-
 constexpr int FLYWHEEL_PRIMARY_CAN_ID = 0;
 constexpr int FLYWHEEL_REPLICA_CAN_ID = 1;
 

@@ -19,7 +19,6 @@ class SPIGyro;
 class PoseManager;
 class Debouncer;
 class Hanger;
-class Turret;
 class BallIntake;
 
 class Robot:
@@ -53,7 +52,6 @@ private:
 	GearIntake	*m_gearIntake;
 	Shooter			*m_shooter;
 	Hanger			*m_hanger;
-	Turret			*m_turret;
 
 	/*
 	 * Compressor

@@ -12,7 +12,6 @@
 #include "subsystems/Shooter.h"
 #include "subsystems/Drive.h"
 #include "subsystems/Hanger.h"
-#include "subsystems/Turret.h"
 
 #include "CANTalon.h"
 
@@ -36,7 +35,6 @@ Robot::Robot(void
 	m_hanger(nullptr),
 	m_ballIntake(nullptr),
 	m_gearIntake(nullptr),
-	m_turret(nullptr),
 	m_autoState(0),
 	m_autoTimer(0),
 	m_battery(nullptr),
@@ -53,8 +51,6 @@ Robot::Robot(void
 	m_leftDriveTalon = new frc::Talon(DRIVE_LEFT_PWM);
 	m_rightDriveTalon = new frc::Talon(DRIVE_RIGHT_PWM);
 	fprintf(stderr, "Initialized drive victors\n");
-
-	m_turretMotor = new CANTalon(SHOOTER_TURRET_CAN_ID);
 
 	m_logger = new LogSpreadsheet(this);
 	m_drive = new Drive(this, m_leftDriveTalon, m_rightDriveTalon,
@@ -75,8 +71,6 @@ Robot::Robot(void
 	m_hanger = new Hanger(this);
 	m_ballIntake = new BallIntake(this);
 	m_gearIntake = new GearIntake(this);
-	m_turret = new Turret(this, m_logger);
-
 }
 
 Robot::~Robot(void) {
