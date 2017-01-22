@@ -50,7 +50,7 @@ static constexpr double KEY_DIST = 52.0;
 	void Robot::GearLtPeg(){
 		switch (m_autoState){
 			case 0:
-				m_drive->PIDDrive(DRIVER_STATION_LAUNCHPAD_DIST + 10.0, 0.0, DriveBase::RelativeTo::Absolute, 0.8);
+				m_drive->PIDDrive(DRIVER_STATION_LAUNCHPAD_DIST + 10.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
 				m_autoState++;
 				break;
 			case 1:
@@ -66,7 +66,7 @@ static constexpr double KEY_DIST = 52.0;
 	void Robot::GearMidPeg(){
 		switch (m_autoState) {
 			case 0:
-				m_drive->PIDDrive(DRIVER_STATION_BASE_LINE_DIST, 0.0, DriveBase::RelativeTo::Absolute, 0.8);
+				m_drive->PIDDrive(DRIVER_STATION_BASE_LINE_DIST, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
 				m_autoState++;
 				break;
 			case 1:
@@ -78,7 +78,7 @@ static constexpr double KEY_DIST = 52.0;
 	void Robot::GearRtPeg(){
 		switch (m_autoState){
 			case 0:
-				m_drive->PIDDrive(DRIVER_STATION_LAUNCHPAD_DIST + 10.0, 0.0, DriveBase::RelativeTo::Absolute, 0.8);
+				m_drive->PIDDrive(DRIVER_STATION_LAUNCHPAD_DIST + 10.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
 				m_autoState++;
 				break;
 			case 1:
@@ -94,7 +94,7 @@ static constexpr double KEY_DIST = 52.0;
 	void Robot::FuelToBoiler(){
 		switch (m_autoState){
 			case 0:
-				m_drive->PIDDrive(DRIVER_STATION_BASE_LINE_DIST / 2.0, 0.0, DriveBase::RelativeTo::Absolute, 0.8);
+				m_drive->PIDDrive(DRIVER_STATION_BASE_LINE_DIST / 2.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
 				m_autoState++;
 				break;
 			case 1:
@@ -102,7 +102,7 @@ static constexpr double KEY_DIST = 52.0;
 				m_autoState++;
 				break;
 			case 2:
-				m_drive->PIDDrive(DRIVER_STATION_BASE_LINE_DIST / 2.0, 0.0, DriveBase::RelativeTo::Absolute, 0.8);
+				m_drive->PIDDrive(DRIVER_STATION_BASE_LINE_DIST / 2.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
 				m_autoState++;
 			case 3:
 				m_shooter->SetFlywheelPow(1.0);
@@ -116,7 +116,7 @@ static constexpr double KEY_DIST = 52.0;
 	void Robot::HopperThenShoot(){
 		switch (m_autoState){
 			case 0:
-				m_drive->PIDDrive(DRIVER_STATION_LAUNCHPAD_DIST + 40.0, 0.0, DriveBase::RelativeTo::Absolute, 0.8);
+				m_drive->PIDDrive(DRIVER_STATION_LAUNCHPAD_DIST + 40.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
 				m_autoState++;
 				break;
 			case 1:
@@ -124,14 +124,14 @@ static constexpr double KEY_DIST = 52.0;
 				m_autoState++;
 				break;
 			case 2:
-				m_drive->PIDDrive(-40.0, 0.0, DriveBase::RelativeTo::Absolute, 0.8);
+				m_drive->PIDDrive(-40.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
 				m_autoState++;
 			case 3:
-				m_drive->PIDDrive(0.0, 180.0, DriveBase::RelativeTo::Absolute, 0.8);
+				m_drive->PIDDrive(0.0, 180.0, DriveBase::RelativeTo::SetPoint, 0.8);
 				m_autoState++;
 				break;
 			case 4:
-				m_drive->PIDDrive(DRIVER_STATION_LAUNCHPAD_DIST + 40.0, 0.0, DriveBase::RelativeTo::Absolute, 0.8);
+				m_drive->PIDDrive(DRIVER_STATION_LAUNCHPAD_DIST + 40.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
 				m_autoState++;
 			case 5:
 				m_shooter->SetFlywheelPow(1.0);
@@ -150,7 +150,7 @@ static constexpr double KEY_DIST = 52.0;
 				m_autoState++;
 				break;
 			case 1:
-				m_drive->PIDDrive(40.0, 0.0, DriveBase::RelativeTo::Absolute, 0.8);
+				m_drive->PIDDrive(40.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
 				m_autoState++;
 				break;
 			case 2:
@@ -162,19 +162,19 @@ static constexpr double KEY_DIST = 52.0;
 				m_autoState++;
 				break;
 			case 4:
-				m_drive->PIDDrive(0.0, 90.0, DriveBase::RelativeTo::Absolute, 0.8);
+				m_drive->PIDDrive(0.0, 90.0, DriveBase::RelativeTo::SetPoint, 0.8);
 				m_autoState++;
 				break;
 			case 5:
-				m_drive->PIDDrive(DRIVER_STATION_LAUNCHPAD_DIST + 40.0, 0.0, DriveBase::RelativeTo::Absolute, 0.8);
+				m_drive->PIDDrive(DRIVER_STATION_LAUNCHPAD_DIST + 40.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
 				m_autoState++;
 				break;
 			case 6:
-				m_drive->PIDDrive(0.0, 180.0, DriveBase::RelativeTo::Absolute, 0.8);
+				m_drive->PIDDrive(0.0, 180.0, DriveBase::RelativeTo::SetPoint, 0.8);
 				m_autoState++;
 				break;
 			case 7:
-				m_drive->PIDDrive(DRIVER_STATION_LAUNCHPAD_DIST + 40.0, 0.0, DriveBase::RelativeTo::Absolute, 0.8);
+				m_drive->PIDDrive(DRIVER_STATION_LAUNCHPAD_DIST + 40.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
 				m_autoState++;
 			case 8:
 				m_shooter->SetFlywheelPow(1.0);

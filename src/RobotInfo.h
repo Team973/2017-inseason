@@ -28,7 +28,6 @@ constexpr int TURRET_PWM = 8;
 constexpr int BALL_INTAKE_B_PWM = 4;
 constexpr int BALL_INTAKE_PWM = 5;
 constexpr int GEAR_INTAKE_PWM = 6;
-//constexpr int UNUSED_PWM = 4;
 constexpr int RIGHT_DRIVE_ENCODER_A_DIN = 12;
 constexpr int RIGHT_DRIVE_ENCODER_B_DIN = 13;
 constexpr int LEFT_DRIVE_ENCODER_A_DIN = 24;
@@ -42,13 +41,17 @@ constexpr int OPERATOR_JOYSTICK_PORT = 1;
 
 //solenoids
 constexpr int DRIVE_SHIFT_SOL = 0;
-constexpr int GEAR_INTAKE_SOL = 1;
+constexpr int GEAR_INTAKE_GRIP = 1;
+constexpr int GEAR_INTAKE_POS = 2;
 
 //CANTalon
 constexpr int SHOOTER_TURRET_CAN_ID = 2;
 
 constexpr int FLYWHEEL_PRIMARY_CAN_ID = 0;
 constexpr int FLYWHEEL_REPLICA_CAN_ID = 1;
+
+constexpr int LEFT_INDEXER_CAN_ID = 2;
+constexpr int RIGHT_INDEXER_CAN_ID = 3;
 
 constexpr int FLYWHEEL_CONTROL_PERIOD_MS = 1;
 /**
