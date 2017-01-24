@@ -177,6 +177,7 @@ TPixy::TPixy(LinkI2C *_link) {
 }
 
 TPixy::~TPixy() {
+    delete link;
     free(blocks);
 }
 
@@ -185,15 +186,12 @@ bool TPixy::GetStart() {
 
     lastw = 0xffff;
 
-    while(true) {
+    int tries = 0;
+    while(tries++ < 30) {
         w = link->getWord();
+        printf(" %x ", w);
         if (w == 0 && lastw == 0) {
-            Timer* delay = new Timer();
-            delay->Start();
-            while (!delay->HasPeriodPassed(0.00005)) {
-                // Wait 50 microseconds
-            }
-
+            printf("no data... giving up\n");
             return false;
         }   
         else if (w == PIXY_START_WORD && lastw == PIXY_START_WORD) {
@@ -205,17 +203,25 @@ bool TPixy::GetStart() {
             return true;
         }
         else if (w==PIXY_START_WORDX) {
-            printf("reorder");
-            link->getByte(); // resync
+            printf("reorder: %x ", link->getByte());
         }
         lastw = w; 
     }
+    printf("Tried 30 initializations and it didn't work so giving up\n");
+    SetLED(30, 30, 30);
+    return false;
 }
 
 void TPixy::Resize() {
     blockArraySize += PIXY_INITIAL_ARRAYSIZE;
-    blocks = (Block *)realloc(blocks, sizeof(Block)*blockArraySize);
-}  
+    Block *newBlocks = (Block *)realloc(blocks, sizeof(Block)*blockArraySize);
+    if (blocks == nullptr) {
+        free(blocks);
+    }
+    else {
+        blocks = newBlocks;
+    }
+}
     
 uint16_t TPixy::GetBlocks(uint16_t maxBlocks) {
     uint8_t i;
@@ -260,10 +266,12 @@ uint16_t TPixy::GetBlocks(uint16_t maxBlocks) {
             *((uint16_t *)block + i) = w;
         }
 
-        if (checksum==sum)
+        if (checksum == sum) {
             blockCount++;
-        else
+        }
+        else {
             printf("cs error");
+        }
 
         block->print();
   
@@ -275,6 +283,7 @@ uint16_t TPixy::GetBlocks(uint16_t maxBlocks) {
         else
             return blockCount;
     }
+    return blockCount;
 }
 
 int8_t TPixy::SetServos(uint16_t s0, uint16_t s1) {

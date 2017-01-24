@@ -5,8 +5,7 @@
  *      Author: Andrew
  */
 
-#ifndef SRC_SUBSYSTEMS_SHOOTER_H_
-#define SRC_SUBSYSTEMS_SHOOTER_H_
+#pragma once
 
 #include "WPILib.h"
 #include "lib/CoopTask.h"
@@ -62,5 +61,3 @@ private:
 };
 
 }
-
-#endif /* SRC_SUBSYSTEMS_SHOOTER_H_ */

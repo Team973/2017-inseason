@@ -15,8 +15,7 @@
  * in the long run.
  */
 
-#ifndef FRCLIB_COOPMTROBOT_H_
-#define FRCLIB_COOPMTROBOT_H_
+#pragma once
 
 #include "stdint.h"
 #include "WPILib.h"
@@ -109,16 +108,14 @@ protected:
 	 * Implement the RobotStateInterface interface so that we may
 	 * cache robor mode.
 	 */
-	bool IsDisabled() const;
-	bool IsEnabled() const;
-	bool IsOperatorControl() const;
-	bool IsAutonomous() const;
-	bool IsTest() const;
+	bool IsDisabled() const override;
+	bool IsEnabled() const override;
+	bool IsOperatorControl() const override;
+	bool IsAutonomous() const override;
+	bool IsTest() const override;
 private:
 	RobotMode m_prevMode;
 	mutable pthread_mutex_t m_robotModeMutex;
 };
 
 }
-
-#endif /* FRCLIB_COOPMTROBOT_H_ */

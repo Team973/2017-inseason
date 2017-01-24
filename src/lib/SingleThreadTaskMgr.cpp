@@ -118,6 +118,7 @@ void* SingleThreadTaskMgr::RunTasks(void *p) {
 					"Time alloted for period: %llu us; time used %llu us",
 					inst->GetLoopFrequency(), timeSliceAllotedUs,
 					timeSliceUsedUs);
+            usleep(0);
 		}
 
 		timeSliceStartTimeUs += timeSliceAllotedUs;

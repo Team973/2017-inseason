@@ -1,5 +1,4 @@
-#ifndef FRCLIB_UTIL_H_
-#define FRCLIB_UTIL_H_
+#pragma once
 
 #include <stdint.h>
 #include <math.h>
@@ -218,5 +217,3 @@ namespace Util {
 }
 
 }
-
-#endif	/* FRCLIB_UTIL_H_ */

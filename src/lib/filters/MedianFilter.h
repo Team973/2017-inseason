@@ -5,8 +5,7 @@
  *      Author: Andrew
  */
 
-#ifndef LIB_FILTERS_MEDIANFILTER_H_
-#define LIB_FILTERS_MEDIANFILTER_H_
+#pragma once
 
 #include "FilterBase.h"
 
@@ -27,5 +26,3 @@ private:
 };
 
 }
-
-#endif /* LIB_FILTERS_MEDIANFILTER_H_ */

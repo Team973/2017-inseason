@@ -5,8 +5,7 @@
  * #noshame
  */
 
-#ifndef LIB_STATESPACECONTROLLER_H_
-#define LIB_STATESPACECONTROLLER_H_
+#pragma once
 
 namespace frc973 {
 
@@ -51,5 +50,3 @@ private:
 };
 
 }
-
-#endif /* LIB_STATESPACECONTROLLER_H_ */

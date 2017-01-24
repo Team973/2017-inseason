@@ -13,8 +13,7 @@
  *      Author: andrew
  */
 
-#ifndef LIB_CONTROLLERBASE_H_
-#define LIB_CONTROLLERBASE_H_
+#pragma once
 
 #include "CoopTask.h"
 #include "TaskMgr.h"
@@ -124,5 +123,3 @@ private:
 };
 
 }
-
-#endif /* LIB_CONTROLLERBASE_H_ */

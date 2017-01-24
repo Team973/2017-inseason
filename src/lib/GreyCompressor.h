@@ -10,8 +10,7 @@
  * Can also be explicitly enabled or disabled.
  */
 
-#ifndef LIB_GREYCOMPRESSOR_H_
-#define LIB_GREYCOMPRESSOR_H_
+#pragma once
 
 #include "TaskMgr.h"
 #include "CoopTask.h"
@@ -63,5 +62,3 @@ private:
 };
 
 }
-
-#endif /* LIB_GREYCOMPRESSOR_H_ */

@@ -5,8 +5,7 @@
  *      Author: Andrew
  */
 
-#ifndef FRCLIB_SINGLETHREADTASKMGR_H_
-#define FRCLIB_SINGLETHREADTASKMGR_H_
+#pragma once
 
 #include "pthread.h"
 #include "TaskMgr.h"
@@ -133,5 +132,3 @@ private:
 };
 
 }
-
-#endif /* FRCLIB_SINGLETHREADTASKMGR_H_ */

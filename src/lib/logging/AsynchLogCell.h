@@ -12,8 +12,7 @@
  *      Author: Andrew
  */
 
-#ifndef LIB_ASYNCHLOGCELL_H_
-#define LIB_ASYNCHLOGCELL_H_
+#pragma once
 
 #include "lib/logging/LogSpreadsheet.h"
 
@@ -66,5 +65,3 @@ public:
 };
 
 }
-
-#endif /* LIB_ASYNCHLOGCELL_H_ */

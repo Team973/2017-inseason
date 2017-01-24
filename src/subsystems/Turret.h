@@ -1,5 +1,4 @@
-#ifndef SRC_SUBSYSTEMS_TURRET_H_
-#define SRC_SUBSYSTEMS_TURRET_H_
+#pragma once
 
 #include "RobotInfo.h"
 #include "WPILib.h"
@@ -11,14 +10,16 @@ using namespace frc;
 namespace frc973 {
 
   class TaskMgr;
+  class PixyThread;
 
   class Turret: public CoopTask{
     public:
-      Turret(TaskMgr *m_scheduler, LogSpreadsheet *logger);
+      Turret(TaskMgr *m_scheduler, LogSpreadsheet *logger, PixyThread *pixy);
       virtual ~Turret();
 
       enum TurretState{
-        running,
+        runningPow,
+        runningPos,
         notRunning,
         vision
       };
@@ -29,18 +30,17 @@ namespace frc973 {
       void SetTurretMode(TurretState turretState);
       void SetTurretAutoTarget();
 
-      void TaskPeriodic();
+      void TaskPeriodic(RobotMode mode) override;
 
     private:
       CANTalon *m_turretMotor;
       TaskMgr *m_scheduler;
+      Solenoid *m_greenFlashlight;
 
       TurretState m_turretState;
 
       double m_turretPos;
       double m_turretPower;
-
+      PixyThread *m_pixyThread;
   };
 }
-
-#endif /* SRC_SUBSYSTEMS_TURRET_H_*/

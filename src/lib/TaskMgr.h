@@ -13,8 +13,7 @@
  * methods once every time period regardless of robot state).
  */
 
-#ifndef FRCLIB_TASKMGR_H_
-#define FRCLIB_TASKMGR_H_
+#pragma once
 
 #include "stdint.h"
 #include "util/Util.h"
@@ -124,5 +123,3 @@ private:
 };
 
 }
-
-#endif /* FRCLIB_TASKMGR_H_ */

@@ -5,8 +5,7 @@
  *      Author: Andrew
  */
 
-#ifndef LIB_JOYSTICKHELPER_H_
-#define LIB_JOYSTICKHELPER_H_
+#pragma once
 
 #include <stdint.h>
 #include "CoopTask.h"
@@ -235,4 +234,3 @@ public:
 
 }
 
-#endif /* LIB_JOYSTICKHELPER_H_ */

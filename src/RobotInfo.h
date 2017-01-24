@@ -5,8 +5,7 @@
  *      Author: Andrew
  */
 
-#ifndef ROBOTINFO_H_
-#define ROBOTINFO_H_
+#pragma once
 
 #include "lib/util/Util.h"
 
@@ -63,5 +62,3 @@ constexpr double DRIVE_DIST_PER_CLICK = DRIVE_DIST_PER_REVOLUTION *
 
 constexpr double SHOOTER_CLICKS_PER_REVOLUTION = 360.0;
 }
-
-#endif /* SRC_ROBOTINFO_H_ */

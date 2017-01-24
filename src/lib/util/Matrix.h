@@ -5,8 +5,7 @@
  *      Author: Andrew
  */
 
-#ifndef LIB_MATRIX_H_
-#define LIB_MATRIX_H_
+#pragma once
 
 #include "math.h"
 #include <stdio.h>
@@ -134,5 +133,3 @@ private:
 };
 
 }
-
-#endif /* LIB_MATRIX_H_ */

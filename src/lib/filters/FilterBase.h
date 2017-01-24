@@ -5,8 +5,7 @@
  *      Author: Andrew
  */
 
-#ifndef LIB_FILTERS_FILTERBASE_H_
-#define LIB_FILTERS_FILTERBASE_H_
+#pragma once
 
 namespace frc973 {
 
@@ -30,5 +29,3 @@ public:
 };
 
 }
-
-#endif /* LIB_FILTERS_FILTERBASE_H_ */

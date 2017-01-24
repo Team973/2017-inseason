@@ -10,8 +10,7 @@
  *      Author: Andrew
  */
 
-#ifndef LIB_FILTERS_DEBOUNCER_H_
-#define LIB_FILTERS_DEBOUNCER_H_
+#pragma once
 
 #include "lib/util/Util.h"
 
@@ -51,5 +50,3 @@ private:
 };
 
 }
-
-#endif /* LIB_FILTERS_DEBOUNCER_H_ */

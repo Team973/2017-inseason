@@ -16,10 +16,14 @@ namespace frc973 {
 
 Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger) :
 		m_scheduler(scheduler),
-		m_flywheelState(FlywheelState::notRunning),
 		m_flywheelMotorPrimary(new CANTalon(FLYWHEEL_PRIMARY_CAN_ID, FLYWHEEL_CONTROL_PERIOD_MS)),
 		m_flywheelMotorReplica(new CANTalon(FLYWHEEL_REPLICA_CAN_ID)),
-		m_flywheelPow(0.0)
+		m_flywheelPow(0.0),
+		m_flywheelState(FlywheelState::notRunning),
+        m_flywheelRate(nullptr),
+        m_flywheelPowLog(nullptr),
+        m_flywheelStateLog(nullptr),
+        m_speedSetpoint(nullptr)
 {
 	m_flywheelMotorPrimary->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
 	m_flywheelMotorPrimary->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);

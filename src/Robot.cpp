@@ -6,8 +6,8 @@
 #include "lib/GreyCompressor.h"
 #include "lib/logging/LogSpreadsheet.h"
 #include "lib/WrapDash.h"
+#include "lib/SingleThreadTaskMgr.h"
 
-#include "subsystems/BallIntake.h"
 #include "subsystems/Shooter.h"
 #include "subsystems/Drive.h"
 #include "subsystems/Hanger.h"
@@ -15,7 +15,7 @@
 
 #include "CANTalon.h"
 
-#include "lib/PixyI2C.h"
+#include "subsystems/PixyThread.h"
 
 using namespace frc;
 
@@ -32,11 +32,13 @@ Robot::Robot(void
 	m_tuningJoystick(nullptr),
 	m_leftDriveTalon(nullptr),
 	m_rightDriveTalon(nullptr),
+    m_turretMotor(nullptr),
 	m_drive(nullptr),
-	m_shooter(nullptr),
+    m_shooter(nullptr),
 	m_hanger(nullptr),
-	m_ballIntake(nullptr),
 	m_turret(nullptr),
+    m_airPressureSwitch(nullptr),
+	m_autoDirection(0.0),
 	m_autoState(0),
 	m_autoTimer(0),
 	m_battery(nullptr),
@@ -44,7 +46,7 @@ Robot::Robot(void
 	m_state(nullptr),
 	m_messages(nullptr),
 	m_buttonPresses(nullptr),
-    m_pixyI2C(nullptr)
+    m_pixyR(nullptr)
 {
 	m_driverJoystick = new ObservableJoystick(DRIVER_JOYSTICK_PORT, this, this);
 	m_operatorJoystick = new ObservableJoystick(OPERATOR_JOYSTICK_PORT, this, this);
@@ -61,8 +63,6 @@ Robot::Robot(void
 	m_drive = new Drive(this, m_leftDriveTalon, m_rightDriveTalon,
 			nullptr, nullptr, nullptr, m_logger);
 
-	m_ballIntake = new BallIntake(this);
-
 	m_battery = new LogCell("Battery voltage");
 
 	m_time = new LogCell("Time (ms)");
@@ -76,9 +76,10 @@ Robot::Robot(void
 
 	m_shooter = new Shooter(this, m_logger);
 	m_hanger = new Hanger(this);
-	m_turret = new Turret(this, m_logger);
-
-    m_pixyI2C = new TPixy(new LinkI2C());
+    SingleThreadTaskMgr *pixyThread = new SingleThreadTaskMgr(*this, 0.02);
+    pixyThread->Start();
+    m_pixyR = new PixyThread(pixyThread);
+	m_turret = new Turret(this, m_logger, m_pixyR);
 }
 
 Robot::~Robot(void) {
@@ -92,8 +93,6 @@ void Robot::AllStateContinuous(void) {
 	m_battery->LogPrintf("%f", DriverStation::GetInstance().GetBatteryVoltage());
 	m_time->LogDouble(GetSecTime());
 	m_state->LogPrintf("%s", GetRobotModeString());
-
-    printf("blocks %d\n", m_pixyI2C->GetBlocks(4));
 }
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
 			bool pressedP) {

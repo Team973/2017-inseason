@@ -1,3 +1,5 @@
+#pragma once
+
 #include "lib/CoopMTRobot.h"
 #include "lib/JoystickHelper.h"
 #include "RobotInfo.h"
@@ -20,8 +22,7 @@ class PoseManager;
 class Debouncer;
 class Hanger;
 class Turret;
-class BallIntake;
-class TPixy;
+class PixyThread;
 
 class Robot:
 		public CoopMTRobot,
@@ -50,7 +51,6 @@ private:
 	/**
 	 * Subsystems
 	 */
-	BallIntake			*m_ballIntake;
 	Shooter			*m_shooter;
 	Hanger			*m_hanger;
 	Turret			*m_turret;
@@ -64,6 +64,7 @@ private:
 	/**
 	 * Auto
 	 */
+    double m_autoDirection;
 	int m_autoState;
 	uint32_t m_autoTimer;
 
@@ -78,7 +79,7 @@ private:
 
 	double m_teleopTimeSec;
 
-    TPixy   *m_pixyI2C;
+    PixyThread *m_pixyR;
 public:
 	/**
 	 * Defined in Robot.cpp
