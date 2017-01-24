@@ -84,7 +84,9 @@ void Robot::AllStateContinuous(void) {
 	m_battery->LogPrintf("%f", DriverStation::GetInstance().GetBatteryVoltage());
 	m_time->LogDouble(GetSecTime());
 	m_state->LogPrintf("%s", GetRobotModeString());
+
 }
+
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
 			bool pressedP) {
 	fprintf(stderr, "joystick state change port %d button %d state %d\n", port, button, pressedP);

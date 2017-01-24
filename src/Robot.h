@@ -1,6 +1,7 @@
 #include "lib/CoopMTRobot.h"
 #include "lib/JoystickHelper.h"
 #include "RobotInfo.h"
+#include "stdio.h"
 
 using namespace frc;
 #include "WPILib.h"
@@ -26,6 +27,16 @@ class Robot:
 		public JoystickObserver
 {
 private:
+	enum AutonomousRoutine {
+		GearLeftPeg,
+		GearMiddlePeg,
+		GearRightPeg,
+		FuelBallToBoiler,
+		ShootFuelThenHopper,
+		HopperThenShootFuel,
+		NoAuto
+	};
+
 	LogSpreadsheet *m_logger;
 
 	PowerDistributionPanel *m_pdp;
@@ -62,8 +73,10 @@ private:
 	/**
 	 * Auto
 	 */
-	int m_autoState;
-	uint32_t m_autoTimer;
+	double 						m_autoDirection;
+	int 							m_autoState;
+	AutonomousRoutine m_autoRoutine;
+	uint32_t 					m_autoTimer;
 
 	/**
 	 * Logging
@@ -96,6 +109,13 @@ public:
 	void AutonomousStart(void) override;
 	void AutonomousStop(void) override;
 	void AutonomousContinuous(void) override;
+
+	void GearRtPeg(void);
+	void GearMidPeg(void);
+	void GearLtPeg(void);
+	void FuelToBoiler(void);
+	void HopperThenShoot(void);
+	void ShootThenHopper(void);
 
 	/**
 	 * Defined in Teleop.h

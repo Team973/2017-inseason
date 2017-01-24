@@ -31,11 +31,13 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 		switch (button) {
 		case DualAction::BtnA:
 			if (pressedP) {
+				DBStringPrintf(DB_LINE9, "BtnA");
 				m_shooter->SetFlywheelPow(1.0);
 			}
 			break;
 		case DualAction::BtnB:
 			if (pressedP) {
+				DBStringPrintf(DB_LINE9, "BtnB");
 			}
 			break;
 		case DualAction::BtnX:
@@ -44,6 +46,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::BtnY:
 			if (pressedP) {
+				DBStringPrintf(DB_LINE9, "BtnY");
 			}
 			break;
 		case DualAction::LeftBumper:

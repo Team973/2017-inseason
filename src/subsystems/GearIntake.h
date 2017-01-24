@@ -4,6 +4,7 @@
 #include "Solenoid.h"
 #include "lib/CoopTask.h"
 #include "lib/TaskMgr.h"
+#include "CANTalon.h"
 
 using namespace frc;
 
@@ -14,7 +15,19 @@ namespace frc973{
     public:
       enum GearIntakeState{
         released,
-        grabbed
+        grabbed,
+        floating
+      };
+
+      enum GearPosition{
+        up,
+        down
+      };
+
+      enum Indexer {
+        intaking,
+        holding,
+        indexing
       };
 
       GearIntake(TaskMgr *scheduler);
@@ -22,13 +35,33 @@ namespace frc973{
 
       void GrabGears();
       void ReleaseGears();
+      void FloatGears();
+
+      void SetIntakeUp();
+      void SetIntakeDown();
+
+      void SetIntakingMode();
+      void SetHoldingMode();
+      void SetIndexingMode();
+
+      bool IsGearAligned();
 
       void TaskPeriodic(RobotMode mode) override;
 
     private:
       TaskMgr *m_scheduler;
+
       GearIntakeState m_gearIntakeState;
-      Solenoid *m_gearIntakeSol;
+      GearPosition m_gearPosition;
+      Indexer m_indexer;
+
+      Solenoid *m_gearIntakeGrip;
+      Solenoid *m_gearIntakePos;
+
+      CANTalon *m_leftIndexer;
+      CANTalon *m_rightIndexer;
+
+      bool  m_bannerSensor;
   };
 }
 #endif /*GEAR_INTAKE_SUBSYSTEM_H*/
