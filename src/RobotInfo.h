@@ -25,8 +25,6 @@ constexpr int SHOOTER_PWM = 9;
 
 constexpr int TURRET_PWM = 8;
 
-constexpr int BALL_INTAKE_B_PWM = 4;
-constexpr int BALL_INTAKE_PWM = 5;
 constexpr int GEAR_INTAKE_PWM = 6;
 constexpr int RIGHT_DRIVE_ENCODER_A_DIN = 12;
 constexpr int RIGHT_DRIVE_ENCODER_B_DIN = 13;
@@ -55,6 +53,13 @@ constexpr int FLYWHEEL_REPLICA_CAN_ID = 1;
 
 constexpr int LEFT_INDEXER_CAN_ID = 2;
 constexpr int RIGHT_INDEXER_CAN_ID = 3;
+
+constexpr int LEFT_AGITATOR_CAN_ID = 4;
+constexpr int RIGHT_AGITATOR_CAN_ID = 5;
+
+constexpr int BALL_INTAKE_CAN_ID = 6;
+constexpr int BALL_INTAKE_B_CAN_ID = 7;
+constexpr int BALL_CONVEYOR_CAN_ID = 8;
 
 constexpr int FLYWHEEL_CONTROL_PERIOD_MS = 1;
 /**

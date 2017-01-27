@@ -31,35 +31,41 @@ public:
 	void TaskPeriodic(RobotMode mode);
 	void SetFlywheelPow(double pow);
 	void SetFlywheelStop();
-	void SetFLywheelSpeed(double speed);
+	void SetFlywheelSpeed(double speed);
+
+	void StartAgitatorConveyor();
+	void StopAgitatorConveyor();
 
 	double GetFlywheelRate();
 
 	static constexpr int DEFAULT_FLYWHEEL_SPEED_SETPOINT = 2700;
 
-enum FlywheelState {
-	power,
-	notRunning,
-	speed
-};
+	enum FlywheelState {
+		power,
+		notRunning,
+		speed
+	};
 
-private:
-	TaskMgr *m_scheduler;
+	private:
+		TaskMgr *m_scheduler;
 
-	CANTalon *m_flywheelMotorPrimary;
-	CANTalon *m_flywheelMotorReplica;
+		CANTalon *m_flywheelMotorPrimary;
+		CANTalon *m_flywheelMotorReplica;
 
-	double m_flywheelPow;
+		CANTalon *m_leftAgitator;
+		CANTalon *m_rightAgitator;
 
-	FlywheelState m_flywheelState;
+		CANTalon *m_ballConveyor;
 
-	LogCell *m_flywheelRate;
-	LogCell *m_flywheelPowLog;
-	LogCell *m_flywheelStateLog;
-	LogCell *m_speedSetpoint;
+		double m_flywheelPow;
 
+		FlywheelState m_flywheelState;
 
-};
+		LogCell *m_flywheelRate;
+		LogCell *m_flywheelPowLog;
+		LogCell *m_flywheelStateLog;
+		LogCell *m_speedSetpoint;
+	};
 
 }
 

@@ -10,6 +10,7 @@
 #include "RobotInfo.h"
 #include "lib/CoopTask.h"
 #include "lib/TaskMgr.h"
+#include "CANTalon.h"
 
 using namespace frc;
 
@@ -33,8 +34,8 @@ namespace frc973 {
 
   private:
     TaskMgr *m_scheduler;
-    VictorSP *m_ballIntakeMotor;
-    VictorSP *m_ballIntakeMotorB;
+    CANTalon *m_ballIntakeMotor;
+    CANTalon *m_ballIntakeMotorB;
 
     BallIntakeState m_ballIntakeState;
 
