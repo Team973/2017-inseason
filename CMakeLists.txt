@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 include(${CMAKE_TOOLCHAIN_FILE})
 
 project(greybots-skeleton)
-set(TEAM_NUMBER 973)
+set(TEAM_NUMBER 9973)
 
 # Robot target
 # For quick list of files run
@@ -17,7 +17,7 @@ set(SOURCE_FILES src/Robot.cpp src/lib/CoopMTRobot.cpp
     src/lib/logging/LogSpreadsheet.cpp src/lib/logging/AsynchLogCell.cpp
     src/lib/filters/BullshitFilter.cpp src/lib/filters/CascadingFilter.cpp
     src/lib/filters/DelaySwitch.cpp src/lib/filters/FilterBase.cpp
-    src/lib/SingleThreadTaskMgr.cpp
+    src/lib/SingleThreadTaskMgr.cpp src/lib/SmartPixy.cpp
     src/subsystems/PixyThread.cpp
     src/subsystems/Turret.cpp
     src/lib/filters/MedianFilter.cpp src/lib/filters/MovingAverageFilter.cpp

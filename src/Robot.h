@@ -32,6 +32,7 @@ private:
 	LogSpreadsheet *m_logger;
 
 	PowerDistributionPanel *m_pdp;
+    SPIGyro                *m_spiGyro;
 
 	/**
 	 * Inputs (joysticks, sensors, etc...)

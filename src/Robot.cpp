@@ -7,6 +7,7 @@
 #include "lib/logging/LogSpreadsheet.h"
 #include "lib/WrapDash.h"
 #include "lib/SingleThreadTaskMgr.h"
+#include "lib/SPIGyro.h"
 
 #include "subsystems/Shooter.h"
 #include "subsystems/Drive.h"
@@ -27,6 +28,7 @@ Robot::Robot(void
 	JoystickObserver(),
 	m_logger(nullptr),
 	m_pdp(new PowerDistributionPanel()),
+    m_spiGyro(new SPIGyro()),
 	m_driverJoystick(nullptr),
 	m_operatorJoystick(nullptr),
 	m_tuningJoystick(nullptr),
@@ -74,7 +76,7 @@ Robot::Robot(void
 	m_logger->RegisterCell(m_time);
 	m_logger->RegisterCell(m_buttonPresses);
 
-	m_shooter = new Shooter(this, m_logger);
+	//m_shooter = new Shooter(this, m_logger);
 	m_hanger = new Hanger(this);
     SingleThreadTaskMgr *pixyThread = new SingleThreadTaskMgr(*this, 0.02);
     pixyThread->Start();
@@ -93,6 +95,7 @@ void Robot::AllStateContinuous(void) {
 	m_battery->LogPrintf("%f", DriverStation::GetInstance().GetBatteryVoltage());
 	m_time->LogDouble(GetSecTime());
 	m_state->LogPrintf("%s", GetRobotModeString());
+    printf("Gyro a %f\n", m_spiGyro->GetDegrees());
 }
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
 			bool pressedP) {
