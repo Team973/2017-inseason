@@ -35,10 +35,10 @@ namespace frc973 {
 	}
 
 	void Hanger::SetHangerState(HangerState hangerState){
-		if (hangerState == preHang){
-			m_hangerState = preHang;
+		if (hangerState == preHang || hangerState == armed){
+			m_hangerState = hangerState;
 		}
-		else if (hangerState == autoHang || hangerState == armed){
+		else if (hangerState == autoHang){
 			//Can't escape
 		}
 	}
