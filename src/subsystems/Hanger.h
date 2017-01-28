@@ -21,23 +21,18 @@ public:
 	enum HangerState {
 		autoHang,
 		preHang,
-		postHang
+		armed
 	};
 
 	Hanger(TaskMgr *scheduler);
 	virtual ~Hanger();
 	void TaskPeriodic(RobotMode mode);
 
-	void SetPreHang();
-	void ReleaseAutoHang();
-	void SetPostHang();
+	void SetHangerState(HangerState hangerState);
 
 private:
 	TaskMgr *m_scheduler;
 	CANTalon *m_crankMotor;
-	DoubleSolenoid *m_ptoRelease;
-
-	bool m_hookReleased;
 
 	HangerState m_hangerState;
 };

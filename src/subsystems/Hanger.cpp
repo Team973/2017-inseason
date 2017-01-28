@@ -14,46 +14,51 @@
 #include "CANTalon.h"
 
 namespace frc973 {
+	static double DEFAULT_HANG_POWER = 1.0;
+	static constexpr double HANGER_POS_SETPT = 90.0;
+	static constexpr double ARM_CURRENT_THRESHOLD = 40.0;
+
 	Hanger::Hanger(TaskMgr *scheduler):
 			 CoopTask(),
 			 m_scheduler(scheduler),
 			 m_crankMotor(new CANTalon(HANGER_CAN_ID)),
-			 m_ptoRelease(new DoubleSolenoid(POWER_TAKEOFF_SOL_A, POWER_TAKEOFF_SOL_B)),
-			 m_hookReleased(false),
 			 m_hangerState(HangerState::preHang)
 	{
 		m_scheduler->RegisterTask("Hanger", this, TASK_PERIODIC);
+		m_crankMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+		m_crankMotor->EnableCurrentLimit(true);
+		m_crankMotor->SetCurrentLimit(40);
 	}
 
 	Hanger::~Hanger() {
 		m_scheduler->UnregisterTask(this);
 	}
 
-	static double DEFAULT_HANG_POWER = 1.0;
-
-	void Hanger::SetPreHang(){
-		m_crankMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
-		m_crankMotor->Set(0.0);
-		m_hangerState = HangerState::preHang;
-	}
-
-	void Hanger::ReleaseAutoHang(){
-		if (m_hookReleased != true){
-			m_ptoRelease->Set(DoubleSolenoid::Value::kForward);
-			m_hookReleased = true;
-			m_hangerState = HangerState::autoHang;
+	void Hanger::SetHangerState(HangerState hangerState){
+		if (hangerState == preHang){
+			m_hangerState = preHang;
 		}
-		else {
+		else if (hangerState == autoHang || hangerState == armed){
+			//Can't escape
 		}
-	}
-
-	void Hanger::SetPostHang(){
-		m_crankMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
-		m_crankMotor->Set(DEFAULT_HANG_POWER);
-		m_hangerState = HangerState::postHang;
 	}
 
 	void Hanger::TaskPeriodic(RobotMode mode) {
+		switch (m_hangerState) {
+			case preHang:
+				m_crankMotor->Set(0.0);
+			break;
+			case autoHang:
+				m_crankMotor->Set(DEFAULT_HANG_POWER);
+			break;
+			case armed:
+				m_crankMotor->SetControlMode(CANTalon::ControlMode::kPosition);
+				m_crankMotor->Set(HANGER_POS_SETPT);
+				if (m_crankMotor->GetOutputCurrent() > ARM_CURRENT_THRESHOLD){
+					m_hangerState = HangerState::autoHang;
+				}
+			break;
+		}
 	}
 
 } /* namespace frc973 */

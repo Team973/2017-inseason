@@ -39,6 +39,9 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger) :
 	m_flywheelMotorReplica->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
 	m_flywheelMotorReplica->SetControlMode(CANSpeedController::ControlMode::kFollower);
 	m_flywheelMotorReplica->Set(m_flywheelMotorPrimary->GetDeviceID());
+	m_leftAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
+	m_rightAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
+	m_ballConveyor->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
 	m_scheduler->RegisterTask("Shooter", this, TASK_PERIODIC);
 	m_flywheelRate = new LogCell("FlywheelRate", 32);
 	m_flywheelPowLog = new LogCell("FlywheelPower", 32);
@@ -54,14 +57,12 @@ Shooter::~Shooter() {
 
 void Shooter::SetFlywheelPow(double pow){
 	m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
-	m_flywheelMotorReplica->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
 	m_flywheelState = FlywheelState::power;
 	m_flywheelPow = pow;
 }
 
 void Shooter::SetFlywheelSpeed(double speed){
 	m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kSpeed);
-	m_flywheelMotorReplica->SetControlMode(CANSpeedController::ControlMode::kSpeed);
 	m_flywheelState = FlywheelState::speed;
 }
 
@@ -75,18 +76,12 @@ double Shooter::GetFlywheelRate(){
 }
 
 void Shooter::StartAgitatorConveyor(){
-	m_leftAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
-	m_rightAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
-	m_ballConveyor->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
 	m_leftAgitator->Set(1.0);
 	m_rightAgitator->Set(-1.0);
 	m_ballConveyor->Set(1.0);
 }
 
 void Shooter::StopAgitatorConveyor(){
-	m_leftAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
-	m_rightAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
-	m_ballConveyor->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
 	m_leftAgitator->Set(0.0);
 	m_rightAgitator->Set(0.0);
 	m_ballConveyor->Set(0.0);

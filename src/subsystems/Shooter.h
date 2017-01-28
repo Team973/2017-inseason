@@ -46,25 +46,25 @@ public:
 		speed
 	};
 
-	private:
-		TaskMgr *m_scheduler;
+private:
+	TaskMgr *m_scheduler;
 
-		CANTalon *m_flywheelMotorPrimary;
-		CANTalon *m_flywheelMotorReplica;
+	CANTalon *m_flywheelMotorPrimary;
+	CANTalon *m_flywheelMotorReplica;
 
-		CANTalon *m_leftAgitator;
-		CANTalon *m_rightAgitator;
+	CANTalon *m_leftAgitator;
+	CANTalon *m_rightAgitator;
 
-		CANTalon *m_ballConveyor;
+	CANTalon *m_ballConveyor;
 
-		double m_flywheelPow;
+	double m_flywheelPow;
 
-		FlywheelState m_flywheelState;
+	FlywheelState m_flywheelState;
 
-		LogCell *m_flywheelRate;
-		LogCell *m_flywheelPowLog;
-		LogCell *m_flywheelStateLog;
-		LogCell *m_speedSetpoint;
+	LogCell *m_flywheelRate;
+	LogCell *m_flywheelPowLog;
+	LogCell *m_flywheelStateLog;
+	LogCell *m_speedSetpoint;
 	};
 
 }
