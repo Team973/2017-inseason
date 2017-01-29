@@ -35,27 +35,34 @@ namespace frc973 {
 	}
 
 	void Hanger::SetHangerState(HangerState hangerState){
-		if (hangerState == preHang || hangerState == armed){
-			m_hangerState = hangerState;
-		}
-		else if (hangerState == autoHang){
-			//Can't escape
+		switch (hangerState) {
+			case preHang:
+				m_hangerState = HangerState::preHang;
+				m_crankMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+				break;
+			case autoHang:
+				break;
+			case armed:
+				m_hangerState = HangerState::armed;
+				m_crankMotor->SetControlMode(CANTalon::ControlMode::kSpeed);
+				break;
 		}
 	}
 
 	void Hanger::TaskPeriodic(RobotMode mode) {
+		m_crankCurrent = m_crankMotor->GetOutputCurrent();
 		switch (m_hangerState) {
-			case preHang:
-				m_crankMotor->Set(0.0);
+		case preHang:
+			m_crankMotor->Set(0.0);
 			break;
-			case autoHang:
-				m_crankMotor->Set(DEFAULT_HANG_POWER);
+		case autoHang:
+			m_crankMotor->Set(DEFAULT_HANG_POWER);
 			break;
-			case armed:
-				m_crankMotor->SetControlMode(CANTalon::ControlMode::kPosition);
-				m_crankMotor->Set(HANGER_POS_SETPT);
-				if (m_crankMotor->GetOutputCurrent() > ARM_CURRENT_THRESHOLD){
+		case armed:
+			m_crankMotor->Set(HANGER_POS_SETPT);
+			if (m_crankCurrent > ARM_CURRENT_THRESHOLD) {
 					m_hangerState = HangerState::autoHang;
+					m_crankMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
 				}
 			break;
 		}

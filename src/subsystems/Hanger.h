@@ -29,12 +29,15 @@ public:
 	void TaskPeriodic(RobotMode mode);
 
 	void SetHangerState(HangerState hangerState);
+	void SetAutoHang();
 
 private:
 	TaskMgr *m_scheduler;
 	CANTalon *m_crankMotor;
 
 	HangerState m_hangerState;
+
+	double m_crankCurrent;
 };
 
 } /* namespace frc973 */
