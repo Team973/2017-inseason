@@ -5,11 +5,13 @@
 #include "lib/CoopTask.h"
 #include "lib/TaskMgr.h"
 #include "CANTalon.h"
+#include "lib/WrapDash.h"
 
 using namespace frc;
 
 namespace frc973{
   class TaskMgr;
+  class frc973::DigitalInput;
 
   class GearIntake : public CoopTask{
     public:
@@ -33,16 +35,9 @@ namespace frc973{
       GearIntake(TaskMgr *scheduler);
       virtual ~GearIntake();
 
-      void GrabGears();
-      void ReleaseGears();
-      void FloatGears();
-
-      void SetIntakeUp();
-      void SetIntakeDown();
-
-      void SetIntakingMode();
-      void SetHoldingMode();
-      void SetIndexingMode();
+      void SetGearIntakeState(GearIntakeState gearIntakeState);
+      void SetGearPos(GearPosition gearPosition);
+      void SetIndexerMode(Indexer indexerMode);
 
       bool IsGearAligned();
 
@@ -61,7 +56,8 @@ namespace frc973{
       CANTalon *m_leftIndexer;
       CANTalon *m_rightIndexer;
 
-      bool  m_bannerSensor;
+      DigitalInput  *m_bannerSensor;
+      bool m_sensorValue;
   };
 }
 #endif /*GEAR_INTAKE_SUBSYSTEM_H*/

@@ -28,6 +28,7 @@ constexpr int RIGHT_DRIVE_ENCODER_B_DIN = 13;
 constexpr int LEFT_DRIVE_ENCODER_A_DIN = 24;
 constexpr int LEFT_DRIVE_ENCODER_B_DIN = 25;
 
+constexpr int GEAR_INTAKE_BANNER_DIN = 18;
 /**
  * USB port-out (driver-station)
  */

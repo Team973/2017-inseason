@@ -11,7 +11,7 @@ static constexpr double KEY_DIST = 52.0;
 
     m_shooter->SetFlywheelStop();
 		m_ballIntake->BallIntakeStop();
-		m_gearIntake->GrabGears();
+		m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
 		m_drive->Zero();
 
 		m_autoState = 0;
@@ -58,7 +58,7 @@ static constexpr double KEY_DIST = 52.0;
 				m_autoState++;
 				break;
 			case 2:
-				m_gearIntake->ReleaseGears();
+				m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
 				break;
 		}
 	}
@@ -70,7 +70,7 @@ static constexpr double KEY_DIST = 52.0;
 				m_autoState++;
 				break;
 			case 1:
-				m_gearIntake->ReleaseGears();
+				m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
 				break;
 		}
 	}
@@ -86,7 +86,7 @@ static constexpr double KEY_DIST = 52.0;
 				m_autoState++;
 				break;
 			case 2:
-				m_gearIntake->ReleaseGears();
+				m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
 				break;
 		}
 	}
