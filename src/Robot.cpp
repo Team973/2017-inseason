@@ -12,7 +12,6 @@
 #include "subsystems/Shooter.h"
 #include "subsystems/Drive.h"
 #include "subsystems/Hanger.h"
-#include "subsystems/Turret.h"
 
 #include "CANTalon.h"
 
@@ -29,14 +28,14 @@ Robot::Robot(void
 	m_driverJoystick(nullptr),
 	m_operatorJoystick(nullptr),
 	m_tuningJoystick(nullptr),
-	m_leftDriveTalon(nullptr),
-	m_rightDriveTalon(nullptr),
+	m_leftDriveTalonA(nullptr),
+	m_leftDriveTalonB(nullptr),
+	m_rightDriveTalonA(nullptr),
+	m_rightDriveTalonB(nullptr),
 	m_drive(nullptr),
-	m_shooter(nullptr),
 	m_hanger(nullptr),
 	m_ballIntake(nullptr),
 	m_gearIntake(nullptr),
-	m_turret(nullptr),
 	m_autoRoutine(AutonomousRoutine::NoAuto),
 	m_autoDirection(0.0),
 	m_autoState(0),
@@ -52,14 +51,23 @@ Robot::Robot(void
 	m_tuningJoystick = new ObservableJoystick(2, this, this);
 	fprintf(stderr, "Joystick Initialized...\n");
 
-	m_leftDriveTalon = new frc::Talon(DRIVE_LEFT_PWM);
-	m_rightDriveTalon = new frc::Talon(DRIVE_RIGHT_PWM);
+	m_leftDriveTalonA = new CANTalon(DRIVE_LEFT_A_CAN);
+	m_leftDriveTalonB = new CANTalon(DRIVE_LEFT_B_CAN);
+	m_rightDriveTalonA = new CANTalon(DRIVE_RIGHT_A_CAN);
+	m_rightDriveTalonB = new CANTalon(DRIVE_RIGHT_B_CAN);
+
+    m_leftDriveTalonA->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
+    m_leftDriveTalonB->SetControlMode(CANSpeedController::ControlMode::kFollower);
+    m_leftDriveTalonB->Set(m_leftDriveTalonA->GetDeviceID());
+
+    m_rightDriveTalonB->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
+    m_rightDriveTalonA->SetControlMode(CANSpeedController::ControlMode::kFollower);
+    m_rightDriveTalonA->Set(m_rightDriveTalonB->GetDeviceID());
 	fprintf(stderr, "Initialized drive victors\n");
 
-	m_turretMotor = new CANTalon(SHOOTER_TURRET_CAN_ID);
-
 	m_logger = new LogSpreadsheet(this);
-	m_drive = new Drive(this, m_leftDriveTalon, m_rightDriveTalon,
+	m_drive = new Drive(this,
+            m_leftDriveTalonA, m_rightDriveTalonB,
 			nullptr, nullptr, nullptr, m_logger);
 
 	m_battery = new LogCell("Battery voltage");
@@ -73,25 +81,31 @@ Robot::Robot(void
 	m_logger->RegisterCell(m_time);
 	m_logger->RegisterCell(m_buttonPresses);
 
-	//m_shooter = new Shooter(this, m_logger);
 	m_hanger = new Hanger(this);
 	m_ballIntake = new BallIntake(this);
 	m_gearIntake = new GearIntake(this);
-	m_turret = new Turret(this, m_logger);
 
+	m_airPressureSwitch = new DigitalInput(AIR_PRESSURE_DIN);
+	m_compressorRelay = new Relay(COMPRESSOR_RELAY, Relay::kForwardOnly);
+	m_compressor = new GreyCompressor(m_airPressureSwitch, m_compressorRelay, this);
+
+    fprintf(stderr, "initializing aliance\n");
 	if(DriverStation::GetInstance().GetAlliance() == DriverStation::Alliance::kRed){
 		m_autoDirection = 1.0;
 	}
 	else{
 		m_autoDirection = -1.0;
 	}
+    fprintf(stderr, "done w/ constructor\n");
 }
 
 Robot::~Robot(void) {
 }
 
 void Robot::Initialize(void) {
+    printf("gonna initialize logger\n");
 	m_logger->InitializeTable();
+    printf("initialized\n");
 }
 
 void Robot::AllStateContinuous(void) {

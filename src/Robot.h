@@ -22,6 +22,7 @@ class Debouncer;
 class Hanger;
 class Turret;
 class BallIntake;
+class GreyCompressor;
 
 class Robot:
 		public CoopMTRobot,
@@ -52,9 +53,10 @@ private:
 	/**
 	 * Outputs (motors, solenoids, etc...)
 	 */
-	Talon		*m_leftDriveTalon;
-	Talon		*m_rightDriveTalon;
-	CANTalon *m_turretMotor;
+	CANTalon		*m_leftDriveTalonA;
+	CANTalon		*m_leftDriveTalonB;
+	CANTalon		*m_rightDriveTalonA;
+	CANTalon		*m_rightDriveTalonB;
 	Drive			*m_drive;
 
 	/**
@@ -64,13 +66,13 @@ private:
 	GearIntake	*m_gearIntake;
 	Shooter			*m_shooter;
 	Hanger			*m_hanger;
-	Turret			*m_turret;
 
 	/*
 	 * Compressor
 	 */
 	DigitalInput	*m_airPressureSwitch;
 	Relay			*m_compressorRelay;
+	GreyCompressor  *m_compressor;
 
 	/**
 	 * Auto

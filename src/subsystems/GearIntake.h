@@ -11,7 +11,6 @@ using namespace frc;
 
 namespace frc973{
   class TaskMgr;
-  class frc973::DigitalInput;
 
   class GearIntake : public CoopTask{
     public:
@@ -50,7 +49,7 @@ namespace frc973{
       GearPosition m_gearPosition;
       Indexer m_indexer;
 
-      Solenoid *m_gearIntakeGrip;
+      DoubleSolenoid *m_gearIntakeGrip;
       Solenoid *m_gearIntakePos;
 
       CANTalon *m_leftIndexer;

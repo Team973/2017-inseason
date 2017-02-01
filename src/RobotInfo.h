@@ -16,19 +16,16 @@ namespace frc973 {
 //#define PRACTICE_BOT_PINOUT
 
 /**
- * PWM pin-out
+ * DIN pin-out
  */
-constexpr int DRIVE_RIGHT_PWM = 1;
-constexpr int DRIVE_LEFT_PWM = 0;
-
-constexpr int SHOOTER_PWM = 9;
-
-constexpr int RIGHT_DRIVE_ENCODER_A_DIN = 12;
-constexpr int RIGHT_DRIVE_ENCODER_B_DIN = 13;
-constexpr int LEFT_DRIVE_ENCODER_A_DIN = 24;
-constexpr int LEFT_DRIVE_ENCODER_B_DIN = 25;
-
+constexpr int AIR_PRESSURE_DIN = 0;
 constexpr int GEAR_INTAKE_BANNER_DIN = 18;
+
+/**
+ * Relays
+ */
+constexpr int COMPRESSOR_RELAY = 0;
+
 /**
  * USB port-out (driver-station)
  */
@@ -36,13 +33,18 @@ constexpr int DRIVER_JOYSTICK_PORT = 0;
 constexpr int OPERATOR_JOYSTICK_PORT = 1;
 
 //solenoids
-constexpr int DRIVE_SHIFT_SOL = 0;
-constexpr int GEAR_INTAKE_GRIP = 1;
-constexpr int GEAR_INTAKE_POS = 2;
+constexpr int GEAR_INTAKE_POS = 0;
+constexpr int GEAR_INTAKE_GRIP_OPEN = 1;
+constexpr int GEAR_INTAKE_GRIP_CLOSE = 2;
 
 constexpr int POWER_TAKEOFF_SOL_A = 3;
 constexpr int POWER_TAKEOFF_SOL_B = 4;
 //CANTalon
+constexpr int DRIVE_LEFT_A_CAN = 16;
+constexpr int DRIVE_LEFT_B_CAN = 15;
+constexpr int DRIVE_RIGHT_A_CAN = 1;
+constexpr int DRIVE_RIGHT_B_CAN = 2;
+
 constexpr int SHOOTER_TURRET_CAN_ID = 2;
 constexpr int HANGER_CAN_ID = 4;
 

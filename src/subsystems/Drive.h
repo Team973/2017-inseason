@@ -38,24 +38,14 @@ class Drive :
 		public DriveControlSignalReceiver
 {
 public:
-    Drive(TaskMgr *scheduler, SpeedController *left, SpeedController *right,
+    Drive(TaskMgr *scheduler,
+            SpeedController *left, SpeedController *right,
     		Encoder *leftEncoder, Encoder *rightEncoder,
 			Encoder *gyro,
 			LogSpreadsheet *logger
 			);
 
     virtual ~Drive() {}
-
-    /**
-     * Gearing in drive subsystem can be in one of two states:
-     *  - HighGear, or - LowGear
-     */
-    enum DriveGearing {
-    	HighGear,
-			LowGear
-    };
-
-    void SetGearing(DriveGearing newGearing);
 
     /**
      * Zero encoders and gyroscope.
@@ -143,9 +133,6 @@ private:
 	Encoder *m_rightEncoder;
 
 	Encoder *m_gyro;
-
-	DriveGearing m_gearing;
-	Solenoid *m_gearingSolenoid;
 
 	double m_leftPower;
 	double m_rightPower;

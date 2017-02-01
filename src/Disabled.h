@@ -12,6 +12,7 @@ void Robot::DisabledStop(void) {
 }
 
 void Robot::DisabledContinuous(void) {
+    fprintf(stderr, "***disabled continuous\n");
 }
 
 void Robot::HandleDisabledButton(uint32_t port, uint32_t button,

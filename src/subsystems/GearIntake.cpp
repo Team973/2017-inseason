@@ -10,7 +10,8 @@ namespace frc973{
 
   GearIntake::GearIntake(TaskMgr *scheduler) :
   m_scheduler(scheduler),
-  m_gearIntakeGrip(new Solenoid(GEAR_INTAKE_GRIP)),
+  m_gearIntakeGrip(new DoubleSolenoid(GEAR_INTAKE_GRIP_OPEN,
+                                      GEAR_INTAKE_GRIP_CLOSE)),
   m_gearIntakePos(new Solenoid(GEAR_INTAKE_POS)),
   m_rightIndexer(new CANTalon(RIGHT_INDEXER_CAN_ID)),
   m_leftIndexer(new CANTalon(LEFT_INDEXER_CAN_ID)),
@@ -32,14 +33,15 @@ namespace frc973{
   void GearIntake::SetGearIntakeState(GearIntakeState gearIntakeState){
     switch (gearIntakeState){
       case released:
-        m_gearIntakeGrip->Set(true);
+        m_gearIntakeGrip->Set(DoubleSolenoid::Value::kReverse);
         m_gearIntakeState  = GearIntake::GearIntakeState::released;
         break;
       case grabbed:
-        m_gearIntakeGrip->Set(false);
+        m_gearIntakeGrip->Set(DoubleSolenoid::Value::kForward);
         m_gearIntakeState = GearIntake::GearIntakeState::grabbed;
         break;
       case floating:
+        m_gearIntakeGrip->Set(DoubleSolenoid::Value::kOff);
         m_gearIntakeState = GearIntake::GearIntakeState::floating;
         break;
     }
