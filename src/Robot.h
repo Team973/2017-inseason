@@ -20,7 +20,6 @@ class SPIGyro;
 class PoseManager;
 class Debouncer;
 class Hanger;
-class Turret;
 class BallIntake;
 class GreyCompressor;
 

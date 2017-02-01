@@ -54,14 +54,17 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::LeftBumper:
 			if (pressedP) {
+				m_gearIntake->SetIndexerMode(GearIntake::Indexer::indexing);
 			}
 			break;
 		case DualAction::LeftTrigger:
 			if (pressedP) {
+				m_gearIntake->SetIndexerMode(GearIntake::Indexer::holding);
 			}
 			break;
 		case DualAction::RightBumper:
 			if (pressedP) {
+				m_gearIntake->SetIndexerMode(GearIntake::Indexer::intaking);
 			}
 			break;
 		case DualAction::RightTrigger:
@@ -84,36 +87,44 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 		switch (button) {
 		case DualAction::BtnY:
 			if (pressedP) {
+				m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
 			}
 			break;
 		case DualAction::BtnA:
 			if (pressedP) {
+				m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
 			}
 			break;
 		case DualAction::BtnX:
 			if (pressedP) {
+				m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
 			}
 			break;
 		case DualAction::BtnB:
 			if (pressedP) {
+				m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
 			}
 			break;
 		case DualAction::LeftBumper:
 			if (pressedP) {
+				m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::floating);
 			}
 			break;
 		case DualAction::LeftTrigger:
 			if (pressedP) {
+				m_hanger->SetHangerState(Hanger::HangerState::preHang);
 			}
 			break;
 		case DualAction::RightBumper:
 			if (pressedP) {
+				m_hanger->SetHangerState(Hanger::HangerState::autoHang);
 			}
 			else {
 			}
 			break;
 		case DualAction::RightTrigger:
 			if (pressedP) {
+				m_hanger->SetHangerState(Hanger::HangerState::armed);
 			}
 			break;
 		case DualAction::DPadUpVirtBtn:

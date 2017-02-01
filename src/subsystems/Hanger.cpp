@@ -41,6 +41,7 @@ namespace frc973 {
 				m_crankMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
 				break;
 			case autoHang:
+				m_hangerState = HangerState::autoHang;
 				break;
 			case armed:
 				m_hangerState = HangerState::armed;

@@ -9,17 +9,16 @@ namespace frc973{
   static constexpr double HOLDING_POWER = 0.2;
 
   GearIntake::GearIntake(TaskMgr *scheduler) :
-  m_scheduler(scheduler),
-  m_gearIntakeGrip(new DoubleSolenoid(GEAR_INTAKE_GRIP_OPEN,
-                                      GEAR_INTAKE_GRIP_CLOSE)),
-  m_gearIntakePos(new Solenoid(GEAR_INTAKE_POS)),
-  m_rightIndexer(new CANTalon(RIGHT_INDEXER_CAN_ID)),
-  m_leftIndexer(new CANTalon(LEFT_INDEXER_CAN_ID)),
-  m_indexer(GearIntake::Indexer::holding),
-  m_gearPosition(GearPosition::up),
-  m_gearIntakeState(GearIntake::GearIntakeState::released),
-  m_bannerSensor(new DigitalInput(GEAR_INTAKE_BANNER_DIN)),
-  m_sensorValue(false)
+    m_scheduler(scheduler),
+    m_gearIntakeGrip(new DoubleSolenoid(GEAR_INTAKE_GRIP_OPEN,
+                                        GEAR_INTAKE_GRIP_CLOSE)),
+    m_gearIntakePos(new Solenoid(GEAR_INTAKE_POS)),
+    m_rightIndexer(new CANTalon(RIGHT_INDEXER_CAN_ID)),
+    m_leftIndexer(new CANTalon(LEFT_INDEXER_CAN_ID)),
+    m_indexer(GearIntake::Indexer::holding),
+    m_gearPosition(GearPosition::up),
+    m_gearIntakeState(GearIntake::GearIntakeState::released),
+    m_bannerSensor(new DigitalInput(GEAR_INTAKE_BANNER_DIN))
   {
     m_rightIndexer->SetControlMode(CANTalon::ControlMode::kPercentVbus);
     m_leftIndexer->SetControlMode(CANTalon::ControlMode::kPercentVbus);
@@ -71,7 +70,7 @@ namespace frc973{
         m_rightIndexer->Set(RIGHT_INDEXER_POWER);
         m_leftIndexer->Set(LEFT_INDEXER_POWER);
         m_indexer = GearIntake::Indexer::indexing;
-        if (m_sensorValue == true) {
+        if (m_bannerSensor->Get() == true) {
             m_indexer = GearIntake::Indexer::indexing;
           }
         break;
@@ -84,15 +83,12 @@ namespace frc973{
   }
 
   bool GearIntake::IsGearAligned(){
-    if (m_sensorValue == true) {
-      return true;
-    }
-    else {
-      return false;
-    }
+    return m_bannerSensor->Get();
   }
 
   void GearIntake::TaskPeriodic(RobotMode mode){
-    m_sensorValue = m_bannerSensor->Get();
+    if (m_indexer == Indexer::indexing && m_bannerSensor->Get() == true){
+      this->SetIndexerMode(Indexer::holding);
+    }
   }
 }

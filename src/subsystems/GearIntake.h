@@ -56,7 +56,6 @@ namespace frc973{
       CANTalon *m_rightIndexer;
 
       DigitalInput  *m_bannerSensor;
-      bool m_sensorValue;
   };
 }
 #endif /*GEAR_INTAKE_SUBSYSTEM_H*/
