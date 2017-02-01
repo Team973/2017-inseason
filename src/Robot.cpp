@@ -28,7 +28,7 @@ Robot::Robot(void
 	JoystickObserver(),
 	m_logger(nullptr),
 	m_pdp(new PowerDistributionPanel()),
-    m_spiGyro(new SPIGyro()),
+    m_spiGyro(nullptr), //new SPIGyro()),
 	m_driverJoystick(nullptr),
 	m_operatorJoystick(nullptr),
 	m_tuningJoystick(nullptr),
@@ -95,7 +95,7 @@ void Robot::AllStateContinuous(void) {
 	m_battery->LogPrintf("%f", DriverStation::GetInstance().GetBatteryVoltage());
 	m_time->LogDouble(GetSecTime());
 	m_state->LogPrintf("%s", GetRobotModeString());
-    printf("Gyro a %f\n", m_spiGyro->GetDegrees());
+    //printf("Gyro a %f\n", m_spiGyro->GetDegrees());
 }
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
 			bool pressedP) {

@@ -1,4 +1,5 @@
 #include "lib/SmartPixy.h"
+#include "unistd.h"
 
 namespace frc973 {
 
@@ -53,6 +54,9 @@ int8_t PixyLinkI2C::send(uint8_t *data, uint8_t len) {
 PixyLinkSPI::PixyLinkSPI(SPI::Port port):
         wire(port) {
     wire.SetMSBFirst();
+    wire.SetClockActiveHigh();
+    wire.SetSampleDataOnRising();
+    wire.SetChipSelectActiveLow();
 }
 
 uint16_t PixyLinkSPI::getWord() {
@@ -73,14 +77,17 @@ uint16_t PixyLinkSPI::getWord() {
     w <<= 8;
     c = getByte(cout); // send out data byte
     w |= c;
+    printf(" getWord 0x%x ", w);
 
     return w;
 }
 
-uint8_t PixyLinkSPI::getByte(uint8_t out) {
-    uint8_t in[1];
-    wire.Transaction(&out, in, 1);
-    return in[1];
+uint8_t PixyLinkSPI::getByte(uint8_t send) {
+    uint8_t recv;
+    wire.Transaction(&send, &recv, 1);
+
+    printf(" transaction {%x -> %x} ", send, recv);
+    return recv;
 }
 
 int8_t PixyLinkSPI::send(uint8_t *data, uint8_t len) {
@@ -118,19 +125,21 @@ bool PixyDriver::GetStart() {
     lastw = 0xffff;
 
     int tries = 0;
+    printf("GETTING START:\n");
     while(tries++ < 30) {
         w = link->getWord();
-        printf(" %x ", w);
         if (w == 0 && lastw == 0) {
-            printf("no data... giving up\n");
+            printf("no data... giving up\n\n");
             return false;
         }   
         else if (w == PIXY_START_WORD && lastw == PIXY_START_WORD) {
             blockType = NORMAL_BLOCK;
+            printf("found start block\n\n");
             return true;
         }
         else if (w == PIXY_START_WORD_CC && lastw == PIXY_START_WORD) {
             blockType = CC_BLOCK;
+            printf("found start block\n\n");
             return true;
         }
         else if (w==PIXY_START_WORDX) {
@@ -138,7 +147,7 @@ bool PixyDriver::GetStart() {
         }
         lastw = w; 
     }
-    printf("Tried 30 initializations and it didn't work so giving up\n");
+    printf("Tried 30 initializations and it didn't work so giving up\n\n");
     SetLED(30, 30, 30);
     return false;
 }
@@ -161,6 +170,7 @@ uint16_t PixyDriver::GetBlocks(uint16_t maxBlocks) {
   
     if (!skipStart) {
         if (GetStart() == false)
+            printf(" fail start ");
             return 0;
     }
     else

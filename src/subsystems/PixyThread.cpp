@@ -10,7 +10,7 @@ using namespace Pixy;
 
 PixyThread::PixyThread(TaskMgr *scheduler) :
     m_scheduler(scheduler),
-    m_pixy(new PixyDriver(new PixyLinkSPI(SPI::Port::kOnboardCS3))),
+    m_pixy(new PixyDriver(new PixyLinkI2C(I2C::Port::kOnboard))),
     m_prevReading(0),
     m_offset(0.0),
     m_prevReadingTime(0)
@@ -27,7 +27,7 @@ void PixyThread::TaskPeriodic(RobotMode mode) {
     if (GetMsecTime() - m_prevReadingTime > 80) {
         printf("Recreating link\n");
         delete m_pixy;
-        m_pixy = new PixyDriver(new PixyLinkSPI(SPI::Port::kOnboardCS3));
+        m_pixy = new PixyDriver(new PixyLinkI2C(I2C::Port::kOnboard));
     }
 
     int numBlocks = m_pixy->GetBlocks(4);

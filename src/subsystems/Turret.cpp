@@ -29,6 +29,8 @@ Turret::Turret(TaskMgr *scheduler, LogSpreadsheet *logger, PixyThread *pixyThrea
   	m_turretMotor->SetSensorDirection(true);
   	m_turretMotor->ConfigForwardLimit(80.0 * CLICKS_PER_DEGREE);
   	m_turretMotor->ConfigReverseLimit(-80.0 * CLICKS_PER_DEGREE);
+    m_turretMotor->EnableCurrentLimit(true);
+    m_turretMotor->SetCurrentLimit(10);
     m_greenFlashlight->Set(true);
 }
 Turret::~Turret(){
