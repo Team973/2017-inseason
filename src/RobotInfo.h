@@ -37,8 +37,9 @@ constexpr int OPERATOR_JOYSTICK_PORT = 1;
 
 //solenoids
 constexpr int DRIVE_SHIFT_SOL = 0;
-constexpr int GEAR_INTAKE_GRIP = 1;
-constexpr int GEAR_INTAKE_POS = 2;
+constexpr int GEAR_INTAKE_GRIP_A = 1;
+constexpr int GEAR_INTAKE_GRIP_B = 2;
+constexpr int GEAR_INTAKE_POS = 3;
 
 constexpr int POWER_TAKEOFF_SOL_A = 3;
 constexpr int POWER_TAKEOFF_SOL_B = 4;

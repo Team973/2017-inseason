@@ -28,11 +28,6 @@ void Robot::TeleopContinuous(void) {
       x *= 0.4;
   }
 
-	if (turretManualControl == true) {
-		m_turret->SetTurretPosition(turretControlPos * 50.0);
-	}
-	DBStringPrintf(DB_LINE2, "%d", turretManualControl);
-
   m_drive->ArcadeDrive(y, x);
 }
 
@@ -49,30 +44,34 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 		case DualAction::BtnB:
 			if (pressedP) {
 				DBStringPrintf(DB_LINE9, "BtnB");
+				m_shooter->SetFlywheelPow(0.0);
 			}
 			break;
 		case DualAction::BtnX:
 			if (pressedP) {
-				turretManualControl = false;
-				m_turret->SetTurretAutoTarget();
 				DBStringPrintf(DB_LINE9, "BtnX");
+				m_ballIntake->BallIntakeStart();
 			}
 			break;
 		case DualAction::BtnY:
 			if (pressedP) {
 				DBStringPrintf(DB_LINE9, "BtnY");
+				m_ballIntake->BallIntakeStop();
 			}
 			break;
 		case DualAction::LeftBumper:
 			if (pressedP) {
+				m_gearIntake->SetIndexerMode(GearIntake::Indexer::indexing);
 			}
 			break;
 		case DualAction::LeftTrigger:
 			if (pressedP) {
+				m_gearIntake->SetIndexerMode(GearIntake::Indexer::holding);
 			}
 			break;
 		case DualAction::RightBumper:
 			if (pressedP) {
+				m_gearIntake->SetIndexerMode(GearIntake::Indexer::intaking);
 			}
 			break;
 		case DualAction::RightTrigger:
@@ -93,38 +92,44 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 		switch (button) {
 		case DualAction::BtnY:
 			if (pressedP) {
-				turretManualControl = true;
+				m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
 			}
 			break;
 		case DualAction::BtnA:
 			if (pressedP) {
-				turretManualControl = false;
+				m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
 			}
 			break;
 		case DualAction::BtnX:
 			if (pressedP) {
+				m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
 			}
 			break;
 		case DualAction::BtnB:
 			if (pressedP) {
+				m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
 			}
 			break;
 		case DualAction::LeftBumper:
 			if (pressedP) {
+				m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::floating);
 			}
 			break;
 		case DualAction::LeftTrigger:
 			if (pressedP) {
+				m_hanger->SetHangerState(Hanger::HangerState::preHang);
 			}
 			break;
 		case DualAction::RightBumper:
 			if (pressedP) {
+				m_hanger->SetHangerState(Hanger::HangerState::autoHang);
 			}
 			else {
 			}
 			break;
 		case DualAction::RightTrigger:
 			if (pressedP) {
+				m_hanger->SetHangerState(Hanger::HangerState::armed);
 			}
 			break;
 		case DualAction::DPadUpVirtBtn:
