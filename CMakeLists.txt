@@ -17,6 +17,7 @@ set(SOURCE_FILES src/Robot.cpp src/lib/CoopMTRobot.cpp
     src/lib/logging/LogSpreadsheet.cpp src/lib/logging/AsynchLogCell.cpp
     src/lib/filters/BullshitFilter.cpp src/lib/filters/CascadingFilter.cpp
     src/lib/filters/DelaySwitch.cpp src/lib/filters/FilterBase.cpp
+    src/lib/SingleThreadTaskMgr.cpp
     src/subsystems/BallIntake.cpp
     src/subsystems/GearIntake.cpp
     src/controllers/PIDDrive.cpp

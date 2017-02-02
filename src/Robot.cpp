@@ -6,6 +6,7 @@
 #include "lib/GreyCompressor.h"
 #include "lib/logging/LogSpreadsheet.h"
 #include "lib/WrapDash.h"
+#include "lib/SingleThreadTaskMgr.h"
 
 #include "subsystems/GearIntake.h"
 #include "subsystems/BallIntake.h"
@@ -46,6 +47,8 @@ Robot::Robot(void
 	m_messages(nullptr),
 	m_buttonPresses(nullptr)
 {
+    SingleThreadTaskMgr *sepTask =
+        new SingleThreadTaskMgr(*this, 1.0 / 50.0);
 	m_driverJoystick = new ObservableJoystick(DRIVER_JOYSTICK_PORT, this, this);
 	m_operatorJoystick = new ObservableJoystick(OPERATOR_JOYSTICK_PORT, this, this);
 	m_tuningJoystick = new ObservableJoystick(2, this, this);
@@ -81,14 +84,15 @@ Robot::Robot(void
 	m_logger->RegisterCell(m_time);
 	m_logger->RegisterCell(m_buttonPresses);
 
-	m_shooter = new Shooter(this, m_logger);
-	m_hanger = new Hanger(this);
-	m_ballIntake = new BallIntake(this);
-	m_gearIntake = new GearIntake(this);
+	m_shooter = new Shooter(sepTask, m_logger);
+	m_hanger = new Hanger(sepTask);
+	m_ballIntake = new BallIntake(sepTask);
+	m_gearIntake = new GearIntake(sepTask);
 
 	m_airPressureSwitch = new DigitalInput(AIR_PRESSURE_DIN);
 	m_compressorRelay = new Relay(COMPRESSOR_RELAY, Relay::kForwardOnly);
-	m_compressor = new GreyCompressor(m_airPressureSwitch, m_compressorRelay, this);
+	m_compressor = new GreyCompressor(m_airPressureSwitch, m_compressorRelay, sepTask);
+    sepTask->Start();
 
     fprintf(stderr, "initializing aliance\n");
 	if(DriverStation::GetInstance().GetAlliance() == DriverStation::Alliance::kRed){

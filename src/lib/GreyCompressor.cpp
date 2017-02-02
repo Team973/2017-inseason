@@ -31,7 +31,7 @@ GreyCompressor::GreyCompressor(DigitalInput *pressureSwitch, Relay *compressor,
 	m_compressor = compressor;
 	m_scheduler = scheduler;
 
-	this->m_scheduler->RegisterTask("Shooter", this, TASK_PERIODIC);
+	this->m_scheduler->RegisterTask("Compressor", this, TASK_PERIODIC);
 }
 
 GreyCompressor::~GreyCompressor() {
@@ -47,8 +47,6 @@ void GreyCompressor::Disable() {
 }
 
 void GreyCompressor::TaskPeriodic(RobotMode mode) {
-    printf("pressure switch %d enabled %d\n", m_airPressureSwitch->Get(),
-            m_enabled);
 	if (!m_airPressureSwitch->Get() && m_enabled) {
 		m_compressor->Set(Relay::kOn);
 	}

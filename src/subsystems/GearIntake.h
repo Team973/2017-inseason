@@ -28,7 +28,8 @@ namespace frc973{
       enum Indexer {
         intaking,
         holding,
-        indexing
+        indexing,
+        stop
       };
 
       GearIntake(TaskMgr *scheduler);

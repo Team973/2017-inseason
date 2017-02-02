@@ -33,16 +33,9 @@ constexpr int DRIVER_JOYSTICK_PORT = 0;
 constexpr int OPERATOR_JOYSTICK_PORT = 1;
 
 //solenoids
-<<<<<<< HEAD
 constexpr int GEAR_INTAKE_POS = 0;
 constexpr int GEAR_INTAKE_GRIP_OPEN = 1;
 constexpr int GEAR_INTAKE_GRIP_CLOSE = 2;
-=======
-constexpr int DRIVE_SHIFT_SOL = 0;
-constexpr int GEAR_INTAKE_GRIP_A = 1;
-constexpr int GEAR_INTAKE_GRIP_B = 2;
-constexpr int GEAR_INTAKE_POS = 3;
->>>>>>> 8b27b27ceaa483262d3a3aeae95242800f03d284
 
 constexpr int POWER_TAKEOFF_SOL_A = 3;
 constexpr int POWER_TAKEOFF_SOL_B = 4;
@@ -52,21 +45,20 @@ constexpr int DRIVE_LEFT_B_CAN = 15;
 constexpr int DRIVE_RIGHT_A_CAN = 1;
 constexpr int DRIVE_RIGHT_B_CAN = 2;
 
-constexpr int SHOOTER_TURRET_CAN_ID = 2;
 constexpr int HANGER_CAN_ID = 4;
+constexpr int HANGER_CAN_ID_B = 13;
 
-constexpr int FLYWHEEL_PRIMARY_CAN_ID = 0;
-constexpr int FLYWHEEL_REPLICA_CAN_ID = 1;
+constexpr int FLYWHEEL_PRIMARY_CAN_ID = 3;
+constexpr int FLYWHEEL_REPLICA_CAN_ID = 14;
 
-constexpr int LEFT_INDEXER_CAN_ID = 2;
-constexpr int RIGHT_INDEXER_CAN_ID = 3;
+constexpr int LEFT_INDEXER_CAN_ID = 11;
+constexpr int RIGHT_INDEXER_CAN_ID = 12;
 
-constexpr int LEFT_AGITATOR_CAN_ID = 4;
-constexpr int RIGHT_AGITATOR_CAN_ID = 5;
+constexpr int LEFT_AGITATOR_CAN_ID = 10;
+constexpr int RIGHT_AGITATOR_CAN_ID = 6;
 
-constexpr int BALL_INTAKE_CAN_ID = 6;
-constexpr int BALL_INTAKE_B_CAN_ID = 7;
-constexpr int BALL_CONVEYOR_CAN_ID = 8;
+constexpr int BALL_INTAKE_CAN_ID = 7;
+constexpr int BALL_CONVEYOR_CAN_ID = 5;
 
 constexpr int FLYWHEEL_CONTROL_PERIOD_MS = 1;
 /**

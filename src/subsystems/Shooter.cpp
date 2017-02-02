@@ -36,12 +36,17 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger) :
 	m_flywheelMotorPrimary->SetI(0.0000012);
 	m_flywheelMotorPrimary->SetD(0);
 	m_flywheelMotorPrimary->SetF(1023.0 / 32768.0 * 0.85);
-	m_flywheelMotorReplica->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
-	m_flywheelMotorReplica->SetControlMode(CANSpeedController::ControlMode::kFollower);
+
+	m_flywheelMotorReplica->ConfigNeutralMode(
+            CANSpeedController::NeutralMode::kNeutralMode_Coast);
+	m_flywheelMotorReplica->SetControlMode(
+            CANSpeedController::ControlMode::kFollower);
 	m_flywheelMotorReplica->Set(m_flywheelMotorPrimary->GetDeviceID());
+
 	m_leftAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
 	m_rightAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
 	m_ballConveyor->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
+
 	m_scheduler->RegisterTask("Shooter", this, TASK_PERIODIC);
 	m_flywheelRate = new LogCell("FlywheelRate", 32);
 	m_flywheelPowLog = new LogCell("FlywheelPower", 32);

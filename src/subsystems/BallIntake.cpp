@@ -9,7 +9,6 @@ namespace frc973{
   :
   m_scheduler(scheduler),
   m_ballIntakeState(BallIntakeState::notRunning),
-  m_ballIntakeMotorB(new CANTalon(BALL_INTAKE_B_CAN_ID)),
   m_ballIntakeMotor(new CANTalon(BALL_INTAKE_CAN_ID)),
   m_ballIntakePow(0.0)
   {
@@ -32,30 +31,22 @@ namespace frc973{
     m_ballIntakePow = power;
     m_ballIntakeState = BallIntakeState::manual;
     m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
-    m_ballIntakeMotorB->SetControlMode(CANTalon::ControlMode::kPercentVbus);
     m_ballIntakeMotor->Set(power);
-    m_ballIntakeMotorB->Set(power);
   }
 
   void BallIntake::TaskPeriodic(){
       switch (m_ballIntakeState) {
         case running:
           m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
-          m_ballIntakeMotorB->SetControlMode(CANTalon::ControlMode::kPercentVbus);
           m_ballIntakeMotor->Set(BALL_INTAKE_RUNNING_SPEED);
-          m_ballIntakeMotorB->Set(BALL_INTAKE_RUNNING_SPEED);
         break;
         case notRunning:
           m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
-          m_ballIntakeMotorB->SetControlMode(CANTalon::ControlMode::kPercentVbus);
           m_ballIntakeMotor->Set(0.0);
-          m_ballIntakeMotorB->Set(0.0);
         break;
         case reverse:
           m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
-          m_ballIntakeMotorB->SetControlMode(CANTalon::ControlMode::kPercentVbus);
           m_ballIntakeMotor->Set(BALL_INTAKE_REVERSE_SPEED);
-          m_ballIntakeMotorB->Set(BALL_INTAKE_REVERSE_SPEED);
         break;
         case manual:
         break;

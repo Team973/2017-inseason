@@ -35,7 +35,6 @@ namespace frc973 {
   private:
     TaskMgr *m_scheduler;
     CANTalon *m_ballIntakeMotor;
-    CANTalon *m_ballIntakeMotorB;
 
     BallIntakeState m_ballIntakeState;
 

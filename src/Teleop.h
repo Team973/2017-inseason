@@ -69,6 +69,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::RightTrigger:
 			if (pressedP) {
+                m_gearIntake->SetIndexerMode(GearIntake::Indexer::stop);
 			}
 			break;
 		case DualAction::Start:
