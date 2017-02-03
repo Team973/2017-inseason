@@ -34,7 +34,6 @@ namespace frc973{
 
       enum PickUp {
         seeking,
-        vomiting,
         chewing,
         digesting
       };
@@ -45,14 +44,14 @@ namespace frc973{
       void StartPickupSequence();
       void ReleaseGear();
 
+      void SetGearIntakeState(GearIntakeState gearIntakeState);
+      void SetGearPos(GearPosition gearPosition);
+      void SetIndexerMode(Indexer indexerMode);
       bool IsGearAligned();
 
       void TaskPeriodic(RobotMode mode) override;
 
     private:
-      void SetGearIntakeState(GearIntakeState gearIntakeState);
-      void SetGearPos(GearPosition gearPosition);
-      void SetIndexerMode(Indexer indexerMode);
 
       TaskMgr *m_scheduler;
 

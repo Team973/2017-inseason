@@ -2,26 +2,24 @@
 #include "RobotInfo.h"
 
 namespace frc973{
-  static constexpr double RIGHT_INDEXER_POWER = 0.3;
-  static constexpr double LEFT_INDEXER_POWER = -0.2;
+  static constexpr double RIGHT_INDEXER_POWER = 0.8;
+  static constexpr double LEFT_INDEXER_POWER = -0.4;
 
-  static constexpr double INTAKING_POWER = 0.4;
+  static constexpr double INTAKING_POWER = 1.0;
   static constexpr double HOLDING_POWER = 0.2;
 
   GearIntake::GearIntake(TaskMgr *scheduler) :
     m_scheduler(scheduler),
-    m_gearIntakeGrip(new DoubleSolenoid(GEAR_INTAKE_GRIP_OPEN,
-                                        GEAR_INTAKE_GRIP_CLOSE)),
+    m_gearIntakeGrip(new DoubleSolenoid(GEAR_INTAKE_GRIP_OPEN, GEAR_INTAKE_GRIP_CLOSE)),
     m_gearIntakePos(new Solenoid(GEAR_INTAKE_POS)),
     m_rightIndexer(new CANTalon(RIGHT_INDEXER_CAN_ID)),
     m_leftIndexer(new CANTalon(LEFT_INDEXER_CAN_ID)),
     m_indexer(GearIntake::Indexer::holding),
     m_gearPosition(GearPosition::up),
     m_gearIntakeState(GearIntake::GearIntakeState::released),
-    m_pickUpState(GearIntake::PickUp::seeking),
     m_bannerSensor(new DigitalInput(GEAR_INTAKE_BANNER_DIN)),
     m_gearTimer(0),
-    m_pickUpState(0)
+    m_pickUpState(GearIntake::PickUp::digesting)
   {
     m_rightIndexer->SetControlMode(CANTalon::ControlMode::kPercentVbus);
     m_leftIndexer->SetControlMode(CANTalon::ControlMode::kPercentVbus);
@@ -39,12 +37,12 @@ namespace frc973{
   void GearIntake::SetGearIntakeState(GearIntakeState gearIntakeState){
     switch (gearIntakeState){
       case released:
-        m_gearIntakeGrip->Set(DoubleSolenoid::Value::kForward);
+        m_gearIntakeGrip->Set(DoubleSolenoid::Value::kReverse);
         m_gearIntakeState  = GearIntake::GearIntakeState::released;
         break;
       case grabbed:
+        m_gearIntakeGrip->Set(DoubleSolenoid::Value::kForward);
         m_gearIntakeState = GearIntake::GearIntakeState::grabbed;
-        m_gearIntakeGrip->Set(DoubleSolenoid::Value::kReverse);
         break;
       case floating:
         m_gearIntakeGrip->Set(DoubleSolenoid::Value::kOff);
@@ -56,11 +54,11 @@ namespace frc973{
   void GearIntake::SetGearPos(GearPosition gearPosition){
     switch (gearPosition){
       case up:
+        m_gearIntakePos->Set(true);
         m_gearPosition = GearPosition::up;
-        m_gearIntakePos->Set(false);
         break;
       case down:
-        m_gearIntakePos->Set(true);
+        m_gearIntakePos->Set(false);
         m_gearPosition = GearPosition::down;
         break;
     }
@@ -69,24 +67,22 @@ namespace frc973{
   void GearIntake::SetIndexerMode(Indexer indexerMode){
     switch (indexerMode) {
       case intaking:
-        m_rightIndexer->Set(-INTAKING_POWER);
+        m_rightIndexer->Set(INTAKING_POWER);
         m_leftIndexer->Set(INTAKING_POWER);
         m_indexer = GearIntake::Indexer::intaking;
         break;
       case indexing:
-        m_rightIndexer->Set(-RIGHT_INDEXER_POWER);
+        m_rightIndexer->Set(RIGHT_INDEXER_POWER);
         m_leftIndexer->Set(LEFT_INDEXER_POWER);
         m_indexer = GearIntake::Indexer::indexing;
+        if (m_bannerSensor->Get() == true) {
+            m_indexer = GearIntake::Indexer::holding;
+          }
         break;
       case holding:
-        m_rightIndexer->Set(-HOLDING_POWER);
+        m_rightIndexer->Set(HOLDING_POWER);
         m_leftIndexer->Set(HOLDING_POWER);
         m_indexer = GearIntake::Indexer::holding;
-        break;
-      case stop:
-        m_rightIndexer->Set(0.0);
-        m_leftIndexer->Set(0.0);
-        m_indexer = GearIntake::Indexer::stop;
         break;
     }
   }
@@ -95,41 +91,40 @@ namespace frc973{
     return m_bannerSensor->Get();
   }
 
-  void StartPickupSequence(){
+  void GearIntake::StartPickupSequence(){
     switch(m_pickUpState){
       case seeking:
-        this->SetIndexerMode(Indexer::intaking);
-        this->SetGearPos(GearPosition::down);
-        this->SetGearIntakeState(GearIntakeState::grabbed);
-        m_pickUpState = PickUp::chewing;
+        this->SetIndexerMode(GearIntake::Indexer::intaking);
+        this->SetGearPos(GearIntake::GearPosition::down);
+        this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
+        if (m_rightIndexer->GetOutputCurrent() >= 8 || m_leftIndexer->GetOutputCurrent() >= 8){
+            m_pickUpState = GearIntake::PickUp::chewing;
+          }
         break;
       case chewing:
         m_gearTimer = GetMsecTime();
-        this->SetIndexerMode(Indexer::intaking);
-        m_pickUpState = PickUp::digesting;
+        this->SetIndexerMode(GearIntake::Indexer::intaking);
+        if (GetMsecTime() - m_gearTimer >= 500) {
+            m_pickUpState = GearIntake::PickUp::digesting;
+          }
         break;
       case digesting:
-        this->SetIndexerMode(Indexer::indexing);
-        this->SetGearPos(GearPosition::up);
-        this->SetGearIntakeState(GearIntakeState::grabbed);
-        m_pickUpState = PickUp::vomiting;
-        break;
-      case vomiting:
-        this->SetIndexerMode(Indexer::holding);
-        this->SetIndexerMode(Indexer::holding);
-        this->SetIndexerMode(Indexer::holding);
+        this->SetIndexerMode(GearIntake::Indexer::indexing);
+        this->SetGearPos(GearIntake::GearPosition::up);
+        this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
         break;
     }
   }
 
-  void ReleaseGear(){
-
+  void GearIntake::ReleaseGear(){
+    this->SetIndexerMode(GearIntake::Indexer::stop);
+    this->SetGearPos(GearIntake::GearPosition::up);
+    this->SetGearIntakeState(GearIntake::GearIntakeState::released);
   }
 
   void GearIntake::TaskPeriodic(RobotMode mode){
-    printf("left = %f, right = %f\n", m_leftIndexer->GetOutputCurrent(), m_rightIndexer->GetOutputCurrent());
     if (m_indexer == Indexer::indexing && m_bannerSensor->Get() == true){
       this->SetIndexerMode(Indexer::holding);
-     }
+    }
   }
 }

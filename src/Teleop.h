@@ -130,10 +130,12 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::DPadUpVirtBtn:
 			if (pressedP) {
+				m_gearIntake->StartPickupSequence();
 			}
 			break;
 		case DualAction::DPadDownVirtBtn:
 			if (pressedP) {
+				m_gearIntake->ReleaseGear();
 			}
 			break;
 		case DualAction::DPadLeftVirtBtn:
