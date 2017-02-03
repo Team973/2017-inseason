@@ -32,31 +32,43 @@ namespace frc973{
         stop
       };
 
+      enum PickUp {
+        seeking,
+        vomiting,
+        chewing,
+        digesting
+      };
+
       GearIntake(TaskMgr *scheduler);
       virtual ~GearIntake();
 
-      void SetGearIntakeState(GearIntakeState gearIntakeState);
-      void SetGearPos(GearPosition gearPosition);
-      void SetIndexerMode(Indexer indexerMode);
+      void StartPickupSequence();
+      void ReleaseGear();
 
       bool IsGearAligned();
 
       void TaskPeriodic(RobotMode mode) override;
 
     private:
+      void SetGearIntakeState(GearIntakeState gearIntakeState);
+      void SetGearPos(GearPosition gearPosition);
+      void SetIndexerMode(Indexer indexerMode);
+
       TaskMgr *m_scheduler;
 
       GearIntakeState m_gearIntakeState;
       GearPosition m_gearPosition;
       Indexer m_indexer;
+      PickUp m_pickUpState;
 
       DoubleSolenoid *m_gearIntakeGrip;
       Solenoid *m_gearIntakePos;
+      DigitalInput  *m_bannerSensor;
 
       CANTalon *m_leftIndexer;
       CANTalon *m_rightIndexer;
 
-      DigitalInput  *m_bannerSensor;
+      uint32_t m_gearTimer;
   };
 }
 #endif /*GEAR_INTAKE_SUBSYSTEM_H*/

@@ -18,7 +18,10 @@ namespace frc973{
     m_indexer(GearIntake::Indexer::holding),
     m_gearPosition(GearPosition::up),
     m_gearIntakeState(GearIntake::GearIntakeState::released),
-    m_bannerSensor(new DigitalInput(GEAR_INTAKE_BANNER_DIN))
+    m_pickUpState(GearIntake::PickUp::seeking),
+    m_bannerSensor(new DigitalInput(GEAR_INTAKE_BANNER_DIN)),
+    m_gearTimer(0),
+    m_pickUpState(0)
   {
     m_rightIndexer->SetControlMode(CANTalon::ControlMode::kPercentVbus);
     m_leftIndexer->SetControlMode(CANTalon::ControlMode::kPercentVbus);
@@ -90,6 +93,37 @@ namespace frc973{
 
   bool GearIntake::IsGearAligned(){
     return m_bannerSensor->Get();
+  }
+
+  void StartPickupSequence(){
+    switch(m_pickUpState){
+      case seeking:
+        this->SetIndexerMode(Indexer::intaking);
+        this->SetGearPos(GearPosition::down);
+        this->SetGearIntakeState(GearIntakeState::grabbed);
+        m_pickUpState = PickUp::chewing;
+        break;
+      case chewing:
+        m_gearTimer = GetMsecTime();
+        this->SetIndexerMode(Indexer::intaking);
+        m_pickUpState = PickUp::digesting;
+        break;
+      case digesting:
+        this->SetIndexerMode(Indexer::indexing);
+        this->SetGearPos(GearPosition::up);
+        this->SetGearIntakeState(GearIntakeState::grabbed);
+        m_pickUpState = PickUp::vomiting;
+        break;
+      case vomiting:
+        this->SetIndexerMode(Indexer::holding);
+        this->SetIndexerMode(Indexer::holding);
+        this->SetIndexerMode(Indexer::holding);
+        break;
+    }
+  }
+
+  void ReleaseGear(){
+
   }
 
   void GearIntake::TaskPeriodic(RobotMode mode){
