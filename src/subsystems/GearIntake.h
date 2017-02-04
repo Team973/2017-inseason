@@ -11,7 +11,6 @@ using namespace frc;
 
 namespace frc973{
   class TaskMgr;
-  class frc973::DigitalInput;
 
   class GearIntake : public CoopTask{
     public:
