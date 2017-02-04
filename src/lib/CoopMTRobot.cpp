@@ -16,6 +16,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
+static constexpr bool ENABLE_PROFILING = false;
+
 namespace frc973 {
 
 CoopMTRobot::CoopMTRobot(void
@@ -80,11 +82,37 @@ void CoopMTRobot::TestInit(void) {
 }
 
 void CoopMTRobot::DisabledPeriodic(void) {
+    uint64_t startTime = GetUsecTime();
+
 	this->TaskPrePeriodicAll(this->m_prevMode);
+    if (ENABLE_PROFILING) {
+        printf("DisabledPrePeriodic toook %llu us\n", 
+               GetUsecTime() - startTime);
+    }
+
 	this->DisabledContinuous();
+    if (ENABLE_PROFILING) {
+        printf("DisabledContinuous toook %llu us\n", 
+               GetUsecTime() - startTime);
+    }
+
 	this->AllStateContinuous();
+    if (ENABLE_PROFILING) {
+        printf("DisabledAllStateContinuous toook %llu us\n", 
+               GetUsecTime() - startTime);
+    }
+
 	this->TaskPeriodicAll(this->m_prevMode);
+    if (ENABLE_PROFILING) {
+        printf("DisabledTaskPeriodic toook %llu us\n", 
+               GetUsecTime() - startTime);
+    }
+    
 	this->TaskPostPeriodicAll(this->m_prevMode);
+    if (ENABLE_PROFILING) {
+        printf("DisabledTaskPostPeriodic toook %llu us\n", 
+               GetUsecTime() - startTime);
+    }
 }
 
 void CoopMTRobot::AutonomousPeriodic(void) {

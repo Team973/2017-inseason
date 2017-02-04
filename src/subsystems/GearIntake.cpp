@@ -23,6 +23,7 @@ namespace frc973{
   {
     m_rightIndexer->SetControlMode(CANTalon::ControlMode::kPercentVbus);
     m_leftIndexer->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+    m_leftIndexer->SetInverted(true);
     m_leftIndexer->EnableCurrentLimit(true);
     m_rightIndexer->SetCurrentLimit(8);
     m_rightIndexer->EnableCurrentLimit(true);

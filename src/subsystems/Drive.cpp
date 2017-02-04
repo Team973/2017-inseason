@@ -62,7 +62,7 @@ Drive::Drive(TaskMgr *scheduler,  SpeedController *left, SpeedController *right,
 		m_spreadsheet->RegisterCell(m_rightPowerLog);
 	}
 
-	scheduler->RegisterTask("DriveBase", this, TASK_PERIODIC);
+	scheduler->RegisterTask("Drive", this, TASK_PERIODIC);
 }
 
 void Drive::Zero() {

@@ -19,9 +19,9 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger) :
 		m_flywheelState(FlywheelState::notRunning),
 		m_flywheelMotorPrimary(new CANTalon(FLYWHEEL_PRIMARY_CAN_ID, FLYWHEEL_CONTROL_PERIOD_MS)),
 		m_flywheelMotorReplica(new CANTalon(FLYWHEEL_REPLICA_CAN_ID)),
-		m_leftAgitator(new CANTalon(LEFT_AGITATOR_CAN_ID)),
-		m_rightAgitator(new CANTalon(RIGHT_AGITATOR_CAN_ID)),
-		m_ballConveyor(new CANTalon(BALL_CONVEYOR_CAN_ID)),
+		m_leftAgitator(new CANTalon(LEFT_AGITATOR_CAN_ID, 50)),
+		m_rightAgitator(new CANTalon(RIGHT_AGITATOR_CAN_ID, 50)),
+		m_ballConveyor(new CANTalon(BALL_CONVEYOR_CAN_ID, 50)),
 		m_flywheelPow(0.0)
 {
 	m_flywheelMotorPrimary->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);

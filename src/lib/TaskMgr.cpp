@@ -8,6 +8,9 @@
 #include "string.h"
 #include "TaskMgr.h"
 #include "CoopTask.h"
+#include "WPILib.h"
+
+static constexpr bool ENABLE_PROFILING = false;
 
 namespace frc973 {
 
@@ -68,42 +71,87 @@ bool TaskMgr::UnregisterTask(CoopTask *task) {
 }
 
 void TaskMgr::TaskStartModeAll(RobotMode mode) {
+    uint64_t startTime, endTime;
+
 	for (int i = 0; i < m_numTasks; i++) {
 		if (m_taskFlags[i] & TASK_START_MODE) {
+            startTime = GetUsecTime();
 			m_tasks[i]->TaskStartMode(mode);
+            endTime = GetUsecTime();
+
+            if (ENABLE_PROFILING) {
+                printf("TaskStartMode(%d) for %s took %llu us\n",
+                       mode, m_taskNames[i], endTime - startTime);
+            }
 		}
 	}
 }
 
 void TaskMgr::TaskStopModeAll(RobotMode mode) {
+    uint64_t startTime, endTime;
+
 	//stop tasks in the reverse order they were started in
 	for (int i = m_numTasks - 1; i >= 0; i--) {
 		if (m_taskFlags[i] & TASK_STOP_MODE) {
+            startTime = GetUsecTime();
 			m_tasks[i]->TaskStopMode(mode);
+            endTime = GetUsecTime();
+
+            if (ENABLE_PROFILING) {
+                printf("TaskStopMode(%d) for %s took %llu us\n",
+                       mode, m_taskNames[i], endTime - startTime);
+            }
 		}
 	}
 }
 
 void TaskMgr::TaskPrePeriodicAll(RobotMode mode) {
+    uint64_t startTime, endTime;
+
 	for (int i = 0; i < m_numTasks; i++) {
 		if (m_taskFlags[i] & TASK_PRE_PERIODIC) {
+            startTime = GetUsecTime();
 			m_tasks[i]->TaskPrePeriodic(mode);
+            endTime = GetUsecTime();
+
+            if (ENABLE_PROFILING) {
+                printf("TaskPrePeriodicAll(%d) for %s took %llu us\n",
+                       mode, m_taskNames[i], endTime - startTime);
+            }
 		}
 	}
 }
 
 void TaskMgr::TaskPeriodicAll(RobotMode mode) {
+    uint64_t startTime, endTime;
+
 	for (int i = 0; i < m_numTasks; i++) {
 		if (m_taskFlags[i] & TASK_PERIODIC) {
+            startTime = GetUsecTime();
 			m_tasks[i]->TaskPeriodic(mode);
+            endTime = GetUsecTime();
+
+            if (ENABLE_PROFILING) {
+                printf("TaskPeriodicAll(%d) for %s took %llu us\n",
+                       mode, m_taskNames[i], endTime - startTime);
+            }
 		}
 	}
 }
 
 void TaskMgr::TaskPostPeriodicAll(RobotMode mode) {
+    uint64_t startTime, endTime;
+
 	for (int i = 0; i < m_numTasks; i++) {
 		if (m_taskFlags[i] & TASK_POST_PERIODIC) {
+            startTime = GetUsecTime();
 			m_tasks[i]->TaskPostPeriodic(mode);
+            endTime = GetUsecTime();
+
+            if (ENABLE_PROFILING) {
+                printf("TaskPostPeriodicAll(%d) for %s took %llu us\n",
+                       mode, m_taskNames[i], endTime - startTime);
+            }
 		}
 	}
 }

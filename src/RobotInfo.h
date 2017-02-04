@@ -60,7 +60,8 @@ constexpr int RIGHT_AGITATOR_CAN_ID = 6;
 constexpr int BALL_INTAKE_CAN_ID = 7;
 constexpr int BALL_CONVEYOR_CAN_ID = 5;
 
-constexpr int FLYWHEEL_CONTROL_PERIOD_MS = 1;
+//default rate is 10ms
+constexpr int FLYWHEEL_CONTROL_PERIOD_MS = 5;
 /**
  * Distance (in inches) of the drive per click of the encoder
  */

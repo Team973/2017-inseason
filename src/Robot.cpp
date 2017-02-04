@@ -84,14 +84,14 @@ Robot::Robot(void
 	m_logger->RegisterCell(m_time);
 	m_logger->RegisterCell(m_buttonPresses);
 
-	m_shooter = new Shooter(sepTask, m_logger);
-	m_hanger = new Hanger(sepTask);
-	m_ballIntake = new BallIntake(sepTask);
-	m_gearIntake = new GearIntake(sepTask);
+	m_shooter = new Shooter(this, m_logger);
+	m_hanger = new Hanger(this);
+	m_ballIntake = new BallIntake(this);
+	m_gearIntake = new GearIntake(this);
 
 	m_airPressureSwitch = new DigitalInput(AIR_PRESSURE_DIN);
 	m_compressorRelay = new Relay(COMPRESSOR_RELAY, Relay::kForwardOnly);
-	m_compressor = new GreyCompressor(m_airPressureSwitch, m_compressorRelay, sepTask);
+	m_compressor = new GreyCompressor(m_airPressureSwitch, m_compressorRelay, this);
     sepTask->Start();
 
     fprintf(stderr, "initializing aliance\n");
