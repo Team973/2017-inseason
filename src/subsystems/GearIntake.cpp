@@ -19,7 +19,7 @@ namespace frc973{
     m_gearIntakeState(GearIntake::GearIntakeState::released),
     m_bannerSensor(new DigitalInput(GEAR_INTAKE_BANNER_DIN)),
     m_gearTimer(0),
-    m_pickUpState(GearIntake::PickUp::digesting)
+    m_pickUpState(GearIntake::PickUp::vomiting)
   {
     m_rightIndexer->SetControlMode(CANTalon::ControlMode::kPercentVbus);
     m_leftIndexer->SetControlMode(CANTalon::ControlMode::kPercentVbus);
@@ -92,7 +92,7 @@ namespace frc973{
   }
 
   void GearIntake::StartPickupSequence(){
-
+    m_pickUpState = PickUp::seeking;
   }
 
   void GearIntake::ReleaseGear(){
@@ -126,7 +126,7 @@ namespace frc973{
         this->SetGearPos(GearIntake::GearPosition::up);
         this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
         break;
-      case releasing:
+      case vomiting:
         this->ReleaseGear();
         break;
     }

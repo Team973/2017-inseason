@@ -36,7 +36,7 @@ namespace frc973{
         seeking,
         chewing,
         digesting,
-        releasing
+        vomiting
       };
 
       GearIntake(TaskMgr *scheduler);
