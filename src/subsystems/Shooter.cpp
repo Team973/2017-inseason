@@ -26,8 +26,8 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger) :
 {
 	m_flywheelMotorPrimary->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
 	m_flywheelMotorPrimary->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
-	m_flywheelMotorPrimary->SetClosedLoopOutputDirection(true);
-	m_flywheelMotorPrimary->SetSensorDirection(true);
+	m_flywheelMotorPrimary->SetClosedLoopOutputDirection(false);
+	m_flywheelMotorPrimary->SetSensorDirection(false);
 	m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kSpeed);
 	m_flywheelMotorPrimary->SelectProfileSlot(0);
 	m_flywheelMotorPrimary->ConfigNominalOutputVoltage(0, 0);
@@ -42,6 +42,7 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger) :
 	m_flywheelMotorReplica->SetControlMode(
             CANSpeedController::ControlMode::kFollower);
 	m_flywheelMotorReplica->Set(m_flywheelMotorPrimary->GetDeviceID());
+    m_flywheelMotorReplica->SetClosedLoopOutputDirection(true);
 
 	m_leftAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
 	m_rightAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
@@ -77,13 +78,13 @@ void Shooter::SetFlywheelStop(){
 }
 
 double Shooter::GetFlywheelRate(){
-	return m_flywheelMotorPrimary->GetSpeed();
+    return m_flywheelMotorPrimary->GetSpeed() * (1.0 / 24576.0); 
 }
 
 void Shooter::StartAgitatorConveyor(){
-	m_leftAgitator->Set(1.0);
-	m_rightAgitator->Set(-1.0);
-	m_ballConveyor->Set(1.0);
+	m_leftAgitator->Set(0.8);
+	m_rightAgitator->Set(-0.8);
+	m_ballConveyor->Set(0.8);
 }
 
 void Shooter::StopAgitatorConveyor(){
@@ -97,7 +98,8 @@ void Shooter::TaskPeriodic(RobotMode mode) {
 	m_flywheelPowLog->LogDouble(m_flywheelMotorPrimary->GetOutputVoltage());
 	m_flywheelStateLog->LogPrintf("%d", m_flywheelState);
 	m_speedSetpoint->LogDouble(DEFAULT_FLYWHEEL_SPEED_SETPOINT);
-	switch(m_flywheelState){
+    DBStringPrintf(DB_LINE5,"shooterrate %2.1f", this->GetFlywheelRate());
+    switch(m_flywheelState){
 		case power:
 			m_flywheelMotorPrimary->Set(m_flywheelPow);
 			break;

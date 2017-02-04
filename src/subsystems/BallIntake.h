@@ -30,7 +30,7 @@ namespace frc973 {
     void BallIntakeStart();
     void BallIntakeStop();
     void SetIntakePower(double power);
-    void TaskPeriodic();
+    void TaskPeriodic(RobotMode mode) override;
 
   private:
     TaskMgr *m_scheduler;
@@ -40,8 +40,8 @@ namespace frc973 {
 
     double m_ballIntakePow;
 
-    static constexpr int BALL_INTAKE_RUNNING_SPEED = 1.0;
-    static constexpr int BALL_INTAKE_REVERSE_SPEED = -1.0;
+    static constexpr int BALL_INTAKE_RUNNING_POW = - 1.0;
+    static constexpr int BALL_INTAKE_REVERSE_POW = 1.0;
   };
 }
 

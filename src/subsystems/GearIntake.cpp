@@ -2,11 +2,11 @@
 #include "RobotInfo.h"
 
 namespace frc973{
-  static constexpr double RIGHT_INDEXER_POWER = 0.8;
-  static constexpr double LEFT_INDEXER_POWER = -0.4;
+  static constexpr double RIGHT_INDEXER_POWER = 0.08;
+  static constexpr double LEFT_INDEXER_POWER = -0.04;
 
   static constexpr double INTAKING_POWER = 1.0;
-  static constexpr double HOLDING_POWER = 0.2;
+  static constexpr double HOLDING_POWER = 0.0;
 
   GearIntake::GearIntake(TaskMgr *scheduler) :
     m_scheduler(scheduler),
@@ -17,7 +17,7 @@ namespace frc973{
     m_leftIndexer(new CANTalon(LEFT_INDEXER_CAN_ID)),
     m_indexer(GearIntake::Indexer::holding),
     m_gearPosition(GearPosition::up),
-    m_gearIntakeState(GearIntake::GearIntakeState::released),
+    m_gearIntakeState(GearIntake::GearIntakeState::grabbed),
     m_bannerSensor(new DigitalInput(GEAR_INTAKE_BANNER_DIN)),
     m_gearTimer(0),
     m_pickUpState(GearIntake::PickUp::vomiting)
@@ -25,10 +25,12 @@ namespace frc973{
     m_rightIndexer->SetControlMode(CANTalon::ControlMode::kPercentVbus);
     m_leftIndexer->SetControlMode(CANTalon::ControlMode::kPercentVbus);
     m_leftIndexer->SetInverted(true);
+    m_rightIndexer->SetInverted(false);
     m_leftIndexer->EnableCurrentLimit(true);
-    m_rightIndexer->SetCurrentLimit(8);
+    m_rightIndexer->SetCurrentLimit(40);
     m_rightIndexer->EnableCurrentLimit(true);
-    m_leftIndexer->SetCurrentLimit(8);
+    m_leftIndexer->SetCurrentLimit(40);
+    this->SetGearIntakeState(GearIntakeState::grabbed);
     this->m_scheduler->RegisterTask("GearIntake", this, TASK_PERIODIC);
   }
 
@@ -61,11 +63,11 @@ namespace frc973{
     m_pickUpState = PickUp::manual;
     switch (gearPosition){
       case up:
-        m_gearIntakePos->Set(true);
+        m_gearIntakePos->Set(false);
         m_gearPosition = GearPosition::up;
         break;
       case down:
-        m_gearIntakePos->Set(false);
+        m_gearIntakePos->Set(true);
         m_gearPosition = GearPosition::down;
         break;
     }
@@ -92,6 +94,11 @@ namespace frc973{
         m_leftIndexer->Set(HOLDING_POWER);
         m_indexer = GearIntake::Indexer::holding;
         break;
+       case stop:
+        m_rightIndexer->Set(0.0);
+        m_leftIndexer->Set(0.0);
+        m_indexer = GearIntake::Indexer::stop;
+        break;
     }
   }
 
@@ -105,10 +112,12 @@ namespace frc973{
 
   void GearIntake::ReleaseGear(){
       m_pickUpState = PickUp::vomiting;
+      this->SetIndexerMode(Indexer::stop);
+      this->SetGearIntakeState(GearIntakeState::released);
   }
 
   void GearIntake::TaskPeriodic(RobotMode mode){
-    printf( "state %d curr %2.1f %2.1f\n",
+    DBStringPrintf(DB_LINE3,  "state %d curr %2.1f %2.1f",
                    m_pickUpState, m_leftIndexer->GetOutputCurrent(),
                    m_rightIndexer->GetOutputCurrent());
 
@@ -122,7 +131,7 @@ namespace frc973{
         this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
         m_pickUpState = PickUp:: seeking;
         m_gearTimer = GetMsecTime();
-        if (m_rightIndexer->GetOutputCurrent() >= 8 || m_leftIndexer->GetOutputCurrent() >= 8){
+        if (m_rightIndexer->GetOutputCurrent() >= 30 || m_leftIndexer->GetOutputCurrent() >= 30){
             m_pickUpState = GearIntake::PickUp::chewing;
           }
         break;
