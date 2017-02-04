@@ -92,28 +92,7 @@ namespace frc973{
   }
 
   void GearIntake::StartPickupSequence(){
-    switch(m_pickUpState){
-      case seeking:
-        this->SetIndexerMode(GearIntake::Indexer::intaking);
-        this->SetGearPos(GearIntake::GearPosition::down);
-        this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
-        if (m_rightIndexer->GetOutputCurrent() >= 8 || m_leftIndexer->GetOutputCurrent() >= 8){
-            m_pickUpState = GearIntake::PickUp::chewing;
-          }
-        break;
-      case chewing:
-        m_gearTimer = GetMsecTime();
-        this->SetIndexerMode(GearIntake::Indexer::intaking);
-        if (GetMsecTime() - m_gearTimer >= 500) {
-            m_pickUpState = GearIntake::PickUp::digesting;
-          }
-        break;
-      case digesting:
-        this->SetIndexerMode(GearIntake::Indexer::indexing);
-        this->SetGearPos(GearIntake::GearPosition::up);
-        this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
-        break;
-    }
+
   }
 
   void GearIntake::ReleaseGear(){
@@ -125,6 +104,31 @@ namespace frc973{
   void GearIntake::TaskPeriodic(RobotMode mode){
     if (m_indexer == Indexer::indexing && m_bannerSensor->Get() == true){
       this->SetIndexerMode(Indexer::holding);
+    }
+    switch(m_pickUpState){
+      case seeking:
+        this->SetIndexerMode(GearIntake::Indexer::intaking);
+        this->SetGearPos(GearIntake::GearPosition::down);
+        this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
+        m_gearTimer = GetMsecTime();
+        if (m_rightIndexer->GetOutputCurrent() >= 8 || m_leftIndexer->GetOutputCurrent() >= 8){
+            m_pickUpState = GearIntake::PickUp::chewing;
+          }
+        break;
+      case chewing:
+        this->SetIndexerMode(GearIntake::Indexer::intaking);
+        if (GetMsecTime() - m_gearTimer >= 500) {
+            m_pickUpState = GearIntake::PickUp::digesting;
+          }
+        break;
+      case digesting:
+        this->SetIndexerMode(GearIntake::Indexer::indexing);
+        this->SetGearPos(GearIntake::GearPosition::up);
+        this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
+        break;
+      case releasing:
+        this->ReleaseGear();
+        break;
     }
   }
 }

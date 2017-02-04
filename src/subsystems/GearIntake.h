@@ -35,7 +35,8 @@ namespace frc973{
       enum PickUp {
         seeking,
         chewing,
-        digesting
+        digesting,
+        releasing
       };
 
       GearIntake(TaskMgr *scheduler);
