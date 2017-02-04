@@ -4,6 +4,7 @@
 #include "lib/DriveBase.h"
 #include "RobotInfo.h"
 #include "WPILib.h"
+#include "CANTalon.h"
 using namespace frc;
 
 namespace frc973 {
@@ -39,8 +40,7 @@ class Drive :
 {
 public:
     Drive(TaskMgr *scheduler,
-            SpeedController *left, SpeedController *right,
-    		Encoder *leftEncoder, Encoder *rightEncoder,
+            CANTalon *left, CANTalon *right,
 			Encoder *gyro,
 			LogSpreadsheet *logger
 			);
@@ -137,8 +137,8 @@ private:
 	double m_leftPower;
 	double m_rightPower;
 
-	SpeedController *m_leftMotor;
-	SpeedController *m_rightMotor;
+	CANTalon *m_leftMotor;
+	CANTalon *m_rightMotor;
 
 	/* Filter to apply to left and right motor power so we don't tip or
 	 * break chains.

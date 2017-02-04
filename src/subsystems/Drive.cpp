@@ -15,15 +15,11 @@
 
 namespace frc973 {
 
-Drive::Drive(TaskMgr *scheduler,  SpeedController *left, SpeedController *right,
-			Encoder *leftEncoder,
-            Encoder *rightEncoder,
+Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
 			Encoder *gyro,
 			LogSpreadsheet *logger
 			)
 		 : DriveBase(scheduler, this, this, nullptr)
-		 , m_leftEncoder(leftEncoder)
-		 , m_rightEncoder(rightEncoder)
 		 , m_gyro(gyro)
 		 , m_leftPower(0.0)
 		 , m_rightPower(0.0)
@@ -87,21 +83,19 @@ void Drive::PIDDrive(double dist, double turn, RelativeTo relativity, double pow
 }
 
 double Drive::GetLeftDist() {
-	return -m_leftEncoder->Get() * 24.5 / 360.0 * 0.95;
+	return -m_leftMotor->GetPosition();
 }
 
 double Drive::GetRightDist() {
-	printf("Someone didn't get the memo this robot only has one encoder\n");
-	return -GetLeftDist();
+	return m_rightMotor->GetPosition();
 }
 
 double Drive::GetLeftRate() {
-	return m_leftEncoder->GetRate();
+	return -m_leftMotor->GetSpeed();
 }
 
 double Drive::GetRightRate() {
-	printf("someone didn't get the memo this robot only has one encoder\n");
-	return GetLeftRate();
+	return m_rightMotor->GetSpeed();
 }
 
 double Drive::GetDist() {

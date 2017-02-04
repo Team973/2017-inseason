@@ -59,7 +59,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::LeftTrigger:
 			if (pressedP) {
-				m_gearIntake->SetIndexerMode(GearIntake::Indexer::holding);
+				m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::floating);
 			}
 			break;
 		case DualAction::RightBumper:
@@ -74,13 +74,13 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::Start:
 			if (pressedP) {
-                m_gearIntake->SetGearIntakeState(
-                        GearIntake::GearIntakeState::floating);
+				m_gearIntake->StartPickupSequence();
 			}
 			break;
 		case DualAction::Back:
 			if (pressedP) {
-			}
+				m_gearIntake->ReleaseGear();
+            }
 			break;
 		}
 	}
@@ -108,19 +108,14 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::LeftBumper:
 			if (pressedP) {
-				m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::floating);
 			}
 			break;
 		case DualAction::LeftTrigger:
 			if (pressedP) {
-				m_hanger->SetHangerState(Hanger::HangerState::preHang);
 			}
 			break;
 		case DualAction::RightBumper:
 			if (pressedP) {
-				m_hanger->SetHangerState(Hanger::HangerState::autoHang);
-			}
-			else {
 			}
 			break;
 		case DualAction::RightTrigger:
@@ -130,12 +125,10 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::DPadUpVirtBtn:
 			if (pressedP) {
-				m_gearIntake->StartPickupSequence();
 			}
 			break;
 		case DualAction::DPadDownVirtBtn:
 			if (pressedP) {
-				m_gearIntake->ReleaseGear();
 			}
 			break;
 		case DualAction::DPadLeftVirtBtn:

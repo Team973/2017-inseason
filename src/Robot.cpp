@@ -60,18 +60,19 @@ Robot::Robot(void
 	m_rightDriveTalonB = new CANTalon(DRIVE_RIGHT_B_CAN);
 
     m_leftDriveTalonA->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
+	m_leftDriveTalonA->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
     m_leftDriveTalonB->SetControlMode(CANSpeedController::ControlMode::kFollower);
     m_leftDriveTalonB->Set(m_leftDriveTalonA->GetDeviceID());
 
-    m_rightDriveTalonB->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
-    m_rightDriveTalonA->SetControlMode(CANSpeedController::ControlMode::kFollower);
-    m_rightDriveTalonA->Set(m_rightDriveTalonB->GetDeviceID());
+    m_rightDriveTalonA->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
+	m_rightDriveTalonA->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
+    m_rightDriveTalonB->SetControlMode(CANSpeedController::ControlMode::kFollower);
+    m_rightDriveTalonB->Set(m_rightDriveTalonA->GetDeviceID());
 	fprintf(stderr, "Initialized drive victors\n");
 
 	m_logger = new LogSpreadsheet(this);
 	m_drive = new Drive(this,
-            m_leftDriveTalonA, m_rightDriveTalonB,
-			nullptr, nullptr, nullptr, m_logger);
+            m_leftDriveTalonA, m_rightDriveTalonA, nullptr, m_logger);
 
 	m_battery = new LogCell("Battery voltage");
 
@@ -117,9 +118,7 @@ void Robot::AllStateContinuous(void) {
 	m_battery->LogPrintf("%f", DriverStation::GetInstance().GetBatteryVoltage());
 	m_time->LogDouble(GetSecTime());
 	m_state->LogPrintf("%s", GetRobotModeString());
-
 }
-
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
 			bool pressedP) {
 	fprintf(stderr, "joystick state change port %d button %d state %d\n", port, button, pressedP);
