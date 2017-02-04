@@ -10,7 +10,8 @@ namespace frc973{
 
   GearIntake::GearIntake(TaskMgr *scheduler) :
     m_scheduler(scheduler),
-    m_gearIntakeGrip(new DoubleSolenoid(GEAR_INTAKE_GRIP_OPEN, GEAR_INTAKE_GRIP_CLOSE)),
+    m_gearIntakeRelease(new Solenoid(GEAR_INTAKE_GRIP_OPEN)),
+    m_gearIntakeGrab(new Solenoid(GEAR_INTAKE_GRIP_CLOSE)),
     m_gearIntakePos(new Solenoid(GEAR_INTAKE_POS)),
     m_rightIndexer(new CANTalon(RIGHT_INDEXER_CAN_ID)),
     m_leftIndexer(new CANTalon(LEFT_INDEXER_CAN_ID)),
@@ -39,15 +40,18 @@ namespace frc973{
     m_pickUpState = PickUp::manual;
     switch (gearIntakeState){
       case released:
-        m_gearIntakeGrip->Set(DoubleSolenoid::Value::kForward);
+        m_gearIntakeGrab->Set(true);
+        m_gearIntakeRelease->Set(true);
         m_gearIntakeState  = GearIntake::GearIntakeState::released;
         break;
       case grabbed:
-        m_gearIntakeGrip->Set(DoubleSolenoid::Value::kOff);
+        m_gearIntakeGrab->Set(false);
+        m_gearIntakeRelease->Set(false);
         m_gearIntakeState = GearIntake::GearIntakeState::grabbed;
         break;
       case floating:
-        m_gearIntakeGrip->Set(DoubleSolenoid::Value::kForward);
+        m_gearIntakeGrab->Set(true);
+        m_gearIntakeRelease->Set(false);
         m_gearIntakeState = GearIntake::GearIntakeState::floating;
         break;
     }
@@ -107,7 +111,7 @@ namespace frc973{
     printf( "state %d curr %2.1f %2.1f\n",
                    m_pickUpState, m_leftIndexer->GetOutputCurrent(),
                    m_rightIndexer->GetOutputCurrent());
-                   
+
     if (m_indexer == Indexer::indexing && m_bannerSensor->Get() == true){
       this->SetIndexerMode(Indexer::holding);
     }

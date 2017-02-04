@@ -62,7 +62,8 @@ namespace frc973{
       Indexer m_indexer;
       PickUp m_pickUpState;
 
-      DoubleSolenoid *m_gearIntakeGrip;
+      Solenoid *m_gearIntakeRelease;
+      Solenoid *m_gearIntakeGrab;
       Solenoid *m_gearIntakePos;
       DigitalInput  *m_bannerSensor;
 
