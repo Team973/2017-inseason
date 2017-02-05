@@ -138,7 +138,7 @@ namespace frc973{
       case chewing:
         this->SetIndexerMode(GearIntake::Indexer::intaking);
         m_pickUpState = PickUp:: chewing;
-        if (GetMsecTime() - m_gearTimer >= 500) {
+        if (GetMsecTime() - m_gearTimer >= 100) {
             m_pickUpState = GearIntake::PickUp::digesting;
         }
         break;
