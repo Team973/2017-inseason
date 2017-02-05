@@ -16,11 +16,11 @@
 namespace frc973 {
 
 Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
-			Encoder *gyro,
+			CANTalon *spareTalon,
 			LogSpreadsheet *logger
 			)
 		 : DriveBase(scheduler, this, this, nullptr)
-		 , m_gyro(gyro)
+		 , m_gyro(new PigeonImu(spareTalon))
 		 , m_leftPower(0.0)
 		 , m_rightPower(0.0)
 		 , m_leftMotor(left)
@@ -67,7 +67,7 @@ void Drive::Zero() {
 	if (m_rightEncoder)
 		m_rightEncoder->Reset();
 	if (m_gyro)
-		m_gyro->Reset();
+		m_gyro->SetFusedHeading(0.0);
 	m_leftEncoder->SetDistancePerPulse(1.0);
 }
 
@@ -107,11 +107,14 @@ double Drive::GetRate() {
 }
 
 double Drive::GetAngle() {
-	return -m_gyro->Get();
+	return -m_gyro->GetFusedHeading();
 }
 
 double Drive::GetAngularRate() {
-	return -m_gyro->GetRate();
+	double xyz_dps[3];
+	m_gyro->GetRawGyro(xyz_dps);
+	printf("a %d b %d c %d d %d\n", xyz_dps[0], xyz_dps[1], xyz_dps[2], xyz_dps[3]);
+	return xyz_dps[2];
 }
 
 void Drive::SetDriveOutput(double left, double right) {

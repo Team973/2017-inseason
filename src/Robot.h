@@ -80,7 +80,7 @@ private:
 	int 							m_autoState;
 	AutonomousRoutine m_autoRoutine;
 	uint32_t 					m_autoTimer;
-
+	int						m_speedSetpt;
 	/**
 	 * Logging
 	 */

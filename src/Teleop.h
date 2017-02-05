@@ -128,14 +128,18 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::DPadUpVirtBtn:
 			if (pressedP) {
-		        m_shooter->SetFlywheelSpeed(2000);
+				m_speedSetpt += 50;
             }
 			break;
 		case DualAction::DPadDownVirtBtn:
 			if (pressedP) {
+				m_speedSetpt -= 50;
 			}
 			break;
 		case DualAction::DPadLeftVirtBtn:
+			if (pressedP){
+				m_shooter->SetFlywheelSpeed(m_speedSetpt);
+			}
 			break;
 		case DualAction::DPadRightVirtBtn:
 			break;

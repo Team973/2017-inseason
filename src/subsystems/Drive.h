@@ -5,6 +5,7 @@
 #include "RobotInfo.h"
 #include "WPILib.h"
 #include "CANTalon.h"
+#include "PigeonImu.h"
 using namespace frc;
 
 namespace frc973 {
@@ -41,7 +42,7 @@ class Drive :
 public:
     Drive(TaskMgr *scheduler,
             CANTalon *left, CANTalon *right,
-			Encoder *gyro,
+			CANTalon *spareTalon,
 			LogSpreadsheet *logger
 			);
 
@@ -132,7 +133,7 @@ private:
 	Encoder *m_leftEncoder;
 	Encoder *m_rightEncoder;
 
-	Encoder *m_gyro;
+	PigeonImu *m_gyro;
 
 	double m_leftPower;
 	double m_rightPower;

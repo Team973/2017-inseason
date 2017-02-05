@@ -41,6 +41,7 @@ Robot::Robot(void
 	m_autoDirection(0.0),
 	m_autoState(0),
 	m_autoTimer(0),
+	m_speedSetpt(2000),
 	m_battery(nullptr),
 	m_time(nullptr),
 	m_state(nullptr),
@@ -118,6 +119,7 @@ void Robot::AllStateContinuous(void) {
 	m_battery->LogPrintf("%f", DriverStation::GetInstance().GetBatteryVoltage());
 	m_time->LogDouble(GetSecTime());
 	m_state->LogPrintf("%s", GetRobotModeString());
+	m_drive->GetAngularRate();
 }
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
 			bool pressedP) {
