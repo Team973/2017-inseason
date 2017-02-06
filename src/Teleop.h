@@ -118,12 +118,12 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::RightBumper:
 			if (pressedP) {
-                m_shooter->StopAgitatorConveyor();
+                m_shooter->StopAgitator();
 			}
 			break;
 		case DualAction::RightTrigger:
 			if (pressedP) {
-			    m_shooter->StartAgitatorConveyor();
+			    m_shooter->StartAgitator();
             }
 			break;
 		case DualAction::DPadUpVirtBtn:
@@ -146,6 +146,12 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 		case DualAction::Back:
 			break;
 		case DualAction::Start:
+            if (pressedP) {
+                m_shooter->StartConveyor();
+            }
+            else {
+                m_shooter->StopConveyor();
+            }
 			break;
 		}
 	}

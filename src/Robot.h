@@ -56,6 +56,7 @@ private:
 	CANTalon		*m_leftDriveTalonB;
 	CANTalon		*m_rightDriveTalonA;
 	CANTalon		*m_rightDriveTalonB;
+    CANTalon        *m_leftAgitatorTalon;
 	Drive			*m_drive;
 
 	/**

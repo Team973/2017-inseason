@@ -33,6 +33,7 @@ Robot::Robot(void
 	m_leftDriveTalonB(nullptr),
 	m_rightDriveTalonA(nullptr),
 	m_rightDriveTalonB(nullptr),
+    m_leftAgitatorTalon(nullptr),
 	m_drive(nullptr),
 	m_hanger(nullptr),
 	m_ballIntake(nullptr),
@@ -69,11 +70,13 @@ Robot::Robot(void
 	m_rightDriveTalonA->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
     m_rightDriveTalonB->SetControlMode(CANSpeedController::ControlMode::kFollower);
     m_rightDriveTalonB->Set(m_rightDriveTalonA->GetDeviceID());
-	fprintf(stderr, "Initialized drive victors\n");
+
+    m_leftAgitatorTalon = new CANTalon(LEFT_AGITATOR_CAN_ID, 50);
+	fprintf(stderr, "Initialized drive controllers\n");
 
 	m_logger = new LogSpreadsheet(this);
 	m_drive = new Drive(this,
-            m_leftDriveTalonA, m_rightDriveTalonA, nullptr, m_logger);
+            m_leftDriveTalonA, m_rightDriveTalonA, m_leftAgitatorTalon, m_logger);
 
 	m_battery = new LogCell("Battery voltage");
 
@@ -86,7 +89,7 @@ Robot::Robot(void
 	m_logger->RegisterCell(m_time);
 	m_logger->RegisterCell(m_buttonPresses);
 
-	m_shooter = new Shooter(this, m_logger);
+	m_shooter = new Shooter(this, m_logger, m_leftAgitatorTalon);
 	m_hanger = new Hanger(this);
 	m_ballIntake = new BallIntake(this);
 	m_gearIntake = new GearIntake(this);

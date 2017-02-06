@@ -14,15 +14,17 @@
 
 namespace frc973 {
 
-Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger) :
+Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgitator) :
 		m_scheduler(scheduler),
 		m_flywheelState(FlywheelState::notRunning),
-		m_flywheelMotorPrimary(new CANTalon(FLYWHEEL_PRIMARY_CAN_ID, FLYWHEEL_CONTROL_PERIOD_MS)),
+		m_flywheelMotorPrimary(new CANTalon(FLYWHEEL_PRIMARY_CAN_ID,
+                                            FLYWHEEL_CONTROL_PERIOD_MS)),
 		m_flywheelMotorReplica(new CANTalon(FLYWHEEL_REPLICA_CAN_ID)),
-		m_leftAgitator(new CANTalon(LEFT_AGITATOR_CAN_ID, 50)),
+		m_leftAgitator(leftAgitator),
 		m_rightAgitator(new CANTalon(RIGHT_AGITATOR_CAN_ID, 50)),
 		m_ballConveyor(new CANTalon(BALL_CONVEYOR_CAN_ID, 50)),
-		m_flywheelPow(0.0)
+		m_flywheelPow(0.0),
+        m_flywheelSpeedSetpt(0.0)
 {
 	m_flywheelMotorPrimary->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
 	m_flywheelMotorPrimary->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
@@ -70,6 +72,7 @@ void Shooter::SetFlywheelPow(double pow){
 void Shooter::SetFlywheelSpeed(double speed){
 	m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kSpeed);
 	m_flywheelState = FlywheelState::speed;
+    m_flywheelSpeedSetpt = speed;
 }
 
 void Shooter::SetFlywheelStop(){
@@ -78,19 +81,25 @@ void Shooter::SetFlywheelStop(){
 }
 
 double Shooter::GetFlywheelRate(){
-    return m_flywheelMotorPrimary->GetSpeed() * (1.0 / 24576.0); 
+    return m_flywheelMotorPrimary->GetSpeed();// * (1.0 / 24576.0); 
 }
 
-void Shooter::StartAgitatorConveyor(){
-	m_leftAgitator->Set(0.8);
-	m_rightAgitator->Set(-0.8);
+void Shooter::StartConveyor() {
 	m_ballConveyor->Set(0.8);
 }
 
-void Shooter::StopAgitatorConveyor(){
+void Shooter::StopConveyor() {
+	m_ballConveyor->Set(0.0);
+}
+
+void Shooter::StartAgitator(){
+	m_leftAgitator->Set(0.8);
+	m_rightAgitator->Set(-0.8);
+}
+
+void Shooter::StopAgitator(){
 	m_leftAgitator->Set(0.0);
 	m_rightAgitator->Set(0.0);
-	m_ballConveyor->Set(0.0);
 }
 
 void Shooter::TaskPeriodic(RobotMode mode) {
@@ -98,7 +107,9 @@ void Shooter::TaskPeriodic(RobotMode mode) {
 	m_flywheelPowLog->LogDouble(m_flywheelMotorPrimary->GetOutputVoltage());
 	m_flywheelStateLog->LogPrintf("%d", m_flywheelState);
 	m_speedSetpoint->LogDouble(DEFAULT_FLYWHEEL_SPEED_SETPOINT);
-    DBStringPrintf(DB_LINE5,"shooterrate %2.1f", this->GetFlywheelRate());
+    DBStringPrintf(DB_LINE5,"shooterrate %2.1f", GetFlywheelRate());
+    DBStringPrintf(DB_LINE6,"shootersetpt %2.1f", m_flywheelSpeedSetpt);
+    DBStringPrintf(DB_LINE8,"shooterpos %2.1f", m_flywheelMotorPrimary->GetOutputVoltage());
     switch(m_flywheelState){
 		case power:
 			m_flywheelMotorPrimary->Set(m_flywheelPow);

@@ -26,15 +26,17 @@ class LogSpreadsheet;
 class Shooter : public CoopTask
 {
 public:
-	Shooter(TaskMgr *scheduler, LogSpreadsheet *logger);
+	Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgitator);
 	virtual ~Shooter();
 	void TaskPeriodic(RobotMode mode);
 	void SetFlywheelPow(double pow);
 	void SetFlywheelStop();
 	void SetFlywheelSpeed(double speed);
 
-	void StartAgitatorConveyor();
-	void StopAgitatorConveyor();
+	void StartAgitator();
+	void StopAgitator();
+	void StartConveyor();
+	void StopConveyor();
 
 	double GetFlywheelRate();
 
@@ -58,6 +60,7 @@ private:
 	CANTalon *m_ballConveyor;
 
 	double m_flywheelPow;
+    double m_flywheelSpeedSetpt;
 
 	FlywheelState m_flywheelState;
 
@@ -65,7 +68,7 @@ private:
 	LogCell *m_flywheelPowLog;
 	LogCell *m_flywheelStateLog;
 	LogCell *m_speedSetpoint;
-	};
+};
 
 }
 
