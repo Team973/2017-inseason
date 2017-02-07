@@ -6,11 +6,9 @@ using namespace frc;
 
 namespace frc973 {
 
-using namespace Pixy;
-
 PixyThread::PixyThread(TaskMgr *scheduler) :
     m_scheduler(scheduler),
-    m_pixy(new PixyDriver(new PixyLinkI2C(I2C::Port::kOnboard))),
+    m_pixy(new Pixy()),
     m_prevReading(0),
     m_offset(0.0),
     m_prevReadingTime(0)
@@ -32,7 +30,7 @@ void PixyThread::TaskPeriodic(RobotMode mode) {
     }
     */
 
-    int numBlocks = m_pixy->GetBlocks(4);
+    int numBlocks = m_pixy->getBlocks(4);
     if (numBlocks >= 2){
         if (m_pixy->blocks[0].x <= m_pixy->blocks[1].x ){
             m_prevReading = m_pixy->blocks[0].x;

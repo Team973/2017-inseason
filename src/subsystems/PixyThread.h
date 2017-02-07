@@ -10,9 +10,7 @@ namespace frc973 {
 class CoopTask;
 class TaskMgr;
 
-namespace Pixy {
-    class PixyDriver;
-}
+class Pixy;
 
 class PixyThread : public CoopTask {
 public:
@@ -27,7 +25,7 @@ public:
     bool GetDataFresh();
 private:
     TaskMgr *m_scheduler;
-    Pixy::PixyDriver *m_pixy;
+    Pixy *m_pixy;
     int m_prevReading;
     double m_offset;
     uint32_t m_prevReadingTime;

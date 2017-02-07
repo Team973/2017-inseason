@@ -55,7 +55,7 @@ void Turret::SetTurretAutoTarget(){
 void Turret::TaskPeriodic(RobotMode mode){
   double pixyOffset = m_pixyThread->GetOffset();
   bool pixyDataFresh = m_pixyThread->GetDataFresh();
-  printf("PIXY offset: %f, fresh: %d\n", pixyOffset, pixyDataFresh);
+  //printf("PIXY offset: %f, fresh: %d\n", pixyOffset, pixyDataFresh);
   //printf("blocks %d aveX %d\n", m_pixyI2C->GetBlocks(4), m_prevX);
 }
 
