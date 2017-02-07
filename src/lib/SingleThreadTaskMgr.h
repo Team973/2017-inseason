@@ -30,9 +30,11 @@ public:
 	 * @param stateProvider resource that can be used to determine robot state
 	 * 		(can be drive station)
 	 * @param loopPeriod interval (in seconds) at which to schedule each period
+     * @param warnSlow determines whether to issue a warning when the tasks
+     *      run longer than their alloted time.
 	 */
 	SingleThreadTaskMgr(RobotStateInterface &stateProvider,
-			double loopPeriod = DEFAULT_PERIOD);
+			double loopPeriod = DEFAULT_PERIOD, bool warnSlow = false);
 	virtual ~SingleThreadTaskMgr();
 
 	/**
@@ -129,6 +131,7 @@ private:
 	bool m_actuallyRunning;
 	bool m_shouldBeRunning;
 	RobotStateInterface &m_stateProvider;
+    bool m_warnSlow;
 };
 
 }

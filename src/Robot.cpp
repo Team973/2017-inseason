@@ -78,9 +78,9 @@ Robot::Robot(void
 
 	//m_shooter = new Shooter(this, m_logger);
 	m_hanger = new Hanger(this);
-    SingleThreadTaskMgr *pixyThread = new SingleThreadTaskMgr(*this, 0.02);
-    pixyThread->Start();
+    SingleThreadTaskMgr *pixyThread = new SingleThreadTaskMgr(*this, 0.02, false);
     m_pixyR = new PixyThread(pixyThread);
+    pixyThread->Start();
 	m_turret = new Turret(this, m_logger, m_pixyR);
 }
 

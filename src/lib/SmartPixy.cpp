@@ -5,6 +5,8 @@ namespace frc973 {
 
 namespace Pixy {
 
+#define RUN_LOG_ERR(x) {int ret=x;if((ret)) { fprintf(stderr, "Warning: " #x " returned %d\n", ret);}}
+
 void Block::print() {
     int i, j;
     char buf[128], sig[6], d;
@@ -34,20 +36,20 @@ PixyLinkI2C::PixyLinkI2C(uint8_t address, I2C::Port port):
 }
 
 uint16_t PixyLinkI2C::getWord() {
-    uint8_t c[2];
-    Wire.ReadOnly(2, c);
+    uint8_t c[2] = {0, 0};
+    RUN_LOG_ERR(Wire.ReadOnly(2, c));
     uint16_t w = (c[1] << 8) + c[0];
     return w;
 }
 
 uint8_t PixyLinkI2C::getByte(uint8_t out) {
-    uint8_t c;
-    Wire.ReadOnly(1, &c);
+    uint8_t c = 0;
+    RUN_LOG_ERR(Wire.ReadOnly(1, &c));
     return c;
 }
 
 int8_t PixyLinkI2C::send(uint8_t *data, uint8_t len) {
-    Wire.WriteBulk(data, len);
+    RUN_LOG_ERR(Wire.WriteBulk(data, len));
     return len;
 }
 
@@ -148,7 +150,6 @@ bool PixyDriver::GetStart() {
         lastw = w; 
     }
     printf("Tried 30 initializations and it didn't work so giving up\n\n");
-    SetLED(30, 30, 30);
     return false;
 }
 

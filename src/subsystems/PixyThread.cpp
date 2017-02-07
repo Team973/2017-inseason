@@ -24,11 +24,13 @@ PixyThread::~PixyThread() {
 }
 
 void PixyThread::TaskPeriodic(RobotMode mode) {
+    /*
     if (GetMsecTime() - m_prevReadingTime > 80) {
         printf("Recreating link\n");
         delete m_pixy;
         m_pixy = new PixyDriver(new PixyLinkI2C(I2C::Port::kOnboard));
     }
+    */
 
     int numBlocks = m_pixy->GetBlocks(4);
     if (numBlocks >= 2){

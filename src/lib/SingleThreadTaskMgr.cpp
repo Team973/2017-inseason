@@ -17,13 +17,15 @@ namespace frc973 {
 
 SingleThreadTaskMgr::SingleThreadTaskMgr(
 		RobotStateInterface &stateProvider,
-		double loopPeriod
+		double loopPeriod,
+        bool warnSlow
 	): m_thread()
 	 , m_mutex(PTHREAD_MUTEX_INITIALIZER)
 	 , m_loopPeriodSec(loopPeriod)
 	 , m_actuallyRunning(false)
 	 , m_shouldBeRunning(false)
 	 , m_stateProvider(stateProvider)
+     , m_warnSlow(warnSlow)
 {
 }
 
@@ -113,13 +115,16 @@ void* SingleThreadTaskMgr::RunTasks(void *p) {
 		if (timeSliceUsedUs <= timeSliceAllotedUs) {
 			usleep(timeSliceRemainingUs);
 		}
-		else {
+		else if(inst->m_warnSlow) {
 			printf("TaskRunner (%fhz) taking too long.  "\
 					"Time alloted for period: %llu us; time used %llu us",
 					inst->GetLoopFrequency(), timeSliceAllotedUs,
 					timeSliceUsedUs);
             usleep(0);
 		}
+        else {
+            usleep(0);
+        }
 
 		timeSliceStartTimeUs += timeSliceAllotedUs;
 
