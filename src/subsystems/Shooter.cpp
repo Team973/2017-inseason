@@ -72,7 +72,7 @@ void Shooter::SetFlywheelPow(double pow){
 void Shooter::SetFlywheelSpeed(double speed){
 	m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kSpeed);
 	m_flywheelState = FlywheelState::speed;
-    m_flywheelSpeedSetpt = speed;
+  m_flywheelSpeedSetpt = speed;
 }
 
 void Shooter::SetFlywheelStop(){
@@ -81,20 +81,20 @@ void Shooter::SetFlywheelStop(){
 }
 
 double Shooter::GetFlywheelRate(){
-    return m_flywheelMotorPrimary->GetSpeed();// * (1.0 / 24576.0); 
+    return m_flywheelMotorPrimary->GetSpeed();// * (1.0 / 24576.0);
 }
 
-void Shooter::StartConveyor() {
-	m_ballConveyor->Set(0.8);
+void Shooter::StartConveyor(int speed) {
+	m_ballConveyor->Set(speed);
 }
 
 void Shooter::StopConveyor() {
 	m_ballConveyor->Set(0.0);
 }
 
-void Shooter::StartAgitator(){
-	m_leftAgitator->Set(0.8);
-	m_rightAgitator->Set(-0.8);
+void Shooter::StartAgitator(int speed){
+	m_leftAgitator->Set(speed);
+	m_rightAgitator->Set(-speed);
 }
 
 void Shooter::StopAgitator(){
@@ -118,7 +118,7 @@ void Shooter::TaskPeriodic(RobotMode mode) {
 			m_flywheelMotorPrimary->Set(0.0);
 			break;
 		case speed:
-			m_flywheelMotorPrimary->Set(DEFAULT_FLYWHEEL_SPEED_SETPOINT);
+			m_flywheelMotorPrimary->Set(m_flywheelSpeedSetpt);
 			break;
 	}
 }

@@ -82,6 +82,8 @@ private:
 	AutonomousRoutine m_autoRoutine;
 	uint32_t 					m_autoTimer;
 	int						m_speedSetpt;
+	int						m_flailSetpt;
+	int						m_conveyorSetpt;
 	/**
 	 * Logging
 	 */

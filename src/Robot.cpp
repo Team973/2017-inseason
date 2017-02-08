@@ -43,6 +43,8 @@ Robot::Robot(void
 	m_autoState(0),
 	m_autoTimer(0),
 	m_speedSetpt(2000),
+	m_flailSetpt(0.5),
+	m_conveyorSetpt(0.5),
 	m_battery(nullptr),
 	m_time(nullptr),
 	m_state(nullptr),
