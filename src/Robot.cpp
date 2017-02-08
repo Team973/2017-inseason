@@ -105,7 +105,7 @@ void Robot::AllStateContinuous(void) {
 	m_time->LogDouble(GetSecTime());
 	m_state->LogPrintf("%s", GetRobotModeString());
 
-    DBStringPrintf(DB_LINE7, 
+    DBStringPrintf(DB_LINE9, 
                    "pixy o%2.2lf %d",
                    m_pixyR->GetOffset(),
                    m_pixyR->GetDataFresh());
