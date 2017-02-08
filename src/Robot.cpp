@@ -32,8 +32,6 @@ Robot::Robot(void
 	m_autoTimer(0),
 	m_speedSetpt(2000)
 {
-    SingleThreadTaskMgr *sepTask =
-        new SingleThreadTaskMgr(*this, 1.0 / 50.0);
 	m_driverJoystick = new ObservableJoystick(DRIVER_JOYSTICK_PORT, this, this);
 	m_operatorJoystick = new ObservableJoystick(OPERATOR_JOYSTICK_PORT, this, this);
 	m_tuningJoystick = new ObservableJoystick(2, this, this);
@@ -80,7 +78,6 @@ Robot::Robot(void
 	m_airPressureSwitch = new DigitalInput(AIR_PRESSURE_DIN);
 	m_compressorRelay = new Relay(COMPRESSOR_RELAY, Relay::kForwardOnly);
 	m_compressor = new GreyCompressor(m_airPressureSwitch, m_compressorRelay, this);
-    sepTask->Start();
 
     fprintf(stderr, "initializing aliance\n");
 	if(DriverStation::GetInstance().GetAlliance() == DriverStation::Alliance::kRed){
@@ -91,9 +88,7 @@ Robot::Robot(void
 	}
     fprintf(stderr, "done w/ constructor\n");
 
-    SingleThreadTaskMgr *pixyThread = new SingleThreadTaskMgr(*this, 0.02, false);
-    m_pixyR = new PixyThread(pixyThread);
-    pixyThread->Start();
+    m_pixyR = new PixyThread(*this);
 }
 
 Robot::~Robot(void) {

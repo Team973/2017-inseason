@@ -67,8 +67,9 @@ bool Pixy::getStart()
 		  getByte(); // resync
 		}
 		lastw = w;
-        if (i++ % 100 == 0) {
+        if (i++ == 100) {
             printf("done 100 iterations waiting for the start\n");
+            i = 0;
         }
 	}
 
