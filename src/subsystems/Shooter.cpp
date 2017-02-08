@@ -84,7 +84,7 @@ double Shooter::GetFlywheelRate(){
     return m_flywheelMotorPrimary->GetSpeed();// * (1.0 / 24576.0);
 }
 
-void Shooter::StartConveyor(int speed) {
+void Shooter::StartConveyor(double speed) {
 	m_ballConveyor->Set(speed);
 }
 
@@ -92,7 +92,7 @@ void Shooter::StopConveyor() {
 	m_ballConveyor->Set(0.0);
 }
 
-void Shooter::StartAgitator(int speed){
+void Shooter::StartAgitator(double speed){
 	m_leftAgitator->Set(speed);
 	m_rightAgitator->Set(-speed);
 }

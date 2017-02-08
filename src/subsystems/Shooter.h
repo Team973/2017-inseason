@@ -33,9 +33,9 @@ public:
 	void SetFlywheelStop();
 	void SetFlywheelSpeed(double speed);
 
-	void StartAgitator(int speed);
+	void StartAgitator(double speed);
 	void StopAgitator();
-	void StartConveyor(int speed);
+	void StartConveyor(double speed);
 	void StopConveyor();
 
 	double GetFlywheelRate();

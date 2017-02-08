@@ -108,12 +108,12 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::LeftBumper:
 			if (pressedP) {
-                m_ballIntake->BallIntakeStop();
+				m_conveyorSetpt -= 0.1;
 			}
 			break;
 		case DualAction::LeftTrigger:
 			if (pressedP) {
-                m_ballIntake->BallIntakeStart();
+				m_conveyorSetpt += 0.1;
 			}
 			break;
 		case DualAction::RightBumper:
@@ -123,7 +123,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::RightTrigger:
 			if (pressedP) {
-					m_conveyorSetpt += 0.1;
+				m_flailSetpt -= 0.1;
         }
 			break;
 		case DualAction::DPadUpVirtBtn:
