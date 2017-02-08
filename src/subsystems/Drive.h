@@ -3,6 +3,8 @@
 #include "lib/DriveBase.h"
 #include "RobotInfo.h"
 #include "WPILib.h"
+#include "CANTalon.h"
+#include "PigeonImu.h"
 using namespace frc;
 
 namespace frc973 {
@@ -37,24 +39,13 @@ class Drive :
 		public DriveControlSignalReceiver
 {
 public:
-    Drive(TaskMgr *scheduler, SpeedController *left, SpeedController *right,
-    		Encoder *leftEncoder, Encoder *rightEncoder,
-			Encoder *gyro,
+    Drive(TaskMgr *scheduler,
+            CANTalon *left, CANTalon *right,
+			CANTalon *spareTalon,
 			LogSpreadsheet *logger
 			);
 
     virtual ~Drive() {}
-
-    /**
-     * Gearing in drive subsystem can be in one of two states:
-     *  - HighGear, or - LowGear
-     */
-    enum DriveGearing {
-    	HighGear,
-			LowGear
-    };
-
-    void SetGearing(DriveGearing newGearing);
 
     /**
      * Zero encoders and gyroscope.
@@ -94,7 +85,7 @@ public:
      * @param dist Distance in inches to go
      * @param relativity What is that distance metric relative to?
      */
-    void PIDDrive(double dist, RelativeTo relativity, double powerCap = 1.0);
+    void PIDDrive(double dist, double turn, RelativeTo relativity, double powerCap);
 
     /**
      * Set a target turn to be achieved by pid
@@ -141,16 +132,13 @@ private:
 	Encoder *m_leftEncoder;
 	Encoder *m_rightEncoder;
 
-	Encoder *m_gyro;
-
-	DriveGearing m_gearing;
-	Solenoid *m_gearingSolenoid;
+	PigeonImu *m_gyro;
 
 	double m_leftPower;
 	double m_rightPower;
 
-	SpeedController *m_leftMotor;
-	SpeedController *m_rightMotor;
+	CANTalon *m_leftMotor;
+	CANTalon *m_rightMotor;
 
 	/* Filter to apply to left and right motor power so we don't tip or
 	 * break chains.

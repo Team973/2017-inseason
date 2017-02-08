@@ -15,23 +15,15 @@ namespace frc973 {
 //#define PRACTICE_BOT_PINOUT
 
 /**
- * PWM pin-out
+ * DIN pin-out
  */
-constexpr int DRIVE_RIGHT_PWM = 1;
-constexpr int DRIVE_LEFT_PWM = 0;
+constexpr int AIR_PRESSURE_DIN = 0;
+constexpr int GEAR_INTAKE_BANNER_DIN = 18;
 
-constexpr int SHOOTER_PWM = 9;
-
-constexpr int TURRET_PWM = 8;
-
-constexpr int BALL_INTAKE_B_PWM = 4;
-constexpr int BALL_INTAKE_PWM = 5;
-constexpr int GEAR_INTAKE_PWM = 6;
-//constexpr int UNUSED_PWM = 4;
-constexpr int RIGHT_DRIVE_ENCODER_A_DIN = 12;
-constexpr int RIGHT_DRIVE_ENCODER_B_DIN = 13;
-constexpr int LEFT_DRIVE_ENCODER_A_DIN = 24;
-constexpr int LEFT_DRIVE_ENCODER_B_DIN = 25;
+/**
+ * Relays
+ */
+constexpr int COMPRESSOR_RELAY = 0;
 
 /**
  * USB port-out (driver-station)
@@ -40,15 +32,35 @@ constexpr int DRIVER_JOYSTICK_PORT = 0;
 constexpr int OPERATOR_JOYSTICK_PORT = 1;
 
 //solenoids
-constexpr int DRIVE_SHIFT_SOL = 0;
+constexpr int GEAR_INTAKE_POS = 0;
+constexpr int GEAR_INTAKE_GRIP_OPEN = 1;
+constexpr int GEAR_INTAKE_GRIP_CLOSE = 2;
 
+constexpr int POWER_TAKEOFF_SOL_A = 3;
+constexpr int POWER_TAKEOFF_SOL_B = 4;
 //CANTalon
-constexpr int SHOOTER_TURRET_CAN_ID = 2;
+constexpr int DRIVE_LEFT_A_CAN = 16;
+constexpr int DRIVE_LEFT_B_CAN = 15;
+constexpr int DRIVE_RIGHT_A_CAN = 1;
+constexpr int DRIVE_RIGHT_B_CAN = 2;
 
-constexpr int FLYWHEEL_PRIMARY_CAN_ID = 0;
-constexpr int FLYWHEEL_REPLICA_CAN_ID = 1;
+constexpr int HANGER_CAN_ID = 4;
+constexpr int HANGER_CAN_ID_B = 13;
 
-constexpr int FLYWHEEL_CONTROL_PERIOD_MS = 1;
+constexpr int FLYWHEEL_PRIMARY_CAN_ID = 14;
+constexpr int FLYWHEEL_REPLICA_CAN_ID = 3;
+
+constexpr int LEFT_INDEXER_CAN_ID = 12;
+constexpr int RIGHT_INDEXER_CAN_ID = 11;
+
+constexpr int LEFT_AGITATOR_CAN_ID = 10;
+constexpr int RIGHT_AGITATOR_CAN_ID = 6;
+
+constexpr int BALL_INTAKE_CAN_ID = 7;
+constexpr int BALL_CONVEYOR_CAN_ID = 5;
+
+//default rate is 10ms
+constexpr int FLYWHEEL_CONTROL_PERIOD_MS = 5;
 /**
  * Distance (in inches) of the drive per click of the encoder
  */

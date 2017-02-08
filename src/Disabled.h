@@ -12,6 +12,7 @@ void Robot::DisabledStop(void) {
 }
 
 void Robot::DisabledContinuous(void) {
+    fprintf(stderr, "***disabled continuous\n");
 }
 
 void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
@@ -21,26 +22,38 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
 		switch (button) {
 		case DualAction::BtnA:
 			if (pressedP) {
+        m_autoRoutine = AutonomousRoutine::GearLeftPeg;
+        DBStringPrintf(DBStringPos::DB_LINE7, "Gear to LeftPeg Auto");
 			}
 			break;
 		case DualAction::BtnB:
 			if (pressedP) {
+        m_autoRoutine = AutonomousRoutine::GearMiddlePeg;
+        DBStringPrintf(DBStringPos::DB_LINE7, "Gear to Middle Peg Auto");
 			}
 			break;
 		case DualAction::BtnX:
 			if (pressedP) {
+        m_autoRoutine = AutonomousRoutine::GearRightPeg;
+        DBStringPrintf(DBStringPos::DB_LINE7, "Gear to Right Peg Auto");
 			}
 			break;
 		case DualAction::BtnY:
 			if (pressedP) {
+        m_autoRoutine = AutonomousRoutine::FuelBallToBoiler;
+        DBStringPrintf(DBStringPos::DB_LINE7, "FuelBallToBoiler Auto");
 			}
 			break;
 		case DualAction::RightBumper:
 			if (pressedP) {
+        m_autoRoutine = AutonomousRoutine::HopperThenShootFuel;
+        DBStringPrintf(DBStringPos::DB_LINE7, "Go to HopperThenShootFuel Auto");
 			}
 			break;
 		case DualAction::DPadUpVirtBtn:
 			if (pressedP) {
+        m_autoRoutine = AutonomousRoutine::ShootFuelThenHopper;
+        DBStringPrintf(DBStringPos::DB_LINE7, "ShootFuel, GoToHopper, ShootFuel Auto");
 			}
 			break;
 		case DualAction::DPadRightVirtBtn:

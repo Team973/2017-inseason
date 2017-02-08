@@ -19,7 +19,9 @@ set(SOURCE_FILES src/Robot.cpp src/lib/CoopMTRobot.cpp
     src/lib/filters/DelaySwitch.cpp src/lib/filters/FilterBase.cpp
     src/lib/SingleThreadTaskMgr.cpp src/lib/SmartPixy.cpp
     src/subsystems/PixyThread.cpp
-    src/subsystems/Turret.cpp
+    src/subsystems/BallIntake.cpp
+    src/subsystems/GearIntake.cpp
+    src/controllers/PIDDrive.cpp
     src/lib/filters/MedianFilter.cpp src/lib/filters/MovingAverageFilter.cpp
     src/lib/filters/PID.cpp src/lib/filters/RampedOutput.cpp
     src/controllers/ArcadeDriveController.cpp

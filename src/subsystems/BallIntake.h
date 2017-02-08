@@ -1,0 +1,48 @@
+/**
+  * BallIntake.h and .cpp
+  * Created on January 10,2017
+  */
+
+#ifndef SRC_SUBSYSTEMS_BALL_INTAKE_H
+#define SRC_SUBSYSTEMS_BALL_INTAKE_H
+
+#include "WPILib.h"
+#include "RobotInfo.h"
+#include "lib/CoopTask.h"
+#include "lib/TaskMgr.h"
+#include "CANTalon.h"
+
+using namespace frc;
+
+namespace frc973 {
+  class TaskMgr;
+
+  class BallIntake : public CoopTask{
+  public:
+    enum BallIntakeState{
+      running,
+      notRunning,
+      manual,
+      reverse
+    };
+    BallIntake(TaskMgr *scheduler);
+    virtual ~BallIntake();
+    void BallIntakeStart();
+    void BallIntakeStop();
+    void SetIntakePower(double power);
+    void TaskPeriodic(RobotMode mode) override;
+
+  private:
+    TaskMgr *m_scheduler;
+    CANTalon *m_ballIntakeMotor;
+
+    BallIntakeState m_ballIntakeState;
+
+    double m_ballIntakePow;
+
+    static constexpr int BALL_INTAKE_RUNNING_POW = - 1.0;
+    static constexpr int BALL_INTAKE_REVERSE_POW = 1.0;
+  };
+}
+
+#endif /*SRC_SUBSYSTEMS_BALL_INTAKE_H*/

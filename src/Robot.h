@@ -3,6 +3,7 @@
 #include "lib/CoopMTRobot.h"
 #include "lib/JoystickHelper.h"
 #include "RobotInfo.h"
+#include "stdio.h"
 
 using namespace frc;
 #include "WPILib.h"
@@ -13,7 +14,7 @@ namespace frc973 {
 class LogSpreadsheet;
 class SingleThreadTaskMgr;
 class Drive;
-class Intake;
+class GearIntake;
 class Shooter;
 class GreyCompressor;
 class LogCell;
@@ -21,14 +22,25 @@ class SPIGyro;
 class PoseManager;
 class Debouncer;
 class Hanger;
-class Turret;
 class PixyThread;
+class BallIntake;
+class GreyCompressor;
 
 class Robot:
 		public CoopMTRobot,
 		public JoystickObserver
 {
 private:
+	enum AutonomousRoutine {
+		GearLeftPeg,
+		GearMiddlePeg,
+		GearRightPeg,
+		FuelBallToBoiler,
+		ShootFuelThenHopper,
+		HopperThenShootFuel,
+		NoAuto
+	};
+
 	LogSpreadsheet *m_logger;
 
 	PowerDistributionPanel *m_pdp;
@@ -44,31 +56,36 @@ private:
 	/**
 	 * Outputs (motors, solenoids, etc...)
 	 */
-	Talon		*m_leftDriveTalon;
-	Talon		*m_rightDriveTalon;
-	CANTalon *m_turretMotor;
+	CANTalon		*m_leftDriveTalonA;
+	CANTalon		*m_leftDriveTalonB;
+	CANTalon		*m_rightDriveTalonA;
+	CANTalon		*m_rightDriveTalonB;
+    CANTalon        *m_leftAgitatorTalon;
 	Drive			*m_drive;
 
 	/**
 	 * Subsystems
 	 */
-	Shooter			*m_shooter;
 	Hanger			*m_hanger;
-	Turret			*m_turret;
+	BallIntake			*m_ballIntake;
+	GearIntake	*m_gearIntake;
+	Shooter			*m_shooter;
 
 	/*
 	 * Compressor
 	 */
 	DigitalInput	*m_airPressureSwitch;
 	Relay			*m_compressorRelay;
+	GreyCompressor  *m_compressor;
 
 	/**
 	 * Auto
 	 */
-    double m_autoDirection;
-	int m_autoState;
-	uint32_t m_autoTimer;
-
+	double                  m_autoDirection;
+	int                     m_autoState;
+	AutonomousRoutine       m_autoRoutine;
+	uint32_t                m_autoTimer;
+	int                     m_speedSetpt;
 	/**
 	 * Logging
 	 */
@@ -102,6 +119,13 @@ public:
 	void AutonomousStart(void) override;
 	void AutonomousStop(void) override;
 	void AutonomousContinuous(void) override;
+
+	void GearRtPeg(void);
+	void GearMidPeg(void);
+	void GearLtPeg(void);
+	void FuelToBoiler(void);
+	void HopperThenShoot(void);
+	void ShootThenHopper(void);
 
 	/**
 	 * Defined in Teleop.h
