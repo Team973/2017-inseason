@@ -31,6 +31,7 @@ constexpr int COMPRESSOR_RELAY = 0;
  */
 constexpr int DRIVER_JOYSTICK_PORT = 0;
 constexpr int OPERATOR_JOYSTICK_PORT = 1;
+constexpr int TUNING_JOYSTICK_PORT = 2;
 
 //solenoids
 constexpr int GEAR_INTAKE_POS = 0;

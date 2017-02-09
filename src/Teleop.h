@@ -31,29 +31,24 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 		switch (button) {
 		case DualAction::BtnA:
 			if (pressedP) {
-                m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
+				m_shooter->SetFlywheelSpeed(m_speedSetpt);
 			}
 			break;
 		case DualAction::BtnB:
 			if (pressedP) {
-                m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
 			}
 			break;
 		case DualAction::BtnX:
 			if (pressedP) {
-                m_gearIntake->SetGearIntakeState(
-                        GearIntake::GearIntakeState::released);
 			}
 			break;
 		case DualAction::BtnY:
 			if (pressedP) {
-                m_gearIntake->SetGearIntakeState(
-                        GearIntake::GearIntakeState::grabbed);
+				m_gearIntake->SetIndexerMode(GearIntake::Indexer::indexing);
 			}
 			break;
 		case DualAction::LeftBumper:
 			if (pressedP) {
-				m_gearIntake->SetIndexerMode(GearIntake::Indexer::indexing);
 			}
 			break;
 		case DualAction::LeftTrigger:
@@ -68,17 +63,15 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::RightTrigger:
 			if (pressedP) {
-                m_gearIntake->SetIndexerMode(GearIntake::Indexer::stop);
+        m_gearIntake->SetIndexerMode(GearIntake::Indexer::stop);
 			}
 			break;
 		case DualAction::Start:
 			if (pressedP) {
-				m_gearIntake->StartPickupSequence();
 			}
 			break;
 		case DualAction::Back:
 			if (pressedP) {
-				m_gearIntake->ReleaseGear();
             }
 			break;
 		}
@@ -107,48 +100,10 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::LeftBumper:
 			if (pressedP) {
-				m_conveyorSetpt -= 0.1;
+				m_gearIntake->ReleaseGear();
 			}
 			break;
 		case DualAction::LeftTrigger:
-			if (pressedP) {
-				m_conveyorSetpt += 0.1;
-			}
-			break;
-		case DualAction::RightBumper:
-			if (pressedP) {
-					m_flailSetpt += 0.1;
-				}
-			break;
-		case DualAction::RightTrigger:
-			if (pressedP) {
-				m_flailSetpt -= 0.1;
-        }
-			break;
-		case DualAction::DPadUpVirtBtn:
-			if (pressedP) {
-				m_speedSetpt += 50;
-            }
-			break;
-		case DualAction::DPadDownVirtBtn:
-			if (pressedP) {
-				m_speedSetpt -= 50;
-			}
-			break;
-		case DualAction::DPadLeftVirtBtn:
-			if (pressedP){
-				m_shooter->SetFlywheelSpeed(m_speedSetpt);
-			}
-			break;
-		case DualAction::DPadRightVirtBtn:
-			if (pressedP){
-				m_shooter->StartAgitator(m_flailSetpt);
-			}
-			else{
-				m_shooter->StopAgitator();
-			}
-			break;
-		case DualAction::Back:
 			if (pressedP){
 				m_shooter->StartConveyor(m_conveyorSetpt);
 			}
@@ -156,14 +111,99 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 				m_shooter->StopConveyor();
 			}
 			break;
-		case DualAction::Start:
-            if (pressedP) {
-                m_shooter->StartConveyor(m_conveyorSetpt);
-            }
-            else {
-                m_shooter->StopConveyor();
+		case DualAction::RightBumper:
+			if (pressedP) {
+				m_gearIntake->StartPickupSequence();
+				}
+			break;
+		case DualAction::RightTrigger:
+			if (pressedP){
+				m_shooter->StartAgitator(m_flailSetpt);
+			}
+			else{
+				m_shooter->StopAgitator();
+			}
+			break;
+		case DualAction::DPadUpVirtBtn:
+			if (pressedP) {
             }
 			break;
+		case DualAction::DPadDownVirtBtn:
+			if (pressedP) {
+			}
+			break;
+		case DualAction::DPadLeftVirtBtn:
+			if (pressedP){
+			}
+			break;
+		case DualAction::DPadRightVirtBtn:
+			if (pressedP) {
+				}
+			break;
+		case DualAction::Back:
+
+			break;
+		case DualAction::Start:
+
+			break;
+		}
+	}
+	else if (port == TUNING_JOYSTICK_PORT){
+		switch (button) {
+			case DualAction::DPadUpVirtBtn:
+				if (pressedP) {
+					m_speedSetpt += 50;
+				}
+				break;
+			case DualAction::DPadDownVirtBtn:
+				if (pressedP) {
+					m_speedSetpt -= 50;
+				}
+				break;
+			case DualAction::DPadRightVirtBtn:
+				if (pressedP) {
+					m_flailSetpt += 0.1;
+				}
+				break;
+			case DualAction::DPadLeftVirtBtn:
+				if (pressedP) {
+					m_flailSetpt -= 0.1;
+				}
+				break;
+			case DualAction::RightTrigger:
+				if (pressedP) {
+					m_conveyorSetpt += 0.1;
+				}
+				break;
+			case DualAction::RightBumper:
+				if (pressedP) {
+					m_conveyorSetpt -= 0.1;
+				}
+				break;
+			case DualAction::LeftTrigger:
+				if (pressedP) {
+				}
+				break;
+			case DualAction::LeftBumper:
+				if (pressedP) {
+				}
+				break;
+			case DualAction::BtnA:
+				if (pressedP) {
+				}
+				break;
+			case DualAction::BtnB:
+				if (pressedP) {
+				}
+				break;
+			case DualAction::BtnX:
+				if (pressedP) {
+				}
+				break;
+			case DualAction::BtnY:
+				if (pressedP) {
+				}
+				break;
 		}
 	}
 }
