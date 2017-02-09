@@ -32,9 +32,9 @@ public:
 	void SetFlywheelStop();
 	void SetFlywheelSpeed(double speed);
 
-	void StartAgitator();
+	void StartAgitator(double speed);
 	void StopAgitator();
-	void StartConveyor();
+	void StartConveyor(double speed);
 	void StopConveyor();
 
 	double GetFlywheelRate();
@@ -61,7 +61,12 @@ private:
 	CANTalon *m_ballConveyor;
 
 	double m_flywheelPow;
-    double m_flywheelSpeedSetpt;
+  double m_flywheelSpeedSetpt;
+
+	CANTalon *m_ballConveyor;
+
+	double m_flywheelPow;
+  double m_flywheelSpeedSetpt;
 
 	LogCell *m_flywheelRate;
 	LogCell *m_flywheelPowLog;

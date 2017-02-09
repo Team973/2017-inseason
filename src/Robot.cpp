@@ -25,13 +25,34 @@ Robot::Robot(void
 	CoopMTRobot(),
 	JoystickObserver(),
 	m_pdp(new PowerDistributionPanel()),
-    m_spiGyro(nullptr), //new SPIGyro()),
+	m_driverJoystick(nullptr),
+	m_operatorJoystick(nullptr),
+	m_tuningJoystick(nullptr),
+	m_leftDriveTalonA(nullptr),
+	m_leftDriveTalonB(nullptr),
+	m_rightDriveTalonA(nullptr),
+	m_rightDriveTalonB(nullptr),
+  m_leftAgitatorTalon(nullptr),
+	m_drive(nullptr),
+	m_hanger(nullptr),
+	m_ballIntake(nullptr),
+	m_gearIntake(nullptr),
+	m_autoRoutine(AutonomousRoutine::NoAuto),
 	m_autoDirection(0.0),
 	m_autoState(0),
 	m_autoRoutine(AutonomousRoutine::NoAuto),
 	m_autoTimer(0),
-	m_speedSetpt(2000)
+	m_speedSetpt(2000),
+	m_flailSetpt(0.5),
+	m_conveyorSetpt(0.5),
+	m_battery(nullptr),
+	m_time(nullptr),
+	m_state(nullptr),
+	m_messages(nullptr),
+	m_buttonPresses(nullptr)
 {
+    SingleThreadTaskMgr *sepTask =
+        new SingleThreadTaskMgr(*this, 1.0 / 50.0);
 	m_driverJoystick = new ObservableJoystick(DRIVER_JOYSTICK_PORT, this, this);
 	m_operatorJoystick = new ObservableJoystick(OPERATOR_JOYSTICK_PORT, this, this);
 	m_tuningJoystick = new ObservableJoystick(2, this, this);
@@ -79,16 +100,16 @@ Robot::Robot(void
 	m_compressorRelay = new Relay(COMPRESSOR_RELAY, Relay::kForwardOnly);
 	m_compressor = new GreyCompressor(m_airPressureSwitch, m_compressorRelay, this);
 
-    fprintf(stderr, "initializing aliance\n");
-	if(DriverStation::GetInstance().GetAlliance() == DriverStation::Alliance::kRed){
+  fprintf(stderr, "initializing aliance\n");
+  if(DriverStation::GetInstance().GetAlliance() == DriverStation::Alliance::kRed){
 		m_autoDirection = 1.0;
 	}
 	else{
 		m_autoDirection = -1.0;
 	}
-    fprintf(stderr, "done w/ constructor\n");
+  fprintf(stderr, "done w/ constructor\n");
 
-    m_pixyR = new PixyThread(*this);
+  m_pixyR = new PixyThread(*this);
 }
 
 Robot::~Robot(void) {
@@ -109,6 +130,7 @@ void Robot::AllStateContinuous(void) {
                    "pixy o%2.2lf %d",
                    m_pixyR->GetOffset(),
                    m_pixyR->GetDataFresh());
+	m_drive->GetAngularRate();
 }
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
 			bool pressedP) {

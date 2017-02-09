@@ -81,11 +81,13 @@ private:
 	/**
 	 * Auto
 	 */
-	double                  m_autoDirection;
-	int                     m_autoState;
-	AutonomousRoutine       m_autoRoutine;
-	uint32_t                m_autoTimer;
-	int                     m_speedSetpt;
+	double 						m_autoDirection;
+	int 							m_autoState;
+	AutonomousRoutine m_autoRoutine;
+	uint32_t 					m_autoTimer;
+	int						m_speedSetpt;
+	double						m_flailSetpt;
+	double						m_conveyorSetpt;
 	/**
 	 * Logging
 	 */

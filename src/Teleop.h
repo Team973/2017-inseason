@@ -16,14 +16,14 @@ void Robot::TeleopStop(void) {
 void Robot::TeleopContinuous(void) {
 	double y = m_driverJoystick->GetRawAxis(DualAction::LeftYAxis);
 	double x = -m_driverJoystick->GetRawAxis(DualAction::RightXAxis);
-    printf("throttle  %lf, turn  %lf\n", y, x);
+  printf("throttle  %lf, turn  %lf\n", y, x);
 
 	if (m_driverJoystick->GetRawButton(DualAction::LeftBumper)) {
-      y *= 0.4;
-      x *= 0.4;
-    }
+    y *= 0.4;
+    x *= 0.4;
+  }
 
-    m_drive->ArcadeDrive(y, x);
+  m_drive->ArcadeDrive(y, x);
 }
 
 void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
@@ -108,23 +108,23 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::LeftBumper:
 			if (pressedP) {
-                m_ballIntake->BallIntakeStop();
+				m_conveyorSetpt -= 0.1;
 			}
 			break;
 		case DualAction::LeftTrigger:
 			if (pressedP) {
-                m_ballIntake->BallIntakeStart();
+				m_conveyorSetpt += 0.1;
 			}
 			break;
 		case DualAction::RightBumper:
 			if (pressedP) {
-                m_shooter->StopAgitator();
-			}
+					m_flailSetpt += 0.1;
+				}
 			break;
 		case DualAction::RightTrigger:
 			if (pressedP) {
-			    m_shooter->StartAgitator();
-            }
+				m_flailSetpt -= 0.1;
+        }
 			break;
 		case DualAction::DPadUpVirtBtn:
 			if (pressedP) {
@@ -142,12 +142,24 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			}
 			break;
 		case DualAction::DPadRightVirtBtn:
+			if (pressedP){
+				m_shooter->StartAgitator(m_flailSetpt);
+			}
+			else{
+				m_shooter->StopAgitator();
+			}
 			break;
 		case DualAction::Back:
+			if (pressedP){
+				m_shooter->StartConveyor(m_conveyorSetpt);
+			}
+			else{
+				m_shooter->StopConveyor();
+			}
 			break;
 		case DualAction::Start:
             if (pressedP) {
-                m_shooter->StartConveyor();
+                m_shooter->StartConveyor(m_conveyorSetpt);
             }
             else {
                 m_shooter->StopConveyor();
