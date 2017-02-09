@@ -63,11 +63,6 @@ private:
 	double m_flywheelPow;
   double m_flywheelSpeedSetpt;
 
-	CANTalon *m_ballConveyor;
-
-	double m_flywheelPow;
-  double m_flywheelSpeedSetpt;
-
 	LogCell *m_flywheelRate;
 	LogCell *m_flywheelPowLog;
 	LogCell *m_flywheelStateLog;

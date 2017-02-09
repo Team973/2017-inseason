@@ -10,7 +10,6 @@ namespace frc973{
   m_scheduler(scheduler),
   m_ballIntakeMotor(new CANTalon(BALL_INTAKE_CAN_ID, 50)),
   m_ballIntakeState(BallIntakeState::notRunning),
-  m_ballIntakeMotor(new CANTalon(BALL_INTAKE_CAN_ID, 50)),
   m_ballIntakePow(0.0)
   {
     this->m_scheduler->RegisterTask("BallIntake", this, TASK_PERIODIC);

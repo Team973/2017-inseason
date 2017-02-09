@@ -12,7 +12,6 @@ using namespace frc;
 namespace frc973 {
 
 class LogSpreadsheet;
-class SingleThreadTaskMgr;
 class Drive;
 class GearIntake;
 class Shooter;

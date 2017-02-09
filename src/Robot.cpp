@@ -6,7 +6,6 @@
 #include "lib/GreyCompressor.h"
 #include "lib/logging/LogSpreadsheet.h"
 #include "lib/WrapDash.h"
-#include "lib/SingleThreadTaskMgr.h"
 #include "subsystems/GearIntake.h"
 #include "subsystems/BallIntake.h"
 #include "subsystems/Shooter.h"
@@ -37,7 +36,6 @@ Robot::Robot(void
 	m_hanger(nullptr),
 	m_ballIntake(nullptr),
 	m_gearIntake(nullptr),
-	m_autoRoutine(AutonomousRoutine::NoAuto),
 	m_autoDirection(0.0),
 	m_autoState(0),
 	m_autoRoutine(AutonomousRoutine::NoAuto),
@@ -51,8 +49,6 @@ Robot::Robot(void
 	m_messages(nullptr),
 	m_buttonPresses(nullptr)
 {
-    SingleThreadTaskMgr *sepTask =
-        new SingleThreadTaskMgr(*this, 1.0 / 50.0);
 	m_driverJoystick = new ObservableJoystick(DRIVER_JOYSTICK_PORT, this, this);
 	m_operatorJoystick = new ObservableJoystick(OPERATOR_JOYSTICK_PORT, this, this);
 	m_tuningJoystick = new ObservableJoystick(2, this, this);
