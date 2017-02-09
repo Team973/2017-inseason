@@ -9,11 +9,11 @@ namespace frc973{
   :
   m_scheduler(scheduler),
   m_ballIntakeState(BallIntakeState::notRunning),
-  m_ballIntakeMotorB(new CANTalon(BALL_INTAKE_B_CAN_ID)),
-  m_ballIntakeMotor(new CANTalon(BALL_INTAKE_CAN_ID)),
+  m_ballIntakeMotor(new CANTalon(BALL_INTAKE_CAN_ID, 50)),
   m_ballIntakePow(0.0)
   {
     this->m_scheduler->RegisterTask("BallIntake", this, TASK_PERIODIC);
+    m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
   }
 
   BallIntake::~BallIntake(){
@@ -31,31 +31,19 @@ namespace frc973{
   void BallIntake::SetIntakePower(double power){
     m_ballIntakePow = power;
     m_ballIntakeState = BallIntakeState::manual;
-    m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
-    m_ballIntakeMotorB->SetControlMode(CANTalon::ControlMode::kPercentVbus);
     m_ballIntakeMotor->Set(power);
-    m_ballIntakeMotorB->Set(power);
   }
 
-  void BallIntake::TaskPeriodic(){
+  void BallIntake::TaskPeriodic(RobotMode mode){
       switch (m_ballIntakeState) {
         case running:
-          m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
-          m_ballIntakeMotorB->SetControlMode(CANTalon::ControlMode::kPercentVbus);
-          m_ballIntakeMotor->Set(BALL_INTAKE_RUNNING_SPEED);
-          m_ballIntakeMotorB->Set(BALL_INTAKE_RUNNING_SPEED);
+          m_ballIntakeMotor->Set(BALL_INTAKE_RUNNING_POW);
         break;
         case notRunning:
-          m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
-          m_ballIntakeMotorB->SetControlMode(CANTalon::ControlMode::kPercentVbus);
           m_ballIntakeMotor->Set(0.0);
-          m_ballIntakeMotorB->Set(0.0);
         break;
         case reverse:
-          m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
-          m_ballIntakeMotorB->SetControlMode(CANTalon::ControlMode::kPercentVbus);
-          m_ballIntakeMotor->Set(BALL_INTAKE_REVERSE_SPEED);
-          m_ballIntakeMotorB->Set(BALL_INTAKE_REVERSE_SPEED);
+          m_ballIntakeMotor->Set(BALL_INTAKE_REVERSE_POW);
         break;
         case manual:
         break;

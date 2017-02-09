@@ -31,47 +31,55 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 		switch (button) {
 		case DualAction::BtnA:
 			if (pressedP) {
-				DBStringPrintf(DB_LINE9, "BtnA");
-				m_shooter->SetFlywheelPow(1.0);
+                m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
 			}
 			break;
 		case DualAction::BtnB:
 			if (pressedP) {
-				DBStringPrintf(DB_LINE9, "BtnB");
+                m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
 			}
 			break;
 		case DualAction::BtnX:
 			if (pressedP) {
+                m_gearIntake->SetGearIntakeState(
+                        GearIntake::GearIntakeState::released);
 			}
 			break;
 		case DualAction::BtnY:
 			if (pressedP) {
-				DBStringPrintf(DB_LINE9, "BtnY");
+                m_gearIntake->SetGearIntakeState(
+                        GearIntake::GearIntakeState::grabbed);
 			}
 			break;
 		case DualAction::LeftBumper:
 			if (pressedP) {
+				m_gearIntake->SetIndexerMode(GearIntake::Indexer::indexing);
 			}
 			break;
 		case DualAction::LeftTrigger:
 			if (pressedP) {
+				m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::floating);
 			}
 			break;
 		case DualAction::RightBumper:
 			if (pressedP) {
+				m_gearIntake->SetIndexerMode(GearIntake::Indexer::intaking);
 			}
 			break;
 		case DualAction::RightTrigger:
 			if (pressedP) {
+                m_gearIntake->SetIndexerMode(GearIntake::Indexer::stop);
 			}
 			break;
 		case DualAction::Start:
 			if (pressedP) {
+				m_gearIntake->StartPickupSequence();
 			}
 			break;
 		case DualAction::Back:
 			if (pressedP) {
-			}
+				m_gearIntake->ReleaseGear();
+            }
 			break;
 		}
 	}
@@ -79,53 +87,82 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 		switch (button) {
 		case DualAction::BtnY:
 			if (pressedP) {
+				m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
 			}
 			break;
 		case DualAction::BtnA:
 			if (pressedP) {
+				m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
 			}
 			break;
 		case DualAction::BtnX:
 			if (pressedP) {
+				m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
 			}
 			break;
 		case DualAction::BtnB:
 			if (pressedP) {
+				m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
 			}
 			break;
 		case DualAction::LeftBumper:
 			if (pressedP) {
+				m_conveyorSetpt -= 0.1;
 			}
 			break;
 		case DualAction::LeftTrigger:
 			if (pressedP) {
+				m_conveyorSetpt += 0.1;
 			}
 			break;
 		case DualAction::RightBumper:
 			if (pressedP) {
-			}
-			else {
-			}
+					m_flailSetpt += 0.1;
+				}
 			break;
 		case DualAction::RightTrigger:
 			if (pressedP) {
-			}
+				m_flailSetpt -= 0.1;
+        }
 			break;
 		case DualAction::DPadUpVirtBtn:
 			if (pressedP) {
-			}
+				m_speedSetpt += 50;
+            }
 			break;
 		case DualAction::DPadDownVirtBtn:
 			if (pressedP) {
+				m_speedSetpt -= 50;
 			}
 			break;
 		case DualAction::DPadLeftVirtBtn:
+			if (pressedP){
+				m_shooter->SetFlywheelSpeed(m_speedSetpt);
+			}
 			break;
 		case DualAction::DPadRightVirtBtn:
+			if (pressedP){
+				m_shooter->StartAgitator(m_flailSetpt);
+			}
+			else{
+				m_shooter->StopAgitator();
+			}
 			break;
 		case DualAction::Back:
+			if (pressedP){
+				m_shooter->StartConveyor(m_conveyorSetpt);
+			}
+			else{
+				m_shooter->StopConveyor();
+			}
 			break;
 		case DualAction::Start:
+            if (pressedP) {
+                m_shooter->StartConveyor(m_conveyorSetpt);
+            }
+            else {
+                m_shooter->StopConveyor();
+            }
 			break;
 		}
 	}

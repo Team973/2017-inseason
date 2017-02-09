@@ -12,6 +12,7 @@ void Robot::DisabledStop(void) {
 }
 
 void Robot::DisabledContinuous(void) {
+    fprintf(stderr, "***disabled continuous\n");
 }
 
 void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
@@ -19,7 +20,7 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
 	m_buttonPresses->LogPrintf("Button event port %d button %d pressed %d", port, button, pressedP);
 	if (port == DRIVER_JOYSTICK_PORT) {
 		switch (button) {
-		case DualAction::BtnA:
+		/*case DualAction::BtnA:
 			if (pressedP) {
         m_autoRoutine = AutonomousRoutine::GearLeftPeg;
         DBStringPrintf(DBStringPos::DB_LINE7, "Gear to LeftPeg Auto");
@@ -54,7 +55,7 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
         m_autoRoutine = AutonomousRoutine::ShootFuelThenHopper;
         DBStringPrintf(DBStringPos::DB_LINE7, "ShootFuel, GoToHopper, ShootFuel Auto");
 			}
-			break;
+			break;*/
 		case DualAction::DPadRightVirtBtn:
 			if (pressedP) {
 			}

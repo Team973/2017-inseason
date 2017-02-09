@@ -21,6 +21,7 @@ class PoseManager;
 class Debouncer;
 class Hanger;
 class BallIntake;
+class GreyCompressor;
 
 class Robot:
 		public CoopMTRobot,
@@ -51,9 +52,11 @@ private:
 	/**
 	 * Outputs (motors, solenoids, etc...)
 	 */
-	Talon		*m_leftDriveTalon;
-	Talon		*m_rightDriveTalon;
-	CANTalon *m_turretMotor;
+	CANTalon		*m_leftDriveTalonA;
+	CANTalon		*m_leftDriveTalonB;
+	CANTalon		*m_rightDriveTalonA;
+	CANTalon		*m_rightDriveTalonB;
+    CANTalon        *m_leftAgitatorTalon;
 	Drive			*m_drive;
 
 	/**
@@ -69,6 +72,7 @@ private:
 	 */
 	DigitalInput	*m_airPressureSwitch;
 	Relay			*m_compressorRelay;
+	GreyCompressor  *m_compressor;
 
 	/**
 	 * Auto
@@ -77,7 +81,9 @@ private:
 	int 							m_autoState;
 	AutonomousRoutine m_autoRoutine;
 	uint32_t 					m_autoTimer;
-
+	int						m_speedSetpt;
+	double						m_flailSetpt;
+	double						m_conveyorSetpt;
 	/**
 	 * Logging
 	 */
