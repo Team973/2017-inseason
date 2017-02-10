@@ -30,6 +30,7 @@ namespace frc973 {
     void BallIntakeStart();
     void BallIntakeStop();
     void SetIntakePower(double power);
+    void BallIntakeStartReverse();
     void TaskPeriodic(RobotMode mode) override;
 
   private:

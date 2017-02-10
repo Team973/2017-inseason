@@ -128,7 +128,7 @@ void Drive::SetDriveOutput(double left, double right) {
 	else {
 		m_leftMotor->Set(
 				m_leftMotorPowerFilter->Update(
-						Util::bound(-m_leftPower, -1.0, 1.0)));
+						Util::bound(m_leftPower, -1.0, 1.0)));
 		m_rightMotor->Set(
 				m_rightMotorPowerFilter->Update(
 						Util::bound(-m_rightPower, -1.0, 1.0)));

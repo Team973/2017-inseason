@@ -33,7 +33,7 @@ public:
 	void SetFlywheelStop();
 	void SetFlywheelSpeed(double speed);
 
-	void StartAgitator(double speed);
+	void StartAgitator(double speed, bool side);
 	void StopAgitator();
 	void StartConveyor(double speed);
 	void StopConveyor();

@@ -22,6 +22,7 @@ namespace frc973{
     m_pushTopRight(new DigitalInput(PUSH_SENSOR_TOP_RIGHT)),
     m_pushBottom(new DigitalInput(PUSH_SENSOR_BOTTOM)),
     m_gearTimer(0),
+    m_driverReleased(false),
     m_pickUpState(GearIntake::PickUp::vomiting)
   {
     m_rightIndexer->SetControlMode(CANTalon::ControlMode::kPercentVbus);
@@ -70,6 +71,7 @@ namespace frc973{
         break;
       case down:
         m_gearIntakePos->Set(true);
+        SetGearIntakeState(GearIntakeState::grabbed);
         m_gearPosition = GearPosition::down;
         break;
     }
@@ -87,7 +89,7 @@ namespace frc973{
         m_rightIndexer->Set(RIGHT_INDEXER_POWER);
         m_leftIndexer->Set(LEFT_INDEXER_POWER);
         m_indexer = GearIntake::Indexer::indexing;
-        if (IsGearAligned() == true) {
+        if (IsGearReady() == true) {
             m_indexer = GearIntake::Indexer::holding;
           }
         break;
@@ -104,8 +106,8 @@ namespace frc973{
     }
   }
 
-  bool GearIntake::IsGearAligned(){
-    if (m_pushTopLeft->Get() == true && m_pushTopRight->Get() == true && m_pushBottom->Get()){
+  bool GearIntake::IsGearReady(){
+    if (m_pushTopLeft->Get() + m_pushTopRight->Get() + m_pushBottom->Get() < 2){
       return true;
     }
     else{
@@ -118,22 +120,24 @@ namespace frc973{
   }
 
   void GearIntake::ReleaseGear(){
-    if (IsGearAligned() == true) {
       m_pickUpState = PickUp::vomiting;
       this->SetIndexerMode(Indexer::stop);
       this->SetGearIntakeState(GearIntakeState::released);
-      }
-    else{
-      m_pickUpState = PickUp::digesting;
-    }
+  }
+
+  void GearIntake::SetReleaseAutoEnable(bool driverInput){
+    m_driverReleased = driverInput;
   }
 
   void GearIntake::TaskPeriodic(RobotMode mode){
     DBStringPrintf(DB_LINE3,  "state %d curr %2.1f %2.1f",
                    m_pickUpState, m_leftIndexer->GetOutputCurrent(),
                    m_rightIndexer->GetOutputCurrent());
+    DBStringPrintf(DB_LINE1, "state ul %d ur %d b %d",m_pushTopLeft->Get(),
+                    m_pushTopRight->Get(),
+                    m_pushBottom->Get());
 
-    if (m_indexer == Indexer::indexing && IsGearAligned() == true){
+    if (m_indexer == Indexer::indexing && IsGearReady() == true){
       this->SetIndexerMode(Indexer::holding);
     }
     switch(m_pickUpState){
@@ -155,13 +159,25 @@ namespace frc973{
         }
         break;
       case digesting:
-        this->SetIndexerMode(GearIntake::Indexer::indexing);
+        this->SetIndexerMode(GearIntake::Indexer::holding);
         this->SetGearPos(GearIntake::GearPosition::up);
         this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
-        m_pickUpState = PickUp::digesting;
+        if (IsGearReady() == true && m_driverReleased == true) {
+          m_pickUpState = PickUp::vomiting;
+        }
+        else{
+          m_pickUpState = PickUp::digesting;
+        }
         break;
       case vomiting:
         this->ReleaseGear();
+        m_gearTimer = GetMsecTime();
+        m_pickUpState = PickUp::postVomit;
+        break;
+      case postVomit:
+        if (m_gearTimer - GetMsecTime() == 3000) {
+          this->SetGearPos(GearPosition::down);
+        }
         break;
       case manual:
         break;

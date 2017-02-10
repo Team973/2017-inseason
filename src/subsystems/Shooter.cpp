@@ -24,7 +24,7 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgita
 		m_rightAgitator(new CANTalon(RIGHT_AGITATOR_CAN_ID, 50)),
 		m_ballConveyor(new CANTalon(BALL_CONVEYOR_CAN_ID, 50)),
 		m_flywheelPow(0.0),
-        m_flywheelSpeedSetpt(0.0)
+    m_flywheelSpeedSetpt(0.0)
 {
 	m_flywheelMotorPrimary->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
 	m_flywheelMotorPrimary->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
@@ -92,14 +92,19 @@ void Shooter::StopConveyor() {
 	m_ballConveyor->Set(0.0);
 }
 
-void Shooter::StartAgitator(double speed){
-	m_leftAgitator->Set(speed);
-	m_rightAgitator->Set(-speed);
+//side: true = right; false = left
+void Shooter::StartAgitator(double speed, bool side){
+	if (side == false) {
+		m_leftAgitator->Set(speed);
+	}
+	else if (side == true) {
+		m_rightAgitator->Set(-speed);
+	}
 }
 
 void Shooter::StopAgitator(){
-	m_leftAgitator->Set(0.0);
-	m_rightAgitator->Set(0.0);
+		m_leftAgitator->Set(0.0);
+		m_rightAgitator->Set(0.0);
 }
 
 void Shooter::TaskPeriodic(RobotMode mode) {
