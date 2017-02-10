@@ -18,7 +18,9 @@ namespace frc973{
     m_indexer(GearIntake::Indexer::holding),
     m_gearPosition(GearPosition::up),
     m_gearIntakeState(GearIntake::GearIntakeState::grabbed),
-    m_bannerSensor(new DigitalInput(GEAR_INTAKE_BANNER_DIN)),
+    m_pushTopLeft(new DigitalInput(PUSH_SENSOR_TOP_LEFT)),
+    m_pushTopRight(new DigitalInput(PUSH_SENSOR_TOP_RIGHT)),
+    m_pushBottom(new DigitalInput(PUSH_SENSOR_BOTTOM)),
     m_gearTimer(0),
     m_pickUpState(GearIntake::PickUp::vomiting)
   {
@@ -85,7 +87,7 @@ namespace frc973{
         m_rightIndexer->Set(RIGHT_INDEXER_POWER);
         m_leftIndexer->Set(LEFT_INDEXER_POWER);
         m_indexer = GearIntake::Indexer::indexing;
-        if (m_bannerSensor->Get() == true) {
+        if (IsGearAligned() == true) {
             m_indexer = GearIntake::Indexer::holding;
           }
         break;
@@ -103,7 +105,12 @@ namespace frc973{
   }
 
   bool GearIntake::IsGearAligned(){
-    return m_bannerSensor->Get();
+    if (m_pushTopLeft->Get() == true && m_pushTopRight->Get() == true && m_pushBottom->Get()){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 
   void GearIntake::StartPickupSequence(){
@@ -111,9 +118,14 @@ namespace frc973{
   }
 
   void GearIntake::ReleaseGear(){
+    if (IsGearAligned() == true) {
       m_pickUpState = PickUp::vomiting;
       this->SetIndexerMode(Indexer::stop);
       this->SetGearIntakeState(GearIntakeState::released);
+      }
+    else{
+      m_pickUpState = PickUp::digesting;
+    }
   }
 
   void GearIntake::TaskPeriodic(RobotMode mode){
@@ -121,7 +133,7 @@ namespace frc973{
                    m_pickUpState, m_leftIndexer->GetOutputCurrent(),
                    m_rightIndexer->GetOutputCurrent());
 
-    if (m_indexer == Indexer::indexing && m_bannerSensor->Get() == true){
+    if (m_indexer == Indexer::indexing && IsGearAligned() == true){
       this->SetIndexerMode(Indexer::holding);
     }
     switch(m_pickUpState){

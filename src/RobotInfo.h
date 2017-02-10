@@ -20,6 +20,9 @@ namespace frc973 {
  */
 constexpr int AIR_PRESSURE_DIN = 0;
 constexpr int GEAR_INTAKE_BANNER_DIN = 18;
+constexpr int PUSH_SENSOR_TOP_LEFT = 1;
+constexpr int PUSH_SENSOR_TOP_RIGHT = 2;
+constexpr int PUSH_SENSOR_BOTTOM = 3;
 
 /**
  * Relays

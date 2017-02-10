@@ -65,7 +65,9 @@ namespace frc973{
       Solenoid *m_gearIntakeRelease;
       Solenoid *m_gearIntakeGrab;
       Solenoid *m_gearIntakePos;
-      DigitalInput  *m_bannerSensor;
+      DigitalInput  *m_pushTopLeft;
+      DigitalInput  *m_pushTopRight;
+      DigitalInput  *m_pushBottom;
 
       CANTalon *m_leftIndexer;
       CANTalon *m_rightIndexer;
