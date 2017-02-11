@@ -117,6 +117,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 		case DualAction::BtnA:
 			if (pressedP) {
 				m_shooter->SetFlywheelSpeed(m_speedSetpt);
+				m_compressor->Disable();
 			}
 			break;
 		case DualAction::BtnX:
@@ -130,6 +131,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 		case DualAction::BtnB:
 			if (pressedP) {
 				m_shooter->SetFlywheelStop();
+				m_compressor->Enable();
 			}
 			break;
 		case DualAction::LeftBumper:

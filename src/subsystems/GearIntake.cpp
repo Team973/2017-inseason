@@ -5,7 +5,7 @@ namespace frc973{
   static constexpr double RIGHT_INDEXER_POWER = 0.08;
   static constexpr double LEFT_INDEXER_POWER = -0.04;
 
-  static constexpr double INTAKING_POWER = 1.0;
+  static constexpr double INTAKING_POWER = 0.7;
   static constexpr double HOLDING_POWER = 0.0;
 
   GearIntake::GearIntake(TaskMgr *scheduler) :
