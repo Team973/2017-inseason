@@ -28,7 +28,7 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgita
 {
 	m_flywheelMotorPrimary->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
 	m_flywheelMotorPrimary->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
-	m_flywheelMotorPrimary->SetClosedLoopOutputDirection(false);
+	m_flywheelMotorPrimary->SetClosedLoopOutputDirection(true);
 	m_flywheelMotorPrimary->SetSensorDirection(false);
 	m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kSpeed);
 	m_flywheelMotorPrimary->SelectProfileSlot(0);
@@ -44,7 +44,7 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgita
 	m_flywheelMotorReplica->SetControlMode(
             CANSpeedController::ControlMode::kFollower);
 	m_flywheelMotorReplica->Set(m_flywheelMotorPrimary->GetDeviceID());
-    m_flywheelMotorReplica->SetClosedLoopOutputDirection(true);
+  m_flywheelMotorReplica->SetClosedLoopOutputDirection(false);
 
 	m_leftAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
 	m_rightAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);

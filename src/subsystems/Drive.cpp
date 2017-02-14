@@ -9,6 +9,7 @@
 #include "lib/filters/RampedOutput.h"
 
 #include "lib/logging/LogSpreadsheet.h"
+#include "lib/WrapDash.h"
 
 #include "controllers/ArcadeDriveController.h"
 #include "controllers/PIDDrive.h"
@@ -47,6 +48,7 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
 	m_arcadeDriveController = new ArcadeDriveController();
 	m_pidDriveController = new PIDDriveController();
 	this->SetDriveController(m_arcadeDriveController);
+	//this->SetDriveControlMode(CANSpeedController::ControlMode::kPercentVbus);
 
 	bool loggingEnabled = true;
 	if (loggingEnabled) {
@@ -111,7 +113,7 @@ double Drive::GetAngle() {
 }
 
 double Drive::GetAngularRate() {
-	double xyz_dps[3];
+	double xyz_dps[4];
 	m_gyro->GetRawGyro(xyz_dps);
 	printf("a %d b %d c %d d %d\n", xyz_dps[0], xyz_dps[1], xyz_dps[2], xyz_dps[3]);
 	return xyz_dps[2];
@@ -135,7 +137,13 @@ void Drive::SetDriveOutput(double left, double right) {
 	}
 }
 
+void Drive::SetDriveControlMode(CANSpeedController::ControlMode mode){
+	m_leftMotor->SetControlMode(mode);
+	m_rightMotor->SetControlMode(mode);
+}
+
 void Drive::TaskPeriodic(RobotMode mode) {
+	DBStringPrintf(DB_LINE0, "gyro %2.1f", this->GetAngularRate());
 }
 
 }

@@ -30,9 +30,9 @@ namespace frc973{
     m_leftIndexer->SetInverted(true);
     m_rightIndexer->SetInverted(false);
     m_leftIndexer->EnableCurrentLimit(true);
-    m_rightIndexer->SetCurrentLimit(40);
+    m_rightIndexer->SetCurrentLimit(100);
     m_rightIndexer->EnableCurrentLimit(true);
-    m_leftIndexer->SetCurrentLimit(40);
+    m_leftIndexer->SetCurrentLimit(100);
     this->SetGearIntakeState(GearIntakeState::grabbed);
     this->m_scheduler->RegisterTask("GearIntake", this, TASK_PERIODIC);
   }
@@ -147,14 +147,14 @@ namespace frc973{
         this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
         m_pickUpState = PickUp:: seeking;
         m_gearTimer = GetMsecTime();
-        if (m_rightIndexer->GetOutputCurrent() >= 30 || m_leftIndexer->GetOutputCurrent() >= 30){
+        if (m_rightIndexer->GetOutputCurrent() >= 50 || m_leftIndexer->GetOutputCurrent() >= 50){
             m_pickUpState = GearIntake::PickUp::chewing;
           }
         break;
       case chewing:
         this->SetIndexerMode(GearIntake::Indexer::intaking);
         m_pickUpState = PickUp:: chewing;
-        if (GetMsecTime() - m_gearTimer >= 100) {
+        if (GetMsecTime() - m_gearTimer >= 200) {
             m_pickUpState = GearIntake::PickUp::digesting;
         }
         break;

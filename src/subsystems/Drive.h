@@ -101,6 +101,7 @@ public:
     void RampPIDDrive(double dist, RelativeTo relativity);
     void RampPIDTurn(double angle, RelativeTo relativity);
 
+		void SetDriveControlMode(CANSpeedController::ControlMode mode) override;
     /**
      * All distances given in inches
      * All velocities given in inches/second
