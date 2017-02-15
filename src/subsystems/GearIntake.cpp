@@ -10,6 +10,10 @@ namespace frc973{
 
   GearIntake::GearIntake(TaskMgr *scheduler) :
     m_scheduler(scheduler),
+    m_gearIntakeState(GearIntake::GearIntakeState::grabbed),
+    m_gearPosition(GearPosition::up),
+    m_indexer(GearIntake::Indexer::holding),
+    m_pickUpState(GearIntake::PickUp::vomiting),
     m_gearIntakeRelease(new Solenoid(GEAR_INTAKE_GRIP_OPEN)),
     m_gearIntakeGrab(new Solenoid(GEAR_INTAKE_GRIP_CLOSE)),
     m_gearIntakePos(new Solenoid(GEAR_INTAKE_POS)),

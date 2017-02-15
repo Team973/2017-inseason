@@ -1,5 +1,4 @@
-#ifndef GYRO_HPP
-#define GYRO_HPP
+#pragma once
 
 #include <pthread.h>
 #include "WPILib.h"
@@ -148,5 +147,3 @@ class SPIGyro {
 };
 
 }
-
-#endif

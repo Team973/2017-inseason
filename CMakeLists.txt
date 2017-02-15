@@ -8,7 +8,7 @@ set(TEAM_NUMBER 973)
 # For quick list of files run
 # find src -iname "*.cpp"
 # in project root
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall")
 set(SOURCE_FILES src/Robot.cpp src/lib/CoopMTRobot.cpp
     src/lib/util/Util.cpp src/lib/util/Matrix.cpp src/lib/jsoncpp.cpp
     src/lib/TaskMgr.cpp src/lib/ControllerBase.cpp src/lib/CoopTask.cpp
@@ -17,7 +17,8 @@ set(SOURCE_FILES src/Robot.cpp src/lib/CoopMTRobot.cpp
     src/lib/logging/LogSpreadsheet.cpp src/lib/logging/AsynchLogCell.cpp
     src/lib/filters/BullshitFilter.cpp src/lib/filters/CascadingFilter.cpp
     src/lib/filters/DelaySwitch.cpp src/lib/filters/FilterBase.cpp
-    src/lib/SingleThreadTaskMgr.cpp
+    src/lib/SingleThreadTaskMgr.cpp src/lib/SmartPixy.cpp
+    src/subsystems/PixyThread.cpp
     src/subsystems/BallIntake.cpp
     src/subsystems/GearIntake.cpp
     src/controllers/PIDDrive.cpp

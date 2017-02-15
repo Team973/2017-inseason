@@ -15,8 +15,7 @@
  * any combination of hooks.
  */
 
-#ifndef FRCLIB_COOPTASK_H_
-#define FRCLIB_COOPTASK_H_
+#pragma once
 
 #include "util/Util.h"
 
@@ -37,5 +36,3 @@ public:
 };
 
 }
-
-#endif /* FRCLIB_COOPTASK_H_ */

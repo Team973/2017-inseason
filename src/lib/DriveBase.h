@@ -5,8 +5,7 @@
  *      Author: Andrew
  */
 
-#ifndef LIB_DRIVEBASE_H_
-#define LIB_DRIVEBASE_H_
+#pragma once
 
 #include "lib/TaskMgr.h"
 #include "lib/CoopTask.h"
@@ -141,5 +140,3 @@ private:
 };
 
 }
-
-#endif /* LIB_DRIVEBASE_H_ */

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "lib/CoopMTRobot.h"
 #include "lib/JoystickHelper.h"
 #include "RobotInfo.h"
@@ -10,7 +12,6 @@ using namespace frc;
 namespace frc973 {
 
 class LogSpreadsheet;
-class SingleThreadTaskMgr;
 class Drive;
 class GearIntake;
 class Shooter;
@@ -20,6 +21,7 @@ class SPIGyro;
 class PoseManager;
 class Debouncer;
 class Hanger;
+class PixyThread;
 class BallIntake;
 class GreyCompressor;
 
@@ -41,6 +43,7 @@ private:
 	LogSpreadsheet *m_logger;
 
 	PowerDistributionPanel *m_pdp;
+    SPIGyro                *m_spiGyro;
 
 	/**
 	 * Inputs (joysticks, sensors, etc...)
@@ -62,10 +65,10 @@ private:
 	/**
 	 * Subsystems
 	 */
+	Hanger			*m_hanger;
 	BallIntake			*m_ballIntake;
 	GearIntake	*m_gearIntake;
 	Shooter			*m_shooter;
-	Hanger			*m_hanger;
 
 	/*
 	 * Compressor
@@ -94,6 +97,8 @@ private:
 	LogCell *m_buttonPresses;
 
 	double m_teleopTimeSec;
+
+    PixyThread *m_pixyR;
 public:
 	/**
 	 * Defined in Robot.cpp

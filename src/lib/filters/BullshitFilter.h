@@ -9,8 +9,7 @@
  *      Author: andrew
  */
 
-#ifndef LIB_FILTERS_BULLSHITFILTER_H_
-#define LIB_FILTERS_BULLSHITFILTER_H_
+#pragma once
 
 #include "lib/filters/FilterBase.h"
 
@@ -58,5 +57,3 @@ private:
 };
 
 } /* namespace frc973 */
-
-#endif /* LIB_FILTERS_BULLSHITFILTER_H_ */

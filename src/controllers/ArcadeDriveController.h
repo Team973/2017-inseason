@@ -5,8 +5,7 @@
  *      Author: Andrew
  */
 
-#ifndef SRC_CONTROLLERS_ARCADEDRIVECONTROLLER_H_
-#define SRC_CONTROLLERS_ARCADEDRIVECONTROLLER_H_
+#pragma once
 
 #include "lib/DriveBase.h"
 #include <stdio.h>
@@ -53,5 +52,3 @@ private:
 };
 
 }
-
-#endif /* SRC_CONTROLLERS_ARCADEDRIVECONTROLLER_H_ */

@@ -12,8 +12,7 @@
  * way below 0.5.
  */
 
-#ifndef LIB_DELAYSWITCH_H_
-#define LIB_DELAYSWITCH_H_
+#pragma once
 
 #include "MovingAverageFilter.h"
 
@@ -57,5 +56,3 @@ private:
 };
 
 }
-
-#endif /* LIB_DELAYSWITCH_H_ */

@@ -5,8 +5,7 @@
  *      Author: Andrew
  */
 
-#ifndef SRC_SUBSYSTEMS_HANGER_H_
-#define SRC_SUBSYSTEMS_HANGER_H_
+#pragma once
 
 #include "lib/CoopTask.h"
 #include "lib/TaskMgr.h"
@@ -44,5 +43,3 @@ private:
 };
 
 } /* namespace frc973 */
-
-#endif /* SRC_SUBSYSTEMS_HANGER_H_ */
