@@ -1,4 +1,4 @@
-#include "src/lib/InterpLookupTable.h"
+#include "lib/InterpLookupTable.h"
 
 namespace frc973 {
     

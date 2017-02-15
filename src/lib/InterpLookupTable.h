@@ -4,9 +4,9 @@
  * Interpolated lookup table
  */
 
-namespace frc973 {
-
 #include <vector>
+
+namespace frc973 {
 
 class InterpLookupTable {
 public:
