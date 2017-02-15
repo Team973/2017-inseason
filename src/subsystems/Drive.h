@@ -34,16 +34,16 @@ class LogCell;
  *  		input signal
  */
 class Drive :
-		public DriveBase,
-		public DriveStateProvider,
-		public DriveControlSignalReceiver
+        public DriveBase,
+        public DriveStateProvider,
+        public DriveControlSignalReceiver
 {
 public:
     Drive(TaskMgr *scheduler,
             CANTalon *left, CANTalon *right,
-			CANTalon *spareTalon,
-			LogSpreadsheet *logger
-			);
+            CANTalon *spareTalon,
+            LogSpreadsheet *logger
+            );
 
     virtual ~Drive() {}
 
@@ -87,80 +87,80 @@ public:
      */
     void PIDDrive(double dist, double turn, RelativeTo relativity, double powerCap);
 
-    /**
-     * Set a target turn to be achieved by pid
-     *
-     * @param angle Angle in degrees to go
-     * @param relativity What is that angle metric relative to?
-     */
-    void PIDTurn(double angle, RelativeTo relativity);
+/**
+ * Set a target turn to be achieved by pid
+ *
+ * @param angle Angle in degrees to go
+ * @param relativity What is that angle metric relative to?
+ */
+void PIDTurn(double angle, RelativeTo relativity);
 
-    void VelocityPIDTurn(double angle, RelativeTo relativity);
+void VelocityPIDTurn(double angle, RelativeTo relativity);
 
-    void RampPIDDrive(double dist, RelativeTo relativity);
-    void RampPIDTurn(double angle, RelativeTo relativity);
+void RampPIDDrive(double dist, RelativeTo relativity);
+void RampPIDTurn(double angle, RelativeTo relativity);
 
-		void SetDriveControlMode(CANSpeedController::ControlMode mode) override;
-    /**
-     * All distances given in inches
-     * All velocities given in inches/second
-     */
-	double GetLeftDist() override;
-	double GetRightDist() override;
-	double GetLeftRate() override;
-	double GetRightRate() override;
-	double GetDist() override;
-	double GetRate() override;
+    void SetDriveControlMode(CANSpeedController::ControlMode mode) override;
+/**
+ * All distances given in inches
+ * All velocities given in inches/second
+ */
+double GetLeftDist() override;
+double GetRightDist() override;
+double GetLeftRate() override;
+double GetRightRate() override;
+double GetDist() override;
+double GetRate() override;
 
-	/**
-	 * All angles given in degrees
-	 * All angular rates given in degrees/second
-	 */
-	double GetAngle() override;
-	double GetAngularRate() override;
+/**
+ * All angles given in degrees
+ * All angular rates given in degrees/second
+ */
+double GetAngle() override;
+double GetAngularRate() override;
 
-	/*
-	 * Used by the DriveController to set motor values
-	 *
-	 * @param left power (from -1.0 to 1.0) for left motor
-	 * @param right power (from -1.0 to 1.0) for right motor
-	 */
-	void SetDriveOutput(double left, double right) override;
+/*
+ * Used by the DriveController to set motor values
+ *
+ * @param left power (from -1.0 to 1.0) for left motor
+ * @param right power (from -1.0 to 1.0) for right motor
+ */
+void SetDriveOutput(double left, double right) override;
 
 private:
-	void TaskPeriodic(RobotMode mode) override;
+void TaskPeriodic(RobotMode mode) override;
 
-	Encoder *m_leftEncoder;
-	Encoder *m_rightEncoder;
+Encoder *m_leftEncoder;
+Encoder *m_rightEncoder;
 
-	PigeonImu *m_gyro;
+PigeonImu *m_gyro;
 
-	double m_leftPower;
-	double m_rightPower;
+double m_leftPower;
+double m_rightPower;
 
-	CANTalon *m_leftMotor;
-	CANTalon *m_rightMotor;
+CANTalon *m_leftMotor;
+CANTalon *m_rightMotor;
 
-	/* Filter to apply to left and right motor power so we don't tip or
-	 * break chains.
-	 */
-	FilterBase *m_leftMotorPowerFilter;
-	FilterBase *m_rightMotorPowerFilter;
+/* Filter to apply to left and right motor power so we don't tip or
+ * break chains.
+ */
+FilterBase *m_leftMotorPowerFilter;
+FilterBase *m_rightMotorPowerFilter;
 
-    ArcadeDriveController *m_arcadeDriveController;
-    CheesyDriveController *m_cheesyDriveController;
-    PIDDriveController *m_pidDriveController;
-    RampPIDDriveController *m_rampPidDriveController;
-    PixyVisionDriveController *m_visionDriveController;
-    VelocityTurnPID *m_velocityTurnController;
+ArcadeDriveController *m_arcadeDriveController;
+CheesyDriveController *m_cheesyDriveController;
+PIDDriveController *m_pidDriveController;
+RampPIDDriveController *m_rampPidDriveController;
+PixyVisionDriveController *m_visionDriveController;
+VelocityTurnPID *m_velocityTurnController;
 
-    LogSpreadsheet *m_spreadsheet;
-    LogCell *m_angleLog;
-    LogCell *m_angularRateLog;
-    LogCell *m_leftDistLog;
-    LogCell *m_leftDistRateLog;
-    LogCell *m_leftPowerLog;
-    LogCell *m_rightPowerLog;
+LogSpreadsheet *m_spreadsheet;
+LogCell *m_angleLog;
+LogCell *m_angularRateLog;
+LogCell *m_leftDistLog;
+LogCell *m_leftDistRateLog;
+LogCell *m_leftPowerLog;
+LogCell *m_rightPowerLog;
 };
 
 }

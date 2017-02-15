@@ -1,5 +1,5 @@
-#ifndef GEAR_INTAKE_SUBSYSTEM_H
-#define GEAR_INTAKE_SUBSYSTEM_H
+#pragma once
+
 #include "WPILib.h"
 #include "Solenoid.h"
 #include "lib/CoopTask.h"
@@ -78,4 +78,3 @@ namespace frc973{
       bool m_driverReleased;
   };
 }
-#endif /*GEAR_INTAKE_SUBSYSTEM_H*/
