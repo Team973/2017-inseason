@@ -17,26 +17,31 @@ namespace frc973 {
 
 class Hanger : public CoopTask {
 public:
-	enum HangerState {
-		autoHang,
-		preHang,
-		armed
-	};
+    enum HangerState {
+        start,
+        autoHang,
+        armed
+    };
 
-	Hanger(TaskMgr *scheduler);
-	virtual ~Hanger();
-	void TaskPeriodic(RobotMode mode);
+    Hanger(TaskMgr *scheduler);
+    virtual ~Hanger();
+    void TaskPeriodic(RobotMode mode);
 
-	void SetHangerState(HangerState hangerState);
-	void SetAutoHang();
+    void SetHangerState(HangerState hangerState);
+    void SetHangerClosedLoop(double position = HANGER_POS_SETPT);
+    void SetAutoHang();
 
+    static constexpr double DEFAULT_HANG_POWER = 1.0;
+    static constexpr double HANGER_POS_SETPT = 90.0;
 private:
-	TaskMgr *m_scheduler;
-	CANTalon *m_crankMotor;
+    TaskMgr *m_scheduler;
+    CANTalon *m_crankMotor;
+    CANTalon *m_crankMotorB;
 
-	HangerState m_hangerState;
+    HangerState m_hangerState;
 
-	double m_crankCurrent;
+    double m_crankCurrent;
+    double m_hangerPositionSetpt;
 };
 
 } /* namespace frc973 */

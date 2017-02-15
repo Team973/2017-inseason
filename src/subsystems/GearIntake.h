@@ -1,5 +1,5 @@
-#ifndef GEAR_INTAKE_SUBSYSTEM_H
-#define GEAR_INTAKE_SUBSYSTEM_H
+#pragma once
+
 #include "WPILib.h"
 #include "Solenoid.h"
 #include "lib/CoopTask.h"
@@ -37,6 +37,7 @@ namespace frc973{
         chewing,
         digesting,
         vomiting,
+        postVomit,
         manual
       };
 
@@ -49,7 +50,8 @@ namespace frc973{
       void SetGearIntakeState(GearIntakeState gearIntakeState);
       void SetGearPos(GearPosition gearPosition);
       void SetIndexerMode(Indexer indexerMode);
-      bool IsGearAligned();
+      void SetReleaseAutoEnable(bool driverInput);
+      bool IsGearReady();
 
       void TaskPeriodic(RobotMode mode) override;
 
@@ -65,12 +67,14 @@ namespace frc973{
       Solenoid *m_gearIntakeRelease;
       Solenoid *m_gearIntakeGrab;
       Solenoid *m_gearIntakePos;
-      DigitalInput  *m_bannerSensor;
+      DigitalInput  *m_pushTopLeft;
+      DigitalInput  *m_pushTopRight;
+      DigitalInput  *m_pushBottom;
 
       CANTalon *m_leftIndexer;
       CANTalon *m_rightIndexer;
 
       uint32_t m_gearTimer;
+      bool m_driverReleased;
   };
 }
-#endif /*GEAR_INTAKE_SUBSYSTEM_H*/

@@ -11,6 +11,7 @@
 #include "lib/CoopTask.h"
 #include "lib/util/Util.h"
 #include "WPILib.h"
+#include "CANTalon.h"
 
 using namespace frc;
 
@@ -46,6 +47,7 @@ public:
 	 * Should only be called from a child of DriveController.
 	 */
 	virtual void SetDriveOutput(double left, double right) = 0;
+	virtual void SetDriveControlMode(CANSpeedController::ControlMode mode) = 0;
 };
 
 /*
@@ -95,7 +97,6 @@ public:
 			DriveControlSignalReceiver *outpt,
 			DriveController *controller = nullptr);
 	virtual ~DriveBase();
-
     /**
      * When making calls to PID-like-commands, parameters can be relative to
      * the world (Absolute), relative to the current position (Now), or

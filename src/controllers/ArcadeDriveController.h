@@ -38,6 +38,7 @@ public:
 	void SetJoysticks(double throttle, double turn);
 
 	void Start() override {
+		m_needSetControlMode = true;
 		printf("Turning on Arcade Mode\n");
 	}
 
@@ -47,6 +48,7 @@ public:
 private:
 	double m_leftOutput;
 	double m_rightOutput;
+	bool 	m_needSetControlMode;
 };
 
 }

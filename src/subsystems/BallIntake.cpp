@@ -24,6 +24,10 @@ namespace frc973{
     m_ballIntakeState = BallIntakeState::running;
   }
 
+  void BallIntake::BallIntakeStartReverse(){
+    m_ballIntakeState = BallIntakeState::reverse;
+  }
+
   void BallIntake::BallIntakeStop(){
     m_ballIntakeState = BallIntakeState::notRunning;
   }

@@ -19,6 +19,9 @@ namespace frc973 {
  */
 constexpr int AIR_PRESSURE_DIN = 0;
 constexpr int GEAR_INTAKE_BANNER_DIN = 18;
+constexpr int PUSH_SENSOR_TOP_LEFT = 1;
+constexpr int PUSH_SENSOR_TOP_RIGHT = 2;
+constexpr int PUSH_SENSOR_BOTTOM = 3;
 
 /**
  * Relays
@@ -30,6 +33,7 @@ constexpr int COMPRESSOR_RELAY = 0;
  */
 constexpr int DRIVER_JOYSTICK_PORT = 0;
 constexpr int OPERATOR_JOYSTICK_PORT = 1;
+constexpr int TUNING_JOYSTICK_PORT = 2;
 
 //solenoids
 constexpr int GEAR_INTAKE_POS = 0;
@@ -59,6 +63,8 @@ constexpr int RIGHT_AGITATOR_CAN_ID = 6;
 constexpr int BALL_INTAKE_CAN_ID = 7;
 constexpr int BALL_CONVEYOR_CAN_ID = 5;
 
+constexpr int SPARE_TALON_A = 61;
+constexpr int SPARE_TALON_B = 62;
 //default rate is 10ms
 constexpr int FLYWHEEL_CONTROL_PERIOD_MS = 5;
 /**
