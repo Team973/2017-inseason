@@ -40,6 +40,10 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 		switch (button) {
 		case DualAction::BtnA:
 			if (pressedP) {
+				m_hanger->SetHangerState(Hanger::HangerState::armed);
+			}
+			else{
+				m_hanger->SetHangerState(Hanger::HangerState::start);
 			}
 			break;
 		case DualAction::BtnB:
@@ -72,6 +76,9 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
 			break;
 		case DualAction::RightBumper:
 			if (pressedP) {
+				m_hanger->SetHangerState(Hanger::HangerState::autoHang);
+			}
+			else{
 			}
 			break;
 		case DualAction::RightTrigger:
