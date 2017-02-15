@@ -5,8 +5,7 @@
  *      Author: Andrew
  */
 
-#ifndef SRC_SUBSYSTEMS_SHOOTER_H_
-#define SRC_SUBSYSTEMS_SHOOTER_H_
+#pragma once
 
 #include "WPILib.h"
 #include "lib/CoopTask.h"
@@ -51,6 +50,8 @@ public:
 private:
 	TaskMgr *m_scheduler;
 
+	FlywheelState m_flywheelState;
+
 	CANTalon *m_flywheelMotorPrimary;
 	CANTalon *m_flywheelMotorReplica;
 
@@ -60,9 +61,7 @@ private:
 	CANTalon *m_ballConveyor;
 
 	double m_flywheelPow;
-    double m_flywheelSpeedSetpt;
-
-	FlywheelState m_flywheelState;
+  double m_flywheelSpeedSetpt;
 
 	LogCell *m_flywheelRate;
 	LogCell *m_flywheelPowLog;
@@ -71,5 +70,3 @@ private:
 };
 
 }
-
-#endif /* SRC_SUBSYSTEMS_SHOOTER_H_ */

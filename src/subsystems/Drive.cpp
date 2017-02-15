@@ -113,7 +113,7 @@ double Drive::GetAngle() {
 double Drive::GetAngularRate() {
 	double xyz_dps[3];
 	m_gyro->GetRawGyro(xyz_dps);
-	printf("a %d b %d c %d d %d\n", xyz_dps[0], xyz_dps[1], xyz_dps[2], xyz_dps[3]);
+	printf("a %lf b %lf c %lf\n", xyz_dps[0], xyz_dps[1], xyz_dps[2]);
 	return xyz_dps[2];
 }
 

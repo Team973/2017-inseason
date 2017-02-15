@@ -7,8 +7,7 @@
  *      Author: Andrew
  */
 
-#ifndef FRCLIB_WRAPDASH_H_
-#define FRCLIB_WRAPDASH_H_
+#pragma once
 
 namespace frc973 {
 
@@ -31,5 +30,3 @@ enum DBStringPos {
 void DBStringPrintf(DBStringPos position, const char *formatstring, ...);
 
 }
-
-#endif

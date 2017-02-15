@@ -1,5 +1,4 @@
-#ifndef DRIVE_H
-#define DRIVE_H
+#pragma once
 
 #include "lib/DriveBase.h"
 #include "RobotInfo.h"
@@ -164,5 +163,3 @@ private:
 };
 
 }
-
-#endif

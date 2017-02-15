@@ -10,17 +10,17 @@ namespace frc973{
 
   GearIntake::GearIntake(TaskMgr *scheduler) :
     m_scheduler(scheduler),
+    m_gearIntakeState(GearIntake::GearIntakeState::grabbed),
+    m_gearPosition(GearPosition::up),
+    m_indexer(GearIntake::Indexer::holding),
+    m_pickUpState(GearIntake::PickUp::vomiting),
     m_gearIntakeRelease(new Solenoid(GEAR_INTAKE_GRIP_OPEN)),
     m_gearIntakeGrab(new Solenoid(GEAR_INTAKE_GRIP_CLOSE)),
     m_gearIntakePos(new Solenoid(GEAR_INTAKE_POS)),
-    m_rightIndexer(new CANTalon(RIGHT_INDEXER_CAN_ID)),
-    m_leftIndexer(new CANTalon(LEFT_INDEXER_CAN_ID)),
-    m_indexer(GearIntake::Indexer::holding),
-    m_gearPosition(GearPosition::up),
-    m_gearIntakeState(GearIntake::GearIntakeState::grabbed),
     m_bannerSensor(new DigitalInput(GEAR_INTAKE_BANNER_DIN)),
-    m_gearTimer(0),
-    m_pickUpState(GearIntake::PickUp::vomiting)
+    m_leftIndexer(new CANTalon(LEFT_INDEXER_CAN_ID)),
+    m_rightIndexer(new CANTalon(RIGHT_INDEXER_CAN_ID)),
+    m_gearTimer(0)
   {
     m_rightIndexer->SetControlMode(CANTalon::ControlMode::kPercentVbus);
     m_leftIndexer->SetControlMode(CANTalon::ControlMode::kPercentVbus);

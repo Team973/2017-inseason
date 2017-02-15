@@ -11,8 +11,7 @@
  * output as long as you make sure to integrate your input.
  */
 
-#ifndef PID_H
-#define PID_H
+#pragma once
 
 #include <math.h>
 #include <stdint.h>
@@ -156,5 +155,3 @@ private:
 };
 
 }
-
-#endif

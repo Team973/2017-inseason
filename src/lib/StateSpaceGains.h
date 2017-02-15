@@ -5,8 +5,7 @@
  *      Author: Andrew
  */
 
-#ifndef LIB_STATESPACEGAINS_H_
-#define LIB_STATESPACEGAINS_H_
+#pragma once
 
 namespace frc973 {
 
@@ -63,5 +62,3 @@ public:
 };
 
 }
-
-#endif /* LIB_STATESPACEGAINS_H_ */

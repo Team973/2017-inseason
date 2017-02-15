@@ -16,8 +16,7 @@
  *      Author: Andrew
  */
 
-#ifndef LIB_RAMPEDOUTPUT_H_
-#define LIB_RAMPEDOUTPUT_H_
+#pragma once
 
 #include <cstdint>
 #include "lib/filters/FilterBase.h"
@@ -92,5 +91,3 @@ private:
 };
 
 }
-
-#endif /* LIB_RAMPEDOUTPUT_H_ */

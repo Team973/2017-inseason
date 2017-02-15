@@ -8,8 +8,7 @@
  *      Author: andrew
  */
 
-#ifndef LIB_FILTERS_CASCADINGFILTER_H_
-#define LIB_FILTERS_CASCADINGFILTER_H_
+#pragma once
 
 #include "FilterBase.h"
 #include <vector>
@@ -32,5 +31,3 @@ private:
 };
 
 } /* namespace frc973 */
-
-#endif /* LIB_FILTERS_CASCADINGFILTER_H_ */

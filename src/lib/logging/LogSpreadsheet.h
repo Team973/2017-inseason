@@ -11,8 +11,7 @@
  *      Author: Andrew
  */
 
-#ifndef LIB_LOGSPREADSHEET_H_
-#define LIB_LOGSPREADSHEET_H_
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -167,5 +166,3 @@ private:
 };
 
 }
-
-#endif /* LIB_LOGSPREADSHEET_H_ */

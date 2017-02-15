@@ -6,8 +6,6 @@
 #include "lib/GreyCompressor.h"
 #include "lib/logging/LogSpreadsheet.h"
 #include "lib/WrapDash.h"
-#include "lib/SingleThreadTaskMgr.h"
-
 #include "subsystems/GearIntake.h"
 #include "subsystems/BallIntake.h"
 #include "subsystems/Shooter.h"
@@ -16,6 +14,7 @@
 
 #include "CANTalon.h"
 
+#include "subsystems/PixyThread.h"
 using namespace frc;
 
 namespace frc973 {
@@ -24,7 +23,6 @@ Robot::Robot(void
 	) :
 	CoopMTRobot(),
 	JoystickObserver(),
-	m_logger(nullptr),
 	m_pdp(new PowerDistributionPanel()),
 	m_driverJoystick(nullptr),
 	m_operatorJoystick(nullptr),
@@ -33,14 +31,14 @@ Robot::Robot(void
 	m_leftDriveTalonB(nullptr),
 	m_rightDriveTalonA(nullptr),
 	m_rightDriveTalonB(nullptr),
-    m_leftAgitatorTalon(nullptr),
+  m_leftAgitatorTalon(nullptr),
 	m_drive(nullptr),
 	m_hanger(nullptr),
 	m_ballIntake(nullptr),
 	m_gearIntake(nullptr),
-	m_autoRoutine(AutonomousRoutine::NoAuto),
 	m_autoDirection(0.0),
 	m_autoState(0),
+	m_autoRoutine(AutonomousRoutine::NoAuto),
 	m_autoTimer(0),
 	m_speedSetpt(2000),
 	m_flailSetpt(0.5),
@@ -51,8 +49,6 @@ Robot::Robot(void
 	m_messages(nullptr),
 	m_buttonPresses(nullptr)
 {
-    SingleThreadTaskMgr *sepTask =
-        new SingleThreadTaskMgr(*this, 1.0 / 50.0);
 	m_driverJoystick = new ObservableJoystick(DRIVER_JOYSTICK_PORT, this, this);
 	m_operatorJoystick = new ObservableJoystick(OPERATOR_JOYSTICK_PORT, this, this);
 	m_tuningJoystick = new ObservableJoystick(2, this, this);
@@ -99,16 +95,17 @@ Robot::Robot(void
 	m_airPressureSwitch = new DigitalInput(AIR_PRESSURE_DIN);
 	m_compressorRelay = new Relay(COMPRESSOR_RELAY, Relay::kForwardOnly);
 	m_compressor = new GreyCompressor(m_airPressureSwitch, m_compressorRelay, this);
-    sepTask->Start();
 
-    fprintf(stderr, "initializing aliance\n");
-	if(DriverStation::GetInstance().GetAlliance() == DriverStation::Alliance::kRed){
+  fprintf(stderr, "initializing aliance\n");
+  if(DriverStation::GetInstance().GetAlliance() == DriverStation::Alliance::kRed){
 		m_autoDirection = 1.0;
 	}
 	else{
 		m_autoDirection = -1.0;
 	}
-    fprintf(stderr, "done w/ constructor\n");
+  fprintf(stderr, "done w/ constructor\n");
+
+  m_pixyR = new PixyThread(*this);
 }
 
 Robot::~Robot(void) {
@@ -124,11 +121,17 @@ void Robot::AllStateContinuous(void) {
 	m_battery->LogPrintf("%f", DriverStation::GetInstance().GetBatteryVoltage());
 	m_time->LogDouble(GetSecTime());
 	m_state->LogPrintf("%s", GetRobotModeString());
+
+    DBStringPrintf(DB_LINE9, 
+                   "pixy o%2.2lf %d",
+                   m_pixyR->GetOffset(),
+                   m_pixyR->GetDataFresh());
 	m_drive->GetAngularRate();
 }
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
 			bool pressedP) {
-	fprintf(stderr, "joystick state change port %d button %d state %d\n", port, button, pressedP);
+	fprintf(stderr, "joystick state change port %d button %d state %d\n",
+            port, button, pressedP);
 	if (this->IsOperatorControl()){
 		HandleTeleopButton(port, button, pressedP);
 	}

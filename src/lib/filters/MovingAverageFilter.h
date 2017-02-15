@@ -8,8 +8,7 @@
  * current datapoint times (1 - m) plus the previous datapoint times m.
  */
 
-#ifndef LIB_MOVINGAVERAGEFILTER_H_
-#define LIB_MOVINGAVERAGEFILTER_H_
+#pragma once
 
 #include "lib/filters/FilterBase.h"
 
@@ -49,5 +48,3 @@ private:
 };
 
 }
-
-#endif /* LIB_MOVINGAVERAGEFILTER_H_ */

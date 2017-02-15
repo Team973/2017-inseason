@@ -7,8 +7,7 @@
  * Author: Mike Tsang
  */
 
-#ifndef FRCLIB_ANSI_H_
-#define FRCLIB_ANSI_H_
+#pragma once
 
 #ifdef _USE_COLORFONT
 
@@ -177,5 +176,3 @@
 #define ESC_BGB_WHITE
 
 #endif
- 
-#endif /* FRCLIB_ANSI_H_ */
