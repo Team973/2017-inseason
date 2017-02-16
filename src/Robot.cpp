@@ -31,7 +31,7 @@ Robot::Robot(void
     m_leftDriveTalonB(nullptr),
     m_rightDriveTalonA(nullptr),
     m_rightDriveTalonB(nullptr),
-  m_leftAgitatorTalon(nullptr),
+    m_leftAgitatorTalon(nullptr),
     m_drive(nullptr),
     m_hanger(nullptr),
     m_ballIntake(nullptr),

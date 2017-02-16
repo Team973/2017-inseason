@@ -29,9 +29,16 @@ public:
 private:
     struct Point {
         double x, y;
+        bool operator<(const Point &rhs) const {
+            return x < rhs.x;
+        }
     };
 
+    double InterpolatePoints(const Point &a, const Point &b, double x);
+
     std::vector<Point> points;
+    double min_x;
+    double max_x;
 };
 
 }
