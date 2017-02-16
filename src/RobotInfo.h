@@ -19,10 +19,18 @@ namespace frc973 {
  */
 constexpr int AIR_PRESSURE_DIN = 0;
 constexpr int GEAR_INTAKE_BANNER_DIN = 18;
+
 constexpr int PUSH_SENSOR_TOP_LEFT = 1;
 constexpr int PUSH_SENSOR_TOP_RIGHT = 2;
 constexpr int PUSH_SENSOR_BOTTOM = 3;
 
+constexpr int BOILER_PIXY_CAM_X_DIGITAL = 4;
+constexpr int BOILER_PIXY_CAM_Y_DIGITAL = 5;
+constexpr int GEAR_PIXY_CAM_DIGITAL = 6;
+
+constexpr int BOILER_PIXY_CAM_X_ANALOG = 4;
+constexpr int BOILER_PIXY_CAM_Y_ANALOG = 5;
+constexpr int GEAR_PIXY_CAM_ANALOG = 6;
 /**
  * Relays
  */
