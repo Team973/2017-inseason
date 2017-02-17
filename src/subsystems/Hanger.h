@@ -28,11 +28,10 @@ public:
     void TaskPeriodic(RobotMode mode);
 
     void SetHangerState(HangerState hangerState);
-    void SetHangerClosedLoop(double position = HANGER_POS_SETPT);
     void SetAutoHang();
 
     static constexpr double DEFAULT_HANG_POWER = 1.0;
-    static constexpr double HANGER_POS_SETPT = 90.0;
+    static constexpr double HANGER_POS_SETPT = 0.25;
 private:
     TaskMgr *m_scheduler;
     CANTalon *m_crankMotor;
