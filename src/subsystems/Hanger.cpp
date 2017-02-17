@@ -24,10 +24,11 @@ namespace frc973 {
         m_scheduler->RegisterTask("Hanger", this, TASK_PERIODIC);
         m_crankMotor->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
         m_crankMotor->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
-        m_crankMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+        m_crankMotor->SetControlMode(CANTalon::ControlMode::kPosition);
         m_crankMotor->EnableCurrentLimit(true);
         m_crankMotor->SetCurrentLimit(40);
-
+        m_crankMotor->Set(0.0);
+        
         m_crankMotorB->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
         m_crankMotorB->SetControlMode(CANTalon::ControlMode::kFollower);
         m_crankMotor->SetInverted(true);
@@ -51,12 +52,12 @@ namespace frc973 {
         switch (hangerState) {
             case start:
                 m_hangerState = HangerState::start;
-                m_crankMotor->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
+                m_crankMotor->SetControlMode(CANSpeedController::ControlMode::kPosition);
                 break;
             case armed:
                 m_hangerState = HangerState::armed;
                 m_crankMotor->ConfigPeakOutputVoltage(3, -3);
-                m_crankMotor->SetControlMode(CANTalon::ControlMode::kSpeed);
+                m_crankMotor->SetControlMode(CANTalon::ControlMode::kPosition);
                 break;
             case autoHang:
                 m_hangerState = HangerState::autoHang;
@@ -66,22 +67,18 @@ namespace frc973 {
         }
     }
 
-    void Hanger::SetHangerClosedLoop(double position){
-        m_hangerPositionSetpt = position;
-    }
-
     void Hanger::TaskPeriodic(RobotMode mode) {
         m_crankCurrent = m_crankMotor->GetOutputCurrent();
         DBStringPrintf(DB_LINE2, "hang %2.1f", m_crankMotor->GetPosition());
         switch (m_hangerState) {
             case start:
-                this->SetHangerClosedLoop(0.0);
+                m_crankMotor->Set(0.0);
                 break;
             case autoHang:
                 m_crankMotor->Set(DEFAULT_HANG_POWER);
                 break;
             case armed:
-                m_crankMotor->Set(m_hangerPositionSetpt);
+                m_crankMotor->Set(HANGER_POS_SETPT);
                 if (m_crankMotor->GetClosedLoopError() > -10) {
                     SetHangerState(HangerState::autoHang);
                 }
