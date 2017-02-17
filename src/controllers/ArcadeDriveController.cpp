@@ -29,7 +29,7 @@ void ArcadeDriveController::CalcDriveOutput(DriveStateProvider *state,
 		out->SetDriveControlMode(CANSpeedController::ControlMode::kSpeed);
 		m_needSetControlMode = false;
 	}
-	out->SetDriveOutput(100 * m_leftOutput, 100 * m_rightOutput);
+	out->SetDriveOutput(1000 * m_leftOutput, 1000 * m_rightOutput);
 	DBStringPrintf(DBStringPos::DB_LINE4,
 				"arcade l=%1.2lf r=%1.2lf", m_leftOutput, m_rightOutput);
 	//printf("arcade l=%1.2lf r=%1.2lf\n", m_leftOutput, m_rightOutput);
@@ -61,8 +61,8 @@ void ArcadeDriveController::SetJoysticks(double throttle, double turn) {
 		}
 	}
 
-	m_leftOutput *= -1.0;
-	m_rightOutput *= -1.0;
+	m_leftOutput *= 1.0;
+	m_rightOutput *= 1.0;
 
 	//m_leftOutput = throttle + turn;
 	//m_rightOutput = throttle - turn;
