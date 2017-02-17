@@ -33,7 +33,7 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgita
     m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kSpeed);
     m_flywheelMotorPrimary->SelectProfileSlot(0);
     m_flywheelMotorPrimary->ConfigNominalOutputVoltage(0, 0);
-    m_flywheelMotorPrimary->ConfigPeakOutputVoltage(12, -12);
+    m_flywheelMotorPrimary->ConfigPeakOutputVoltage(12, 0);
     m_flywheelMotorPrimary->SetP(0.035);
     m_flywheelMotorPrimary->SetI(0.0000012);
     m_flywheelMotorPrimary->SetD(0);
