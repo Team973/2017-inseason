@@ -22,20 +22,18 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
             )
          : DriveBase(scheduler, this, this, nullptr)
          , m_gyro(new PigeonImu(spareTalon))
-         , m_leftPower(0.0)
-         , m_rightPower(0.0)
+         , m_leftSignal(0.0)
+         , m_rightSignal(0.0)
          , m_leftMotor(left)
          , m_rightMotor(right)
-         , m_leftMotorPowerFilter(dynamic_cast<FilterBase*>(new RampedOutput(10.0)))
-         , m_rightMotorPowerFilter(dynamic_cast<FilterBase*>(new RampedOutput(10.0)))
          , m_arcadeDriveController(nullptr)
          , m_spreadsheet(logger)
          , m_angleLog(new LogCell("Angle"))
          , m_angularRateLog(new LogCell("Angular Rate"))
          , m_leftDistLog(new LogCell("Left Encoder Distance"))
          , m_leftDistRateLog(new LogCell("Left Encoder Rate"))
-         , m_leftPowerLog(new LogCell("Left motor power"))
-         , m_rightPowerLog(new LogCell("Right motor power"))
+         , m_leftSignalLog(new LogCell("Left motor signal (pow or vel)"))
+         , m_rightSignalLog(new LogCell("Right motor signal (pow or vel)"))
 {
     fprintf(stderr, "Initializing Drive Subsystem %p\n", m_leftEncoder);
     fprintf(stderr, "Survived fprintf yes its up to date\n");
@@ -56,8 +54,8 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
         m_spreadsheet->RegisterCell(m_angularRateLog);
         m_spreadsheet->RegisterCell(m_leftDistLog);
         m_spreadsheet->RegisterCell(m_leftDistRateLog);
-        m_spreadsheet->RegisterCell(m_leftPowerLog);
-        m_spreadsheet->RegisterCell(m_rightPowerLog);
+        m_spreadsheet->RegisterCell(m_leftSignalLog);
+        m_spreadsheet->RegisterCell(m_rightSignalLog);
     }
 
     scheduler->RegisterTask("Drive", this, TASK_PERIODIC);
@@ -120,21 +118,17 @@ double Drive::GetAngularRate() {
 }
 
 void Drive::SetDriveOutput(double left, double right) {
-    m_leftPower = left;
-    m_rightPower = right;
+	m_leftSignal = left;
+	m_rightSignal = right;
 
-    if (isnan(m_leftPower) || isnan(m_rightPower)) {
-        m_leftMotor->Set(0.0);
-        m_rightMotor->Set(0.0);
-    }
-    else {
-        m_leftMotor->Set(
-                m_leftMotorPowerFilter->Update(
-                        Util::bound(m_leftPower, -1.0, 1.0)));
-        m_rightMotor->Set(
-                m_rightMotorPowerFilter->Update(
-                        Util::bound(-m_rightPower, -1.0, 1.0)));
-    }
+	if (isnan(m_leftSignal) || isnan(m_rightSignal)) {
+		m_leftMotor->Set(0.0);
+		m_rightMotor->Set(0.0);
+	}
+	else {
+		m_leftMotor->Set(m_leftSignal);
+		m_rightMotor->Set(-m_rightSignal);
+	}
 }
 
 void Drive::SetDriveControlMode(CANSpeedController::ControlMode mode){
@@ -143,7 +137,10 @@ void Drive::SetDriveControlMode(CANSpeedController::ControlMode mode){
 }
 
 void Drive::TaskPeriodic(RobotMode mode) {
-    DBStringPrintf(DB_LINE0, "gyro %2.1f", this->GetAngularRate());
+	DBStringPrintf(DB_LINE0, "gyro r %2.1f p", this->GetAngularRate(),
+            this->GetAngle());
+    DBStringPrintf(DB_LINE9, "l %2.1f lr%2.1f", 
+            this->GetLeftDist(), this->GetLeftRate());
 }
 
 }

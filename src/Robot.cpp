@@ -60,14 +60,44 @@ Robot::Robot(void
     m_rightDriveTalonB = new CANTalon(DRIVE_RIGHT_B_CAN);
 
     m_leftDriveTalonA->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
+    m_leftDriveTalonA->ConfigNeutralMode(
+            CANSpeedController::NeutralMode::kNeutralMode_Brake);
     m_leftDriveTalonA->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
+    m_leftDriveTalonA->SetClosedLoopOutputDirection(true);
+    m_leftDriveTalonA->ConfigNominalOutputVoltage(0, 0);
+    m_leftDriveTalonA->ConfigPeakOutputVoltage(12, -12);
+    m_leftDriveTalonA->SetSensorDirection(true);
+    m_leftDriveTalonA->SelectProfileSlot(0);
+    m_leftDriveTalonA->SetP(1.0);
+    m_leftDriveTalonA->SetI(0);
+    m_leftDriveTalonA->SetD(0);
+    m_leftDriveTalonA->SetF(0);
+
     m_leftDriveTalonB->SetControlMode(CANSpeedController::ControlMode::kFollower);
+    m_leftDriveTalonB->ConfigNeutralMode(
+            CANSpeedController::NeutralMode::kNeutralMode_Brake);
     m_leftDriveTalonB->Set(m_leftDriveTalonA->GetDeviceID());
+    m_leftDriveTalonB->SetClosedLoopOutputDirection(true);
 
     m_rightDriveTalonA->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
+    m_rightDriveTalonA->ConfigNeutralMode(
+            CANSpeedController::NeutralMode::kNeutralMode_Brake);
     m_rightDriveTalonA->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
+    m_rightDriveTalonA->SetClosedLoopOutputDirection(true);
+    m_rightDriveTalonA->ConfigNominalOutputVoltage(0, 0);
+    m_rightDriveTalonA->ConfigPeakOutputVoltage(12, -12);
+    m_rightDriveTalonA->SetSensorDirection(true);
+    m_rightDriveTalonA->SelectProfileSlot(0);
+    m_rightDriveTalonA->SetP(1.0);
+    m_rightDriveTalonA->SetI(0);
+    m_rightDriveTalonA->SetD(0);
+    m_rightDriveTalonA->SetF(0);
+
     m_rightDriveTalonB->SetControlMode(CANSpeedController::ControlMode::kFollower);
+    m_rightDriveTalonB->ConfigNeutralMode(
+            CANSpeedController::NeutralMode::kNeutralMode_Brake);
     m_rightDriveTalonB->Set(m_rightDriveTalonA->GetDeviceID());
+    m_rightDriveTalonB->SetClosedLoopOutputDirection(true);
 
     m_leftAgitatorTalon = new CANTalon(LEFT_AGITATOR_CAN_ID, 50);
     fprintf(stderr, "Initialized drive controllers\n");
