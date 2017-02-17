@@ -6,11 +6,12 @@
 #include "lib/GreyCompressor.h"
 #include "lib/logging/LogSpreadsheet.h"
 #include "lib/WrapDash.h"
-#include "subsystems/GearIntake.h"
-#include "subsystems/BallIntake.h"
-#include "subsystems/Shooter.h"
 #include "subsystems/Drive.h"
 #include "subsystems/Hanger.h"
+#include "subsystems/BallIntake.h"
+#include "subsystems/GearIntake.h"
+#include "subsystems/Shooter.h"
+#include "subsystems/BoilerPixy.h"
 
 #include "CANTalon.h"
 
@@ -24,30 +25,13 @@ Robot::Robot(void
     CoopMTRobot(),
     JoystickObserver(),
     m_pdp(new PowerDistributionPanel()),
-    m_driverJoystick(nullptr),
-    m_operatorJoystick(nullptr),
-    m_tuningJoystick(nullptr),
-    m_leftDriveTalonA(nullptr),
-    m_leftDriveTalonB(nullptr),
-    m_rightDriveTalonA(nullptr),
-    m_rightDriveTalonB(nullptr),
-    m_leftAgitatorTalon(nullptr),
-    m_drive(nullptr),
-    m_hanger(nullptr),
-    m_ballIntake(nullptr),
-    m_gearIntake(nullptr),
     m_autoDirection(0.0),
     m_autoState(0),
     m_autoRoutine(AutonomousRoutine::NoAuto),
     m_autoTimer(0),
     m_speedSetpt(2000),
     m_flailSetpt(0.5),
-    m_conveyorSetpt(0.5),
-    m_battery(nullptr),
-    m_time(nullptr),
-    m_state(nullptr),
-    m_messages(nullptr),
-    m_buttonPresses(nullptr)
+    m_conveyorSetpt(0.5)
 {
     m_driverJoystick = new ObservableJoystick(DRIVER_JOYSTICK_PORT, this, this);
     m_operatorJoystick = new ObservableJoystick(OPERATOR_JOYSTICK_PORT, this, this);
@@ -117,10 +101,11 @@ Robot::Robot(void
     m_logger->RegisterCell(m_time);
     m_logger->RegisterCell(m_buttonPresses);
 
-    m_shooter = new Shooter(this, m_logger, m_leftAgitatorTalon);
     m_hanger = new Hanger(this);
     m_ballIntake = new BallIntake(this);
     m_gearIntake = new GearIntake(this);
+    m_shooter = new Shooter(this, m_logger, m_leftAgitatorTalon);
+    m_boilerPixy = new BoilerPixy(this);
 
     m_airPressureSwitch = new DigitalInput(AIR_PRESSURE_DIN);
     m_compressorRelay = new Relay(COMPRESSOR_RELAY, Relay::kForwardOnly);

@@ -9,7 +9,7 @@ namespace frc973{
     m_seesTargetX(new DigitalInput(BOILER_PIXY_CAM_X_DIGITAL)),
     m_seesTargetY(new DigitalInput(BOILER_PIXY_CAM_Y_DIGITAL))
   {
-
+    m_scheduler->RegisterTask("Boiler pixy", this, TASK_PERIODIC);
   }
 
   BoilerPixy::~BoilerPixy(){
@@ -33,6 +33,9 @@ namespace frc973{
   }
 
   void BoilerPixy::TaskPeriodic(RobotMode mode){
-
+      DBStringPrintf(DB_LINE3,
+              "x %d %2.1f y %d %2.1f",
+              GetSeesTargetX(), GetXOffset(),
+              GetSeesTargetY(), GetHeight());
   }
 }
