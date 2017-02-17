@@ -29,7 +29,7 @@ void ArcadeDriveController::CalcDriveOutput(DriveStateProvider *state,
 		out->SetDriveControlMode(CANSpeedController::ControlMode::kSpeed);
 		m_needSetControlMode = false;
 	}
-	out->SetDriveOutput(4000 * m_leftOutput, 4000 * m_rightOutput);
+	out->SetDriveOutput(100 * m_leftOutput, 100 * m_rightOutput);
 	DBStringPrintf(DBStringPos::DB_LINE4,
 				"arcade l=%1.2lf r=%1.2lf", m_leftOutput, m_rightOutput);
 	//printf("arcade l=%1.2lf r=%1.2lf\n", m_leftOutput, m_rightOutput);

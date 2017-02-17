@@ -46,6 +46,10 @@ PIDDriveController::PIDDriveController():
 
 void PIDDriveController::CalcDriveOutput(DriveStateProvider *state,
 		DriveControlSignalReceiver *out) {
+	if(m_needSetControlMode == true){
+		out->SetDriveControlMode(CANSpeedController::ControlMode::kSpeed);
+		m_needSetControlMode = false;
+	}
 	m_prevDist = state->GetDist();
 	m_prevAngle = state->GetAngle();
 
@@ -77,7 +81,7 @@ void PIDDriveController::CalcDriveOutput(DriveStateProvider *state,
 
 	DBStringPrintf(DBStringPos::DB_LINE6, "error %lf", m_prevAngle - m_targetAngle);
 
-	out->SetDriveOutput(throttle + turn, throttle - turn);
+	out->SetDriveOutput(100 * (throttle + turn), 100 * (throttle - turn));
 
 	if ((m_distEnabled == false || (Util::abs(m_targetDist - m_prevDist) < 2.0 && Util::abs(state->GetRate()) < 0.5)) &&
 			Util::abs(m_targetAngle - m_prevAngle) < 2.0 && Util::abs(state->GetAngularRate()) < 1.0) {

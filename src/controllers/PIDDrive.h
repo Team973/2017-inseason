@@ -28,6 +28,10 @@ public:
 	void CalcDriveOutput(DriveStateProvider *state,
 			DriveControlSignalReceiver *out) override;
 
+	void Start() override {
+		m_needSetControlMode = true;
+	}
+
 	/*
 	 * On CalcDriveOutput, the robot sets the internal m_onTarget flag if it
 	 * is within tolerance of the target.  This method returns whether we are
@@ -70,6 +74,7 @@ public:
 		m_onTarget = false;
 	}
 private:
+    bool m_needSetControlMode = true;
 	double m_prevDist;
 	double m_prevAngle;
 

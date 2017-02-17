@@ -52,7 +52,7 @@ Robot::Robot(void
     m_leftDriveTalonA->ConfigPeakOutputVoltage(12, -12);
     m_leftDriveTalonA->SetSensorDirection(true);
     m_leftDriveTalonA->SelectProfileSlot(0);
-    m_leftDriveTalonA->SetP(1.0);
+    m_leftDriveTalonA->SetP(0.10);
     m_leftDriveTalonA->SetI(0);
     m_leftDriveTalonA->SetD(0);
     m_leftDriveTalonA->SetF(0);
@@ -61,7 +61,7 @@ Robot::Robot(void
     m_leftDriveTalonB->ConfigNeutralMode(
             CANSpeedController::NeutralMode::kNeutralMode_Brake);
     m_leftDriveTalonB->Set(m_leftDriveTalonA->GetDeviceID());
-    m_leftDriveTalonB->SetClosedLoopOutputDirection(true);
+    m_leftDriveTalonB->SetClosedLoopOutputDirection(false);
 
     m_rightDriveTalonA->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
     m_rightDriveTalonA->ConfigNeutralMode(
@@ -72,7 +72,7 @@ Robot::Robot(void
     m_rightDriveTalonA->ConfigPeakOutputVoltage(12, -12);
     m_rightDriveTalonA->SetSensorDirection(true);
     m_rightDriveTalonA->SelectProfileSlot(0);
-    m_rightDriveTalonA->SetP(1.0);
+    m_rightDriveTalonA->SetP(0.10);
     m_rightDriveTalonA->SetI(0);
     m_rightDriveTalonA->SetD(0);
     m_rightDriveTalonA->SetF(0);
@@ -81,7 +81,7 @@ Robot::Robot(void
     m_rightDriveTalonB->ConfigNeutralMode(
             CANSpeedController::NeutralMode::kNeutralMode_Brake);
     m_rightDriveTalonB->Set(m_rightDriveTalonA->GetDeviceID());
-    m_rightDriveTalonB->SetClosedLoopOutputDirection(true);
+    m_rightDriveTalonB->SetClosedLoopOutputDirection(false);
 
     m_leftAgitatorTalon = new CANTalon(LEFT_AGITATOR_CAN_ID, 50);
     fprintf(stderr, "Initialized drive controllers\n");
