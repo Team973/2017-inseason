@@ -101,7 +101,7 @@ uint8_t Pixy::getByte() {
 
 uint16_t Pixy::getBlocks(uint16_t maxBlocks)
 {
-    printf("Starting frame\n");
+//    printf("Starting frame\n");
 	blocks[0] = {0}; //resets the array - clears out data from previous reading
 	uint8_t i;
 	uint16_t w, checksum, sum;

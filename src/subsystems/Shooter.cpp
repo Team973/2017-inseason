@@ -26,18 +26,18 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgita
         m_flywheelPow(0.0),
     m_flywheelSpeedSetpt(0.0)
 {
-    m_flywheelMotorPrimary->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
+    m_flywheelMotorPrimary->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Absolute);
     m_flywheelMotorPrimary->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
     m_flywheelMotorPrimary->SetClosedLoopOutputDirection(true);
     m_flywheelMotorPrimary->SetSensorDirection(false);
     m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kSpeed);
     m_flywheelMotorPrimary->SelectProfileSlot(0);
     m_flywheelMotorPrimary->ConfigNominalOutputVoltage(0, 0);
-    m_flywheelMotorPrimary->ConfigPeakOutputVoltage(12, 0);
+    m_flywheelMotorPrimary->ConfigPeakOutputVoltage(0, -12);
     m_flywheelMotorPrimary->SetP(0.035);
     m_flywheelMotorPrimary->SetI(0.0000012);
     m_flywheelMotorPrimary->SetD(0);
-    m_flywheelMotorPrimary->SetF(1023.0 / 32768.0 * 0.85);
+    m_flywheelMotorPrimary->SetF((1023.0 / 32768.0) * 0.85);
 
     m_flywheelMotorReplica->ConfigNeutralMode(
             CANSpeedController::NeutralMode::kNeutralMode_Coast);
@@ -72,7 +72,7 @@ void Shooter::SetFlywheelPow(double pow){
 void Shooter::SetFlywheelSpeed(double speed){
     m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kSpeed);
     m_flywheelState = FlywheelState::speed;
-  m_flywheelSpeedSetpt = speed;
+    m_flywheelSpeedSetpt = speed;
 }
 
 void Shooter::SetFlywheelStop(){
@@ -112,9 +112,9 @@ void Shooter::TaskPeriodic(RobotMode mode) {
     m_flywheelPowLog->LogDouble(m_flywheelMotorPrimary->GetOutputVoltage());
     m_flywheelStateLog->LogPrintf("%d", m_flywheelState);
     m_speedSetpoint->LogDouble(DEFAULT_FLYWHEEL_SPEED_SETPOINT);
-    DBStringPrintf(DB_LINE5,"shooterrate %2.1f", GetFlywheelRate());
-    DBStringPrintf(DB_LINE6,"shootersetpt %2.1f", m_flywheelSpeedSetpt);
-    DBStringPrintf(DB_LINE8,"shooterpos %2.1f", m_flywheelMotorPrimary->GetOutputVoltage());
+    DBStringPrintf(DB_LINE5,"shooterrate %2.1lf", GetFlywheelRate());
+    DBStringPrintf(DB_LINE6,"shootersetpt %2.1lf", m_flywheelSpeedSetpt);
+    DBStringPrintf(DB_LINE8,"shooterpow %2.1lf", m_flywheelMotorPrimary->GetOutputVoltage());
     switch(m_flywheelState){
         case power:
             m_flywheelMotorPrimary->Set(m_flywheelPow);

@@ -13,16 +13,20 @@ void Robot::TeleopStart(void) {
 void Robot::TeleopStop(void) {
 }
 
+static bool manualControl = true;
+
 void Robot::TeleopContinuous(void) {
     double y = m_driverJoystick->GetRawAxis(DualAction::LeftYAxis);
     double x = -m_driverJoystick->GetRawAxis(DualAction::RightXAxis);
-  printf("throttle  %lf, turn  %lf\n", y, x);
+//  printf("throttle  %lf, turn  %lf\n", y, x);
 
     if (m_driverJoystick->GetRawButton(DualAction::LeftBumper)) {
-    y *= 0.4;
-    x *= 0.4;
-  }
-  m_drive->ArcadeDrive(y, x);
+        y *= 0.4;
+        x *= 0.4;
+    }
+    if (manualControl) {
+        m_drive->ArcadeDrive(y, x);
+    }
 
     double c = m_operatorJoystick->GetRawAxis(DualAction::RightXAxis);
 
@@ -202,12 +206,10 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         switch (button) {
             case DualAction::DPadUpVirtBtn:
                 if (pressedP) {
-                    m_speedSetpt += 50;
                 }
                 break;
             case DualAction::DPadDownVirtBtn:
                 if (pressedP) {
-                    m_speedSetpt -= 50;
                 }
                 break;
             case DualAction::DPadRightVirtBtn:
@@ -230,28 +232,43 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                     m_conveyorSetpt -= 0.1;
                 }
                 break;
-            case DualAction::LeftTrigger:
-                if (pressedP) {
-                }
-                break;
             case DualAction::LeftBumper:
                 if (pressedP) {
+                    m_speedSetpt += 50;
+                    m_shooter->SetFlywheelSpeed(m_speedSetpt);
+                }
+                break;
+            case DualAction::LeftTrigger:
+                if (pressedP) {
+                    m_speedSetpt -= 50;
+                    m_shooter->SetFlywheelSpeed(m_speedSetpt);
                 }
                 break;
             case DualAction::BtnA:
                 if (pressedP) {
+                    manualControl = false;
+                    m_drive->PIDDrive(120, 0,
+                            Drive::RelativeTo::Now, 0.5);
                 }
                 break;
             case DualAction::BtnB:
                 if (pressedP) {
+                    manualControl = true;
+                    m_drive->ArcadeDrive(0.0, 0.0);
                 }
                 break;
             case DualAction::BtnX:
                 if (pressedP) {
+                    manualControl = false;
+                    m_drive->PIDTurn(90,
+                            Drive::RelativeTo::Now, 1.0);
                 }
                 break;
             case DualAction::BtnY:
                 if (pressedP) {
+                    manualControl = false;
+                    m_drive->PIDDrive(120, 0,
+                            Drive::RelativeTo::Now, 0.1);
                 }
                 break;
         }

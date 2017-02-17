@@ -93,7 +93,7 @@ public:
      * @param angle Angle in degrees to go
      * @param relativity What is that angle metric relative to?
      */
-    void PIDTurn(double angle, RelativeTo relativity);
+    void PIDTurn(double angle, RelativeTo relativity, double powerCap);
 
     void VelocityPIDTurn(double angle, RelativeTo relativity);
 

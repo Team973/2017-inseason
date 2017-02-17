@@ -78,13 +78,10 @@ constexpr int FLYWHEEL_CONTROL_PERIOD_MS = 5;
 /**
  * Distance (in inches) of the drive per click of the encoder
  */
-constexpr double DRIVE_WHEEL_DIAMETER = 4.0;
-constexpr double DRIVE_CLICKS_PER_REVOLUTION = 360.0;
+constexpr double DRIVE_WHEEL_DIAMETER = 3.25;
 constexpr double DRIVE_GEAR_RATIO = 1.0;
 constexpr double DRIVE_DIST_PER_REVOLUTION = DRIVE_WHEEL_DIAMETER *
 		Constants::PI;
-constexpr double DRIVE_DIST_PER_CLICK = DRIVE_DIST_PER_REVOLUTION *
-		DRIVE_CLICKS_PER_REVOLUTION;
 
 constexpr double SHOOTER_CLICKS_PER_REVOLUTION = 360.0;
 }

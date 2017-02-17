@@ -45,41 +45,41 @@ Robot::Robot(void
 
     m_leftDriveTalonA->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
     m_leftDriveTalonA->ConfigNeutralMode(
-            CANSpeedController::NeutralMode::kNeutralMode_Brake);
+            CANSpeedController::NeutralMode::kNeutralMode_Coast);
     m_leftDriveTalonA->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
     m_leftDriveTalonA->SetClosedLoopOutputDirection(true);
     m_leftDriveTalonA->ConfigNominalOutputVoltage(0, 0);
     m_leftDriveTalonA->ConfigPeakOutputVoltage(12, -12);
     m_leftDriveTalonA->SetSensorDirection(true);
     m_leftDriveTalonA->SelectProfileSlot(0);
-    m_leftDriveTalonA->SetP(0.10);
+    m_leftDriveTalonA->SetP(0.30);
     m_leftDriveTalonA->SetI(0);
     m_leftDriveTalonA->SetD(0);
     m_leftDriveTalonA->SetF(0);
 
     m_leftDriveTalonB->SetControlMode(CANSpeedController::ControlMode::kFollower);
     m_leftDriveTalonB->ConfigNeutralMode(
-            CANSpeedController::NeutralMode::kNeutralMode_Brake);
+            CANSpeedController::NeutralMode::kNeutralMode_Coast);
     m_leftDriveTalonB->Set(m_leftDriveTalonA->GetDeviceID());
     m_leftDriveTalonB->SetClosedLoopOutputDirection(false);
 
     m_rightDriveTalonA->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
     m_rightDriveTalonA->ConfigNeutralMode(
-            CANSpeedController::NeutralMode::kNeutralMode_Brake);
+            CANSpeedController::NeutralMode::kNeutralMode_Coast);
     m_rightDriveTalonA->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
     m_rightDriveTalonA->SetClosedLoopOutputDirection(true);
     m_rightDriveTalonA->ConfigNominalOutputVoltage(0, 0);
     m_rightDriveTalonA->ConfigPeakOutputVoltage(12, -12);
     m_rightDriveTalonA->SetSensorDirection(true);
     m_rightDriveTalonA->SelectProfileSlot(0);
-    m_rightDriveTalonA->SetP(0.10);
+    m_rightDriveTalonA->SetP(0.30);
     m_rightDriveTalonA->SetI(0);
     m_rightDriveTalonA->SetD(0);
     m_rightDriveTalonA->SetF(0);
 
     m_rightDriveTalonB->SetControlMode(CANSpeedController::ControlMode::kFollower);
     m_rightDriveTalonB->ConfigNeutralMode(
-            CANSpeedController::NeutralMode::kNeutralMode_Brake);
+            CANSpeedController::NeutralMode::kNeutralMode_Coast);
     m_rightDriveTalonB->Set(m_rightDriveTalonA->GetDeviceID());
     m_rightDriveTalonB->SetClosedLoopOutputDirection(false);
 
@@ -137,10 +137,6 @@ void Robot::AllStateContinuous(void) {
     m_time->LogDouble(GetSecTime());
     m_state->LogPrintf("%s", GetRobotModeString());
 
-    DBStringPrintf(DB_LINE9, 
-                   "pixy o%2.2lf %d",
-                   m_pixyR->GetOffset(),
-                   m_pixyR->GetDataFresh());
     m_drive->GetAngularRate();
 }
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,

@@ -79,23 +79,33 @@ void Drive::ArcadeDrive(double throttle, double turn) {
 void Drive::PIDDrive(double dist, double turn, RelativeTo relativity, double powerCap) {
     this->SetDriveController(m_pidDriveController);
     m_pidDriveController->SetCap(powerCap);
-    m_pidDriveController->SetTarget(dist, turn, relativity, this);
+    m_pidDriveController->SetTarget(dist, turn,
+            relativity, this);
+    m_pidDriveController->EnableDist();
+}
+
+void Drive::PIDTurn(double turn, RelativeTo relativity, double powerCap) {
+    this->SetDriveController(m_pidDriveController);
+    m_pidDriveController->SetCap(powerCap);
+    m_pidDriveController->SetTarget(0.0, turn,
+            relativity, this);
+    m_pidDriveController->DisableDist();
 }
 
 double Drive::GetLeftDist() {
-    return -m_leftMotor->GetPosition();
+    return m_leftMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION;
 }
 
 double Drive::GetRightDist() {
-    return m_rightMotor->GetPosition();
+    return -m_rightMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION;
 }
 
 double Drive::GetLeftRate() {
-    return -m_leftMotor->GetSpeed();
+    return m_leftMotor->GetSpeed() * DRIVE_DIST_PER_REVOLUTION;
 }
 
 double Drive::GetRightRate() {
-    return m_rightMotor->GetSpeed();
+    return -m_rightMotor->GetSpeed() * DRIVE_DIST_PER_REVOLUTION;
 }
 
 double Drive::GetDist() {
@@ -107,13 +117,13 @@ double Drive::GetRate() {
 }
 
 double Drive::GetAngle() {
-    return -m_gyro->GetFusedHeading();
+    return m_gyro->GetFusedHeading();
 }
 
 double Drive::GetAngularRate() {
     double xyz_dps[4];
     m_gyro->GetRawGyro(xyz_dps);
-    printf("a %lf b %lf c %lf\n", xyz_dps[0], xyz_dps[1], xyz_dps[2]);
+//    printf("a %lf b %lf c %lf\n", xyz_dps[0], xyz_dps[1], xyz_dps[2]);
     return xyz_dps[2];
 }
 
@@ -139,8 +149,9 @@ void Drive::SetDriveControlMode(CANSpeedController::ControlMode mode){
 void Drive::TaskPeriodic(RobotMode mode) {
 	DBStringPrintf(DB_LINE0, "gyro r %2.1f p", this->GetAngularRate(),
             this->GetAngle());
-    DBStringPrintf(DB_LINE9, "l %2.1f lr%2.1f", 
-            this->GetLeftDist(), this->GetLeftRate());
+    DBStringPrintf(DB_LINE9, "l %2.1lf %2.1lf l %2.1lf %2.1lf", 
+            this->GetLeftDist(), this->GetLeftRate(),
+            this->GetRightDist(), this->GetRightRate());
 }
 
 }

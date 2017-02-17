@@ -62,6 +62,11 @@ public:
 		m_distEnabled = false;
 	}
 
+    /*
+     * Scale the pseed down by |newCap|
+     * 
+     * |newCap| of 1.0 means max speed
+     */
 	void SetCap (double newCap){
 		m_powerCap = newCap;
 	}
@@ -88,7 +93,8 @@ private:
 
 	bool m_distEnabled;
 
-	double m_powerCap;
+	double m_speedCap;
+    double m_lastThrottle;
 };
 
 }

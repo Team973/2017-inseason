@@ -12,22 +12,15 @@
 
 namespace frc973 {
 
-static constexpr double DRIVE_PID_KP = 0.05;
+static constexpr double DRIVE_PID_KP = 0.03;
 static constexpr double DRIVE_PID_KI = 0.0;
 static constexpr double DRIVE_PID_KD = 0;
 
-static constexpr double TURN_PID_KP = 0.10;
+static constexpr double TURN_PID_KP = 0.02;
 static constexpr double TURN_PID_KI = 0.0;
 static constexpr double TURN_PID_KD = 0;
 
-
-/*
-static constexpr double TURN_PID_KP = 0.17;
-static constexpr double TURN_PID_KI = 0.002;
-static constexpr double TURN_PID_KD = 0.0015;
-
-static constexpr double TURN_FEEDFORWARD = 0.06;
-*/
+static constexpr double MAX_SPEED = 1000;
 
 PIDDriveController::PIDDriveController():
 	m_prevDist(0.0),
@@ -38,7 +31,8 @@ PIDDriveController::PIDDriveController():
 	m_drivePID(nullptr),
 	m_turnPID(nullptr),
 	m_distEnabled(true),
-	m_powerCap(1.0)
+	m_speedCap(1.0),
+    m_lastThrottle(0.0)
 {
 	m_drivePID = new PID(DRIVE_PID_KP, DRIVE_PID_KI, DRIVE_PID_KD);
 	m_turnPID = new PID(TURN_PID_KP, TURN_PID_KI, TURN_PID_KD);
@@ -50,25 +44,24 @@ void PIDDriveController::CalcDriveOutput(DriveStateProvider *state,
 		out->SetDriveControlMode(CANSpeedController::ControlMode::kSpeed);
 		m_needSetControlMode = false;
 	}
+
 	m_prevDist = state->GetDist();
 	m_prevAngle = state->GetAngle();
 
 	double throttle;
 	double turn = Util::bound(m_turnPID->CalcOutput(m_prevAngle), -0.5, 0.5);
 
-	/*
-	double turn = m_turnPID->CalcOutput(m_prevAngle);
-	turn = Util::signedIncrease(turn, TURN_FEEDFORWARD);
-	turn = Util::bound(turn, -0.35, 0.35);
-	*/
-
-
 	if (m_distEnabled){
-		throttle = -Util::bound(m_drivePID->CalcOutput(m_prevDist), -m_powerCap, m_powerCap);
+		throttle = Util::bound(m_drivePID->CalcOutput(m_prevDist), -m_speedCap, m_speedCap);
 	}
 	else {
 		throttle = 0.0;
 	}
+
+    if (throttle > m_lastThrottle + 0.03) {
+        throttle = m_lastThrottle + 0.03;
+    }
+    m_lastThrottle = throttle;
 
 	DBStringPrintf(DBStringPos::DB_LINE9, "p %2.2lf t %2.2lf", throttle, turn);
 
@@ -81,10 +74,13 @@ void PIDDriveController::CalcDriveOutput(DriveStateProvider *state,
 
 	DBStringPrintf(DBStringPos::DB_LINE6, "error %lf", m_prevAngle - m_targetAngle);
 
-	out->SetDriveOutput(100 * (throttle + turn), 100 * (throttle - turn));
+	out->SetDriveOutput(MAX_SPEED * m_speedCap * (throttle - turn),
+                        MAX_SPEED * m_speedCap * (throttle + turn));
 
-	if ((m_distEnabled == false || (Util::abs(m_targetDist - m_prevDist) < 2.0 && Util::abs(state->GetRate()) < 0.5)) &&
-			Util::abs(m_targetAngle - m_prevAngle) < 2.0 && Util::abs(state->GetAngularRate()) < 1.0) {
+	if ((m_distEnabled == false || (Util::abs(m_targetDist - m_prevDist) < 2.0 &&
+                                    Util::abs(state->GetRate()) < 0.5)) &&
+            Util::abs(m_targetAngle - m_prevAngle) < 2.0 &&
+            Util::abs(state->GetAngularRate()) < 1.0) {
 		m_onTarget = true;
 	}
 	else {
