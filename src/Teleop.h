@@ -206,6 +206,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         switch (button) {
             case DualAction::DPadUpVirtBtn:
                 if (pressedP) {
+                  m_drive->SetBoilerPixyTargeting();
                 }
                 break;
             case DualAction::DPadDownVirtBtn:

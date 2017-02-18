@@ -88,7 +88,7 @@ Robot::Robot(void
 
     m_logger = new LogSpreadsheet(this);
     m_drive = new Drive(this,
-            m_leftDriveTalonA, m_rightDriveTalonA, m_leftAgitatorTalon, m_logger);
+            m_leftDriveTalonA, m_rightDriveTalonA, m_leftAgitatorTalon, m_logger, m_boilerPixy);
 
     m_battery = new LogCell("Battery voltage");
 

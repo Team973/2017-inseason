@@ -13,12 +13,13 @@
 
 #include "controllers/ArcadeDriveController.h"
 #include "controllers/PIDDrive.h"
+#include "controllers/BoilerPixyVisionDriveController.h"
 
 namespace frc973 {
 
 Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
             CANTalon *spareTalon,
-            LogSpreadsheet *logger
+            LogSpreadsheet *logger, BoilerPixy *boilerPixy
             )
          : DriveBase(scheduler, this, this, nullptr)
          , m_gyro(new PigeonImu(spareTalon))
@@ -28,6 +29,7 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
          , m_rightMotor(right)
          , m_arcadeDriveController(nullptr)
          , m_spreadsheet(logger)
+         , m_boilerPixyDriveController(new BoilerPixyVisionDriveController(boilerPixy))
          , m_angleLog(new LogCell("Angle"))
          , m_angularRateLog(new LogCell("Angular Rate"))
          , m_leftDistLog(new LogCell("Left Encoder Distance"))
@@ -74,6 +76,10 @@ void Drive::Zero() {
 void Drive::ArcadeDrive(double throttle, double turn) {
     this->SetDriveController(m_arcadeDriveController);
     m_arcadeDriveController->SetJoysticks(throttle, turn);
+}
+
+void Drive::SetBoilerPixyTargeting(){
+  this->SetDriveController(m_boilerPixyDriveController);
 }
 
 void Drive::PIDDrive(double dist, double turn, RelativeTo relativity, double powerCap) {
@@ -149,7 +155,7 @@ void Drive::SetDriveControlMode(CANSpeedController::ControlMode mode){
 void Drive::TaskPeriodic(RobotMode mode) {
 	DBStringPrintf(DB_LINE0, "gyro r %2.1f p", this->GetAngularRate(),
             this->GetAngle());
-    DBStringPrintf(DB_LINE9, "l %2.1lf %2.1lf l %2.1lf %2.1lf", 
+    DBStringPrintf(DB_LINE9, "l %2.1lf %2.1lf l %2.1lf %2.1lf",
             this->GetLeftDist(), this->GetLeftRate(),
             this->GetRightDist(), this->GetRightRate());
 }

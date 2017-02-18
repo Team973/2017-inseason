@@ -5,6 +5,7 @@
 #include "WPILib.h"
 #include "CANTalon.h"
 #include "PigeonImu.h"
+#include "BoilerPixy.h"
 using namespace frc;
 
 namespace frc973 {
@@ -14,7 +15,7 @@ class ArcadeDriveController;
 class CheesyDriveController;
 class PIDDriveController;
 class RampPIDDriveController;
-class PixyVisionDriveController;
+class BoilerPixyVisionDriveController;
 class VelocityTurnPID;
 class LogSpreadsheet;
 class LogCell;
@@ -42,7 +43,8 @@ public:
     Drive(TaskMgr *scheduler,
             CANTalon *left, CANTalon *right,
             CANTalon *spareTalon,
-            LogSpreadsheet *logger
+            LogSpreadsheet *logger,
+            BoilerPixy *BoilerPixy
             );
 
     virtual ~Drive() {}
@@ -68,7 +70,7 @@ public:
      */
     void SetCheesyQuickTurn(bool quickturn);
 
-    void SetVisionTargeting();
+    void SetBoilerPixyTargeting();
 
     /*
      * Sets drive to use standard arcade drive controller if it doesn't already
@@ -151,10 +153,10 @@ private:
     CheesyDriveController *m_cheesyDriveController;
     PIDDriveController *m_pidDriveController;
     RampPIDDriveController *m_rampPidDriveController;
-    PixyVisionDriveController *m_visionDriveController;
     VelocityTurnPID *m_velocityTurnController;
 
     LogSpreadsheet *m_spreadsheet;
+    BoilerPixyVisionDriveController *m_boilerPixyDriveController;
     LogCell *m_angleLog;
     LogCell *m_angularRateLog;
     LogCell *m_leftDistLog;

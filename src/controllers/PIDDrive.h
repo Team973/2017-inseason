@@ -64,11 +64,11 @@ public:
 
     /*
      * Scale the pseed down by |newCap|
-     * 
+     *
      * |newCap| of 1.0 means max speed
      */
 	void SetCap (double newCap){
-		m_powerCap = newCap;
+		m_speedCap = newCap;
 	}
 
 	void Zero() {
