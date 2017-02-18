@@ -44,7 +44,7 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgita
     m_flywheelMotorReplica->SetControlMode(
             CANSpeedController::ControlMode::kFollower);
     m_flywheelMotorReplica->Set(m_flywheelMotorPrimary->GetDeviceID());
-  m_flywheelMotorReplica->SetClosedLoopOutputDirection(false);
+    m_flywheelMotorReplica->SetClosedLoopOutputDirection(false);
 
     m_leftAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
     m_rightAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);

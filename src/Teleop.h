@@ -13,7 +13,7 @@ void Robot::TeleopStart(void) {
 void Robot::TeleopStop(void) {
 }
 
-static bool manualControl = true;
+static bool g_manualControl = true;
 
 void Robot::TeleopContinuous(void) {
     double y = m_driverJoystick->GetRawAxis(DualAction::LeftYAxis);
@@ -24,7 +24,7 @@ void Robot::TeleopContinuous(void) {
         y *= 0.4;
         x *= 0.4;
     }
-    if (manualControl) {
+    if (g_manualControl) {
         m_drive->ArcadeDrive(y, x);
     }
 
@@ -206,7 +206,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         switch (button) {
             case DualAction::DPadUpVirtBtn:
                 if (pressedP) {
-                  m_drive->SetBoilerPixyTargeting();
+                    m_drive->SetBoilerPixyTargeting();
                 }
                 break;
             case DualAction::DPadDownVirtBtn:
@@ -247,29 +247,35 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::BtnA:
                 if (pressedP) {
-                    manualControl = false;
+                    g_manualControl = false;
                     m_drive->PIDDrive(120, 0,
                             Drive::RelativeTo::Now, 0.5);
                 }
                 break;
             case DualAction::BtnB:
                 if (pressedP) {
-                    manualControl = true;
+                    g_manualControl = true;
                     m_drive->ArcadeDrive(0.0, 0.0);
                 }
                 break;
             case DualAction::BtnX:
                 if (pressedP) {
-                    manualControl = false;
+                    g_manualControl = false;
                     m_drive->PIDTurn(90,
                             Drive::RelativeTo::Now, 1.0);
                 }
                 break;
             case DualAction::BtnY:
                 if (pressedP) {
-                    manualControl = false;
+                    m_boilerPixy->Enable();
+                    /*
+                    g_manualControl = false;
                     m_drive->PIDDrive(120, 0,
                             Drive::RelativeTo::Now, 0.1);
+                            */
+                }
+                else {
+                    m_boilerPixy->Disable();
                 }
                 break;
         }

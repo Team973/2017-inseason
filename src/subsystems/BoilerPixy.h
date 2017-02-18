@@ -15,6 +15,12 @@ namespace frc973{
       BoilerPixy(TaskMgr *scheduler);
       virtual ~BoilerPixy();
 
+      /**
+       * Turn the flashlight on or off
+       */
+      void Enable();
+      void Disable();
+
       double GetXOffset();
       double GetHeight();
       bool GetSeesTargetX();
@@ -28,5 +34,7 @@ namespace frc973{
       AnalogInput *m_pixyYOffset;
       DigitalInput *m_seesTargetX;
       DigitalInput *m_seesTargetY;
+
+      Relay *m_pixyLight;
   };
 }

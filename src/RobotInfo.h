@@ -35,6 +35,8 @@ constexpr int GEAR_PIXY_CAM_ANALOG = 2;
  * Relays
  */
 constexpr int COMPRESSOR_RELAY = 0;
+constexpr int GEAR_PIXY_LIGHT_RELAY = 1;
+constexpr int BOILER_PIXY_LIGHT_RELAY = 2;
 
 /**
  * USB port-out (driver-station)
