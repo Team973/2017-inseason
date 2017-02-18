@@ -25,6 +25,7 @@ class PixyThread;
 class BallIntake;
 class GreyCompressor;
 class BoilerPixy;
+class GearPixy;
 
 class Robot:
         public CoopMTRobot,
@@ -71,7 +72,7 @@ private:
     GearIntake	*m_gearIntake;
     Shooter			*m_shooter;
     BoilerPixy      *m_boilerPixy;
-
+    GearPixy    *m_gearPixy;
     /*
      * Compressor
      */

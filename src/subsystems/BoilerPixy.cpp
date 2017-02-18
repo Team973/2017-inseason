@@ -1,5 +1,6 @@
 #include "BoilerPixy.h"
 #include "RobotInfo.h"
+#include "stdio.h"
 
 namespace frc973{
     BoilerPixy::BoilerPixy(TaskMgr *scheduler) :
@@ -8,11 +9,10 @@ namespace frc973{
     m_pixyYOffset(new AnalogInput(BOILER_PIXY_CAM_Y_ANALOG)),
     m_seesTargetX(new DigitalInput(BOILER_PIXY_CAM_X_DIGITAL)),
     m_seesTargetY(new DigitalInput(BOILER_PIXY_CAM_Y_DIGITAL)),
-    m_pixyLight(new Relay(BOILER_PIXY_LIGHT_RELAY, 
-                          Relay::kForwardOnly))
+    m_pixyLight(new Solenoid(BOILER_PIXY_LIGHT_SOL))
     {
         m_scheduler->RegisterTask("Boiler pixy", this, TASK_PERIODIC);
-        m_pixyLight->Set(Relay::kOff);
+        m_pixyLight->Set(false);
     }
 
     BoilerPixy::~BoilerPixy(){
@@ -20,15 +20,16 @@ namespace frc973{
     }
 
     void BoilerPixy::Enable() {
-        m_pixyLight->Set(Relay::kOn);
+        printf("Enabling the boiler pixy\n");
+        m_pixyLight->Set(true);
     }
 
     void BoilerPixy::Disable() {
-        m_pixyLight->Set(Relay::kOff);
+        m_pixyLight->Set(false);
     }
 
     double BoilerPixy::GetXOffset(){
-        return 1.25 * (m_pixyXOffset->GetVoltage() - 8.0);
+        return -(1.25 * (m_pixyXOffset->GetVoltage() - 2.2));
     }
 
     double BoilerPixy::GetHeight(){
@@ -45,8 +46,8 @@ namespace frc973{
 
     void BoilerPixy::TaskPeriodic(RobotMode mode){
         DBStringPrintf(DB_LINE7,
-              "x %d %2.1lf y %d %2.1lf",
-              GetSeesTargetX(), m_pixyXOffset->GetVoltage(),
+              "x %d %2.1lf %2.1lf y %d %2.1lf",
+              GetSeesTargetX(), GetXOffset(), m_pixyXOffset->GetVoltage(),
               GetSeesTargetY(), m_pixyYOffset->GetVoltage());
           /*
         DBStringPrintf(DB_LINE7,

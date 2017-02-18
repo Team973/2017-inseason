@@ -7,6 +7,7 @@
 
  #include "lib/DriveBase.h"
  #include "subsystems/BoilerPixy.h"
+ #include "stdio.h"
 
  namespace frc973{
 
@@ -18,6 +19,8 @@
       virtual ~BoilerPixyVisionDriveController();
 
       void Start()  override{
+        printf("Starting BoiulerPixyVisionController %p\n", m_boilerPixy);
+        m_boilerPixy->Enable();
         m_needSetControlMode = true;
       }
       void CalcDriveOutput(DriveStateProvider *state,

@@ -15,6 +15,9 @@ namespace frc973{
     this->m_scheduler->RegisterTask("BallIntake", this, TASK_PERIODIC);
     m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
     m_ballIntakeMotor->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
+    m_ballIntakeMotor->EnableCurrentLimit(true);
+    m_ballIntakeMotor->SetCurrentLimit(20);
+    m_ballIntakeMotor->SetVoltageRampRate(6.0);
   }
 
   BallIntake::~BallIntake(){

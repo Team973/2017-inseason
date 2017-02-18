@@ -26,7 +26,7 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgita
         m_flywheelPow(0.0),
     m_flywheelSpeedSetpt(0.0)
 {
-    m_flywheelMotorPrimary->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Absolute);
+    m_flywheelMotorPrimary->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
     m_flywheelMotorPrimary->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
     m_flywheelMotorPrimary->SetClosedLoopOutputDirection(true);
     m_flywheelMotorPrimary->SetSensorDirection(false);
@@ -49,6 +49,13 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgita
     m_leftAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
     m_rightAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
     m_ballConveyor->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
+
+    m_leftAgitator->EnableCurrentLimit(true);
+    m_rightAgitator->EnableCurrentLimit(true);
+    m_leftAgitator->SetCurrentLimit(20);
+    m_rightAgitator->SetCurrentLimit(20);
+    m_leftAgitator->SetVoltageRampRate(6.0);
+    m_rightAgitator->SetVoltageRampRate(6.0);
 
     m_scheduler->RegisterTask("Shooter", this, TASK_PERIODIC);
     m_flywheelRate = new LogCell("FlywheelRate", 32);

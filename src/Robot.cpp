@@ -12,6 +12,7 @@
 #include "subsystems/GearIntake.h"
 #include "subsystems/Shooter.h"
 #include "subsystems/BoilerPixy.h"
+#include "subsystems/GearPixy.h"
 
 #include "CANTalon.h"
 
@@ -107,6 +108,7 @@ Robot::Robot(void
     m_gearIntake = new GearIntake(this);
     m_shooter = new Shooter(this, m_logger, m_leftAgitatorTalon);
     m_boilerPixy = new BoilerPixy(this);
+    m_gearPixy = new GearPixy(this);
 
     m_airPressureSwitch = new DigitalInput(AIR_PRESSURE_DIN);
     m_compressorRelay = new Relay(COMPRESSOR_RELAY, Relay::kForwardOnly);

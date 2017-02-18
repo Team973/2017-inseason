@@ -35,6 +35,6 @@ namespace frc973{
       DigitalInput *m_seesTargetX;
       DigitalInput *m_seesTargetY;
 
-      Relay *m_pixyLight;
+      Solenoid *m_pixyLight;
   };
 }

@@ -7,7 +7,7 @@ namespace frc973{
     m_pixyOffset(new AnalogInput(GEAR_PIXY_CAM_ANALOG)),
     m_seesTarget(new DigitalInput(GEAR_PIXY_CAM_DIGITAL))
   {
-
+    m_scheduler->RegisterTask("Gear pixy", this, TASK_PERIODIC);
   }
 
   GearPixy::~GearPixy(){
@@ -23,8 +23,8 @@ namespace frc973{
   }
 
   void GearPixy::TaskPeriodic(RobotMode mode){
-    /*DBStringPrintf(DB_LINE8,
+    DBStringPrintf(DB_LINE8,
             "g %d %2.1lf",
-            GetSeesTarget(), m_pixyOffset->GetVoltage());*/
+            GetSeesTarget(), m_pixyOffset->GetVoltage());
   }
 }

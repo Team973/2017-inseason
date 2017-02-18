@@ -24,19 +24,18 @@ constexpr int PUSH_SENSOR_TOP_LEFT = 1;
 constexpr int PUSH_SENSOR_TOP_RIGHT = 2;
 constexpr int PUSH_SENSOR_BOTTOM = 3;
 
-constexpr int BOILER_PIXY_CAM_X_DIGITAL = 4;
-constexpr int BOILER_PIXY_CAM_Y_DIGITAL = 5;
+constexpr int BOILER_PIXY_CAM_X_DIGITAL = 5;
+constexpr int BOILER_PIXY_CAM_Y_DIGITAL = 4;
 constexpr int GEAR_PIXY_CAM_DIGITAL = 6;
 
-constexpr int BOILER_PIXY_CAM_X_ANALOG = 0;
-constexpr int BOILER_PIXY_CAM_Y_ANALOG = 1;
+constexpr int BOILER_PIXY_CAM_X_ANALOG = 1;
+constexpr int BOILER_PIXY_CAM_Y_ANALOG = 0;
 constexpr int GEAR_PIXY_CAM_ANALOG = 2;
 /**
  * Relays
  */
 constexpr int COMPRESSOR_RELAY = 0;
 constexpr int GEAR_PIXY_LIGHT_RELAY = 1;
-constexpr int BOILER_PIXY_LIGHT_RELAY = 2;
 
 /**
  * USB port-out (driver-station)
@@ -52,6 +51,8 @@ constexpr int GEAR_INTAKE_GRIP_CLOSE = 2;
 
 constexpr int POWER_TAKEOFF_SOL_A = 3;
 constexpr int POWER_TAKEOFF_SOL_B = 4;
+
+constexpr int BOILER_PIXY_LIGHT_SOL = 6;
 //CANTalon
 constexpr int DRIVE_LEFT_A_CAN = 16;
 constexpr int DRIVE_LEFT_B_CAN = 15;
