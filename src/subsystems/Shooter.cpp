@@ -114,7 +114,7 @@ void Shooter::TaskPeriodic(RobotMode mode) {
     m_speedSetpoint->LogDouble(DEFAULT_FLYWHEEL_SPEED_SETPOINT);
     DBStringPrintf(DB_LINE5,"shooterrate %2.1lf", GetFlywheelRate());
     DBStringPrintf(DB_LINE6,"shootersetpt %2.1lf", m_flywheelSpeedSetpt);
-    DBStringPrintf(DB_LINE8,"shooterpow %2.1lf", m_flywheelMotorPrimary->GetOutputVoltage());
+    //DBStringPrintf(DB_LINE8,"shooterpow %2.1lf", m_flywheelMotorPrimary->GetOutputVoltage());
     switch(m_flywheelState){
         case power:
             m_flywheelMotorPrimary->Set(m_flywheelPow);

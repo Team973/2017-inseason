@@ -33,7 +33,7 @@ namespace frc973{
   }
 
   void BoilerPixy::TaskPeriodic(RobotMode mode){
-      DBStringPrintf(DB_LINE7,
+    DBStringPrintf(DB_LINE7,
               "x %d %2.1lf y %d %2.1lf",
               GetSeesTargetX(), m_pixyXOffset->GetVoltage(),
               GetSeesTargetY(), m_pixyYOffset->GetVoltage());
