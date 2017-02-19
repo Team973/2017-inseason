@@ -1,4 +1,5 @@
 #include "Lights.h"
+#include "lib/WrapDash.h"
 
 namespace frc973{
   Lights::Lights(TaskMgr *scheduler) :
@@ -18,35 +19,39 @@ namespace frc973{
 
     void Lights::EnableLights(){
       m_pixyLight->Set(true);
+      m_lightMode = on;
     }
 
     void Lights::DisableLights(){
       m_pixyLight->Set(false);
+      m_lightMode = off;
     }
 
     void Lights::NotifyFlash(int n){
       m_lightMode = LightMode::blinkingOn;
       m_flashOrder = n;
+      m_lightsTimer = GetMsecTime();
     }
 
     void Lights::TaskPeriodic(RobotMode mode){
+      DBStringPrintf(DB_LINE0, "light state %d", m_lightMode);
       switch(m_lightMode){
         case on:
-          this->EnableLights();
+          m_pixyLight->Set(true);
           break;
         case off:
-          this->DisableLights();
+          m_pixyLight->Set(false);
           break;
         case blinkingOn:
+          m_pixyLight->Set(true);
           if(GetMsecTime() - m_lightsTimer >= 250){
-            this->EnableLights();
             m_lightsTimer = GetMsecTime();
             m_lightMode = LightMode::blinkingOff;
           }
           break;
         case blinkingOff:
+          m_pixyLight->Set(false);
           if (GetMsecTime() - m_lightsTimer >= 250){
-            this->DisableLights();
             m_lightsTimer = GetMsecTime();
             m_flashOrder--;
             if (m_flashOrder > 0) {

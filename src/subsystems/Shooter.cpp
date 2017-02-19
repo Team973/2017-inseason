@@ -116,14 +116,12 @@ void Shooter::StartAgitator(double speed, bool side){
     else if (side == true) {
         m_rightAgitator->Set(-speed);
         printf("%lf pow on %d - right agitator\n", speed, RIGHT_AGITATOR_CAN_ID);
-        DBStringPrintf(DB_LINE0, "ag pow %lf", speed);
     }
 }
 
 void Shooter::StopAgitator(){
     m_leftAgitator->Set(0.0);
     m_rightAgitator->Set(0.0);
-    DBStringPrintf(DB_LINE0, "ag pow %lf", 0.0);
 }
 
 void Shooter::TaskPeriodic(RobotMode mode) {

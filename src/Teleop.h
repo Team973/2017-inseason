@@ -289,7 +289,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::BtnY:
                 if (pressedP) {
-                    m_boilerPixy->Enable();
+                    m_lights->EnableLights();
                     /*
                     g_manualControl = false;
                     m_drive->PIDDrive(120, 0,
@@ -297,7 +297,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                             */
                 }
                 else {
-                    m_boilerPixy->Disable();
+                    m_lights->DisableLights();
                 }
                 break;
         }
