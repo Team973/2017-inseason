@@ -29,7 +29,7 @@ void Robot::TeleopContinuous(void) {
         m_drive->ArcadeDrive(y, x);
     }
 
-    double c = m_operatorJoystick->GetRawAxis(DualAction::RightXAxis);
+    double c = m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis);
 
     m_shooter->StartConveyor(c);
 
@@ -99,11 +99,11 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         case DualAction::DPadUpVirtBtn:
             if (pressedP) {
                 m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
-                //m_hanger->SetHangerState(Hanger::HangerState::autoHang);
         }
             break;
         case DualAction::DPadDownVirtBtn:
             if (pressedP) {
+              m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
             }
             break;
         case DualAction::DPadLeftVirtBtn:
@@ -189,7 +189,6 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::DPadDownVirtBtn:
             if (pressedP) {
-                m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
             }
             break;
         case DualAction::DPadLeftVirtBtn:
@@ -213,7 +212,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         switch (button) {
             case DualAction::DPadUpVirtBtn:
                 if (pressedP) {
-                    g_manualControl = false; 
+                    g_manualControl = false;
                     m_drive->SetBoilerPixyTargeting();
                 }
                 break;

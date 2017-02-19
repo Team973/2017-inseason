@@ -63,7 +63,9 @@ void PIDDriveController::CalcDriveOutput(DriveStateProvider *state,
     }
     m_lastThrottle = throttle;
 
-	DBStringPrintf(DBStringPos::DB_LINE3, "p %2.2lf t %2.2lf", throttle, turn);
+	DBStringPrintf(DBStringPos::DB_LINE3, "p %2.2lf t %2.2lf",
+            MAX_SPEED * m_speedCap * throttle,
+            MAX_SPEED * m_speedCap * turn);
 
 	printf("dist target %lf, dist curr %lf, dist error: %lf \n",
 			m_targetDist, m_prevDist, m_targetDist - m_prevDist);

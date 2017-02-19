@@ -29,7 +29,7 @@ namespace frc973 {
         m_crankMotor->EnableCurrentLimit(true);
         m_crankMotor->SetCurrentLimit(40);
         m_crankMotor->Set(0.0);
-        
+
         m_crankMotorB->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
         m_crankMotorB->SetControlMode(CANTalon::ControlMode::kFollower);
         m_crankMotor->SetInverted(true);
@@ -70,7 +70,7 @@ namespace frc973 {
 
     void Hanger::TaskPeriodic(RobotMode mode) {
         m_crankCurrent = m_crankMotor->GetOutputCurrent();
-        DBStringPrintf(DB_LINE2, "hang %lf", m_crankMotor->GetPosition());
+        DBStringPrintf(DB_LINE2, "hang %2.1f", (m_crankMotor->GetPosition()) * 16.0 / 22.0);
         /*
         switch (m_hangerState) {
             case start:
