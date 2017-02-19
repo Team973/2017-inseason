@@ -24,9 +24,12 @@
         m_boilerPixy->Enable();
         m_needSetControlMode = true;
         m_lightEnableTimeMs = GetMsecTime();
+        m_onTarget = false;
       }
+
       void CalcDriveOutput(DriveStateProvider *state,
     			DriveControlSignalReceiver *out) override;
+
       bool OnTarget() override{
         return m_onTarget;
       };

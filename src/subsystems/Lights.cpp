@@ -34,7 +34,6 @@ namespace frc973{
     }
 
     void Lights::TaskPeriodic(RobotMode mode){
-      DBStringPrintf(DB_LINE0, "light state %d", m_lightMode);
       switch(m_lightMode){
         case on:
           m_pixyLight->Set(true);

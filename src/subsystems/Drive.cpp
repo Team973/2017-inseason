@@ -122,6 +122,11 @@ double Drive::GetRate() {
     return GetLeftRate();
 }
 
+double Drive::GetDriveCurrent() {
+    return (m_rightMotor->GetOutputCurrent() + 
+            m_leftMotor->GetOutputCurrent()) / 2.0;
+}
+
 double Drive::GetAngle() {
     return m_gyro->GetFusedHeading();
 }

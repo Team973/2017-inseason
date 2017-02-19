@@ -24,7 +24,8 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgita
         m_rightAgitator(new CANTalon(RIGHT_AGITATOR_CAN_ID, 50)),
         m_ballConveyor(new CANTalon(BALL_CONVEYOR_CAN_ID, 50)),
         m_flywheelPow(0.0),
-        m_flywheelSpeedSetpt(0.0)
+        m_flywheelSpeedSetpt(0.0),
+        m_flywheelOnTargetFilter(0.5)
 {
     m_flywheelMotorPrimary->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
     m_flywheelMotorPrimary->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
@@ -35,10 +36,10 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgita
     m_flywheelMotorPrimary->SelectProfileSlot(0);
     m_flywheelMotorPrimary->ConfigNominalOutputVoltage(0, 0);
     m_flywheelMotorPrimary->ConfigPeakOutputVoltage(12, -12);
-    m_flywheelMotorPrimary->SetP(0.03);
+    m_flywheelMotorPrimary->SetP(0.015);
     m_flywheelMotorPrimary->SetI(0.0);
-    m_flywheelMotorPrimary->SetD(0.3);
-    m_flywheelMotorPrimary->SetF(0.024);
+    m_flywheelMotorPrimary->SetD(0.29);
+    m_flywheelMotorPrimary->SetF(0.029);
 
     m_flywheelMotorReplica->ConfigNeutralMode(
             CANSpeedController::NeutralMode::kNeutralMode_Coast);
@@ -82,6 +83,7 @@ void Shooter::SetFlywheelSpeed(double speed){
     m_flywheelState = FlywheelState::speed;
     m_flywheelSpeedSetpt = speed;
     m_flywheelMotorPrimary->Set(m_flywheelSpeedSetpt);
+    m_flywheelOnTargetFilter.Update(false);
 }
 
 void Shooter::SetFlywheelStop(){
@@ -89,10 +91,16 @@ void Shooter::SetFlywheelStop(){
     m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
     m_flywheelMotorPrimary->Set(0.0);
     m_flywheelState = FlywheelState::notRunning;
+    m_flywheelOnTargetFilter.Update(false);
 }
 
 double Shooter::GetFlywheelRate(){
     return m_flywheelMotorPrimary->GetSpeed();// * (1.0 / 24576.0);
+}
+
+bool Shooter::OnTarget() {
+    return m_flywheelOnTargetFilter.Update(
+            abs(GetFlywheelRate() - m_flywheelSpeedSetpt) < 200.0);
 }
 
 void Shooter::StartConveyor(double speed) {

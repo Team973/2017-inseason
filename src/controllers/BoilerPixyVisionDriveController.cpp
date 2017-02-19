@@ -12,7 +12,7 @@ namespace frc973{
     m_leftSetpoint(0.0),
     m_rightSetpoint(0.0),
     m_boilerPixy(boilerPixy),
-    m_pid(new PID(1.2, 0.0, 0.1))
+    m_pid(new PID(1.8, 0.0, 0.1))
   {
   }
 
@@ -41,7 +41,7 @@ namespace frc973{
 
     out->SetDriveOutput(m_leftSetpoint, m_rightSetpoint);
 
-    if (Util::abs(m_boilerPixy->GetXOffset()) < 0.2 &&
+    if (Util::abs(m_boilerPixy->GetXOffset()) < 0.1 &&
             Util::abs(state->GetAngularRate()) < 1.0) {
   		m_onTarget = true;
   	}

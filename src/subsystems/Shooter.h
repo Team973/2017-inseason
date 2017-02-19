@@ -10,6 +10,7 @@
 #include "WPILib.h"
 #include "lib/CoopTask.h"
 #include "CANTalon.h"
+#include "lib/filters/Debouncer.h"
 
 using namespace frc;
 
@@ -31,6 +32,8 @@ public:
     void SetFlywheelPow(double pow);
     void SetFlywheelStop();
     void SetFlywheelSpeed(double speed);
+
+    bool OnTarget();
 
     void StartAgitator(double speed, bool side);
     void StopAgitator();
@@ -67,6 +70,7 @@ private:
     LogCell *m_flywheelPowLog;
     LogCell *m_flywheelStateLog;
     LogCell *m_speedSetpoint;
+    Debouncer m_flywheelOnTargetFilter;
 };
 
 }
