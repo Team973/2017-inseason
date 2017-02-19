@@ -51,8 +51,7 @@ constexpr int GEAR_INTAKE_GRIP_CLOSE = 2;
 constexpr int POWER_TAKEOFF_SOL_A = 3;
 constexpr int POWER_TAKEOFF_SOL_B = 4;
 
-constexpr int BOILER_PIXY_X_LIGHT_SOL = 6;
-constexpr int BOILER_PIXY_Y_LIGHT_SOL = 5;
+constexpr int BOILER_PIXY_LIGHT_SOL = 6;
 
 constexpr int GEAR_PIXY_LIGHT_SOL = 7;
 //CANTalon

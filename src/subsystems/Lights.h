@@ -15,6 +15,13 @@ using namespace frc;
 namespace frc973{
   class Lights : public CoopTask{
     public:
+      enum LightMode {
+        on,
+        off,
+        blinkingOn,
+        blinkingOff
+      };
+
       Lights(TaskMgr *scheduler);
       virtual ~Lights();
 
@@ -26,8 +33,9 @@ namespace frc973{
     private:
       TaskMgr *m_scheduler;
       uint32_t m_lightsTimer;
+      int m_flashOrder;
 
-      Solenoid *m_pixyLightX;
-      Solenoid *m_pixyLightY;
+      LightMode m_lightMode;
+      Solenoid *m_pixyLight;
   };
 }
