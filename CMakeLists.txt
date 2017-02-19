@@ -23,7 +23,7 @@ set(SOURCE_FILES src/Robot.cpp src/lib/CoopMTRobot.cpp
     src/subsystems/GearPixy.cpp
     src/subsystems/BallIntake.cpp
     src/subsystems/GearIntake.cpp
-    src/Subsystems/Lights.cpp
+    src/subsystems/Lights.cpp
     src/controllers/PIDDrive.cpp
     src/lib/filters/MedianFilter.cpp src/lib/filters/MovingAverageFilter.cpp
     src/lib/filters/PID.cpp src/lib/filters/RampedOutput.cpp

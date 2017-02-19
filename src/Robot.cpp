@@ -89,6 +89,8 @@ Robot::Robot(void
     fprintf(stderr, "Initialized drive controllers\n");
 
     m_logger = new LogSpreadsheet(this);
+    m_lights = new Lights(this);
+    m_boilerPixy = new BoilerPixy(this, m_lights);
     m_drive = new Drive(this,
             m_leftDriveTalonA, m_rightDriveTalonA, m_leftAgitatorTalon,
             m_logger, m_boilerPixy);
@@ -109,8 +111,6 @@ Robot::Robot(void
     m_gearIntake = new GearIntake(this);
     m_shooter = new Shooter(this, m_logger, m_leftAgitatorTalon);
     m_gearPixy = new GearPixy(this);
-    m_lights = new Lights(this);
-    m_boilerPixy = new BoilerPixy(this, m_lights);
 
     m_airPressureSwitch = new DigitalInput(AIR_PRESSURE_DIN);
     m_compressorRelay = new Relay(COMPRESSOR_RELAY, Relay::kForwardOnly);

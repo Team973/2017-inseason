@@ -24,16 +24,17 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgita
         m_rightAgitator(new CANTalon(RIGHT_AGITATOR_CAN_ID, 50)),
         m_ballConveyor(new CANTalon(BALL_CONVEYOR_CAN_ID, 50)),
         m_flywheelPow(0.0),
-    m_flywheelSpeedSetpt(0.0)
+        m_flywheelSpeedSetpt(0.0)
 {
     m_flywheelMotorPrimary->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
     m_flywheelMotorPrimary->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
-    m_flywheelMotorPrimary->SetClosedLoopOutputDirection(true);
+    m_flywheelMotorPrimary->SetClosedLoopOutputDirection(false);
+    m_flywheelMotorPrimary->ConfigLimitSwitchOverrides(false, false);
     m_flywheelMotorPrimary->SetSensorDirection(false);
     m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kSpeed);
     m_flywheelMotorPrimary->SelectProfileSlot(0);
     m_flywheelMotorPrimary->ConfigNominalOutputVoltage(0, 0);
-    m_flywheelMotorPrimary->ConfigPeakOutputVoltage(0, -12);
+    m_flywheelMotorPrimary->ConfigPeakOutputVoltage(12, -12);
     m_flywheelMotorPrimary->SetP(0.03);
     m_flywheelMotorPrimary->SetI(0.0);
     m_flywheelMotorPrimary->SetD(0.3);
@@ -44,7 +45,7 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgita
     m_flywheelMotorReplica->SetControlMode(
             CANSpeedController::ControlMode::kFollower);
     m_flywheelMotorReplica->Set(m_flywheelMotorPrimary->GetDeviceID());
-    m_flywheelMotorReplica->SetClosedLoopOutputDirection(false);
+    m_flywheelMotorReplica->SetClosedLoopOutputDirection(true);
 
     m_leftAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
     m_rightAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
@@ -85,6 +86,8 @@ void Shooter::SetFlywheelSpeed(double speed){
 
 void Shooter::SetFlywheelStop(){
     m_flywheelPow = 0.0;
+    m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
+    m_flywheelMotorPrimary->Set(0.0);
     m_flywheelState = FlywheelState::notRunning;
 }
 
@@ -94,25 +97,33 @@ double Shooter::GetFlywheelRate(){
 
 void Shooter::StartConveyor(double speed) {
     m_ballConveyor->Set(speed);
+    printf("%lf pow on %d - conveyor\n", speed, BALL_CONVEYOR_CAN_ID);
+    DBStringPrintf(DB_LINE3, "conv pow %lf", speed);
 }
 
 void Shooter::StopConveyor() {
     m_ballConveyor->Set(0.0);
+    printf("%lf pow on %d - conveyor\n", 0.0, BALL_CONVEYOR_CAN_ID);
+    DBStringPrintf(DB_LINE3, "conv pow %lf", 0.0);
 }
 
 //side: true = right; false = left
 void Shooter::StartAgitator(double speed, bool side){
     if (side == false) {
-        m_leftAgitator->Set(-speed);
+        m_leftAgitator->Set(speed);
+        printf("%lf pow on %d - left agitator\n", speed, LEFT_AGITATOR_CAN_ID);
     }
     else if (side == true) {
-        m_rightAgitator->Set(speed);
+        m_rightAgitator->Set(-speed);
+        printf("%lf pow on %d - right agitator\n", speed, RIGHT_AGITATOR_CAN_ID);
+        DBStringPrintf(DB_LINE0, "ag pow %lf", speed);
     }
 }
 
 void Shooter::StopAgitator(){
-        m_leftAgitator->Set(0.0);
-        m_rightAgitator->Set(0.0);
+    m_leftAgitator->Set(0.0);
+    m_rightAgitator->Set(0.0);
+    DBStringPrintf(DB_LINE0, "ag pow %lf", 0.0);
 }
 
 void Shooter::TaskPeriodic(RobotMode mode) {
@@ -122,6 +133,8 @@ void Shooter::TaskPeriodic(RobotMode mode) {
     m_speedSetpoint->LogDouble(DEFAULT_FLYWHEEL_SPEED_SETPOINT);
     DBStringPrintf(DB_LINE5,"shooterrate %2.1lf", GetFlywheelRate());
     DBStringPrintf(DB_LINE6,"shootersetpt %2.1lf", m_flywheelSpeedSetpt);
+    printf("setpt %lf speed %lf\n",
+            m_flywheelSpeedSetpt, GetFlywheelRate());
     //DBStringPrintf(DB_LINE8,"shooterpow %2.1lf", m_flywheelMotorPrimary->GetOutputVoltage());
     switch(m_flywheelState){
         case power:

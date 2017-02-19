@@ -19,7 +19,7 @@ namespace frc973 {
              m_scheduler(scheduler),
              m_crankMotor(new CANTalon(HANGER_CAN_ID)),
              m_crankMotorB(new CANTalon(HANGER_CAN_ID_B)),
-             m_hangerState(HangerState::armed)
+             m_hangerState(HangerState::start)
     {
         m_scheduler->RegisterTask("Hanger", this, TASK_PERIODIC);
         m_crankMotor->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
@@ -28,21 +28,21 @@ namespace frc973 {
         m_crankMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
         m_crankMotor->EnableCurrentLimit(true);
         m_crankMotor->SetCurrentLimit(40);
-        m_crankMotor->Set(0.0);
 
         m_crankMotorB->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
         m_crankMotorB->SetControlMode(CANTalon::ControlMode::kFollower);
         m_crankMotor->SetInverted(true);
 
-        m_crankMotor->SetClosedLoopOutputDirection(false);
+        m_crankMotor->SetClosedLoopOutputDirection(true);
         m_crankMotor->SetSensorDirection(false);
         m_crankMotor->SelectProfileSlot(0);
-        m_crankMotor->SetP(0.0035);
-        m_crankMotor->SetI(0.0000012);
+        m_crankMotor->SetP(0.0001);
+        m_crankMotor->SetI(0.0);
         m_crankMotor->SetD(0);
 
         m_crankMotorB->Set(m_crankMotor->GetDeviceID());
         m_crankMotorB->SetClosedLoopOutputDirection(true);
+        m_crankMotor->Set(0.0);
     }
 
     Hanger::~Hanger() {
@@ -70,8 +70,8 @@ namespace frc973 {
 
     void Hanger::TaskPeriodic(RobotMode mode) {
         m_crankCurrent = m_crankMotor->GetOutputCurrent();
-        DBStringPrintf(DB_LINE2, "hang %2.1f", (m_crankMotor->GetPosition()) * 16.0 / 22.0);
-        /*
+        DBStringPrintf(DB_LINE2, "hang %2.1f",
+                m_crankMotor->GetPosition() * 22.0 / 16.0);
         switch (m_hangerState) {
             case start:
                 m_crankMotor->Set(0.0);
@@ -86,7 +86,6 @@ namespace frc973 {
                 }
                 break;
         }
-        */
     }
 
 } /* namespace frc973 */
