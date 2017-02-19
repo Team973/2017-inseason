@@ -70,8 +70,10 @@ namespace frc973 {
 
     void Hanger::TaskPeriodic(RobotMode mode) {
         m_crankCurrent = m_crankMotor->GetOutputCurrent();
+        /*
         DBStringPrintf(DB_LINE2, "hang %2.1f",
                 m_crankMotor->GetPosition() * 22.0 / 16.0);
+                */
         switch (m_hangerState) {
             case start:
                 m_crankMotor->Set(0.0);

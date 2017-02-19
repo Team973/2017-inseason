@@ -114,6 +114,8 @@ public:
     double GetDist() override;
     double GetRate() override;
 
+    double GetDriveCurrent();
+
     /**
      * All angles given in degrees
      * All angular rates given in degrees/second

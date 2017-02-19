@@ -32,11 +32,11 @@ namespace frc973{
     }
 
     double BoilerPixy::GetXOffset(){
-        return m_pixyFilter->Update(m_pixyXOffset->GetVoltage() - 1.6);
+        return m_pixyFilter->Update(m_pixyXOffset->GetVoltage() - 2.0);
     }
 
     double BoilerPixy::GetHeight(){
-        return 1.25 * (m_pixyYOffset->GetVoltage() - 8.0);
+        return 1.25 * (m_pixyYOffset->GetVoltage() - 0.8);
     }
 
     bool BoilerPixy::GetSeesTargetX(){

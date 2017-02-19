@@ -54,10 +54,10 @@ Robot::Robot(void
     m_leftDriveTalonA->ConfigPeakOutputVoltage(12, -12);
     m_leftDriveTalonA->SetSensorDirection(true);
     m_leftDriveTalonA->SelectProfileSlot(0);
-    m_leftDriveTalonA->SetP(0.25);
+    m_leftDriveTalonA->SetP(0.30);
     m_leftDriveTalonA->SetI(0);
     m_leftDriveTalonA->SetD(0);
-    m_leftDriveTalonA->SetF(0.001);
+    m_leftDriveTalonA->SetF(0.005);
 
     m_leftDriveTalonB->SetControlMode(CANSpeedController::ControlMode::kFollower);
     m_leftDriveTalonB->ConfigNeutralMode(
@@ -74,10 +74,10 @@ Robot::Robot(void
     m_rightDriveTalonA->ConfigPeakOutputVoltage(12, -12);
     m_rightDriveTalonA->SetSensorDirection(true);
     m_rightDriveTalonA->SelectProfileSlot(0);
-    m_rightDriveTalonA->SetP(0.25);
+    m_rightDriveTalonA->SetP(0.30);
     m_rightDriveTalonA->SetI(0);
     m_rightDriveTalonA->SetD(0);
-    m_rightDriveTalonA->SetF(0.001);
+    m_rightDriveTalonA->SetF(0.005);
 
     m_rightDriveTalonB->SetControlMode(CANSpeedController::ControlMode::kFollower);
     m_rightDriveTalonB->ConfigNeutralMode(
@@ -118,10 +118,10 @@ Robot::Robot(void
 
   fprintf(stderr, "initializing aliance\n");
   if(DriverStation::GetInstance().GetAlliance() == DriverStation::Alliance::kRed){
-        m_autoDirection = 1.0;
+        m_autoDirection = -1.0;
     }
     else{
-        m_autoDirection = -1.0;
+        m_autoDirection = 1.0;
     }
   fprintf(stderr, "done w/ constructor\n");
 
@@ -144,6 +144,8 @@ void Robot::AllStateContinuous(void) {
     DBStringPrintf(DB_LINE1,
             "angle %.2lf rate %.2lf",
             m_drive->GetAngle(), m_drive->GetAngularRate());
+    DBStringPrintf(DB_LINE2, "drive cur %lf",
+                   m_drive->GetDriveCurrent());
 }
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
             bool pressedP) {
