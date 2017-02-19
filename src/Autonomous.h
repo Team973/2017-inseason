@@ -193,14 +193,14 @@ namespace frc973 {
                 break;
             case 2:
                 if (m_drive->OnTarget()) {
-                    m_drive->PIDDrive(26.0, 0.0,
+                    m_drive->PIDDrive(8.0, 0.0,
                             DriveBase::RelativeTo::SetPoint, 0.6);
                     m_autoState++;
                 }
                 break;
             case 3:
                 if (m_drive->OnTarget()) {
-                    m_drive->PIDDrive(-26.0, 0.0,
+                    m_drive->PIDDrive(-8.0, 0.0,
                             DriveBase::RelativeTo::SetPoint, 0.8);
                     m_autoState++;
                 }

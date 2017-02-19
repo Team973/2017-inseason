@@ -31,7 +31,7 @@ Robot::Robot(void
     m_autoState(0),
     m_autoRoutine(AutonomousRoutine::NoAuto),
     m_autoTimer(0),
-    m_speedSetpt(3400),
+    m_speedSetpt(1000),
     m_flailSetpt(1.0),
     m_conveyorSetpt(1.0)
 {
@@ -118,10 +118,10 @@ Robot::Robot(void
 
   fprintf(stderr, "initializing aliance\n");
   if(DriverStation::GetInstance().GetAlliance() == DriverStation::Alliance::kRed){
-        m_autoDirection = 1.0;
+        m_autoDirection = -1.0;
     }
     else{
-        m_autoDirection = -1.0;
+        m_autoDirection = 1.0;
     }
   fprintf(stderr, "done w/ constructor\n");
 
