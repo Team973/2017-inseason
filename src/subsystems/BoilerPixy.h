@@ -10,10 +10,11 @@ using namespace frc;
 
 namespace frc973{
   class TaskMgr;
+  class Lights;
 
   class BoilerPixy : public CoopTask{
     public:
-      BoilerPixy(TaskMgr *scheduler);
+      BoilerPixy(TaskMgr *scheduler, Lights *lights);
       virtual ~BoilerPixy();
 
       /**
@@ -35,9 +36,8 @@ namespace frc973{
       AnalogInput *m_pixyYOffset;
       DigitalInput *m_seesTargetX;
       DigitalInput *m_seesTargetY;
-
-      Solenoid *m_pixyLight;
-
       MovingAverageFilter *m_pixyFilter;
+
+      Lights *m_lights;
   };
 }

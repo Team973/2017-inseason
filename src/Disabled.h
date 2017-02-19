@@ -12,7 +12,7 @@ void Robot::DisabledStop(void) {
 }
 
 void Robot::DisabledContinuous(void) {
-  int auto = m_autoRoutine
+  /*int auto = m_autoRoutine;
   if (auto == 0){
     DBStringPrintf(DBStringPos::DB_LINE0,
             "Gear to LeftPeg Auto");
@@ -40,7 +40,7 @@ void Robot::DisabledContinuous(void) {
   else if (auto == 6){
     DBStringPrintf(DBStringPos::DB_LINE0,
                       "No Auto");
-  }
+  }*/
 //    fprintf(stderr, "***disabled continuous\n");
 }
 

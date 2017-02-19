@@ -1,19 +1,20 @@
 #include "BoilerPixy.h"
 #include "RobotInfo.h"
+#include "Lights.h"
 #include "stdio.h"
 
 namespace frc973{
-    BoilerPixy::BoilerPixy(TaskMgr *scheduler) :
+    BoilerPixy::BoilerPixy(TaskMgr *scheduler, Lights *lights) :
     m_scheduler(scheduler),
     m_pixyXOffset(new AnalogInput(BOILER_PIXY_CAM_X_ANALOG)),
     m_pixyYOffset(new AnalogInput(BOILER_PIXY_CAM_Y_ANALOG)),
     m_seesTargetX(new DigitalInput(BOILER_PIXY_CAM_X_DIGITAL)),
     m_seesTargetY(new DigitalInput(BOILER_PIXY_CAM_Y_DIGITAL)),
-    m_pixyLight(new Solenoid(BOILER_PIXY_LIGHT_SOL)),
     m_pixyFilter(new MovingAverageFilter(0.9))
     {
         m_scheduler->RegisterTask("Boiler pixy", this, TASK_PERIODIC);
-        m_pixyLight->Set(false);
+        m_lights = lights;
+        m_lights->DisableLights();
     }
 
     BoilerPixy::~BoilerPixy(){
@@ -21,13 +22,13 @@ namespace frc973{
     }
 
     void BoilerPixy::Enable() {
-        printf("Enabling the boiler pixy light %p\n", m_pixyLight);
-        m_pixyLight->Set(true);
+        printf("Enabling the boiler pixy light \n");
+        m_lights->EnableLights();
         printf("did the boiler pixy\n");
     }
 
     void BoilerPixy::Disable() {
-        m_pixyLight->Set(false);
+        m_lights->DisableLights();
     }
 
     double BoilerPixy::GetXOffset(){

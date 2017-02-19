@@ -35,7 +35,6 @@ constexpr int GEAR_PIXY_CAM_ANALOG = 2;
  * Relays
  */
 constexpr int COMPRESSOR_RELAY = 0;
-constexpr int GEAR_PIXY_LIGHT_RELAY = 1;
 
 /**
  * USB port-out (driver-station)
@@ -52,7 +51,10 @@ constexpr int GEAR_INTAKE_GRIP_CLOSE = 2;
 constexpr int POWER_TAKEOFF_SOL_A = 3;
 constexpr int POWER_TAKEOFF_SOL_B = 4;
 
-constexpr int BOILER_PIXY_LIGHT_SOL = 6;
+constexpr int BOILER_PIXY_X_LIGHT_SOL = 6;
+constexpr int BOILER_PIXY_Y_LIGHT_SOL = 5;
+
+constexpr int GEAR_PIXY_LIGHT_SOL = 7;
 //CANTalon
 constexpr int DRIVE_LEFT_A_CAN = 16;
 constexpr int DRIVE_LEFT_B_CAN = 15;
