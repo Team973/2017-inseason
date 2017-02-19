@@ -132,13 +132,6 @@ namespace frc973{
   }
 
   void GearIntake::TaskPeriodic(RobotMode mode){
-    DBStringPrintf(DB_LINE3,  "state %d curr %2.1f %2.1f",
-                   m_pickUpState, m_leftIndexer->GetOutputCurrent(),
-                   m_rightIndexer->GetOutputCurrent());
-    DBStringPrintf(DB_LINE1, "state ul %d ur %d b %d",m_pushTopLeft->Get(),
-                    m_pushTopRight->Get(),
-                    m_pushBottom->Get());
-
     if (m_indexer == Indexer::indexing && IsGearReady() == true){
       this->SetIndexerMode(Indexer::holding);
     }

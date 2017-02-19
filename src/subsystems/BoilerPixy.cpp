@@ -9,7 +9,8 @@ namespace frc973{
     m_pixyYOffset(new AnalogInput(BOILER_PIXY_CAM_Y_ANALOG)),
     m_seesTargetX(new DigitalInput(BOILER_PIXY_CAM_X_DIGITAL)),
     m_seesTargetY(new DigitalInput(BOILER_PIXY_CAM_Y_DIGITAL)),
-    m_pixyLight(new Solenoid(BOILER_PIXY_LIGHT_SOL))
+    m_pixyLight(new Solenoid(BOILER_PIXY_LIGHT_SOL)),
+    m_pixyFilter(new MovingAverageFilter(0.9))
     {
         m_scheduler->RegisterTask("Boiler pixy", this, TASK_PERIODIC);
         m_pixyLight->Set(false);
@@ -20,8 +21,9 @@ namespace frc973{
     }
 
     void BoilerPixy::Enable() {
-        printf("Enabling the boiler pixy\n");
+        printf("Enabling the boiler pixy light %p\n", m_pixyLight);
         m_pixyLight->Set(true);
+        printf("did the boiler pixy\n");
     }
 
     void BoilerPixy::Disable() {
@@ -29,7 +31,7 @@ namespace frc973{
     }
 
     double BoilerPixy::GetXOffset(){
-        return -(1.25 * (m_pixyXOffset->GetVoltage() - 2.2));
+        return m_pixyFilter->Update(m_pixyXOffset->GetVoltage() - 1.6);
     }
 
     double BoilerPixy::GetHeight(){
@@ -46,8 +48,8 @@ namespace frc973{
 
     void BoilerPixy::TaskPeriodic(RobotMode mode){
         DBStringPrintf(DB_LINE7,
-              "x %d %2.1lf %2.1lf y %d %2.1lf",
-              GetSeesTargetX(), GetXOffset(), m_pixyXOffset->GetVoltage(),
+              "x %d %2.1lf y %d %2.1lf",
+              GetSeesTargetX(), m_pixyXOffset->GetVoltage(),
               GetSeesTargetY(), m_pixyYOffset->GetVoltage());
           /*
         DBStringPrintf(DB_LINE7,

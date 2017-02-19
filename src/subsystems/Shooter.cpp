@@ -34,10 +34,10 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgita
     m_flywheelMotorPrimary->SelectProfileSlot(0);
     m_flywheelMotorPrimary->ConfigNominalOutputVoltage(0, 0);
     m_flywheelMotorPrimary->ConfigPeakOutputVoltage(0, -12);
-    m_flywheelMotorPrimary->SetP(0.035);
-    m_flywheelMotorPrimary->SetI(0.0000012);
-    m_flywheelMotorPrimary->SetD(0);
-    m_flywheelMotorPrimary->SetF((1023.0 / 32768.0) * 0.85);
+    m_flywheelMotorPrimary->SetP(0.03);
+    m_flywheelMotorPrimary->SetI(0.0);
+    m_flywheelMotorPrimary->SetD(0.3);
+    m_flywheelMotorPrimary->SetF(0.024);
 
     m_flywheelMotorReplica->ConfigNeutralMode(
             CANSpeedController::NeutralMode::kNeutralMode_Coast);
@@ -80,6 +80,7 @@ void Shooter::SetFlywheelSpeed(double speed){
     m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kSpeed);
     m_flywheelState = FlywheelState::speed;
     m_flywheelSpeedSetpt = speed;
+    m_flywheelMotorPrimary->Set(m_flywheelSpeedSetpt);
 }
 
 void Shooter::SetFlywheelStop(){
@@ -102,10 +103,10 @@ void Shooter::StopConveyor() {
 //side: true = right; false = left
 void Shooter::StartAgitator(double speed, bool side){
     if (side == false) {
-        m_leftAgitator->Set(speed);
+        m_leftAgitator->Set(-speed);
     }
     else if (side == true) {
-        m_rightAgitator->Set(-speed);
+        m_rightAgitator->Set(speed);
     }
 }
 
@@ -130,7 +131,7 @@ void Shooter::TaskPeriodic(RobotMode mode) {
             m_flywheelMotorPrimary->Set(0.0);
             break;
         case speed:
-            m_flywheelMotorPrimary->Set(m_flywheelSpeedSetpt);
+            //m_flywheelMotorPrimary->Set(m_flywheelSpeedSetpt);
             break;
     }
 }

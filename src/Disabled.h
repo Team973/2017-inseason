@@ -17,45 +17,51 @@ void Robot::DisabledContinuous(void) {
 
 void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
         bool pressedP){
-    m_buttonPresses->LogPrintf("Button event port %d button %d pressed %d", port, button, pressedP);
-    if (port == DRIVER_JOYSTICK_PORT) {
-        switch (button) {
-        /*case DualAction::BtnA:
+    m_buttonPresses->LogPrintf("Button event port %d button %d pressed %d",
+            port, button, pressedP);
+    switch (button) {
+        case DualAction::BtnA:
             if (pressedP) {
-        m_autoRoutine = AutonomousRoutine::GearLeftPeg;
-        DBStringPrintf(DBStringPos::DB_LINE7, "Gear to LeftPeg Auto");
+                m_autoRoutine = AutonomousRoutine::GearLeftPeg;
+                DBStringPrintf(DBStringPos::DB_LINE0,
+                        "Gear to LeftPeg Auto");
             }
             break;
         case DualAction::BtnB:
             if (pressedP) {
-        m_autoRoutine = AutonomousRoutine::GearMiddlePeg;
-        DBStringPrintf(DBStringPos::DB_LINE7, "Gear to Middle Peg Auto");
+                m_autoRoutine = AutonomousRoutine::GearMiddlePeg;
+                DBStringPrintf(DBStringPos::DB_LINE0,
+                        "Gear to Middle Peg Auto");
             }
             break;
         case DualAction::BtnX:
             if (pressedP) {
-        m_autoRoutine = AutonomousRoutine::GearRightPeg;
-        DBStringPrintf(DBStringPos::DB_LINE7, "Gear to Right Peg Auto");
+                m_autoRoutine = AutonomousRoutine::GearRightPeg;
+                DBStringPrintf(DBStringPos::DB_LINE0,
+                        "Gear to Right Peg Auto");
             }
             break;
         case DualAction::BtnY:
             if (pressedP) {
-        m_autoRoutine = AutonomousRoutine::FuelBallToBoiler;
-        DBStringPrintf(DBStringPos::DB_LINE7, "FuelBallToBoiler Auto");
+                m_autoRoutine = AutonomousRoutine::FuelBallToBoiler;
+                DBStringPrintf(DBStringPos::DB_LINE0,
+                        "FuelBallToBoiler Auto");
             }
             break;
         case DualAction::RightBumper:
             if (pressedP) {
-        m_autoRoutine = AutonomousRoutine::HopperThenShootFuel;
-        DBStringPrintf(DBStringPos::DB_LINE7, "Go to HopperThenShootFuel Auto");
+                m_autoRoutine = AutonomousRoutine::HopperThenShootFuel;
+                DBStringPrintf(DBStringPos::DB_LINE0,
+                        "HopperThenShoot Auto");
             }
             break;
         case DualAction::DPadUpVirtBtn:
             if (pressedP) {
-        m_autoRoutine = AutonomousRoutine::ShootFuelThenHopper;
-        DBStringPrintf(DBStringPos::DB_LINE7, "ShootFuel, GoToHopper, ShootFuel Auto");
+                m_autoRoutine = AutonomousRoutine::ShootFuelThenHopper;
+                DBStringPrintf(DBStringPos::DB_LINE0,
+                        "ShootFuel, GoToHopper, ShootFuel Auto");
             }
-            break;*/
+            break;
         case DualAction::DPadRightVirtBtn:
             if (pressedP) {
             }
@@ -88,7 +94,6 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             if (pressedP) {
             }
             break;
-        }
     }
 }
 

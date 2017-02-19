@@ -70,7 +70,6 @@ void Drive::Zero() {
         m_rightEncoder->Reset();
     if (m_gyro)
         m_gyro->SetFusedHeading(0.0);
-    m_leftEncoder->SetDistancePerPulse(1.0);
 }
 
 void Drive::ArcadeDrive(double throttle, double turn) {
@@ -154,8 +153,8 @@ void Drive::SetDriveControlMode(CANSpeedController::ControlMode mode){
 }
 
 void Drive::TaskPeriodic(RobotMode mode) {
-	DBStringPrintf(DB_LINE0, "gyro r %2.1f p", this->GetAngularRate(),
-            this->GetAngle());
+//	DBStringPrintf(DB_LINE0, "gyro r %2.1f p", this->GetAngularRate(),
+//            this->GetAngle());
     DBStringPrintf(DB_LINE9, "l %2.1lf %2.1lf l %2.1lf %2.1lf",
             this->GetLeftDist(), this->GetLeftRate(),
             this->GetRightDist(), this->GetRightRate());

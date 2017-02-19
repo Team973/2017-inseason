@@ -47,7 +47,6 @@ void GreyCompressor::Disable() {
 }
 
 void GreyCompressor::TaskPeriodic(RobotMode mode) {
-    printf("switch %d enabled %d\n", m_airPressureSwitch->Get(), m_enabled);
 	if (!m_airPressureSwitch->Get() && m_enabled) {
 		m_compressor->Set(Relay::kOn);
 	}

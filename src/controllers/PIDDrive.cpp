@@ -16,9 +16,9 @@ static constexpr double DRIVE_PID_KP = 0.03;
 static constexpr double DRIVE_PID_KI = 0.0;
 static constexpr double DRIVE_PID_KD = 0;
 
-static constexpr double TURN_PID_KP = 0.02;
+static constexpr double TURN_PID_KP = 0.03;
 static constexpr double TURN_PID_KI = 0.0;
-static constexpr double TURN_PID_KD = 0;
+static constexpr double TURN_PID_KD = 0.00;
 
 static constexpr double MAX_SPEED = 1000;
 
@@ -63,7 +63,7 @@ void PIDDriveController::CalcDriveOutput(DriveStateProvider *state,
     }
     m_lastThrottle = throttle;
 
-	DBStringPrintf(DBStringPos::DB_LINE9, "p %2.2lf t %2.2lf", throttle, turn);
+	DBStringPrintf(DBStringPos::DB_LINE3, "p %2.2lf t %2.2lf", throttle, turn);
 
 	printf("dist target %lf, dist curr %lf, dist error: %lf \n",
 			m_targetDist, m_prevDist, m_targetDist - m_prevDist);
@@ -72,7 +72,9 @@ void PIDDriveController::CalcDriveOutput(DriveStateProvider *state,
 	printf("throttle %lf  turn %lf\n",
 			throttle, turn);
 
-	DBStringPrintf(DBStringPos::DB_LINE6, "error %lf", m_prevAngle - m_targetAngle);
+	DBStringPrintf(DBStringPos::DB_LINE6, "err d %.3lf a %.3lf",
+            m_prevDist - m_targetDist,
+            m_prevAngle - m_targetAngle);
 
 	out->SetDriveOutput(MAX_SPEED * m_speedCap * (throttle - turn),
                         MAX_SPEED * m_speedCap * (throttle + turn));

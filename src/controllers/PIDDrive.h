@@ -37,7 +37,7 @@ public:
 	 * is within tolerance of the target.  This method returns whether we are
 	 * on target.
 	 */
-	bool OnTarget() { return m_onTarget; }
+	bool OnTarget() override { return m_onTarget; }
 
 	/*
 	 * Set the target position/heading relative to absolute world

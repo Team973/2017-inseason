@@ -2,14 +2,14 @@ using namespace frc;
 
 namespace frc973 {
 
-    static constexpr double DRIVER_STATION_BASE_LINE_DIST = 93.3;
+    static constexpr double DRIVER_STATION_BASE_LINE_DIST = 87.0;
     static constexpr double DRIVER_STATION_LAUNCHPAD_DIST = 185.3;
     static constexpr double KEY_DIST = 52.0;
 
     void Robot::AutonomousStart(void) {
         printf("***auto start\n");
 
-    m_shooter->SetFlywheelStop();
+        m_shooter->SetFlywheelStop();
         m_ballIntake->BallIntakeStop();
         m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
         m_drive->Zero();
@@ -22,6 +22,7 @@ namespace frc973 {
     }
 
     void Robot::AutonomousContinuous(void) {
+        printf("autonomous continuous\n");
         switch (m_autoRoutine){
             case AutonomousRoutine::GearLeftPeg:
                 GearLtPeg();
@@ -45,6 +46,7 @@ namespace frc973 {
                 //Don't do any auto
                 break;
         }
+        printf("did auto continuous\n");
     }
 
     void Robot::GearLtPeg(){
@@ -171,31 +173,60 @@ namespace frc973 {
     }
 
     void Robot::HopperThenShoot(){
+        printf("HopperThenShoot auto\n");
         switch (m_autoState){
             case 0:
-                m_drive->PIDDrive(DRIVER_STATION_LAUNCHPAD_DIST + 40.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
+                printf("gonna piddrive\n");
+                m_drive->PIDDrive(DRIVER_STATION_BASE_LINE_DIST, 0.0,
+                        DriveBase::RelativeTo::Now, 0.6);
+                printf("piddrived\n");
                 m_autoState++;
                 break;
             case 1:
-                m_drive->PIDDrive(0.0, -90.0, DriveBase::RelativeTo::SetPoint, 0.8);
-                m_autoState++;
+                printf("waiting for pid on target\n");
+                if (m_drive->OnTarget()) {
+                    printf("pid on target moving on\n");
+                    m_drive->PIDDrive(0.0, 90.0 * m_autoDirection,
+                            DriveBase::RelativeTo::SetPoint, 0.8);
+                    m_autoState++;
+                }
                 break;
             case 2:
-                m_drive->PIDDrive(-40.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
-                m_autoState++;
+                if (m_drive->OnTarget()) {
+                    m_drive->PIDDrive(26.0, 0.0,
+                            DriveBase::RelativeTo::SetPoint, 0.6);
+                    m_autoState++;
+                }
+                break;
             case 3:
-                m_drive->PIDDrive(0.0, 180.0, DriveBase::RelativeTo::SetPoint, 0.8);
-                m_autoState++;
+                if (m_drive->OnTarget()) {
+                    m_drive->PIDDrive(-26.0, 0.0,
+                            DriveBase::RelativeTo::SetPoint, 0.8);
+                    m_autoState++;
+                }
                 break;
             case 4:
-                m_drive->PIDDrive(DRIVER_STATION_LAUNCHPAD_DIST + 40.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
-                m_autoState++;
-            case 5:
-                m_shooter->SetFlywheelPow(1.0);
-                m_autoState++;
+                if (m_drive->OnTarget()) {
+                    m_drive->PIDDrive(0.0, 67.0 * m_autoDirection,
+                            DriveBase::RelativeTo::SetPoint, 0.8);
+                    m_autoState++;
+                }
                 break;
+            case 5:
+                if (m_drive->OnTarget()) {
+                    m_drive->SetBoilerPixyTargeting();
+                    m_shooter->SetFlywheelSpeed(3400.0);
+                    m_autoState++;
+                }
             case 6:
-                m_ballIntake->BallIntakeStart();
+                if (m_drive->OnTarget()) {
+                    m_shooter->StartAgitator(1.0, true);
+                    m_shooter->StartAgitator(1.0, false);
+                    m_shooter->StartConveyor(1.0);
+                    m_autoState++;
+                }
+                break;
+            case 7:
                 break;
         }
     }

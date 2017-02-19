@@ -39,7 +39,7 @@ public:
 
     double GetFlywheelRate();
 
-    static constexpr int DEFAULT_FLYWHEEL_SPEED_SETPOINT = 2700;
+    static constexpr int DEFAULT_FLYWHEEL_SPEED_SETPOINT = 3400;
 
     enum FlywheelState {
         power,

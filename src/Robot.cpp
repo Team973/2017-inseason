@@ -30,9 +30,9 @@ Robot::Robot(void
     m_autoState(0),
     m_autoRoutine(AutonomousRoutine::NoAuto),
     m_autoTimer(0),
-    m_speedSetpt(2000),
-    m_flailSetpt(0.5),
-    m_conveyorSetpt(0.5)
+    m_speedSetpt(3400),
+    m_flailSetpt(1.0),
+    m_conveyorSetpt(1.0)
 {
     m_driverJoystick = new ObservableJoystick(DRIVER_JOYSTICK_PORT, this, this);
     m_operatorJoystick = new ObservableJoystick(OPERATOR_JOYSTICK_PORT, this, this);
@@ -53,10 +53,10 @@ Robot::Robot(void
     m_leftDriveTalonA->ConfigPeakOutputVoltage(12, -12);
     m_leftDriveTalonA->SetSensorDirection(true);
     m_leftDriveTalonA->SelectProfileSlot(0);
-    m_leftDriveTalonA->SetP(0.30);
+    m_leftDriveTalonA->SetP(0.25);
     m_leftDriveTalonA->SetI(0);
     m_leftDriveTalonA->SetD(0);
-    m_leftDriveTalonA->SetF(0);
+    m_leftDriveTalonA->SetF(0.001);
 
     m_leftDriveTalonB->SetControlMode(CANSpeedController::ControlMode::kFollower);
     m_leftDriveTalonB->ConfigNeutralMode(
@@ -73,10 +73,10 @@ Robot::Robot(void
     m_rightDriveTalonA->ConfigPeakOutputVoltage(12, -12);
     m_rightDriveTalonA->SetSensorDirection(true);
     m_rightDriveTalonA->SelectProfileSlot(0);
-    m_rightDriveTalonA->SetP(0.30);
+    m_rightDriveTalonA->SetP(0.25);
     m_rightDriveTalonA->SetI(0);
     m_rightDriveTalonA->SetD(0);
-    m_rightDriveTalonA->SetF(0);
+    m_rightDriveTalonA->SetF(0.001);
 
     m_rightDriveTalonB->SetControlMode(CANSpeedController::ControlMode::kFollower);
     m_rightDriveTalonB->ConfigNeutralMode(
@@ -88,6 +88,7 @@ Robot::Robot(void
     fprintf(stderr, "Initialized drive controllers\n");
 
     m_logger = new LogSpreadsheet(this);
+    m_boilerPixy = new BoilerPixy(this);
     m_drive = new Drive(this,
             m_leftDriveTalonA, m_rightDriveTalonA, m_leftAgitatorTalon,
             m_logger, m_boilerPixy);
@@ -107,7 +108,6 @@ Robot::Robot(void
     m_ballIntake = new BallIntake(this);
     m_gearIntake = new GearIntake(this);
     m_shooter = new Shooter(this, m_logger, m_leftAgitatorTalon);
-    m_boilerPixy = new BoilerPixy(this);
     m_gearPixy = new GearPixy(this);
 
     m_airPressureSwitch = new DigitalInput(AIR_PRESSURE_DIN);
@@ -139,8 +139,9 @@ void Robot::AllStateContinuous(void) {
     m_battery->LogPrintf("%f", DriverStation::GetInstance().GetBatteryVoltage());
     m_time->LogDouble(GetSecTime());
     m_state->LogPrintf("%s", GetRobotModeString());
-
-    m_drive->GetAngularRate();
+    DBStringPrintf(DB_LINE1,
+            "angle %.2lf rate %.2lf", 
+            m_drive->GetAngle(), m_drive->GetAngularRate());
 }
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
             bool pressedP) {

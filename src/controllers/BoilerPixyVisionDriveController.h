@@ -8,10 +8,12 @@
  #include "lib/DriveBase.h"
  #include "subsystems/BoilerPixy.h"
  #include "stdio.h"
+ #include "lib/util/Util.h"
 
  namespace frc973{
 
    class BoilerPixy;
+   class PID;
 
    class BoilerPixyVisionDriveController : public DriveController{
     public:
@@ -19,9 +21,9 @@
       virtual ~BoilerPixyVisionDriveController();
 
       void Start()  override{
-        printf("Starting BoiulerPixyVisionController %p\n", m_boilerPixy);
         m_boilerPixy->Enable();
         m_needSetControlMode = true;
+        m_lightEnableTimeMs = GetMsecTime();
       }
       void CalcDriveOutput(DriveStateProvider *state,
     			DriveControlSignalReceiver *out) override;
@@ -34,7 +36,9 @@
       bool m_onTarget;
       double m_leftSetpoint;
       double m_rightSetpoint;
+      uint64_t m_lightEnableTimeMs;
 
       BoilerPixy *m_boilerPixy;
+      PID *m_pid;
    };
  }

@@ -4,6 +4,7 @@
 #include "lib/CoopTask.h"
 #include "lib/TaskMgr.h"
 #include "lib/WrapDash.h"
+#include "lib/filters/MovingAverageFilter.h"
 
 using namespace frc;
 
@@ -36,5 +37,7 @@ namespace frc973{
       DigitalInput *m_seesTargetY;
 
       Solenoid *m_pixyLight;
+
+      MovingAverageFilter *m_pixyFilter;
   };
 }

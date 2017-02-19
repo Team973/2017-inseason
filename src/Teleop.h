@@ -17,7 +17,8 @@ static bool g_manualControl = true;
 
 void Robot::TeleopContinuous(void) {
     double y = m_driverJoystick->GetRawAxis(DualAction::LeftYAxis);
-    double x = -m_driverJoystick->GetRawAxis(DualAction::RightXAxis);
+    double x = -m_driverJoystick->GetRawAxis(DualAction::RightXAxis)
+        + -m_tuningJoystick->GetRawAxis(DualAction::RightXAxis);
 //  printf("throttle  %lf, turn  %lf\n", y, x);
 
     if (m_driverJoystick->GetRawButton(DualAction::LeftBumper)) {
@@ -69,6 +70,10 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         case DualAction::LeftBumper:
             if (pressedP) {
                 //sw lowgear
+                m_boilerPixy->Enable();
+            }
+            else {
+                m_boilerPixy->Disable();
             }
             break;
         case DualAction::LeftTrigger:
@@ -134,9 +139,11 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::BtnX:
             if (pressedP) {
+                m_boilerPixy->Enable();
                 m_ballIntake->BallIntakeStartReverse();
-                }
+            }
             else{
+                m_boilerPixy->Disable();
                 m_ballIntake->BallIntakeStop();
             }
             break;
@@ -212,6 +219,13 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::DPadDownVirtBtn:
                 if (pressedP) {
+                    m_shooter->StartAgitator(m_flailSetpt, true);
+                    m_shooter->StartAgitator(m_flailSetpt, false);
+                    m_shooter->StartConveyor(1.0);
+                }
+                else {
+                    m_shooter->StopAgitator();
+                    m_shooter->StopConveyor();
                 }
                 break;
             case DualAction::DPadRightVirtBtn:
@@ -231,7 +245,15 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::RightBumper:
                 if (pressedP) {
-                    m_conveyorSetpt -= 0.1;
+                    printf("Start right bumper things\n");
+                    m_shooter->StartAgitator(m_flailSetpt, true);
+                    m_shooter->StartAgitator(m_flailSetpt, false);
+                    m_shooter->StartConveyor(1.0);
+                }
+                else {
+                    printf("end right bumper things\n");
+                    m_shooter->StopAgitator();
+                    m_shooter->StopConveyor();
                 }
                 break;
             case DualAction::LeftBumper:
