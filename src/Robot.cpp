@@ -146,6 +146,9 @@ void Robot::AllStateContinuous(void) {
             m_drive->GetAngle(), m_drive->GetAngularRate());
     DBStringPrintf(DB_LINE2, "drive cur %lf",
                    m_drive->GetDriveCurrent());
+    DBStringPrintf(DB_LINE8,
+            "g %d %2.1lf",
+            m_pixyR->GetDataFresh(), m_pixyR->GetOffset());
 }
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
             bool pressedP) {

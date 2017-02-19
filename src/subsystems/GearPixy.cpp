@@ -23,8 +23,5 @@ namespace frc973{
   }
 
   void GearPixy::TaskPeriodic(RobotMode mode){
-    DBStringPrintf(DB_LINE8,
-            "g %d %2.1lf",
-            GetSeesTarget(), m_pixyOffset->GetVoltage());
   }
 }
