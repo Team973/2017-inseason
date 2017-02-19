@@ -12,35 +12,34 @@ void Robot::DisabledStop(void) {
 }
 
 void Robot::DisabledContinuous(void) {
-  /*int auto = m_autoRoutine;
-  if (auto == 0){
+  if (m_autoRoutine == AutonomousRoutine::GearLeftPeg){
     DBStringPrintf(DBStringPos::DB_LINE0,
             "Gear to LeftPeg Auto");
   }
-  else if (auto == 1){
+  else if (m_autoRoutine == AutonomousRoutine::GearMiddlePeg){
     DBStringPrintf(DBStringPos::DB_LINE0,
             "Gear to Middle Peg Auto");
   }
-  else if (auto == 2){
+  else if (m_autoRoutine == AutonomousRoutine::GearRightPeg){
     DBStringPrintf(DBStringPos::DB_LINE0,
       "Gear to Right Peg Auto");
   }
-  else if (auto == 3){
+  else if (m_autoRoutine == AutonomousRoutine::FuelBallToBoiler){
     DBStringPrintf(DBStringPos::DB_LINE0,
                       "FuelBallToBoiler Auto");
   }
-  else if (auto == 4){
+  else if (m_autoRoutine == AutonomousRoutine::ShootFuelThenHopper){
     DBStringPrintf(DBStringPos::DB_LINE0,
                       "ShootFuel, GoToHopper, ShootFuel Auto");
   }
-  else if (auto == 5){
+  else if (m_autoRoutine == AutonomousRoutine::HopperThenShootFuel){
     DBStringPrintf(DBStringPos::DB_LINE0,
                       "HopperThenShoot Auto");
   }
-  else if (auto == 6){
+  else if (m_autoRoutine == AutonomousRoutine::NoAuto){
     DBStringPrintf(DBStringPos::DB_LINE0,
                       "No Auto");
-  }*/
+  }
 //    fprintf(stderr, "***disabled continuous\n");
 }
 
