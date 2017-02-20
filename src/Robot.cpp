@@ -30,7 +30,7 @@ Robot::Robot(void
     m_autoState(0),
     m_autoRoutine(AutonomousRoutine::NoAuto),
     m_autoTimer(0),
-    m_speedSetpt(3400),
+    m_speedSetpt(1000),
     m_flailSetpt(1.0),
     m_conveyorSetpt(1.0)
 {
@@ -90,9 +90,10 @@ Robot::Robot(void
     m_logger = new LogSpreadsheet(this);
     m_lights = new Lights(this);
     m_boilerPixy = new BoilerPixy(this, m_lights);
+    m_gearPixy = new GearPixy(this);
     m_drive = new Drive(this,
             m_leftDriveTalonA, m_rightDriveTalonA, m_leftAgitatorTalon,
-            m_logger, m_boilerPixy);
+            m_logger, m_boilerPixy, m_gearPixy);
 
     m_battery = new LogCell("Battery voltage");
 

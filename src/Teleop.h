@@ -14,6 +14,7 @@ void Robot::TeleopStop(void) {
 }
 
 static bool g_manualControl = true;
+static bool g_shooterControl = true;
 
 void Robot::TeleopContinuous(void) {
     double y = m_driverJoystick->GetRawAxis(DualAction::LeftYAxis);
@@ -29,15 +30,17 @@ void Robot::TeleopContinuous(void) {
         m_drive->ArcadeDrive(y, x);
     }
 
-    double c = m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis);
+    if (g_shooterControl == false){
+      double c = m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis);
 
-    m_shooter->StartConveyor(c);
+      m_shooter->StartConveyor(c);
 
-    double l = m_operatorJoystick->GetRawAxisWithDeadband(DualAction::LeftYAxis);
-    double r = m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightYAxis);
+      double l = m_operatorJoystick->GetRawAxisWithDeadband(DualAction::LeftYAxis);
+      double r = m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightYAxis);
 
-    m_shooter->Shooter::StartAgitator(l, false);
-    m_shooter->Shooter::StartAgitator(r, true);
+      m_shooter->Shooter::StartAgitator(l, false);
+      m_shooter->Shooter::StartAgitator(r, true);
+    }
 }
 
 void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
@@ -129,6 +132,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         switch (button) {
         case DualAction::BtnY:
             if (pressedP) {
+              g_shooterControl = false;
             }
             break;
         case DualAction::BtnA:
@@ -160,6 +164,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::LeftTrigger:
             if (pressedP){
+                g_shooterControl = true;
                 m_shooter->StartConveyor(m_conveyorSetpt);
             }
             else{
@@ -176,6 +181,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::RightTrigger:
             if (pressedP){
+                g_shooterControl = true;
                 m_shooter->StartAgitator(m_flailSetpt, true);
                 m_shooter->StartAgitator(m_flailSetpt, false);
             }
