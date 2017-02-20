@@ -68,6 +68,7 @@ private:
 
     LogCell *m_flywheelRate;
     LogCell *m_flywheelPowLog;
+    LogCell *m_flywheelAmpsLog;
     LogCell *m_flywheelStateLog;
     LogCell *m_speedSetpoint;
     Debouncer m_flywheelOnTargetFilter;

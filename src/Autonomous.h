@@ -66,37 +66,45 @@ namespace frc973 {
     }
 
     void Robot::GearMidPeg(){
+        //Start facing the wall
         switch (m_autoState) {
             case 0:
-                m_drive->PIDDrive(DRIVER_STATION_BASE_LINE_DIST, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
+                m_drive->PIDDrive(-(DRIVER_STATION_BASE_LINE_DIST - 40), 0.0, DriveBase::RelativeTo::Now, 0.8);
                 m_autoState++;
                 break;
             case 1:
                 if (m_drive->OnTarget()) {
-                    m_drive->PIDDrive(0.0, 30.0 * m_autoDirection, DriveBase::RelativeTo::SetPoint, 0.8);
+                    m_drive->SetGearPixyTargeting();
                     m_autoState++;
-                  }
+                }
                 break;
             case 2:
                 if (m_drive->OnTarget()) {
-                    //gearpixy cam aim
+                    m_drive->ArcadeDrive(0.5, 0.0);
                     m_autoState++;
-                  }
+                }
                 break;
             case 3:
-                if (m_drive->OnTarget()) {
-                    m_drive->PIDDrive(DRIVER_STATION_BASE_LINE_DIST - 40.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
+                if (m_gearIntake->IsGearReady()) {
+                    //hit the gear, continue normally
+                    m_drive->PIDDrive(40.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
+                    m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
                     m_autoState++;
-                  }
+                }
+                else if (GetMsecTime() - m_autoTimer > 3000) {
+                    //we did not hit it after 3 seconds so back up and try again
+                    m_drive->PIDDrive(40.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
+                    m_autoState = 2;
+                }
                 break;
             case 4:
-                if (m_gearIntake->IsGearReady()){
-                    m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
-                    }
-                else{
-                    m_drive->PIDDrive(-(DRIVER_STATION_BASE_LINE_DIST - 40.0), 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
-                    m_autoState = 1;
+                //should be done scoring gear... make hair merry red left
+                if (m_drive->OnTarget()) {
+                    m_drive->PIDDrive(0.0, 90.0 * m_autoDirection, DriveBase::RelativeTo::SetPoint, 0.8);
+                    m_autoState++;
                 }
+                break;
+            default:
                 break;
         }
     }

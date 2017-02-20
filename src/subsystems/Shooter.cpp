@@ -36,10 +36,12 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgita
     m_flywheelMotorPrimary->SelectProfileSlot(0);
     m_flywheelMotorPrimary->ConfigNominalOutputVoltage(0, 0);
     m_flywheelMotorPrimary->ConfigPeakOutputVoltage(12, -12);
-    m_flywheelMotorPrimary->SetP(0.015);
+    m_flywheelMotorPrimary->SetP(0.05);
     m_flywheelMotorPrimary->SetI(0.0);
-    m_flywheelMotorPrimary->SetD(0.29);
-    m_flywheelMotorPrimary->SetF(0.029);
+    m_flywheelMotorPrimary->SetD(4.00);
+    m_flywheelMotorPrimary->SetF(0.024);
+//    m_flywheelMotorPrimary->SetVelocityMeasurementPeriod(CANTalon::Period_20Ms);
+//    m_flywheelMotorPrimary->SetVelocityMeasurementWindow(32);
 
     m_flywheelMotorReplica->ConfigNeutralMode(
             CANSpeedController::NeutralMode::kNeutralMode_Coast);
@@ -61,12 +63,14 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgita
 
     m_scheduler->RegisterTask("Shooter", this, TASK_PERIODIC);
     m_flywheelRate = new LogCell("FlywheelRate", 32);
-    m_flywheelPowLog = new LogCell("FlywheelPower", 32);
+    m_flywheelPowLog = new LogCell("Flywheel voltage", 32);
+    m_flywheelAmpsLog = new LogCell("Flywheel current", 32);
     m_flywheelStateLog = new LogCell("FlywheelState", 32);
     m_speedSetpoint = new LogCell("SpeedSetpoint", 32);
     logger->RegisterCell(m_flywheelRate);
     logger->RegisterCell(m_flywheelPowLog);
     logger->RegisterCell(m_speedSetpoint);
+    logger->RegisterCell(m_flywheelAmpsLog);
 }
 
 Shooter::~Shooter() {
@@ -136,6 +140,7 @@ void Shooter::StopAgitator(){
 void Shooter::TaskPeriodic(RobotMode mode) {
     m_flywheelRate->LogDouble(GetFlywheelRate());
     m_flywheelPowLog->LogDouble(m_flywheelMotorPrimary->GetOutputVoltage());
+    m_flywheelAmpsLog->LogDouble(m_flywheelMotorPrimary->GetOutputCurrent());
     m_flywheelStateLog->LogPrintf("%d", m_flywheelState);
     m_speedSetpoint->LogDouble(m_flywheelSpeedSetpt);
     DBStringPrintf(DB_LINE5,"shooterrate %2.1lf", GetFlywheelRate());

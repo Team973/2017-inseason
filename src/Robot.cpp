@@ -30,7 +30,7 @@ Robot::Robot(void
     m_autoState(0),
     m_autoRoutine(AutonomousRoutine::NoAuto),
     m_autoTimer(0),
-    m_speedSetpt(1000),
+    m_speedSetpt(3400),
     m_flailSetpt(1.0),
     m_conveyorSetpt(1.0)
 {
@@ -50,7 +50,7 @@ Robot::Robot(void
     m_leftDriveTalonA->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
     m_leftDriveTalonA->SetClosedLoopOutputDirection(true);
     m_leftDriveTalonA->ConfigNominalOutputVoltage(0, 0);
-    m_leftDriveTalonA->ConfigPeakOutputVoltage(12, -12);
+    m_leftDriveTalonA->ConfigPeakOutputVoltage(12, 0);
     m_leftDriveTalonA->SetSensorDirection(true);
     m_leftDriveTalonA->SelectProfileSlot(0);
     m_leftDriveTalonA->SetP(0.30);

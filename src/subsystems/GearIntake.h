@@ -51,6 +51,10 @@ namespace frc973{
       void SetGearPos(GearPosition gearPosition);
       void SetIndexerMode(Indexer indexerMode);
       void SetReleaseAutoEnable(bool driverInput);
+      /**
+       * Checks if the push sensors on the gear claw are pressed
+       * i.e., is the gear ready to be released?
+       */
       bool IsGearReady();
 
       void TaskPeriodic(RobotMode mode) override;
