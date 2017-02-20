@@ -6,7 +6,7 @@
 #include "CANTalon.h"
 #include "PigeonImu.h"
 #include "BoilerPixy.h"
-#include "GearPixy.h"
+#include "PixyThread.h"
 
 using namespace frc;
 
@@ -48,7 +48,7 @@ public:
             CANTalon *spareTalon,
             LogSpreadsheet *logger,
             BoilerPixy *BoilerPixy,
-            GearPixy *gearPixy
+            PixyThread *gearPixy
             );
 
     virtual ~Drive() {}
@@ -106,7 +106,7 @@ public:
     void RampPIDDrive(double dist, RelativeTo relativity);
     void RampPIDTurn(double angle, RelativeTo relativity);
 
-        void SetDriveControlMode(CANSpeedController::ControlMode mode) override;
+    void SetDriveControlMode(CANSpeedController::ControlMode mode) override;
     /**
      * All distances given in inches
      * All velocities given in inches/second

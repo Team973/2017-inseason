@@ -54,7 +54,7 @@ void PixyThread::TaskPeriodic(RobotMode mode) {
 
 double PixyThread::GetOffset() {
 	pthread_mutex_lock(&m_mutex);
-    double ret = (m_prevReading / 319.0) - 0.5;
+    double ret = -((m_prevReading / 319.0) - 0.5);
 	pthread_mutex_unlock(&m_mutex);
     return ret;
 }

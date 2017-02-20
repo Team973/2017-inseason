@@ -20,7 +20,7 @@ namespace frc973 {
 
 Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
             CANTalon *spareTalon,
-            LogSpreadsheet *logger, BoilerPixy *boilerPixy, GearPixy *gearPixy
+            LogSpreadsheet *logger, BoilerPixy *boilerPixy, PixyThread *gearPixy
             )
          : DriveBase(scheduler, this, this, nullptr)
          , m_gyro(new PigeonImu(spareTalon))

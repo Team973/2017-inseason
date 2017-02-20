@@ -66,6 +66,7 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgita
     m_speedSetpoint = new LogCell("SpeedSetpoint", 32);
     logger->RegisterCell(m_flywheelRate);
     logger->RegisterCell(m_flywheelPowLog);
+    logger->RegisterCell(m_speedSetpoint);
 }
 
 Shooter::~Shooter() {
@@ -136,7 +137,7 @@ void Shooter::TaskPeriodic(RobotMode mode) {
     m_flywheelRate->LogDouble(GetFlywheelRate());
     m_flywheelPowLog->LogDouble(m_flywheelMotorPrimary->GetOutputVoltage());
     m_flywheelStateLog->LogPrintf("%d", m_flywheelState);
-    m_speedSetpoint->LogDouble(DEFAULT_FLYWHEEL_SPEED_SETPOINT);
+    m_speedSetpoint->LogDouble(m_flywheelSpeedSetpt);
     DBStringPrintf(DB_LINE5,"shooterrate %2.1lf", GetFlywheelRate());
     DBStringPrintf(DB_LINE6,"shootersetpt %2.1lf", m_flywheelSpeedSetpt);
     DBStringPrintf(DB_LINE3,"conv %2.1lf flail %2.1lf %2.1lf", m_ballConveyor->GetOutputVoltage(),

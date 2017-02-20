@@ -224,13 +224,8 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::DPadDownVirtBtn:
                 if (pressedP) {
-                    m_shooter->StartAgitator(m_flailSetpt, true);
-                    m_shooter->StartAgitator(m_flailSetpt, false);
-                    m_shooter->StartConveyor(1.0);
-                }
-                else {
-                    m_shooter->StopAgitator();
-                    m_shooter->StopConveyor();
+                    g_manualControl = false;
+                    m_drive->SetGearPixyTargeting();
                 }
                 break;
             case DualAction::DPadRightVirtBtn:

@@ -6,7 +6,7 @@
  #pragma once
 
  #include "lib/DriveBase.h"
- #include "subsystems/GearPixy.h"
+ #include "subsystems/PixyThread.h"
  #include "stdio.h"
  #include "lib/util/Util.h"
  #include "subsystems/PixyThread.h"
@@ -18,7 +18,7 @@
 
    class GearPixyVisionDriveController : public DriveController{
     public:
-      GearPixyVisionDriveController(GearPixy *gearPixy);
+      GearPixyVisionDriveController(PixyThread *gearPixy);
       virtual ~GearPixyVisionDriveController();
 
       void Start()  override{
@@ -42,7 +42,7 @@
       double m_rightSetpoint;
       uint64_t m_lightEnableTimeMs;
 
-      GearPixy *m_gearPixy;
+      PixyThread *m_gearPixy;
       PID *m_pid;
    };
  }

@@ -90,10 +90,10 @@ Robot::Robot(void
     m_logger = new LogSpreadsheet(this);
     m_lights = new Lights(this);
     m_boilerPixy = new BoilerPixy(this, m_lights);
-    m_gearPixy = new GearPixy(this);
+    m_pixyR = new PixyThread(*this);
     m_drive = new Drive(this,
             m_leftDriveTalonA, m_rightDriveTalonA, m_leftAgitatorTalon,
-            m_logger, m_boilerPixy, m_gearPixy);
+            m_logger, m_boilerPixy, m_pixyR);
 
     m_battery = new LogCell("Battery voltage");
 
@@ -124,7 +124,6 @@ Robot::Robot(void
     }
     fprintf(stderr, "done w/ constructor\n");
 
-    m_pixyR = new PixyThread(*this);
 }
 
 Robot::~Robot(void) {
@@ -146,7 +145,7 @@ void Robot::AllStateContinuous(void) {
     DBStringPrintf(DB_LINE2, "drive cur %lf",
                    m_drive->GetDriveCurrent());
     DBStringPrintf(DB_LINE8,
-            "g %d %2.1lf",
+            "g %d %lf",
             m_pixyR->GetDataFresh(), m_pixyR->GetOffset());
 }
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,

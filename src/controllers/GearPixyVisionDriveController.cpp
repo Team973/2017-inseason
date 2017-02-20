@@ -7,12 +7,12 @@ namespace frc973{
 
   static constexpr double VISION_DRIVE_MULTIPLIER = 200.0;
 
-  GearPixyVisionDriveController::GearPixyVisionDriveController(GearPixy *gearPixy) :
+  GearPixyVisionDriveController::GearPixyVisionDriveController(PixyThread *gearPixy) :
     m_onTarget(false),
     m_leftSetpoint(0.0),
     m_rightSetpoint(0.0),
     m_gearPixy(gearPixy),
-    m_pid(new PID(1.8, 0.0, 0.1))
+    m_pid(new PID(3.5, 0.0, 0.1))
   {
   }
 
@@ -28,7 +28,7 @@ namespace frc973{
 
     double offset = m_gearPixy->GetOffset();
 
-    if (m_gearPixy->GetSeesTarget() == false ||
+    if (m_gearPixy->GetDataFresh() == false ||
         GetMsecTime() - m_lightEnableTimeMs < 1000){
       m_leftSetpoint = 0.0;
       m_rightSetpoint = 0.0;
