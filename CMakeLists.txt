@@ -20,7 +20,6 @@ set(SOURCE_FILES src/Robot.cpp src/lib/CoopMTRobot.cpp
     src/lib/SingleThreadTaskMgr.cpp src/lib/SmartPixy.cpp
     src/subsystems/PixyThread.cpp
     src/subsystems/BoilerPixy.cpp
-    src/subsystems/GearPixy.cpp
     src/subsystems/BallIntake.cpp
     src/subsystems/GearIntake.cpp
     src/subsystems/Lights.cpp

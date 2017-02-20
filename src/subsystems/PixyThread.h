@@ -28,7 +28,7 @@ private:
 
     SingleThreadTaskMgr *m_thread;
     Pixy *m_pixy;
-    int m_prevReading;
+    double m_prevReading;
     double m_offset;
     uint32_t m_prevReadingTime;
 	pthread_mutex_t	m_mutex;

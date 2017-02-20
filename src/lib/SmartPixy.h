@@ -23,9 +23,9 @@ namespace frc973 {
 
 // Pixy x-y position values
 #define PIXY_MIN_X                  0L	//x: 0~319 pixels, y:0~199 pixels. (0,0) starts at bottom left
-#define PIXY_MAX_X                  319L
+#define PIXY_MAX_X                  319
 #define PIXY_MIN_Y                  0L
-#define PIXY_MAX_Y                  199L
+#define PIXY_MAX_Y                  199
 
 // RC-servo values - not needed unless you want to use servo to face the goal instead of moving the whole robot
 #define PIXY_RCS_MIN_POS            0L

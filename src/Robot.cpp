@@ -12,7 +12,6 @@
 #include "subsystems/GearIntake.h"
 #include "subsystems/Shooter.h"
 #include "subsystems/BoilerPixy.h"
-#include "subsystems/GearPixy.h"
 #include "subsystems/Lights.h"
 
 #include "CANTalon.h"
@@ -110,22 +109,21 @@ Robot::Robot(void
     m_ballIntake = new BallIntake(this);
     m_gearIntake = new GearIntake(this);
     m_shooter = new Shooter(this, m_logger, m_leftAgitatorTalon);
-    m_gearPixy = new GearPixy(this);
 
     m_airPressureSwitch = new DigitalInput(AIR_PRESSURE_DIN);
     m_compressorRelay = new Relay(COMPRESSOR_RELAY, Relay::kForwardOnly);
     m_compressor = new GreyCompressor(m_airPressureSwitch, m_compressorRelay, this);
 
-  fprintf(stderr, "initializing aliance\n");
-  if(DriverStation::GetInstance().GetAlliance() == DriverStation::Alliance::kRed){
+    fprintf(stderr, "initializing aliance\n");
+    if(DriverStation::GetInstance().GetAlliance() == DriverStation::Alliance::kRed){
         m_autoDirection = -1.0;
     }
     else{
         m_autoDirection = 1.0;
     }
-  fprintf(stderr, "done w/ constructor\n");
+    fprintf(stderr, "done w/ constructor\n");
 
-  m_pixyR = new PixyThread(*this);
+    m_pixyR = new PixyThread(*this);
 }
 
 Robot::~Robot(void) {

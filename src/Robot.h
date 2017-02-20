@@ -25,7 +25,6 @@ class PixyThread;
 class BallIntake;
 class GreyCompressor;
 class BoilerPixy;
-class GearPixy;
 class Lights;
 
 class Robot:
@@ -72,7 +71,6 @@ private:
     BallIntake			*m_ballIntake;
     GearIntake	*m_gearIntake;
     Shooter			*m_shooter;
-    GearPixy    *m_gearPixy;
     Lights      *m_lights;
     BoilerPixy      *m_boilerPixy;
 
