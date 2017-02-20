@@ -12,7 +12,6 @@ namespace frc973 {
         m_shooter->SetFlywheelStop();
         m_ballIntake->BallIntakeStop();
         m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
-        m_drive->Zero();
 
         m_autoState = 0;
     }
@@ -23,6 +22,7 @@ namespace frc973 {
 
     void Robot::AutonomousContinuous(void) {
         printf("autonomous continuous\n");
+        DBStringPrintf(DB_LINE0, "AutoState %d", m_autoState);
         switch (m_autoRoutine){
             case AutonomousRoutine::GearLeftPeg:
                 GearLtPeg();
@@ -69,7 +69,7 @@ namespace frc973 {
         //Start facing the wall
         switch (m_autoState) {
             case 0:
-                m_drive->PIDDrive(-(DRIVER_STATION_BASE_LINE_DIST - 40), 0.0, DriveBase::RelativeTo::Now, 0.8);
+                m_drive->PIDDrive(-30.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
                 m_autoState++;
                 break;
             case 1:
@@ -80,21 +80,23 @@ namespace frc973 {
                 break;
             case 2:
                 if (m_drive->OnTarget()) {
-                    m_drive->ArcadeDrive(0.5, 0.0);
+                    m_autoTimer = GetMsecTime();
+                    m_drive->ArcadeDrive(0.3, 0.0);
                     m_autoState++;
                 }
                 break;
             case 3:
                 if (m_gearIntake->IsGearReady()) {
                     //hit the gear, continue normally
-                    m_drive->PIDDrive(40.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
+                    m_drive->PIDDrive(30.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
+                    m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
                     m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
                     m_autoState++;
                 }
                 else if (GetMsecTime() - m_autoTimer > 3000) {
                     //we did not hit it after 3 seconds so back up and try again
-                    m_drive->PIDDrive(40.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
-                    m_autoState = 2;
+                    m_drive->PIDDrive(20.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
+                    m_autoState = 1;
                 }
                 break;
             case 4:

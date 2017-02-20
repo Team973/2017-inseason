@@ -36,18 +36,21 @@ void PixyThread::TaskPeriodic(RobotMode mode) {
     */
 
     int numBlocks = m_pixy->getBlocks(4);
+    double currentRead;
 
 	pthread_mutex_lock(&m_mutex);
     if (numBlocks >= 2){
-        m_prevReading = (
-                (double) (m_pixy->blocks[0].x + 
+        currentRead = (
+                (double) (m_pixy->blocks[0].x +
                           m_pixy->blocks[1].x)) / 2.0;
         m_prevReadingTime = GetMsecTime();
     }
     else if (numBlocks == 1){
-        m_prevReading = m_pixy->blocks[0].x;
+        currentRead = m_pixy->blocks[0].x;
         m_prevReadingTime = GetMsecTime();
     }
+
+    m_prevReading = (m_prevReading + currentRead) / 2.0;
     printf("reading %lf\n", m_prevReading);
 	pthread_mutex_unlock(&m_mutex);
 }

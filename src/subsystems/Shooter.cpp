@@ -111,13 +111,13 @@ bool Shooter::OnTarget() {
 void Shooter::StartConveyor(double speed) {
     m_ballConveyor->Set(speed);
     printf("%lf pow on %d - conveyor\n", speed, BALL_CONVEYOR_CAN_ID);
-    DBStringPrintf(DB_LINE3, "conv pow %lf", speed);
+    //DBStringPrintf(DB_LINE3, "conv pow %lf", speed);
 }
 
 void Shooter::StopConveyor() {
     m_ballConveyor->Set(0.0);
     printf("%lf pow on %d - conveyor\n", 0.0, BALL_CONVEYOR_CAN_ID);
-    DBStringPrintf(DB_LINE3, "conv pow %lf", 0.0);
+    //DBStringPrintf(DB_LINE3, "conv pow %lf", 0.0);
 }
 
 //side: true = right; false = left
@@ -143,10 +143,10 @@ void Shooter::TaskPeriodic(RobotMode mode) {
     m_flywheelAmpsLog->LogDouble(m_flywheelMotorPrimary->GetOutputCurrent());
     m_flywheelStateLog->LogPrintf("%d", m_flywheelState);
     m_speedSetpoint->LogDouble(m_flywheelSpeedSetpt);
-    DBStringPrintf(DB_LINE5,"shooterrate %2.1lf", GetFlywheelRate());
-    DBStringPrintf(DB_LINE6,"shootersetpt %2.1lf", m_flywheelSpeedSetpt);
-    DBStringPrintf(DB_LINE3,"conv %2.1lf flail %2.1lf %2.1lf", m_ballConveyor->GetOutputVoltage(),
-                  m_leftAgitator->GetOutputVoltage(), m_rightAgitator->GetOutputVoltage());
+    //DBStringPrintf(DB_LINE5,"shooterrate %2.1lf", GetFlywheelRate());
+    //DBStringPrintf(DB_LINE6,"shootersetpt %2.1lf", m_flywheelSpeedSetpt);
+    //DBStringPrintf(DB_LINE3,"conv %2.1lf flail %2.1lf %2.1lf", m_ballConveyor->GetOutputVoltage(),
+                //  m_leftAgitator->GetOutputVoltage(), m_rightAgitator->GetOutputVoltage());
     printf("setpt %lf speed %lf\n",
             m_flywheelSpeedSetpt, GetFlywheelRate());
     //DBStringPrintf(DB_LINE8,"shooterpow %2.1lf", m_flywheelMotorPrimary->GetOutputVoltage());

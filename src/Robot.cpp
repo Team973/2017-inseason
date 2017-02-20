@@ -50,7 +50,7 @@ Robot::Robot(void
     m_leftDriveTalonA->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
     m_leftDriveTalonA->SetClosedLoopOutputDirection(true);
     m_leftDriveTalonA->ConfigNominalOutputVoltage(0, 0);
-    m_leftDriveTalonA->ConfigPeakOutputVoltage(12, 0);
+    m_leftDriveTalonA->ConfigPeakOutputVoltage(12, -12);
     m_leftDriveTalonA->SetSensorDirection(true);
     m_leftDriveTalonA->SelectProfileSlot(0);
     m_leftDriveTalonA->SetP(0.30);
@@ -145,8 +145,8 @@ void Robot::AllStateContinuous(void) {
     DBStringPrintf(DB_LINE2, "drive cur %lf",
                    m_drive->GetDriveCurrent());
     DBStringPrintf(DB_LINE8,
-            "g %d %lf",
-            m_pixyR->GetDataFresh(), m_pixyR->GetOffset());
+            "g %d %lf %d",
+            m_pixyR->GetDataFresh(), m_pixyR->GetOffset(), m_gearIntake->IsGearReady());
 }
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
             bool pressedP) {

@@ -12,7 +12,7 @@ namespace frc973{
     m_leftSetpoint(0.0),
     m_rightSetpoint(0.0),
     m_gearPixy(gearPixy),
-    m_pid(new PID(3.5, 0.0, 0.1))
+    m_pid(new PID(8.0, 0.0, 0.0))
   {
   }
 
@@ -28,8 +28,7 @@ namespace frc973{
 
     double offset = m_gearPixy->GetOffset();
 
-    if (m_gearPixy->GetDataFresh() == false ||
-        GetMsecTime() - m_lightEnableTimeMs < 1000){
+    if (m_gearPixy->GetDataFresh() == false){
       m_leftSetpoint = 0.0;
       m_rightSetpoint = 0.0;
     }
@@ -41,7 +40,7 @@ namespace frc973{
 
     out->SetDriveOutput(m_leftSetpoint, m_rightSetpoint);
 
-    if (Util::abs(m_gearPixy->GetOffset()) < 0.1 &&
+    if (Util::abs(m_gearPixy->GetOffset()) < 0.04 &&
             Util::abs(state->GetAngularRate()) < 1.0) {
   		m_onTarget = true;
   	}

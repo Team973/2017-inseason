@@ -16,7 +16,7 @@ static constexpr double DRIVE_PID_KP = 0.05;
 static constexpr double DRIVE_PID_KI = 0.0;
 static constexpr double DRIVE_PID_KD = 0;
 
-static constexpr double TURN_PID_KP = 0.016;
+static constexpr double TURN_PID_KP = 0.008;
 static constexpr double TURN_PID_KI = 0.0;
 static constexpr double TURN_PID_KD = 0.00;
 
@@ -52,14 +52,14 @@ void PIDDriveController::CalcDriveOutput(DriveStateProvider *state,
 	double turn = Util::bound(m_turnPID->CalcOutput(m_prevAngle), -0.5, 0.5);
 
 	if (m_distEnabled){
-		throttle = Util::bound(m_drivePID->CalcOutput(m_prevDist), -m_speedCap, m_speedCap);
+		throttle = m_drivePID->CalcOutput(m_prevDist);
 	}
 	else {
 		throttle = 0.0;
 	}
 
-    if (throttle > m_lastThrottle + 0.03) {
-        throttle = m_lastThrottle + 0.03;
+    if (throttle > m_lastThrottle + 0.09) {
+        throttle = m_lastThrottle + 0.09;
     }
     m_lastThrottle = throttle;
 
