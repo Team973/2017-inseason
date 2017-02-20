@@ -25,6 +25,7 @@ set(SOURCE_FILES src/Robot.cpp src/lib/CoopMTRobot.cpp
     src/subsystems/GearIntake.cpp
     src/subsystems/Lights.cpp
     src/controllers/PIDDrive.cpp
+    src/controllers/GearPixyVisionDriveController.cpp
     src/lib/filters/MedianFilter.cpp src/lib/filters/MovingAverageFilter.cpp
     src/lib/filters/PID.cpp src/lib/filters/RampedOutput.cpp
     src/controllers/ArcadeDriveController.cpp

@@ -139,6 +139,8 @@ void Shooter::TaskPeriodic(RobotMode mode) {
     m_speedSetpoint->LogDouble(DEFAULT_FLYWHEEL_SPEED_SETPOINT);
     DBStringPrintf(DB_LINE5,"shooterrate %2.1lf", GetFlywheelRate());
     DBStringPrintf(DB_LINE6,"shootersetpt %2.1lf", m_flywheelSpeedSetpt);
+    DBStringPrintf(DB_LINE3,"conv %2.1lf flail %2.1lf %2.1lf", m_ballConveyor->GetOutputVoltage(),
+                  m_leftAgitator->GetOutputVoltage(), m_rightAgitator->GetOutputVoltage());
     printf("setpt %lf speed %lf\n",
             m_flywheelSpeedSetpt, GetFlywheelRate());
     //DBStringPrintf(DB_LINE8,"shooterpow %2.1lf", m_flywheelMotorPrimary->GetOutputVoltage());

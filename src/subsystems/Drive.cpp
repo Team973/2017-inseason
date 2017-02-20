@@ -14,12 +14,13 @@
 #include "controllers/ArcadeDriveController.h"
 #include "controllers/PIDDrive.h"
 #include "controllers/BoilerPixyVisionDriveController.h"
+#include "controllers/GearPixyVisionDriveController.h"
 
 namespace frc973 {
 
 Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
             CANTalon *spareTalon,
-            LogSpreadsheet *logger, BoilerPixy *boilerPixy
+            LogSpreadsheet *logger, BoilerPixy *boilerPixy, GearPixy *gearPixy
             )
          : DriveBase(scheduler, this, this, nullptr)
          , m_gyro(new PigeonImu(spareTalon))
@@ -30,6 +31,7 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
          , m_arcadeDriveController(nullptr)
          , m_spreadsheet(logger)
          , m_boilerPixyDriveController(new BoilerPixyVisionDriveController(boilerPixy))
+         , m_gearPixyDriveController(new GearPixyVisionDriveController(gearPixy))
          , m_angleLog(new LogCell("Angle"))
          , m_angularRateLog(new LogCell("Angular Rate"))
          , m_leftDistLog(new LogCell("Left Encoder Distance"))
@@ -82,6 +84,10 @@ void Drive::SetBoilerPixyTargeting(){
   this->SetDriveController(m_boilerPixyDriveController);
 }
 
+void Drive::SetGearPixyTargeting(){
+  this->SetDriveController(m_gearPixyDriveController);
+}
+
 void Drive::PIDDrive(double dist, double turn, RelativeTo relativity, double powerCap) {
     this->SetDriveController(m_pidDriveController);
     m_pidDriveController->SetCap(powerCap);
@@ -123,7 +129,7 @@ double Drive::GetRate() {
 }
 
 double Drive::GetDriveCurrent() {
-    return (m_rightMotor->GetOutputCurrent() + 
+    return (m_rightMotor->GetOutputCurrent() +
             m_leftMotor->GetOutputCurrent()) / 2.0;
 }
 
