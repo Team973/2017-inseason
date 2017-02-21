@@ -4,6 +4,7 @@
 #include "lib/JoystickHelper.h"
 #include "RobotInfo.h"
 #include "stdio.h"
+#include "lib/WrapDash.h"
 
 using namespace frc;
 #include "WPILib.h"

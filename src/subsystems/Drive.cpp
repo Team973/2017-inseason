@@ -71,7 +71,7 @@ void Drive::Zero() {
     if (m_rightEncoder)
         m_rightEncoder->Reset();
     if (m_gyro)
-        m_gyro->SetFusedHeading(0.0);
+        m_gyro->SetYaw(0.0);
 }
 
 void Drive::ArcadeDrive(double throttle, double turn) {

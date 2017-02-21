@@ -73,10 +73,8 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         case DualAction::LeftBumper:
             if (pressedP) {
                 //sw lowgear
-                m_boilerPixy->Enable();
             }
             else {
-                m_boilerPixy->Disable();
             }
             break;
         case DualAction::LeftTrigger:
@@ -143,11 +141,9 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::BtnX:
             if (pressedP) {
-                m_boilerPixy->Enable();
                 m_ballIntake->BallIntakeStartReverse();
             }
             else{
-                m_boilerPixy->Disable();
                 m_ballIntake->BallIntakeStop();
             }
             break;
@@ -240,7 +236,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::RightTrigger:
                 if (pressedP) {
-                    m_conveyorSetpt += 0.1;
+                    //m_conveyorSetpt += 0.1;
                 }
                 break;
             case DualAction::RightBumper:

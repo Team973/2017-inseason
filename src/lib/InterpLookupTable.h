@@ -16,6 +16,7 @@ public:
     /**
      * Add the (x, y) point to the table and return |this|
      * for chaining
+     * x: pixy height offset; y: horizontal distance
      */
     InterpLookupTable &AddPoint(double x, double y);
 

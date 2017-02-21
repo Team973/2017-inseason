@@ -18,6 +18,7 @@ set(SOURCE_FILES src/Robot.cpp src/lib/CoopMTRobot.cpp
     src/lib/filters/BullshitFilter.cpp src/lib/filters/CascadingFilter.cpp
     src/lib/filters/DelaySwitch.cpp src/lib/filters/FilterBase.cpp
     src/lib/SingleThreadTaskMgr.cpp src/lib/SmartPixy.cpp
+    src/lib/InterpLookupTable.cpp
     src/subsystems/PixyThread.cpp
     src/subsystems/BoilerPixy.cpp
     src/subsystems/BallIntake.cpp

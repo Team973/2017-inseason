@@ -12,7 +12,6 @@ namespace frc973 {
         m_shooter->SetFlywheelStop();
         m_ballIntake->BallIntakeStop();
         m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
-        m_drive->Zero();
 
         m_autoState = 0;
     }
@@ -23,6 +22,7 @@ namespace frc973 {
 
     void Robot::AutonomousContinuous(void) {
         printf("autonomous continuous\n");
+        DBStringPrintf(DB_LINE0, "AutoState %d", m_autoState);
         switch (m_autoRoutine){
             case AutonomousRoutine::GearLeftPeg:
                 GearLtPeg();
@@ -50,26 +50,62 @@ namespace frc973 {
     }
 
     void Robot::GearLtPeg(){
-        switch (m_autoState){
-            case 0:
-                m_drive->PIDDrive(DRIVER_STATION_LAUNCHPAD_DIST + 10.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
+      //start at left side
+      switch (m_autoState) {
+          case 0:
+              m_drive->PIDDrive(-72.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
+              m_autoState++;
+              break;
+          case 1:
+              if (m_drive->OnTarget()){
+                m_drive->PIDDrive(0.0, -60.0 * m_autoDirection, DriveBase::RelativeTo::SetPoint, 0.8);
                 m_autoState++;
-                break;
-            case 1:
-                m_drive->PIDDrive(0.0, 130.0, DriveBase::RelativeTo::SetPoint, 0.8);
-                m_autoState++;
-                break;
-            case 2:
-                m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
-                break;
-        }
+              }
+              break;
+          case 2:
+              if (m_drive->OnTarget()) {
+                  m_drive->SetGearPixyTargeting();
+                  m_autoState++;
+              }
+              break;
+          case 3:
+              if (m_drive->OnTarget()) {
+                  m_autoTimer = GetMsecTime();
+                  m_drive->ArcadeDrive(0.3, 0.0);
+                  m_autoState++;
+              }
+              break;
+          case 4:
+              if (m_gearIntake->IsGearReady()) {
+                  //hit the gear, continue normally
+                  m_drive->PIDDrive(30.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
+                  m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
+                  m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
+                  m_autoState++;
+              }
+              else if (GetMsecTime() - m_autoTimer > 3000) {
+                  //we did not hit it after 3 seconds so back up and try again
+                  m_drive->PIDDrive(20.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
+                  m_autoState = 2;
+              }
+              break;
+          //READY FOR teleop
+          case 5:
+              if (m_drive->OnTarget()) {
+                  m_drive->PIDDrive(0.0, -30.0 * m_autoDirection, DriveBase::RelativeTo::SetPoint, 0.8);
+                  m_autoState++;
+              }
+              break;
+          default:
+              break;
+      }
     }
 
     void Robot::GearMidPeg(){
         //Start facing the wall
         switch (m_autoState) {
             case 0:
-                m_drive->PIDDrive(-(DRIVER_STATION_BASE_LINE_DIST - 40), 0.0, DriveBase::RelativeTo::Now, 0.8);
+                m_drive->PIDDrive(-30.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
                 m_autoState++;
                 break;
             case 1:
@@ -80,21 +116,23 @@ namespace frc973 {
                 break;
             case 2:
                 if (m_drive->OnTarget()) {
-                    m_drive->ArcadeDrive(0.5, 0.0);
+                    m_autoTimer = GetMsecTime();
+                    m_drive->ArcadeDrive(0.3, 0.0);
                     m_autoState++;
                 }
                 break;
             case 3:
                 if (m_gearIntake->IsGearReady()) {
                     //hit the gear, continue normally
-                    m_drive->PIDDrive(40.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
+                    m_drive->PIDDrive(30.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
+                    m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
                     m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
                     m_autoState++;
                 }
                 else if (GetMsecTime() - m_autoTimer > 3000) {
                     //we did not hit it after 3 seconds so back up and try again
-                    m_drive->PIDDrive(40.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
-                    m_autoState = 2;
+                    m_drive->PIDDrive(20.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
+                    m_autoState = 1;
                 }
                 break;
             case 4:
@@ -110,18 +148,53 @@ namespace frc973 {
     }
 
     void Robot::GearRtPeg(){
-        switch (m_autoState){
-            case 0:
-                m_drive->PIDDrive(DRIVER_STATION_LAUNCHPAD_DIST + 10.0, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
+      switch (m_autoState) {
+          case 0:
+              m_drive->PIDDrive(-72.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
+              m_autoState++;
+              break;
+          case 1:
+              if (m_drive->OnTarget()){
+                m_drive->PIDDrive(0.0, 60.0 * m_autoDirection, DriveBase::RelativeTo::SetPoint, 0.8);
                 m_autoState++;
-                break;
-            case 1:
-                m_drive->PIDDrive(0.0, -130.0, DriveBase::RelativeTo::SetPoint, 0.8);
-                m_autoState++;
-                break;
-            case 2:
-                m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
-                break;
+              }
+              break;
+          case 2:
+              if (m_drive->OnTarget()) {
+                  m_drive->SetGearPixyTargeting();
+                  m_autoState++;
+              }
+              break;
+          case 3:
+              if (m_drive->OnTarget()) {
+                  m_autoTimer = GetMsecTime();
+                  m_drive->ArcadeDrive(0.3, 0.0);
+                  m_autoState++;
+              }
+              break;
+          case 4:
+              if (m_gearIntake->IsGearReady()) {
+                  //hit the gear, continue normally
+                  m_drive->PIDDrive(30.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
+                  m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
+                  m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
+                  m_autoState++;
+              }
+              else if (GetMsecTime() - m_autoTimer > 3000) {
+                  //we did not hit it after 3 seconds so back up and try again
+                  m_drive->PIDDrive(20.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
+                  m_autoState = 2;
+              }
+              break;
+          case 5:
+              //ready for teleop
+              if (m_drive->OnTarget()) {
+                  m_drive->PIDDrive(0.0, 32.0 * m_autoDirection, DriveBase::RelativeTo::Now, 0.8);
+                  m_autoState++;
+              }
+              break;
+          default:
+            break;
         }
     }
 
