@@ -26,6 +26,7 @@ namespace frc973{
 
       double GetXOffset();
       double GetHeight();
+      double GetXDistance();
       bool GetSeesTargetX();
       bool GetSeesTargetY();
 
@@ -40,6 +41,6 @@ namespace frc973{
       MovingAverageFilter *m_pixyFilter;
 
       Lights *m_lights;
-      //InterpLookupTable *m_interpTable;
+      InterpLookupTable *m_interpTable;
   };
 }
