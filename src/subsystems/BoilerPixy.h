@@ -5,6 +5,7 @@
 #include "lib/TaskMgr.h"
 #include "lib/WrapDash.h"
 #include "lib/filters/MovingAverageFilter.h"
+#include "lib/InterpLookupTable.h"
 
 using namespace frc;
 
@@ -39,5 +40,6 @@ namespace frc973{
       MovingAverageFilter *m_pixyFilter;
 
       Lights *m_lights;
+      //InterpLookupTable *m_interpTable;
   };
 }

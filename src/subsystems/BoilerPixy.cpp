@@ -2,18 +2,20 @@
 #include "RobotInfo.h"
 #include "Lights.h"
 #include "stdio.h"
+#include "lib/InterpLookupTable.h"
 
 namespace frc973{
     BoilerPixy::BoilerPixy(TaskMgr *scheduler, Lights *lights) :
-    m_scheduler(scheduler),
-    m_pixyXOffset(new AnalogInput(BOILER_PIXY_CAM_X_ANALOG)),
-    m_pixyYOffset(new AnalogInput(BOILER_PIXY_CAM_Y_ANALOG)),
-    m_seesTargetX(new DigitalInput(BOILER_PIXY_CAM_X_DIGITAL)),
-    m_seesTargetY(new DigitalInput(BOILER_PIXY_CAM_Y_DIGITAL)),
-    m_pixyFilter(new MovingAverageFilter(0.9))
+      m_scheduler(scheduler),
+      m_pixyXOffset(new AnalogInput(BOILER_PIXY_CAM_X_ANALOG)),
+      m_pixyYOffset(new AnalogInput(BOILER_PIXY_CAM_Y_ANALOG)),
+      m_seesTargetX(new DigitalInput(BOILER_PIXY_CAM_X_DIGITAL)),
+      m_seesTargetY(new DigitalInput(BOILER_PIXY_CAM_Y_DIGITAL)),
+      m_pixyFilter(new MovingAverageFilter(0.9)),
+      m_lights(lights)
+      //m_interpTable(new InterpLookupTable())
     {
         m_scheduler->RegisterTask("Boiler pixy", this, TASK_PERIODIC);
-        m_lights = lights;
         m_lights->DisableLights();
     }
 
@@ -49,7 +51,7 @@ namespace frc973{
 
     void BoilerPixy::TaskPeriodic(RobotMode mode){
         DBStringPrintf(DB_LINE7,
-              "x %d %2.1lf y %d %2.1lf",
+              "x %d %2.1lf y %d %2.4lf",
               GetSeesTargetX(), m_pixyXOffset->GetVoltage(),
               GetSeesTargetY(), m_pixyYOffset->GetVoltage());
           /*
