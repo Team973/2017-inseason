@@ -28,9 +28,9 @@ namespace frc973{
         m_interpTable->AddPoint(1.4197,72.0);
         m_interpTable->AddPoint(1.3684,78.0);*/
         //pbot
-        m_interpTable->AddPoint(3.2361,0.0);
-        m_interpTable->AddPoint(3.0408,6.0);
-        m_interpTable->AddPoint(2.8271,12.0);
+        //m_interpTable->AddPoint(3.2361,0.0);
+        //m_interpTable->AddPoint(3.0408,6.0);
+        //m_interpTable->AddPoint(2.8271,12.0);
         m_interpTable->AddPoint(2.5635,18.0);
         m_interpTable->AddPoint(2.334,24.0);
         m_interpTable->AddPoint(2.1863,30.0);

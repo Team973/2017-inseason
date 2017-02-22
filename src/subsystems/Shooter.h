@@ -71,6 +71,9 @@ private:
     LogCell *m_flywheelAmpsLog;
     LogCell *m_flywheelStateLog;
     LogCell *m_speedSetpoint;
+    LogCell *m_conveyorLog;
+    LogCell *m_leftAgitatorLog;
+    LogCell *m_rightAgitatorLog;
     Debouncer m_flywheelOnTargetFilter;
 };
 
