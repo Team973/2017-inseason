@@ -76,10 +76,10 @@ namespace frc973{
     }
 
     void BoilerPixy::TaskPeriodic(RobotMode mode){
-        DBStringPrintf(DB_LINE6,
+      /*  DBStringPrintf(DB_LINE6,
               "x %d %2.1lf y %d %2.4lf",
               GetSeesTargetX(), m_pixyXOffset->GetVoltage(),
-              GetSeesTargetY(), m_pixyYOffset->GetVoltage());
-        DBStringPrintf(DB_LINE7, "horizontal %2.4lf", GetXDistance());
+              GetSeesTargetY(), m_pixyYOffset->GetVoltage());*/
+      //  DBStringPrintf(DB_LINE7, "horizontal %2.4lf", GetXDistance());
     }
 }

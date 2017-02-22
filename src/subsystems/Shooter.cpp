@@ -35,11 +35,12 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgita
     m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kSpeed);
     m_flywheelMotorPrimary->SelectProfileSlot(0);
     m_flywheelMotorPrimary->ConfigNominalOutputVoltage(0, 0);
-    m_flywheelMotorPrimary->ConfigPeakOutputVoltage(12, -12);
-    m_flywheelMotorPrimary->SetP(0.05);
-    m_flywheelMotorPrimary->SetI(0.0);
-    m_flywheelMotorPrimary->SetD(4.00);
-    m_flywheelMotorPrimary->SetF(0.024);
+    m_flywheelMotorPrimary->ConfigPeakOutputVoltage(12, 0.0);
+    m_flywheelMotorPrimary->SetP(0.02);
+    m_flywheelMotorPrimary->SetI(0.00004);
+    m_flywheelMotorPrimary->SetD(0.00);
+    m_flywheelMotorPrimary->SetF(0.022);
+    m_flywheelMotorPrimary->SetIzone(3500);
     //m_flywheelMotorPrimary->SetVelocityMeasurementPeriod(CANTalon::Period_20Ms);
     //m_flywheelMotorPrimary->SetVelocityMeasurementWindow(64);
 
@@ -149,13 +150,13 @@ void Shooter::TaskPeriodic(RobotMode mode) {
     m_conveyorLog->LogDouble(m_ballConveyor->GetOutputCurrent());
     m_leftAgitatorLog->LogDouble(m_leftAgitator->GetOutputCurrent());
     m_rightAgitatorLog->LogDouble(m_rightAgitator->GetOutputCurrent());
-    //DBStringPrintf(DB_LINE5,"shooterrate %2.1lf", GetFlywheelRate());
-    //DBStringPrintf(DB_LINE6,"shootersetpt %2.1lf", m_flywheelSpeedSetpt);
+    DBStringPrintf(DB_LINE5,"shooterrate %2.1lf", GetFlywheelRate());
+    DBStringPrintf(DB_LINE6,"shootersetpt %2.1lf", m_flywheelSpeedSetpt);
     //DBStringPrintf(DB_LINE3,"conv %2.1lf flail %2.1lf %2.1lf", m_ballConveyor->GetOutputVoltage(),
                 //  m_leftAgitator->GetOutputVoltage(), m_rightAgitator->GetOutputVoltage());
     printf("setpt %lf speed %lf\n",
             m_flywheelSpeedSetpt, GetFlywheelRate());
-    //DBStringPrintf(DB_LINE8,"shooterpow %2.1lf", m_flywheelMotorPrimary->GetOutputVoltage());
+    DBStringPrintf(DB_LINE8,"shooterpow %2.1lf", m_flywheelMotorPrimary->GetOutputVoltage());
     switch(m_flywheelState){
         case power:
             m_flywheelMotorPrimary->Set(m_flywheelPow);
@@ -164,7 +165,7 @@ void Shooter::TaskPeriodic(RobotMode mode) {
             m_flywheelMotorPrimary->Set(0.0);
             break;
         case speed:
-            //m_flywheelMotorPrimary->Set(m_flywheelSpeedSetpt);
+            m_flywheelMotorPrimary->Set(m_flywheelSpeedSetpt);
             break;
     }
 }
