@@ -133,6 +133,7 @@ void Robot::Initialize(void) {
     printf("gonna initialize logger\n");
     m_logger->InitializeTable();
     printf("initialized\n");
+    CameraServer::GetInstance()->StartAutomaticCapture();
 }
 
 void Robot::AllStateContinuous(void) {
