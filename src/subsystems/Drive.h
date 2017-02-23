@@ -129,9 +129,15 @@ public:
 
     /*
      * Used by the DriveController to set motor values
+     * 
+     * The unit of this command depends on the mode of the controller...
+     * If in kPercentVbus mode (default), command is from -1.0 to 1.0 and
+     *      scales to voltage sent to motors
+     * If in kSpeed mode, the command is the speed setpoint in in/sec
+     * If in kPositon mode, the command is the position setpoint in inches
      *
-     * @param left power (from -1.0 to 1.0) for left motor
-     * @param right power (from -1.0 to 1.0) for right motor
+     * @param command to send to left motor
+     * @param command to send to right motor
      */
     void SetDriveOutput(double left, double right) override;
 
@@ -145,6 +151,8 @@ private:
 
     CANTalon *m_leftMotor;
     CANTalon *m_rightMotor;
+
+    CANSpeedController::ControlMode m_controlMode;
 
     ArcadeDriveController *m_arcadeDriveController;
     CheesyDriveController *m_cheesyDriveController;

@@ -16,7 +16,7 @@ static bool g_manualControl = true;
 static bool g_shooterControl = true;
 
 void Robot::TeleopContinuous(void) {
-    double y = m_driverJoystick->GetRawAxis(DualAction::LeftYAxis);
+    double y = -m_driverJoystick->GetRawAxis(DualAction::LeftYAxis);
     double x = -m_driverJoystick->GetRawAxis(DualAction::RightXAxis)
         + -m_tuningJoystick->GetRawAxis(DualAction::RightXAxis);
 //  printf("throttle  %lf, turn  %lf\n", y, x);

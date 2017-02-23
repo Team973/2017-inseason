@@ -9,6 +9,7 @@
 #include "lib/util/Util.h"
 #include <stdio.h>
 #include "lib/WrapDash.h"
+#include "RobotInfo.h"
 
 namespace frc973 {
 
@@ -29,43 +30,26 @@ void ArcadeDriveController::CalcDriveOutput(DriveStateProvider *state,
 		out->SetDriveControlMode(CANSpeedController::ControlMode::kSpeed);
 		m_needSetControlMode = false;
 	}
-	out->SetDriveOutput(1000 * m_leftOutput, 1000 * m_rightOutput);
+
+	out->SetDriveOutput(m_leftOutput, m_rightOutput);
 	DBStringPrintf(DBStringPos::DB_LINE4,
 				"arcade l=%1.2lf r=%1.2lf", m_leftOutput, m_rightOutput);
 	//printf("arcade l=%1.2lf r=%1.2lf\n", m_leftOutput, m_rightOutput);
 }
 
 void ArcadeDriveController::SetJoysticks(double throttle, double turn) {
-	throttle = Util::bound(throttle, -1.0, 1.0);
-	turn = Util::bound(turn, -1.0, 1.0);
+	throttle = Util::bound(throttle, -1.0, 1.0) * THROTTLE_MAX;
+	turn = Util::bound(turn, -1.0, 1.0) * TURN_MAX;
 
+    m_leftOutput = throttle - 0.5 * DRIVE_WIDTH * turn;
+    m_rightOutput = throttle + 0.5 * DRIVE_WIDTH * turn;
 
-	if (throttle < 0.0) {
-		if (turn > 0.0) {
-			m_leftOutput = (-throttle - turn);
-			m_rightOutput = Util::max(-throttle, turn);
-		}
-		else {
-			m_leftOutput = Util::max(-throttle, -turn);
-			m_rightOutput = -throttle + turn;
-		}
-	}
-	else {
-		if (turn > 0.0) {
-			m_leftOutput = -Util::max(throttle, turn);
-			m_rightOutput = -throttle + turn;
-		}
-		else {
-			m_leftOutput = -throttle - turn;
-			m_rightOutput = -Util::max(throttle, -turn);
-		}
-	}
+    double maxSpeed = Util::max(m_leftOutput, m_rightOutput);
+    if (maxSpeed > THROTTLE_MAX) {
+        m_leftOutput = m_leftOutput * (THROTTLE_MAX / maxSpeed);
+        m_rightOutput = m_rightOutput * (THROTTLE_MAX / maxSpeed);
+    }
 
-	m_leftOutput *= 1.0;
-	m_rightOutput *= 1.0;
-
-	//m_leftOutput = throttle + turn;
-	//m_rightOutput = throttle - turn;
 	//printf("left %lf  right %lf\n", m_leftOutput, m_rightOutput);
 }
 

@@ -28,6 +28,7 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
          , m_rightCommand(0.0)
          , m_leftMotor(left)
          , m_rightMotor(right)
+         , m_controlMode(CANSpeedController::ControlMode::kPercentVbus)
          , m_arcadeDriveController(nullptr)
          , m_spreadsheet(logger)
          , m_boilerPixyDriveController(
@@ -51,7 +52,7 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
     m_arcadeDriveController = new ArcadeDriveController();
     m_pidDriveController = new PIDDriveController();
     this->SetDriveController(m_arcadeDriveController);
-    //this->SetDriveControlMode(CANSpeedController::ControlMode::kPercentVbus);
+    this->SetDriveControlMode(m_controlMode);
 
     bool loggingEnabled = true;
     if (loggingEnabled) {
@@ -103,6 +104,9 @@ void Drive::PIDTurn(double turn, RelativeTo relativity, double powerCap) {
     m_pidDriveController->DisableDist();
 }
 
+/**
+ * reported in inches
+ */
 double Drive::GetLeftDist() {
     return m_leftMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION;
 }
@@ -111,12 +115,16 @@ double Drive::GetRightDist() {
     return -m_rightMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION;
 }
 
+/**
+ * Reported in inches per second
+ * As per manual 17.2.1, GetSpeed reports RPM
+ */
 double Drive::GetLeftRate() {
-    return m_leftMotor->GetSpeed() * DRIVE_DIST_PER_REVOLUTION;
+    return m_leftMotor->GetSpeed() * DRIVE_IPS_FROM_RPM;
 }
 
 double Drive::GetRightRate() {
-    return -m_rightMotor->GetSpeed() * DRIVE_DIST_PER_REVOLUTION;
+    return -m_rightMotor->GetSpeed() * DRIVE_IPS_FROM_RPM;
 }
 
 double Drive::GetDist() {
@@ -147,6 +155,15 @@ void Drive::SetDriveOutput(double left, double right) {
 	m_leftCommand = left;
 	m_rightCommand = right;
 
+    if (m_controlMode == CANSpeedController::ControlMode::kSpeed) {
+        m_leftCommand /= DRIVE_IPS_FROM_RPM;
+        m_rightCommand /= DRIVE_IPS_FROM_RPM;
+    }
+    else if (m_controlMode == CANSpeedController::ControlMode::kPosition) {
+        m_leftCommand /= DRIVE_DIST_PER_REVOLUTION;
+        m_rightCommand /= DRIVE_DIST_PER_REVOLUTION;
+    }
+
 	if (isnan(m_leftCommand) || isnan(m_rightCommand)) {
 		m_leftMotor->Set(0.0);
 		m_rightMotor->Set(0.0);
@@ -160,6 +177,7 @@ void Drive::SetDriveOutput(double left, double right) {
 void Drive::SetDriveControlMode(CANSpeedController::ControlMode mode){
     m_leftMotor->SetControlMode(mode);
     m_rightMotor->SetControlMode(mode);
+    m_controlMode = mode;
 }
 
 void Drive::TaskPeriodic(RobotMode mode) {

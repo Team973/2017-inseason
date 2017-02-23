@@ -71,7 +71,7 @@ namespace frc973 {
           case 3:
               if (m_drive->OnTarget()) {
                   m_autoTimer = GetMsecTime();
-                  m_drive->ArcadeDrive(0.3, 0.0);
+                  m_drive->ArcadeDrive(-0.3, 0.0);
                   m_autoState++;
               }
               break;
@@ -117,7 +117,7 @@ namespace frc973 {
             case 2:
                 if (m_drive->OnTarget()) {
                     m_autoTimer = GetMsecTime();
-                    m_drive->ArcadeDrive(0.3, 0.0);
+                    m_drive->ArcadeDrive(-0.3, 0.0);
                     m_autoState++;
                 }
                 break;
@@ -168,7 +168,7 @@ namespace frc973 {
           case 3:
               if (m_drive->OnTarget()) {
                   m_autoTimer = GetMsecTime();
-                  m_drive->ArcadeDrive(0.3, 0.0);
+                  m_drive->ArcadeDrive(-0.3, 0.0);
                   m_autoState++;
               }
               break;
@@ -274,7 +274,7 @@ namespace frc973 {
                 break;
             case 2:
                 if (m_drive->OnTarget()) {
-                    m_drive->ArcadeDrive(-0.3, 0.0);
+                    m_drive->ArcadeDrive(0.3, 0.0);
                     m_autoTimer = GetMsecTime();
                     /*
                     m_drive->PIDDrive(26.0, 0.0,
@@ -286,7 +286,7 @@ namespace frc973 {
             case 3:
                 if (GetMsecTime() - m_autoTimer > 700 &&
                         m_drive->GetDriveCurrent() > 18.0) {
-                    m_drive->ArcadeDrive(-0.1, 0.0);
+                    m_drive->ArcadeDrive(0.1, 0.0);
                     m_autoTimer = GetMsecTime();
                     m_autoState++;
                 }

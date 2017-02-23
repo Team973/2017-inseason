@@ -72,7 +72,8 @@ Robot::Robot(void
     m_rightDriveTalonA->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
     m_rightDriveTalonA->ConfigNeutralMode(
             CANSpeedController::NeutralMode::kNeutralMode_Coast);
-    m_rightDriveTalonA->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
+    m_rightDriveTalonA->SetFeedbackDevice(
+            CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
     m_rightDriveTalonA->SetClosedLoopOutputDirection(true);
     m_rightDriveTalonA->ConfigNominalOutputVoltage(0, 0);
     m_rightDriveTalonA->ConfigPeakOutputVoltage(12, -12);

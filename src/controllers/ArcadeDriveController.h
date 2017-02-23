@@ -49,6 +49,9 @@ private:
 	double m_leftOutput;
 	double m_rightOutput;
 	bool 	m_needSetControlMode;
+
+    static constexpr double THROTTLE_MAX = 200;  //in inches/sec
+    static constexpr double TURN_MAX = 6.3; //in radians/sec... 6.3radians ~= 360degrees
 };
 
 }
