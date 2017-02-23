@@ -76,3 +76,8 @@ if(DOXYGEN_FOUND)
     ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
   set_target_properties(doxygen PROPERTIES EXCLUDE_FROM_ALL TRUE)
 endif()
+
+# Lint target
+add_custom_target(lint
+    COMMAND sh -c "cppcheck src --enable=information,warning,style -I src"
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
