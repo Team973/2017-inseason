@@ -87,7 +87,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             }
             break;
         case DualAction::RightBumper:
-            if (pressedP) {
+            if (pressedP && m_shooter->OnTarget()) {
               g_shooterControl = true;
               m_shooter->StartConveyor(m_conveyorSetpt);
               m_shooter->StartAgitator(m_flailSetpt, true);
@@ -99,11 +99,15 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             }
             break;
         case DualAction::RightTrigger:
-            if (pressedP && m_drive->OnTarget() && m_shooter->OnTarget()) {
-              g_shooterControl = true;
-              m_shooter->StartConveyor(m_conveyorSetpt);
-              m_shooter->StartAgitator(m_flailSetpt, true);
-              m_shooter->StartAgitator(m_flailSetpt, false);
+            if (pressedP) {
+              m_drive->SetBoilerPixyTargeting();
+              if (m_drive->OnTarget() && m_shooter->OnTarget()) {
+                g_shooterControl = true;
+                m_shooter->StartConveyor(m_conveyorSetpt);
+                m_shooter->StartAgitator(m_flailSetpt, true);
+                m_shooter->StartAgitator(m_flailSetpt, false);
+                }
+
             }
             else{
               m_shooter->StopConveyor();
@@ -112,6 +116,10 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::DPadUpVirtBtn:
             if (pressedP) {
+              m_gearIntake->StartPickupSequence();
+              if (m_gearIntake->IsGearReady()){
+                m_lights->NotifyFlash(3);
+              }
             }
             else{
             }
@@ -191,7 +199,11 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::DPadUpVirtBtn:
             if (pressedP) {
-          }
+              m_gearIntake->StartPickupSequence();
+              if (m_gearIntake->IsGearReady()){
+                m_lights->NotifyFlash(3);
+              }
+            }
             break;
         case DualAction::DPadDownVirtBtn:
             if (pressedP) {

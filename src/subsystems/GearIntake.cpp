@@ -137,32 +137,36 @@ namespace frc973{
     }
     switch(m_pickUpState){
       case seeking:
-        this->SetIndexerMode(GearIntake::Indexer::intaking);
+        //this->SetIndexerMode(GearIntake::Indexer::intaking);
         this->SetGearPos(GearIntake::GearPosition::down);
         this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
-        m_pickUpState = PickUp:: seeking;
+        //m_pickUpState = PickUp::seeking;
         m_gearTimer = GetMsecTime();
-        if (m_rightIndexer->GetOutputCurrent() >= 50 || m_leftIndexer->GetOutputCurrent() >= 50){
+        //if (m_rightIndexer->GetOutputCurrent() >= 50 || m_leftIndexer->GetOutputCurrent() >= 50){
             m_pickUpState = GearIntake::PickUp::chewing;
-          }
+          //}
         break;
       case chewing:
-        this->SetIndexerMode(GearIntake::Indexer::intaking);
-        m_pickUpState = PickUp:: chewing;
+        //this->SetIndexerMode(GearIntake::Indexer::intaking);
+        m_pickUpState = PickUp::chewing;
         if (GetMsecTime() - m_gearTimer >= 200) {
-            m_pickUpState = GearIntake::PickUp::digesting;
+          this->SetGearIntakeState(GearIntake::GearIntakeState::released);
+          m_gearTimer = GetMsecTime();
+          m_pickUpState = GearIntake::PickUp::digesting;
         }
         break;
       case digesting:
-        this->SetIndexerMode(GearIntake::Indexer::holding);
-        this->SetGearPos(GearIntake::GearPosition::up);
-        this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
-        if (IsGearReady() == true && m_driverReleased == true) {
+        //this->SetIndexerMode(GearIntake::Indexer::holding);
+        //this->SetGearPos(GearIntake::GearPosition::up);
+        if (GetMsecTime() - m_gearTimer >= 200) {
+          this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
+        }
+        /*if (IsGearReady() == true && m_driverReleased == true) {
           m_pickUpState = PickUp::vomiting;
         }
         else{
           m_pickUpState = PickUp::digesting;
-        }
+        }*/
         break;
       case vomiting:
         this->ReleaseGear();
