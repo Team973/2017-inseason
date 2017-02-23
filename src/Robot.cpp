@@ -101,15 +101,23 @@ Robot::Robot(void
             m_logger, m_boilerPixy, m_pixyR);
 
     m_battery = new LogCell("Battery voltage");
-
     m_time = new LogCell("Time (ms)");
     m_state = new LogCell("Game State");
     m_messages = new LogCell("Robot messages", 100, true);
     m_buttonPresses = new LogCell("Button Presses", 100, true);
+    m_xAccel = new LogCell("X acceleration", 32, true);
+    m_yAccel = new LogCell("Y acceleration", 32, true);
+    m_zAccel = new LogCell("Z acceleration", 32, true);
+
 
     m_logger->RegisterCell(m_battery);
     m_logger->RegisterCell(m_time);
+    m_logger->RegisterCell(m_state);
+    m_logger->RegisterCell(m_messages);
     m_logger->RegisterCell(m_buttonPresses);
+    m_logger->RegisterCell(m_xAccel);
+    m_logger->RegisterCell(m_yAccel);
+    m_logger->RegisterCell(m_zAccel);
 
     m_hanger = new Hanger(this);
     m_ballIntake = new BallIntake(this);
@@ -142,9 +150,15 @@ void Robot::Initialize(void) {
 }
 
 void Robot::AllStateContinuous(void) {
-    m_battery->LogPrintf("%f", DriverStation::GetInstance().GetBatteryVoltage());
+    m_battery->LogPrintf("%f",
+            DriverStation::GetInstance().GetBatteryVoltage());
     m_time->LogDouble(GetSecTime());
     m_state->LogPrintf("%s", GetRobotModeString());
+
+    m_xAccel->LogDouble(m_accel.GetX());
+    m_yAccel->LogDouble(m_accel.GetY());
+    m_zAccel->LogDouble(m_accel.GetZ());
+
     DBStringPrintf(DB_LINE1,
             "angle %.2lf rate %.2lf",
             m_drive->GetAngle(), m_drive->GetAngularRate());

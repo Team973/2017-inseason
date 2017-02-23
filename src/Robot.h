@@ -90,14 +90,20 @@ private:
     int						m_speedSetpt;
     double						m_flailSetpt;
     double						m_conveyorSetpt;
+
     /**
      * Logging
      */
+    BuiltInAccelerometer m_accel;//for testing the logger only
+
     LogCell *m_battery;
     LogCell *m_time;
     LogCell *m_state;
     LogCell *m_messages;
     LogCell *m_buttonPresses;
+    LogCell *m_xAccel;
+    LogCell *m_yAccel;
+    LogCell *m_zAccel;
 
     PixyThread *m_pixyR;
 public:
