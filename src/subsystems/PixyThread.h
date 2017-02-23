@@ -16,7 +16,7 @@ class Pixy;
 
 class PixyThread : public CoopTask {
 public:
-    PixyThread(RobotStateInterface &stateProvider);
+    explicit PixyThread(RobotStateInterface &stateProvider);
     virtual ~PixyThread();
 
     void TaskPeriodic(RobotMode mode) override;

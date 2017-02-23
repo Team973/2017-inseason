@@ -17,6 +17,7 @@ namespace frc973{
   }
 
   GearPixyVisionDriveController::~GearPixyVisionDriveController(){
+      delete m_pid;
   }
 
   void GearPixyVisionDriveController::CalcDriveOutput(DriveStateProvider *state,

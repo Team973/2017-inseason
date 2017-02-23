@@ -32,7 +32,9 @@ public:
 	 * @param compressor is the relay that the compressor is attached to
 	 * @param scheduler is the taskManager that will continually call this
 	 */
-	GreyCompressor(DigitalInput *pressureSwitch, Relay *compressor,
+	explicit GreyCompressor(
+            DigitalInput *pressureSwitch,
+            Relay *compressor,
 			TaskMgr *scheduler);
 	virtual ~GreyCompressor();
 

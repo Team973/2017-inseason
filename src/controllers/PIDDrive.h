@@ -18,7 +18,7 @@ class PID;
 class PIDDriveController : public DriveController {
 public:
 	PIDDriveController();
-	virtual ~PIDDriveController() {}
+	virtual ~PIDDriveController();
 
 	/*
 	 * Calculate the motor output to achieve the most recently set setpoint.

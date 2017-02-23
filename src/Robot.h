@@ -18,7 +18,6 @@ class GearIntake;
 class Shooter;
 class GreyCompressor;
 class LogCell;
-class SPIGyro;
 class PoseManager;
 class Debouncer;
 class Hanger;
@@ -46,7 +45,6 @@ private:
     LogSpreadsheet *m_logger;
 
     PowerDistributionPanel *m_pdp;
-    SPIGyro                *m_spiGyro;
 
     /**
      * Inputs (joysticks, sensors, etc...)
@@ -100,8 +98,6 @@ private:
     LogCell *m_state;
     LogCell *m_messages;
     LogCell *m_buttonPresses;
-
-    double m_teleopTimeSec;
 
     PixyThread *m_pixyR;
 public:

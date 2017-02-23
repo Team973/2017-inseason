@@ -38,7 +38,8 @@ public:
 	 * Instantiate a LogCell passing in the name of the column
 	 * and the maximum length of the field (default 32 chars)
 	 */
-	LogCell(const char *name,
+	explicit LogCell(
+            const char *name,
 			uint32_t size = DEFAULT_MAX_LOG_CELL_SIZE,
 			uint32_t flags = 0);
 
@@ -124,7 +125,7 @@ public:
 	 *
 	 * @param scheduler the Task Manager to register this with
 	 */
-	LogSpreadsheet(TaskMgr *scheduler);
+	explicit LogSpreadsheet(TaskMgr *scheduler);
 	virtual ~LogSpreadsheet();
 
 	/**

@@ -38,6 +38,11 @@ PIDDriveController::PIDDriveController():
 	m_turnPID = new PID(TURN_PID_KP, TURN_PID_KI, TURN_PID_KD);
 }
 
+PIDDriveController::~PIDDriveController() {
+    delete m_drivePID;
+    delete m_turnPID;
+}
+
 void PIDDriveController::CalcDriveOutput(DriveStateProvider *state,
 		DriveControlSignalReceiver *out) {
 	if(m_needSetControlMode == true){

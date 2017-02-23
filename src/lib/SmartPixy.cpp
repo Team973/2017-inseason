@@ -10,11 +10,11 @@ int num_cs_errors = 0;
 #define RUN_LOG_ERR(x) {int ret=x;if((ret)) { fprintf(stderr, "Warning: " #x " returned %d\n", ret);}}
 
 Pixy::Pixy()
+    : i2c(new I2C(I2C::Port::kOnboard, PIXY_I2C_DEFAULT_ADDR))
+    , blockType(BlockType::NORMAL_BLOCK)
+    , skipStart(false)
+    , blockCount(0)
 {
-    //(I2C::Port::kOnboard or kMXP, Pixy Address)
-	i2c = new I2C(I2C::Port::kOnboard, PIXY_I2C_DEFAULT_ADDR);
-
-	skipStart = false;
 }
 
 Pixy::~Pixy()
@@ -38,14 +38,14 @@ void Pixy::Block::print()
 
 bool Pixy::getStart()
 {
-	uint16_t w, lastw;
+	uint16_t lastw;
 
 	lastw = 0xffff;
 
     int i = 0;
 	while(true)
 	{
-		w = getWord();
+		uint16_t w = getWord();
 		if (w==0 && lastw==0)
 		{
 		  return false;

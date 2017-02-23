@@ -22,9 +22,7 @@
       virtual ~GearPixyVisionDriveController();
 
       void Start()  override{
-      //  m_gearPixy->Enable();
         m_needSetControlMode = true;
-        m_lightEnableTimeMs = GetMsecTime();
         m_onTarget = false;
       }
 
@@ -40,7 +38,6 @@
       bool m_onTarget;
       double m_leftSetpoint;
       double m_rightSetpoint;
-      uint64_t m_lightEnableTimeMs;
 
       PixyThread *m_gearPixy;
       PID *m_pid;

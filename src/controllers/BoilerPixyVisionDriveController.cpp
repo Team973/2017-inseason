@@ -11,12 +11,14 @@ namespace frc973{
     m_onTarget(false),
     m_leftSetpoint(0.0),
     m_rightSetpoint(0.0),
+    m_lightEnableTimeMs(0),
     m_boilerPixy(boilerPixy),
     m_pid(new PID(1.8, 0.0, 0.1))
   {
   }
 
   BoilerPixyVisionDriveController::~BoilerPixyVisionDriveController(){
+      delete m_pid;
   }
 
   void BoilerPixyVisionDriveController::CalcDriveOutput(DriveStateProvider *state,

@@ -6,7 +6,6 @@ using namespace frc;
 namespace frc973 {
 
 void Robot::TeleopStart(void) {
-    m_teleopTimeSec = GetSecTime();
     m_drive->ArcadeDrive(0.0, 0.0);
 }
 
