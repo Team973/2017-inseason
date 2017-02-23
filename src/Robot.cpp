@@ -34,8 +34,10 @@ Robot::Robot(void
     m_flailSetpt(1.0),
     m_conveyorSetpt(1.0)
 {
-    m_driverJoystick = new ObservableJoystick(DRIVER_JOYSTICK_PORT, this, this);
-    m_operatorJoystick = new ObservableJoystick(OPERATOR_JOYSTICK_PORT, this, this);
+    m_driverJoystick = new ObservableJoystick(DRIVER_JOYSTICK_PORT,
+            this, this);
+    m_operatorJoystick = new ObservableJoystick(OPERATOR_JOYSTICK_PORT,
+            this, this);
     m_tuningJoystick = new ObservableJoystick(2, this, this);
     fprintf(stderr, "Joystick Initialized...\n");
 
@@ -44,10 +46,12 @@ Robot::Robot(void
     m_rightDriveTalonA = new CANTalon(DRIVE_RIGHT_A_CAN);
     m_rightDriveTalonB = new CANTalon(DRIVE_RIGHT_B_CAN);
 
-    m_leftDriveTalonA->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
+    m_leftDriveTalonA->SetControlMode(
+            CANSpeedController::ControlMode::kPercentVbus);
     m_leftDriveTalonA->ConfigNeutralMode(
             CANSpeedController::NeutralMode::kNeutralMode_Coast);
-    m_leftDriveTalonA->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
+    m_leftDriveTalonA->SetFeedbackDevice(
+            CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
     m_leftDriveTalonA->SetClosedLoopOutputDirection(true);
     m_leftDriveTalonA->ConfigNominalOutputVoltage(0, 0);
     m_leftDriveTalonA->ConfigPeakOutputVoltage(12, -12);
@@ -58,7 +62,8 @@ Robot::Robot(void
     m_leftDriveTalonA->SetD(0);
     m_leftDriveTalonA->SetF(0.005);
 
-    m_leftDriveTalonB->SetControlMode(CANSpeedController::ControlMode::kFollower);
+    m_leftDriveTalonB->SetControlMode(
+            CANSpeedController::ControlMode::kFollower);
     m_leftDriveTalonB->ConfigNeutralMode(
             CANSpeedController::NeutralMode::kNeutralMode_Coast);
     m_leftDriveTalonB->Set(m_leftDriveTalonA->GetDeviceID());

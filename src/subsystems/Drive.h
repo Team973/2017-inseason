@@ -138,22 +138,13 @@ public:
 private:
     void TaskPeriodic(RobotMode mode) override;
 
-    Encoder *m_leftEncoder;
-    Encoder *m_rightEncoder;
-
     PigeonImu *m_gyro;
 
-    double m_leftSignal;
-    double m_rightSignal;
+    double m_leftCommand;
+    double m_rightCommand;
 
     CANTalon *m_leftMotor;
     CANTalon *m_rightMotor;
-
-    /* Filter to apply to left and right motor power so we don't tip or
-     * break chains.
-     */
-    FilterBase *m_leftMotorSignalFilter;
-    FilterBase *m_rightMotorSignalFilter;
 
     ArcadeDriveController *m_arcadeDriveController;
     CheesyDriveController *m_cheesyDriveController;
@@ -168,8 +159,12 @@ private:
     LogCell *m_angularRateLog;
     LogCell *m_leftDistLog;
     LogCell *m_leftDistRateLog;
-    LogCell *m_leftSignalLog;
-    LogCell *m_rightSignalLog;
+    LogCell *m_rightDistLog;
+    LogCell *m_rightDistRateLog;
+    LogCell *m_leftCommandLog;
+    LogCell *m_rightCommandLog;
+    LogCell *m_leftVoltageLog;
+    LogCell *m_rightVoltageLog;
 };
 
 }

@@ -17,7 +17,9 @@ PixyThread::PixyThread(RobotStateInterface &stateProvider) :
     m_mutex(PTHREAD_MUTEX_INITIALIZER)
 {
     m_thread->Start();
+    fprintf(stderr, "gonna register the pixy task\n");
     m_thread->RegisterTask("Pixy", this, TASK_PERIODIC);
+    fprintf(stderr, "registered the pixy task\n");
     m_prevReadingTime = GetMsecTime();
 }
 

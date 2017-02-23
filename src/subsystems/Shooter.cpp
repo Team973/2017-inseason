@@ -14,7 +14,8 @@
 
 namespace frc973 {
 
-Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgitator) :
+Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
+            CANTalon *leftAgitator) :
         m_scheduler(scheduler),
         m_flywheelState(FlywheelState::notRunning),
         m_flywheelMotorPrimary(new CANTalon(FLYWHEEL_PRIMARY_CAN_ID,

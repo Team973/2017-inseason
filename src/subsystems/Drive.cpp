@@ -24,28 +24,29 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
             )
          : DriveBase(scheduler, this, this, nullptr)
          , m_gyro(new PigeonImu(spareTalon))
-         , m_leftSignal(0.0)
-         , m_rightSignal(0.0)
+         , m_leftCommand(0.0)
+         , m_rightCommand(0.0)
          , m_leftMotor(left)
          , m_rightMotor(right)
          , m_arcadeDriveController(nullptr)
          , m_spreadsheet(logger)
-         , m_boilerPixyDriveController(new BoilerPixyVisionDriveController(boilerPixy))
-         , m_gearPixyDriveController(new GearPixyVisionDriveController(gearPixy))
+         , m_boilerPixyDriveController(
+                 new BoilerPixyVisionDriveController(boilerPixy))
+         , m_gearPixyDriveController(
+                 new GearPixyVisionDriveController(gearPixy))
          , m_angleLog(new LogCell("Angle"))
          , m_angularRateLog(new LogCell("Angular Rate"))
          , m_leftDistLog(new LogCell("Left Encoder Distance"))
          , m_leftDistRateLog(new LogCell("Left Encoder Rate"))
-         , m_leftSignalLog(new LogCell("Left motor signal (pow or vel)"))
-         , m_rightSignalLog(new LogCell("Right motor signal (pow or vel)"))
+         , m_rightDistLog(new LogCell("Left Encoder Distance"))
+         , m_rightDistRateLog(new LogCell("Left Encoder Rate"))
+         , m_leftCommandLog(new LogCell("Left motor signal (pow or vel)"))
+         , m_rightCommandLog(new LogCell("Right motor signal (pow or vel)"))
+         , m_leftVoltageLog(new LogCell("Left motor voltage"))
+         , m_rightVoltageLog(new LogCell("Right motor voltage"))
 {
-    fprintf(stderr, "Initializing Drive Subsystem %p\n", m_leftEncoder);
+    fprintf(stderr, "Initializing Drive Subsystem %p\n", this);
     fprintf(stderr, "Survived fprintf yes its up to date\n");
-
-    if (m_leftEncoder != nullptr) {
-        fprintf(stderr, "Operating on left drive encoder\n");
-        m_leftEncoder->SetDistancePerPulse(1.0);
-    }
 
     m_arcadeDriveController = new ArcadeDriveController();
     m_pidDriveController = new PIDDriveController();
@@ -58,18 +59,16 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
         m_spreadsheet->RegisterCell(m_angularRateLog);
         m_spreadsheet->RegisterCell(m_leftDistLog);
         m_spreadsheet->RegisterCell(m_leftDistRateLog);
-        m_spreadsheet->RegisterCell(m_leftSignalLog);
-        m_spreadsheet->RegisterCell(m_rightSignalLog);
+        m_spreadsheet->RegisterCell(m_leftCommandLog);
+        m_spreadsheet->RegisterCell(m_rightCommandLog);
     }
+    fprintf(stderr, "Enabled spreadsheets\n");
 
     scheduler->RegisterTask("Drive", this, TASK_PERIODIC);
+    fprintf(stderr, "Scheduled task\n");
 }
 
 void Drive::Zero() {
-    if (m_leftEncoder)
-        m_leftEncoder->Reset();
-    if (m_rightEncoder)
-        m_rightEncoder->Reset();
     if (m_gyro)
         m_gyro->SetYaw(0.0);
 }
@@ -145,16 +144,16 @@ double Drive::GetAngularRate() {
 }
 
 void Drive::SetDriveOutput(double left, double right) {
-	m_leftSignal = left;
-	m_rightSignal = right;
+	m_leftCommand = left;
+	m_rightCommand = right;
 
-	if (isnan(m_leftSignal) || isnan(m_rightSignal)) {
+	if (isnan(m_leftCommand) || isnan(m_rightCommand)) {
 		m_leftMotor->Set(0.0);
 		m_rightMotor->Set(0.0);
 	}
 	else {
-		m_leftMotor->Set(m_leftSignal);
-		m_rightMotor->Set(-m_rightSignal);
+		m_leftMotor->Set(m_leftCommand);
+		m_rightMotor->Set(-m_rightCommand);
 	}
 }
 
@@ -169,6 +168,21 @@ void Drive::TaskPeriodic(RobotMode mode) {
     DBStringPrintf(DB_LINE9, "l %2.1lf %2.1lf l %2.1lf %2.1lf",
             this->GetLeftDist(), this->GetLeftRate(),
             this->GetRightDist(), this->GetRightRate());
+
+    m_angleLog->LogDouble(GetAngle());
+    m_angularRateLog->LogDouble(GetAngularRate());
+
+    m_leftDistLog->LogDouble(GetLeftDist());
+    m_leftDistRateLog->LogDouble(GetLeftRate());
+
+    m_rightDistLog->LogDouble(GetLeftDist());
+    m_rightDistRateLog->LogDouble(GetLeftRate());
+
+    m_leftCommandLog->LogDouble(m_leftCommand);
+    m_rightCommandLog->LogDouble(m_rightCommand);
+
+    m_leftVoltageLog->LogDouble(m_leftMotor->GetOutputVoltage());
+    m_rightVoltageLog->LogDouble(m_rightMotor->GetOutputVoltage());
 }
 
 }
