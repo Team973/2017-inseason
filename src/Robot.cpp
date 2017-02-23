@@ -105,7 +105,7 @@ Robot::Robot(void
     m_time = new LogCell("Time (ms)");
     m_state = new LogCell("Game State");
     m_messages = new LogCell("Robot messages", 100, true);
-    m_buttonPresses = new LogCell("Button Presses (disabled only)", 100, true);
+    m_buttonPresses = new LogCell("Button Presses", 100, true);
 
     m_logger->RegisterCell(m_battery);
     m_logger->RegisterCell(m_time);

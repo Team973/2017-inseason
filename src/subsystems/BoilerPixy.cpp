@@ -28,9 +28,9 @@ namespace frc973{
         m_interpTable->AddPoint(1.4197,72.0);
         m_interpTable->AddPoint(1.3684,78.0);*/
         //pbot
-        m_interpTable->AddPoint(3.2361,0.0);
-        m_interpTable->AddPoint(3.0408,6.0);
-        m_interpTable->AddPoint(2.8271,12.0);
+        //m_interpTable->AddPoint(3.2361,0.0);
+        //m_interpTable->AddPoint(3.0408,6.0);
+        //m_interpTable->AddPoint(2.8271,12.0);
         m_interpTable->AddPoint(2.5635,18.0);
         m_interpTable->AddPoint(2.334,24.0);
         m_interpTable->AddPoint(2.1863,30.0);
@@ -76,10 +76,10 @@ namespace frc973{
     }
 
     void BoilerPixy::TaskPeriodic(RobotMode mode){
-        DBStringPrintf(DB_LINE6,
+      /*  DBStringPrintf(DB_LINE6,
               "x %d %2.1lf y %d %2.4lf",
               GetSeesTargetX(), m_pixyXOffset->GetVoltage(),
-              GetSeesTargetY(), m_pixyYOffset->GetVoltage());
-        DBStringPrintf(DB_LINE7, "horizontal %2.4lf", GetXDistance());
+              GetSeesTargetY(), m_pixyYOffset->GetVoltage());*/
+      //  DBStringPrintf(DB_LINE7, "horizontal %2.4lf", GetXDistance());
     }
 }
