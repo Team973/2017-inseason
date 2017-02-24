@@ -48,12 +48,11 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         switch (button) {
         case DualAction::BtnA:
             if (pressedP) {
-              m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
+              m_gearIntake->SetSeeking(true);
             }
             break;
         case DualAction::BtnB:
             if (pressedP) {
-              m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
             }
             break;
         case DualAction::BtnX:
@@ -115,12 +114,13 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::DPadUpVirtBtn:
             if (pressedP) {
-              m_gearIntake->StartPickupSequence();
+              m_gearIntake->SetSeeking(true);
               if (m_gearIntake->IsGearReady()){
                 m_lights->NotifyFlash(3);
               }
             }
             else{
+              m_gearIntake->SetSeeking(false);
             }
             break;
         case DualAction::DPadDownVirtBtn:
@@ -198,10 +198,13 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::DPadUpVirtBtn:
             if (pressedP) {
-              m_gearIntake->StartPickupSequence();
+              m_gearIntake->SetSeeking(true);
               if (m_gearIntake->IsGearReady()){
                 m_lights->NotifyFlash(3);
               }
+            }
+            else{
+              m_gearIntake->SetSeeking(false);
             }
             break;
         case DualAction::DPadDownVirtBtn:
