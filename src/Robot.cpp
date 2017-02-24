@@ -94,6 +94,8 @@ Robot::Robot(void
     fprintf(stderr, "Initialized drive controllers\n");
 
     m_logger = new LogSpreadsheet(this);
+    m_time = new LogCell("Time");
+    m_logger->RegisterCell(m_time);
     m_lights = new Lights(this);
     m_boilerPixy = new BoilerPixy(this, m_lights);
     m_pixyR = new PixyThread(*this);
@@ -102,7 +104,6 @@ Robot::Robot(void
             m_logger, m_boilerPixy, m_pixyR);
 
     m_battery = new LogCell("Battery voltage");
-    m_time = new LogCell("Time (ms)");
     m_state = new LogCell("Game State");
     m_messages = new LogCell("Robot messages", 100, true);
     m_buttonPresses = new LogCell("Button Presses", 100, true);
@@ -112,7 +113,6 @@ Robot::Robot(void
 
 
     m_logger->RegisterCell(m_battery);
-    m_logger->RegisterCell(m_time);
     m_logger->RegisterCell(m_state);
     m_logger->RegisterCell(m_messages);
     m_logger->RegisterCell(m_buttonPresses);

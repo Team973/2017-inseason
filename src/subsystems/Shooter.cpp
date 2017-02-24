@@ -42,8 +42,8 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
     m_flywheelMotorPrimary->SetD(0.00);
     m_flywheelMotorPrimary->SetF(0.022);
     m_flywheelMotorPrimary->SetIzone(3500);
-    //m_flywheelMotorPrimary->SetVelocityMeasurementPeriod(CANTalon::Period_20Ms);
-    //m_flywheelMotorPrimary->SetVelocityMeasurementWindow(64);
+    m_flywheelMotorPrimary->SetVelocityMeasurementPeriod(CANTalon::Period_10Ms);
+    m_flywheelMotorPrimary->SetVelocityMeasurementWindow(32);
 
     m_flywheelMotorReplica->ConfigNeutralMode(
             CANSpeedController::NeutralMode::kNeutralMode_Coast);
@@ -60,8 +60,8 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
     m_rightAgitator->EnableCurrentLimit(true);
     m_leftAgitator->SetCurrentLimit(20);
     m_rightAgitator->SetCurrentLimit(20);
-    m_leftAgitator->SetVoltageRampRate(6.0);
-    m_rightAgitator->SetVoltageRampRate(6.0);
+    m_leftAgitator->SetVoltageRampRate(120.0);
+    m_rightAgitator->SetVoltageRampRate(120.0);
 
     m_scheduler->RegisterTask("Shooter", this, TASK_PERIODIC);
     m_flywheelRate = new LogCell("FlywheelRate", 32);

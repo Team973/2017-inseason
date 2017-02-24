@@ -62,6 +62,8 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
         m_spreadsheet->RegisterCell(m_leftDistRateLog);
         m_spreadsheet->RegisterCell(m_leftCommandLog);
         m_spreadsheet->RegisterCell(m_rightCommandLog);
+        m_spreadsheet->RegisterCell(m_leftVoltageLog);
+        m_spreadsheet->RegisterCell(m_rightVoltageLog);
     }
     fprintf(stderr, "Enabled spreadsheets\n");
 
@@ -156,8 +158,8 @@ void Drive::SetDriveOutput(double left, double right) {
 	m_rightCommand = right;
 
     if (m_controlMode == CANSpeedController::ControlMode::kSpeed) {
-        m_leftCommand /= DRIVE_IPS_FROM_RPM;
-        m_rightCommand /= DRIVE_IPS_FROM_RPM;
+        m_leftCommand /= 1;
+        m_rightCommand /= 1;
     }
     else if (m_controlMode == CANSpeedController::ControlMode::kPosition) {
         m_leftCommand /= DRIVE_DIST_PER_REVOLUTION;
