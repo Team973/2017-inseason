@@ -47,7 +47,7 @@ namespace frc973{
       virtual ~GearIntake();
 
       void SetSeeking(bool request);
-      void ReleaseGear();
+      void SetReleaseManualEnable(bool request);
       void SetPickUpState(PickUp state);
 
       void SetGearIntakeState(GearIntakeState gearIntakeState);
@@ -82,7 +82,8 @@ namespace frc973{
 
       uint32_t m_gearTimer;
       Lights *m_lights;
-      bool m_driverReleased;
+      bool m_manualReleaseRequest;
       bool m_seekingRequest;
+      bool m_autoReleaseRequest;
   };
 }

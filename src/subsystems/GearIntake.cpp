@@ -25,8 +25,9 @@ namespace frc973{
     m_rightIndexer(new CANTalon(RIGHT_INDEXER_CAN_ID)),
     m_gearTimer(0),
     m_lights(lights),
-    m_driverReleased(false),
-    m_seekingRequest(false)
+    m_manualReleaseRequest(false),
+    m_seekingRequest(false),
+    m_autoReleaseRequest(false)
   {
     m_rightIndexer->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
     m_leftIndexer->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
@@ -112,13 +113,14 @@ namespace frc973{
     return (m_pushTopLeft->Get() + m_pushTopRight->Get() + m_pushBottom->Get() < 2);
   }
 
-  void GearIntake::ReleaseGear(){
+  void GearIntake::SetReleaseManualEnable(bool request){
       this->SetIndexerMode(Indexer::stop);
       this->SetGearIntakeState(GearIntakeState::released);
+      m_manualReleaseRequest = request;
   }
 
   void GearIntake::SetReleaseAutoEnable(bool driverInput){
-    m_driverReleased = driverInput;
+    m_autoReleaseRequest = driverInput;
   }
 
   void GearIntake::SetSeeking(bool request){
@@ -154,14 +156,13 @@ namespace frc973{
       case chewing:
         this->SetIndexerMode(GearIntake::Indexer::intaking);
         if (GetMsecTime() - m_gearTimer >= 100) {
-          m_gearTimer = GetMsecTime();
           m_pickUpState = GearIntake::PickUp::digesting;
         }
         break;
       case digesting:
         this->SetIndexerMode(GearIntake::Indexer::holding);
         this->SetGearPos(GearIntake::GearPosition::up);
-        if (IsGearReady() == true || m_driverReleased == true) {
+        if ((IsGearReady() == true && m_autoReleaseRequest) || m_manualReleaseRequest) {
           m_gearTimer = GetMsecTime();
           m_lights->NotifyFlash(2);
           m_pickUpState = PickUp::vomiting;

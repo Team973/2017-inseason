@@ -73,10 +73,11 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::LeftBumper:
             if (pressedP) {
-                //sw lowgear
-                m_gearIntake->ReleaseGear();
+              //sw lowgear
+              m_gearIntake->SetReleaseManualEnable(true);
             }
             else {
+              m_gearIntake->SetReleaseManualEnable(false);
             }
             break;
         case DualAction::LeftTrigger:
@@ -145,6 +146,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         }
     }
+  }
     else if (port == OPERATOR_JOYSTICK_PORT) {
         switch (button) {
         case DualAction::BtnY:
@@ -167,7 +169,10 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::BtnB:
             if (pressedP) {
-              m_gearIntake->ReleaseGear();
+              m_gearIntake->SetReleaseManualEnable(true);
+            }
+            else{
+              m_gearIntake->SetReleaseManualEnable(false);
             }
             break;
         case DualAction::LeftBumper:
