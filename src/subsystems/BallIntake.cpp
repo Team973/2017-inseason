@@ -17,7 +17,7 @@ namespace frc973{
     m_ballIntakeMotor->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
     m_ballIntakeMotor->EnableCurrentLimit(true);
     m_ballIntakeMotor->SetCurrentLimit(20);
-    m_ballIntakeMotor->SetVoltageRampRate(6.0);
+    m_ballIntakeMotor->SetVoltageRampRate(120.0);
   }
 
   BallIntake::~BallIntake(){

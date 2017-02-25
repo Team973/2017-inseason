@@ -29,6 +29,11 @@ void Robot::TeleopContinuous(void) {
         m_drive->ArcadeDrive(y, x);
     }
 
+    if (Util::abs(m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)) > 0.5 ||
+        Util::abs(m_operatorJoystick->GetRawAxisWithDeadband(DualAction::LeftYAxis)) > 0.5) {
+      g_manualConveyorControl = true;
+    }
+
     if (g_manualConveyorControl == false){
       double c = m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis);
 
@@ -48,10 +53,8 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         switch (button) {
         case DualAction::BtnA:
             if (pressedP) {
-              m_gearIntake->SetSeeking(true);
             }
             else{
-              m_gearIntake->SetSeeking(false);
             }
             break;
         case DualAction::BtnB:
@@ -89,30 +92,20 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             }
             break;
         case DualAction::RightBumper:
-            if (pressedP && m_shooter->OnTarget()) {
-              g_manualConveyorControl = true;
-              m_shooter->StartConveyor(m_conveyorSetpt);
-              m_shooter->StartAgitator(m_flailSetpt, true);
-              m_shooter->StartAgitator(m_flailSetpt, false);
+            if (pressedP) {
+              m_shooter->SetShooterState(Shooter::ShootingSequenceState::shooting);
             }
             else{
-              g_manualConveyorControl = false;
-              m_shooter->StopConveyor();
-              m_shooter->StopAgitator();
+              m_shooter->SetShooterState(Shooter::ShootingSequenceState::idle);
             }
             break;
         case DualAction::RightTrigger:
             if (pressedP) {
-              m_drive->SetBoilerPixyTargeting();
-              g_manualConveyorControl = true;
-              m_shooter->StartConveyor(m_conveyorSetpt);
-              m_shooter->StartAgitator(m_flailSetpt, true);
-              m_shooter->StartAgitator(m_flailSetpt, false);
+              m_shooter->SetShooterState(Shooter::ShootingSequenceState::targeting);
             }
             else{
               g_manualConveyorControl = false;
-              m_shooter->StopConveyor();
-              m_shooter->StopAgitator();
+              m_shooter->SetShooterState(Shooter::ShootingSequenceState::idle);
             }
             break;
         case DualAction::DPadUpVirtBtn:
@@ -146,20 +139,18 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         }
     }
-  }
     else if (port == OPERATOR_JOYSTICK_PORT) {
         switch (button) {
         case DualAction::BtnY:
             if (pressedP) {
               m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
+              m_gearIntake->SetPickUpManual();
               }
             break;
         case DualAction::BtnA:
             if (pressedP) {
-                m_gearIntake->SetReleaseAutoEnable(true);
             }
             else{
-                m_gearIntake->SetReleaseAutoEnable(false);
             }
             break;
         case DualAction::BtnX:
@@ -169,10 +160,8 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::BtnB:
             if (pressedP) {
-              m_gearIntake->SetReleaseManualEnable(true);
             }
             else{
-              m_gearIntake->SetReleaseManualEnable(false);
             }
             break;
         case DualAction::LeftBumper:

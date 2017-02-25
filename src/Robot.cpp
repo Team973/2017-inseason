@@ -135,7 +135,7 @@ Robot::Robot(void
     m_hanger = new Hanger(this);
     m_ballIntake = new BallIntake(this);
     m_gearIntake = new GearIntake(this, m_lights);
-    m_shooter = new Shooter(this, m_logger, m_leftAgitatorTalon);
+    m_shooter = new Shooter(this, m_logger, m_leftAgitatorTalon, m_drive, m_boilerPixy);
 
     m_airPressureSwitch = new DigitalInput(AIR_PRESSURE_DIN);
     m_compressorRelay = new Relay(COMPRESSOR_RELAY, Relay::kForwardOnly);
@@ -193,7 +193,7 @@ void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
     else if (this->IsDisabled()){
         HandleDisabledButton(port, button, pressedP);
     }
-}
+  }
 }
 
 #include "Disabled.h"

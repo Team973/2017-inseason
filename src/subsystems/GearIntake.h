@@ -49,7 +49,7 @@ namespace frc973{
       void SetSeeking(bool request);
       void SetReleaseManualEnable(bool request);
       void SetPickUpState(PickUp state);
-
+      void SetPickUpManual();
       void SetGearIntakeState(GearIntakeState gearIntakeState);
       void SetGearPos(GearPosition gearPosition);
       void SetIndexerMode(Indexer indexerMode);

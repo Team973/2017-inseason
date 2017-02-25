@@ -30,6 +30,7 @@ set(SOURCE_FILES src/Robot.cpp src/lib/CoopMTRobot.cpp
     src/lib/filters/PID.cpp src/lib/filters/RampedOutput.cpp
     src/controllers/ArcadeDriveController.cpp
     src/controllers/BoilerPixyVisionDriveController.cpp
+    src/controllers/OpenloopArcadeDriveController.cpp
     src/subsystems/Drive.cpp src/subsystems/Hanger.cpp
     src/subsystems/Shooter.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})

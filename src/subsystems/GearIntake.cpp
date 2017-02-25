@@ -119,6 +119,10 @@ namespace frc973{
       m_manualReleaseRequest = request;
   }
 
+  void GearIntake::SetPickUpManual(){
+    m_pickUpState = PickUp::manual;
+  }
+
   void GearIntake::SetReleaseAutoEnable(bool driverInput){
     m_autoReleaseRequest = driverInput;
   }
@@ -181,6 +185,12 @@ namespace frc973{
         }
         break;
       case manual:
+        if(m_seekingRequest){
+          m_pickUpState = PickUp::seeking;
+        }
+        if (m_autoReleaseRequest || m_manualReleaseRequest) {
+          m_pickUpState = PickUp::digesting;
+        }
         break;
     }
   }
