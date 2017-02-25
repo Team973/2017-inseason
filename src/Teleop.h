@@ -50,6 +50,9 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             if (pressedP) {
               m_gearIntake->SetSeeking(true);
             }
+            else{
+              m_gearIntake->SetSeeking(false);
+            }
             break;
         case DualAction::BtnB:
             if (pressedP) {

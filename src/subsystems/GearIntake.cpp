@@ -14,7 +14,7 @@ namespace frc973{
     m_gearIntakeState(GearIntake::GearIntakeState::grabbed),
     m_gearPosition(GearPosition::up),
     m_indexer(GearIntake::Indexer::holding),
-    m_pickUpState(GearIntake::PickUp::vomiting),
+    m_pickUpState(GearIntake::PickUp::idle),
     m_gearIntakeRelease(new Solenoid(GEAR_INTAKE_GRIP_OPEN)),
     m_gearIntakeGrab(new Solenoid(GEAR_INTAKE_GRIP_CLOSE)),
     m_gearIntakePos(new Solenoid(GEAR_INTAKE_POS)),
@@ -47,7 +47,6 @@ namespace frc973{
   }
 
   void GearIntake::SetGearIntakeState(GearIntakeState gearIntakeState){
-    m_pickUpState = PickUp::manual;
     switch (gearIntakeState){
       case released:
         m_gearIntakeGrab->Set(true);
@@ -68,7 +67,6 @@ namespace frc973{
   }
 
   void GearIntake::SetGearPos(GearPosition gearPosition){
-    m_pickUpState = PickUp::manual;
     switch (gearPosition){
       case up:
         m_gearIntakePos->Set(false);
@@ -83,7 +81,6 @@ namespace frc973{
   }
 
   void GearIntake::SetIndexerMode(Indexer indexerMode){
-    m_pickUpState = PickUp::manual;
     switch (indexerMode) {
       case intaking:
         m_rightIndexer->Set(INTAKING_POWER);
@@ -116,7 +113,6 @@ namespace frc973{
   }
 
   void GearIntake::ReleaseGear(){
-      m_pickUpState = PickUp::vomiting;
       this->SetIndexerMode(Indexer::stop);
       this->SetGearIntakeState(GearIntakeState::released);
   }
@@ -148,7 +144,7 @@ namespace frc973{
         this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
         if (m_rightIndexer->GetOutputCurrent() >= 50 || m_leftIndexer->GetOutputCurrent() >= 50){
           m_gearTimer = GetMsecTime();
-          m_lights->NotifyFlash(3);
+          m_lights->NotifyFlash(2);
           m_pickUpState = PickUp::chewing;
         }
         else if (m_seekingRequest == false){
@@ -167,18 +163,19 @@ namespace frc973{
         this->SetGearPos(GearIntake::GearPosition::up);
         if (IsGearReady() == true || m_driverReleased == true) {
           m_gearTimer = GetMsecTime();
+          m_lights->NotifyFlash(2);
           m_pickUpState = PickUp::vomiting;
         }
         break;
       case vomiting:
         this->SetGearPos(GearPosition::down);
+        this->SetGearIntakeState(GearIntake::GearIntakeState::released);
         if(GetMsecTime() - m_gearTimer >= 100){
           m_pickUpState = PickUp::postVomit;
         }
         break;
       case postVomit:
-        this->SetGearIntakeState(GearIntake::GearIntakeState::released);
-        if(GetMsecTime() - m_gearTimer >= 200){
+        if(GetMsecTime() - m_gearTimer >= 1000){
           m_pickUpState = PickUp::idle;
         }
         break;
