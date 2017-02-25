@@ -6,6 +6,7 @@
 #include "lib/TaskMgr.h"
 #include "CANTalon.h"
 #include "lib/WrapDash.h"
+#include "Lights.h"
 
 using namespace frc;
 
@@ -42,7 +43,7 @@ namespace frc973{
         manual
       };
 
-      GearIntake(TaskMgr *scheduler);
+      GearIntake(TaskMgr *scheduler, Lights *lights);
       virtual ~GearIntake();
 
       void SetSeeking(bool request);
@@ -62,7 +63,6 @@ namespace frc973{
       void TaskPeriodic(RobotMode mode) override;
 
     private:
-
       TaskMgr *m_scheduler;
 
       GearIntakeState m_gearIntakeState;
@@ -81,6 +81,7 @@ namespace frc973{
       CANTalon *m_rightIndexer;
 
       uint32_t m_gearTimer;
+      Lights *m_lights;
       bool m_driverReleased;
       bool m_seekingRequest;
   };

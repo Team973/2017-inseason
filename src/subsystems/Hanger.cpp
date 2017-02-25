@@ -53,12 +53,12 @@ namespace frc973 {
         switch (hangerState) {
             case start:
                 m_hangerState = HangerState::start;
-                m_crankMotor->SetControlMode(CANSpeedController::ControlMode::kPosition);
+                m_crankMotor->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
                 break;
             case armed:
                 m_hangerState = HangerState::armed;
                 m_crankMotor->ConfigPeakOutputVoltage(3, -3);
-                m_crankMotor->SetControlMode(CANTalon::ControlMode::kPosition);
+                m_crankMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
                 break;
             case autoHang:
                 m_hangerState = HangerState::autoHang;
@@ -70,20 +70,18 @@ namespace frc973 {
 
     void Hanger::TaskPeriodic(RobotMode mode) {
         m_crankCurrent = m_crankMotor->GetOutputCurrent();
-        /*
-        DBStringPrintf(DB_LINE2, "hang %2.1f",
-                m_crankMotor->GetPosition() * 22.0 / 16.0);
-                */
+        DBStringPrintf(DB_LINE2, "hang %d c %2.1f",
+                m_hangerState, m_crankCurrent);
         switch (m_hangerState) {
             case start:
                 m_crankMotor->Set(0.0);
                 break;
             case autoHang:
-                m_crankMotor->Set(DEFAULT_HANG_POWER);
+                m_crankMotor->Set(1.0);
                 break;
             case armed:
-                m_crankMotor->Set(HANGER_POS_SETPT);
-                if (m_crankMotor->GetClosedLoopError() > -10) {
+                m_crankMotor->Set(1.0);
+                if (m_crankCurrent > 6) {
                     SetHangerState(HangerState::autoHang);
                 }
                 break;

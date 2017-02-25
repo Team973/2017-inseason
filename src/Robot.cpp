@@ -122,7 +122,7 @@ Robot::Robot(void
 
     m_hanger = new Hanger(this);
     m_ballIntake = new BallIntake(this);
-    m_gearIntake = new GearIntake(this);
+    m_gearIntake = new GearIntake(this, m_lights);
     m_shooter = new Shooter(this, m_logger, m_leftAgitatorTalon);
 
     m_airPressureSwitch = new DigitalInput(AIR_PRESSURE_DIN);
@@ -163,8 +163,10 @@ void Robot::AllStateContinuous(void) {
     DBStringPrintf(DB_LINE1,
             "angle %.2lf rate %.2lf",
             m_drive->GetAngle(), m_drive->GetAngularRate());
+    /*
     DBStringPrintf(DB_LINE2, "drive cur %lf",
                    m_drive->GetDriveCurrent());
+                   */
     DBStringPrintf(DB_LINE8,
             "g %d %lf %d",
             m_pixyR->GetDataFresh(), m_pixyR->GetOffset(), m_gearIntake->IsGearReady());

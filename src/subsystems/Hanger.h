@@ -29,9 +29,6 @@ public:
 
     void SetHangerState(HangerState hangerState);
     void SetAutoHang();
-
-    static constexpr double DEFAULT_HANG_POWER = 1.0;
-    static constexpr double HANGER_POS_SETPT = 0.25 * 22.0 / 16.0;
 private:
     TaskMgr *m_scheduler;
     CANTalon *m_crankMotor;

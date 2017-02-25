@@ -39,7 +39,6 @@ namespace frc973{
         m_interpTable->AddPoint(1.6956,48.0);
         m_interpTable->AddPoint(1.582,54.0);
         m_interpTable->AddPoint(1.4673,60.0);
-        Enable();
     }
 
     BoilerPixy::~BoilerPixy(){

@@ -1,5 +1,6 @@
 #include "GearIntake.h"
 #include "RobotInfo.h"
+#include "Lights.h"
 
 namespace frc973{
   static constexpr double RIGHT_INDEXER_POWER = -0.08;
@@ -8,7 +9,7 @@ namespace frc973{
   static constexpr double INTAKING_POWER = -0.7;
   static constexpr double HOLDING_POWER = -0.0;
 
-  GearIntake::GearIntake(TaskMgr *scheduler) :
+  GearIntake::GearIntake(TaskMgr *scheduler, Lights *lights) :
     m_scheduler(scheduler),
     m_gearIntakeState(GearIntake::GearIntakeState::grabbed),
     m_gearPosition(GearPosition::up),
@@ -23,6 +24,7 @@ namespace frc973{
     m_leftIndexer(new CANTalon(LEFT_INDEXER_CAN_ID)),
     m_rightIndexer(new CANTalon(RIGHT_INDEXER_CAN_ID)),
     m_gearTimer(0),
+    m_lights(lights),
     m_driverReleased(false),
     m_seekingRequest(false)
   {
@@ -146,6 +148,7 @@ namespace frc973{
         this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
         if (m_rightIndexer->GetOutputCurrent() >= 50 || m_leftIndexer->GetOutputCurrent() >= 50){
           m_gearTimer = GetMsecTime();
+          m_lights->NotifyFlash(3);
           m_pickUpState = PickUp::chewing;
         }
         else if (m_seekingRequest == false){

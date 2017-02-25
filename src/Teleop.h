@@ -13,7 +13,7 @@ void Robot::TeleopStop(void) {
 }
 
 static bool g_manualControl = true;
-static bool g_shooterControl = true;
+static bool g_manualConveyorControl = true;
 
 void Robot::TeleopContinuous(void) {
     double y = -m_driverJoystick->GetRawAxis(DualAction::LeftYAxis);
@@ -29,7 +29,7 @@ void Robot::TeleopContinuous(void) {
         m_drive->ArcadeDrive(y, x);
     }
 
-    if (g_shooterControl == false){
+    if (g_manualConveyorControl == false){
       double c = m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis);
 
       m_shooter->StartConveyor(c);
@@ -86,12 +86,13 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::RightBumper:
             if (pressedP && m_shooter->OnTarget()) {
-              g_shooterControl = true;
+              g_manualConveyorControl = true;
               m_shooter->StartConveyor(m_conveyorSetpt);
               m_shooter->StartAgitator(m_flailSetpt, true);
               m_shooter->StartAgitator(m_flailSetpt, false);
             }
             else{
+              g_manualConveyorControl = false;
               m_shooter->StopConveyor();
               m_shooter->StopAgitator();
             }
@@ -100,14 +101,14 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             if (pressedP) {
               m_drive->SetBoilerPixyTargeting();
               if (m_drive->OnTarget() && m_shooter->OnTarget()) {
-                g_shooterControl = true;
+                g_manualConveyorControl = true;
                 m_shooter->StartConveyor(m_conveyorSetpt);
                 m_shooter->StartAgitator(m_flailSetpt, true);
                 m_shooter->StartAgitator(m_flailSetpt, false);
-                }
-
+              }
             }
             else{
+              g_manualConveyorControl = false;
               m_shooter->StopConveyor();
               m_shooter->StopAgitator();
             }
@@ -115,9 +116,6 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         case DualAction::DPadUpVirtBtn:
             if (pressedP) {
               m_gearIntake->SetSeeking(true);
-              if (m_gearIntake->IsGearReady()){
-                m_lights->NotifyFlash(3);
-              }
             }
             else{
               m_gearIntake->SetSeeking(false);
@@ -185,7 +183,6 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::RightTrigger:
             if (pressedP) {
-              g_shooterControl = false;
             }
             break;
         case DualAction::RightBumper:
@@ -199,9 +196,6 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         case DualAction::DPadUpVirtBtn:
             if (pressedP) {
               m_gearIntake->SetSeeking(true);
-              if (m_gearIntake->IsGearReady()){
-                m_lights->NotifyFlash(3);
-              }
             }
             else{
               m_gearIntake->SetSeeking(false);
@@ -260,14 +254,14 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::RightBumper:
                 if (pressedP) {
-                    g_shooterControl = true;
+                    g_manualConveyorControl = true;
                     printf("Start right bumper things\n");
                     m_shooter->StartAgitator(m_flailSetpt, true);
                     m_shooter->StartAgitator(m_flailSetpt, false);
                     m_shooter->StartConveyor(0.5);
                 }
                 else {
-                    g_shooterControl = false;
+                    g_manualConveyorControl = false;
                     printf("end right bumper things\n");
                     m_shooter->StopAgitator();
                     m_shooter->StopConveyor();

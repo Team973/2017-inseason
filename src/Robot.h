@@ -68,11 +68,10 @@ private:
      */
     Hanger			*m_hanger;
     BallIntake			*m_ballIntake;
-    GearIntake	*m_gearIntake;
     Shooter			*m_shooter;
     Lights      *m_lights;
     BoilerPixy      *m_boilerPixy;
-
+    GearIntake	*m_gearIntake;
     /*
      * Compressor
      */
