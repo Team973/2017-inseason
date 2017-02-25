@@ -261,7 +261,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                     printf("Start right bumper things\n");
                     m_shooter->StartAgitator(m_flailSetpt, true);
                     m_shooter->StartAgitator(m_flailSetpt, false);
-                    m_shooter->StartConveyor(0.6);
+                    m_shooter->StartConveyor(0.5);
                 }
                 else {
                     g_shooterControl = false;
@@ -272,13 +272,13 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::LeftBumper:
                 if (pressedP) {
-                    m_speedSetpt += 50;
+                    m_speedSetpt += 10;
                     m_shooter->SetFlywheelSpeed(m_speedSetpt);
                 }
                 break;
             case DualAction::LeftTrigger:
                 if (pressedP) {
-                    m_speedSetpt -= 50;
+                    m_speedSetpt -= 10;
                     m_shooter->SetFlywheelSpeed(m_speedSetpt);
                 }
                 break;

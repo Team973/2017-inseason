@@ -37,9 +37,9 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
     m_flywheelMotorPrimary->SelectProfileSlot(0);
     m_flywheelMotorPrimary->ConfigNominalOutputVoltage(0, 0);
     m_flywheelMotorPrimary->ConfigPeakOutputVoltage(12, 0.0);
-    m_flywheelMotorPrimary->SetP(0.02);
-    m_flywheelMotorPrimary->SetI(0.00004);
-    m_flywheelMotorPrimary->SetD(0.00);
+    m_flywheelMotorPrimary->SetP(3.0);
+    m_flywheelMotorPrimary->SetI(0.0);
+    m_flywheelMotorPrimary->SetD(60.00);
     m_flywheelMotorPrimary->SetF(0.022);
     m_flywheelMotorPrimary->SetIzone(3500);
     m_flywheelMotorPrimary->SetVelocityMeasurementPeriod(CANTalon::Period_10Ms);
