@@ -105,7 +105,6 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 m_shooter->StartConveyor(m_conveyorSetpt);
                 m_shooter->StartAgitator(m_flailSetpt, true);
                 m_shooter->StartAgitator(m_flailSetpt, false);
-              }
             }
             else{
               g_manualConveyorControl = false;
