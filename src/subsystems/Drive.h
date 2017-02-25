@@ -19,6 +19,7 @@ class PIDDriveController;
 class RampPIDDriveController;
 class BoilerPixyVisionDriveController;
 class GearPixyVisionDriveController;
+class OpenloopArcadeDriveController;
 class VelocityTurnPID;
 class LogSpreadsheet;
 class LogCell;
@@ -84,6 +85,11 @@ public:
      * @param wheel turn value to drive with
      */
     void ArcadeDrive(double throttle, double turn);
+
+    /**
+     * Set drive to use the open loop arcade drive controller and sets powers
+     */
+    void OpenloopArcadeDrive(double throttle, double turn);
 
     /**
      * Set a target distance to be achieved by pid
@@ -155,6 +161,7 @@ private:
     CANSpeedController::ControlMode m_controlMode;
 
     ArcadeDriveController *m_arcadeDriveController;
+    OpenloopArcadeDriveController *m_openloopArcadeDriveController;
     CheesyDriveController *m_cheesyDriveController;
     PIDDriveController *m_pidDriveController;
     RampPIDDriveController *m_rampPidDriveController;
@@ -173,6 +180,7 @@ private:
     LogCell *m_rightCommandLog;
     LogCell *m_leftVoltageLog;
     LogCell *m_rightVoltageLog;
+    LogCell *m_currentLog;
 };
 
 }

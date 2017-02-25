@@ -41,8 +41,11 @@ void ArcadeDriveController::SetJoysticks(double throttle, double turn) {
 	throttle = Util::bound(throttle, -1.0, 1.0) * THROTTLE_MAX;
 	turn = Util::bound(turn, -1.0, 1.0) * TURN_MAX;
 
-    m_leftOutput = throttle - 0.5 * DRIVE_WIDTH * turn;
-    m_rightOutput = throttle + 0.5 * DRIVE_WIDTH * turn;
+    double TURN_RAMPUP = 0.25;
+    m_leftOutput = throttle -
+        0.5 * DRIVE_WIDTH * (TURN_RAMPUP * Util::abs(throttle) * turn + turn);
+    m_rightOutput = throttle +
+        0.5 * DRIVE_WIDTH * (TURN_RAMPUP * Util::abs(throttle) * turn + turn);
 
     double maxSpeed = Util::max(m_leftOutput, m_rightOutput);
     if (maxSpeed > THROTTLE_MAX) {

@@ -16,9 +16,9 @@ static bool g_manualControl = true;
 static bool g_manualConveyorControl = true;
 
 void Robot::TeleopContinuous(void) {
-    double y = -m_driverJoystick->GetRawAxis(DualAction::LeftYAxis);
-    double x = -m_driverJoystick->GetRawAxis(DualAction::RightXAxis)
-        + -m_tuningJoystick->GetRawAxis(DualAction::RightXAxis);
+    double y = -m_driverJoystick->GetRawAxisWithDeadband(DualAction::LeftYAxis);
+    double x = -m_driverJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)
+        + -m_tuningJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis);
 //  printf("throttle  %lf, turn  %lf\n", y, x);
 
     if (m_driverJoystick->GetRawButton(DualAction::LeftBumper)) {
@@ -103,11 +103,10 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         case DualAction::RightTrigger:
             if (pressedP) {
               m_drive->SetBoilerPixyTargeting();
-              if (m_drive->OnTarget() && m_shooter->OnTarget()) {
-                g_manualConveyorControl = true;
-                m_shooter->StartConveyor(m_conveyorSetpt);
-                m_shooter->StartAgitator(m_flailSetpt, true);
-                m_shooter->StartAgitator(m_flailSetpt, false);
+              g_manualConveyorControl = true;
+              m_shooter->StartConveyor(m_conveyorSetpt);
+              m_shooter->StartAgitator(m_flailSetpt, true);
+              m_shooter->StartAgitator(m_flailSetpt, false);
             }
             else{
               g_manualConveyorControl = false;

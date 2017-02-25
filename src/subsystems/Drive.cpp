@@ -12,6 +12,7 @@
 #include "lib/WrapDash.h"
 
 #include "controllers/ArcadeDriveController.h"
+#include "controllers/OpenloopArcadeDriveController.h"
 #include "controllers/PIDDrive.h"
 #include "controllers/BoilerPixyVisionDriveController.h"
 #include "controllers/GearPixyVisionDriveController.h"
@@ -45,11 +46,13 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
          , m_rightCommandLog(new LogCell("Right motor signal (pow or vel)"))
          , m_leftVoltageLog(new LogCell("Left motor voltage"))
          , m_rightVoltageLog(new LogCell("Right motor voltage"))
+         , m_currentLog(new LogCell("Drive current"))
 {
     fprintf(stderr, "Initializing Drive Subsystem %p\n", this);
     fprintf(stderr, "Survived fprintf yes its up to date\n");
 
     m_arcadeDriveController = new ArcadeDriveController();
+    m_openloopArcadeDriveController = new OpenloopArcadeDriveController();
     m_pidDriveController = new PIDDriveController();
     this->SetDriveController(m_arcadeDriveController);
     this->SetDriveControlMode(m_controlMode);
@@ -64,6 +67,7 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
         m_spreadsheet->RegisterCell(m_rightCommandLog);
         m_spreadsheet->RegisterCell(m_leftVoltageLog);
         m_spreadsheet->RegisterCell(m_rightVoltageLog);
+        m_spreadsheet->RegisterCell(m_currentLog);
     }
     fprintf(stderr, "Enabled spreadsheets\n");
 
@@ -79,6 +83,11 @@ void Drive::Zero() {
 void Drive::ArcadeDrive(double throttle, double turn) {
     this->SetDriveController(m_arcadeDriveController);
     m_arcadeDriveController->SetJoysticks(throttle, turn);
+}
+
+void Drive::OpenloopArcadeDrive(double throttle, double turn) {
+    this->SetDriveController(m_openloopArcadeDriveController);
+    m_openloopArcadeDriveController->SetJoysticks(throttle, turn);
 }
 
 void Drive::SetBoilerPixyTargeting(){
@@ -158,8 +167,8 @@ void Drive::SetDriveOutput(double left, double right) {
 	m_rightCommand = right;
 
     if (m_controlMode == CANSpeedController::ControlMode::kSpeed) {
-        m_leftCommand /= 1;
-        m_rightCommand /= 1;
+        m_leftCommand /= DRIVE_IPS_FROM_RPM;
+        m_rightCommand /= DRIVE_IPS_FROM_RPM;
     }
     else if (m_controlMode == CANSpeedController::ControlMode::kPosition) {
         m_leftCommand /= DRIVE_DIST_PER_REVOLUTION;
@@ -185,7 +194,7 @@ void Drive::SetDriveControlMode(CANSpeedController::ControlMode mode){
 void Drive::TaskPeriodic(RobotMode mode) {
 //	DBStringPrintf(DB_LINE0, "gyro r %2.1f p", this->GetAngularRate(),
 //            this->GetAngle());
-    DBStringPrintf(DB_LINE9, "l %2.1lf %2.1lf l %2.1lf %2.1lf",
+    DBStringPrintf(DB_LINE9, "l %2.1lf %2.1lf r %2.1lf %2.1lf",
             this->GetLeftDist(), this->GetLeftRate(),
             this->GetRightDist(), this->GetRightRate());
 
@@ -198,11 +207,23 @@ void Drive::TaskPeriodic(RobotMode mode) {
     m_rightDistLog->LogDouble(GetLeftDist());
     m_rightDistRateLog->LogDouble(GetLeftRate());
 
-    m_leftCommandLog->LogDouble(m_leftCommand);
-    m_rightCommandLog->LogDouble(m_rightCommand);
+    if (m_controlMode == CANSpeedController::ControlMode::kSpeed) {
+        m_leftCommandLog->LogDouble(m_leftCommand * DRIVE_IPS_FROM_RPM);
+        m_rightCommandLog->LogDouble(m_rightCommand * DRIVE_IPS_FROM_RPM);
+    }
+    else if (m_controlMode == CANSpeedController::ControlMode::kPosition) {
+        m_leftCommandLog->LogDouble(m_leftCommand * DRIVE_DIST_PER_REVOLUTION);
+        m_rightCommandLog->LogDouble(m_rightCommand * DRIVE_DIST_PER_REVOLUTION);
+    }
+    else {
+        m_leftCommandLog->LogDouble(m_leftCommand);
+        m_rightCommandLog->LogDouble(m_rightCommand);
+    }
 
     m_leftVoltageLog->LogDouble(m_leftMotor->GetOutputVoltage());
     m_rightVoltageLog->LogDouble(m_rightMotor->GetOutputVoltage());
+
+    m_currentLog->LogDouble(GetDriveCurrent());
 }
 
 }
