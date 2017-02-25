@@ -42,8 +42,8 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
     m_flywheelMotorPrimary->SetD(60.00);
     m_flywheelMotorPrimary->SetF(0.022);
     m_flywheelMotorPrimary->SetIzone(3500);
-    m_flywheelMotorPrimary->SetVelocityMeasurementPeriod(CANTalon::Period_10Ms);
-    m_flywheelMotorPrimary->SetVelocityMeasurementWindow(32);
+  //  m_flywheelMotorPrimary->SetVelocityMeasurementPeriod(CANTalon::Period_10Ms);
+    //m_flywheelMotorPrimary->SetVelocityMeasurementWindow(32);
 
     m_flywheelMotorReplica->ConfigNeutralMode(
             CANSpeedController::NeutralMode::kNeutralMode_Coast);

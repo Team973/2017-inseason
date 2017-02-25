@@ -33,6 +33,7 @@ namespace frc973{
       };
 
       enum PickUp {
+        idle,
         seeking,
         chewing,
         digesting,
@@ -44,8 +45,9 @@ namespace frc973{
       GearIntake(TaskMgr *scheduler);
       virtual ~GearIntake();
 
-      void StartPickupSequence();
+      void SetSeeking(bool request);
       void ReleaseGear();
+      void SetPickUpState(PickUp state);
 
       void SetGearIntakeState(GearIntakeState gearIntakeState);
       void SetGearPos(GearPosition gearPosition);
@@ -80,5 +82,6 @@ namespace frc973{
 
       uint32_t m_gearTimer;
       bool m_driverReleased;
+      bool m_seekingRequest;
   };
 }
