@@ -46,11 +46,9 @@ public:
 		printf("Turning off arcade Mode\n");
 	}
 private:
-	double m_leftOutput;
-	double m_rightOutput;
+	double m_throttle;
+	double m_turn;
 	bool 	m_needSetControlMode;
 };
 
 }
-
-

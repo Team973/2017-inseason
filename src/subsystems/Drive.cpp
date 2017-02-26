@@ -92,6 +92,11 @@ void Drive::OpenloopArcadeDrive(double throttle, double turn) {
     m_openloopArcadeDriveController->SetJoysticks(throttle, turn);
 }
 
+void Drive::AssistedArcadeDrive(double throttle, double turn){
+  this->SetDriveController(m_assistedArcadeDriveController);
+  m_assistedArcadeDriveController->SetJoysticks(throttle, turn);
+}
+
 void Drive::SetBoilerPixyTargeting(){
   printf("got here fam\n");
   this->SetDriveController(m_boilerPixyDriveController);
