@@ -261,7 +261,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                     printf("Start right bumper things\n");
                     m_shooter->StartAgitator(1.0, true);
                     m_shooter->StartAgitator(1.0, false);
-                    m_shooter->StartConveyor(1.0);
+                    m_shooter->StartConveyor(0.75);
                 }
                 else {
                     g_manualConveyorControl = true;
