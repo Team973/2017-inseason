@@ -14,19 +14,31 @@ void Robot::TeleopStop(void) {
 
 static bool g_manualControl = true;
 static bool g_manualConveyorControl = true;
+static bool g_driveArcade = true;
 
 void Robot::TeleopContinuous(void) {
     double y = -m_driverJoystick->GetRawAxisWithDeadband(DualAction::LeftYAxis);
     double x = -m_driverJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)
         + -m_tuningJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis);
 //  printf("throttle  %lf, turn  %lf\n", y, x);
-
+/*
     if (m_driverJoystick->GetRawButton(DualAction::LeftBumper)) {
         y *= 0.4;
         x *= 0.4;
-    }
-    if (g_manualControl) {
+    }*/
+
+/*    if (g_manualControl) {
+      if (g_driveArcade) {
         m_drive->ArcadeDrive(y, x);
+      }
+      else{}
+    }*/
+        m_drive->OpenloopArcadeDrive(y, 0.3 * x);
+
+
+    if (Util::abs(m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)) > 0.5 ||
+        Util::abs(m_operatorJoystick->GetRawAxisWithDeadband(DualAction::LeftYAxis)) > 0.5) {
+      g_manualConveyorControl = true;
     }
 
     if (g_manualConveyorControl == false){
@@ -48,23 +60,19 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         switch (button) {
         case DualAction::BtnA:
             if (pressedP) {
-              m_gearIntake->SetSeeking(true);
-            }
-            else{
-              m_gearIntake->SetSeeking(false);
+              g_driveArcade = false;
             }
             break;
         case DualAction::BtnB:
             if (pressedP) {
+              g_driveArcade = true;
             }
             break;
         case DualAction::BtnX:
             if (pressedP) {
-                m_hanger->SetHangerState(Hanger::HangerState::armed);
                 //m_hanger->SetHangerState(Hanger::HangerState::autoHang);
             }
             else{
-                m_hanger->SetHangerState(Hanger::HangerState::start);
             }
             break;
         case DualAction::BtnY:
@@ -73,10 +81,11 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::LeftBumper:
             if (pressedP) {
-                //sw lowgear
-                m_gearIntake->ReleaseGear();
+              //sw lowgear
+              m_gearIntake->SetReleaseManualEnable(true);
             }
             else {
+              m_gearIntake->SetReleaseManualEnable(false);
             }
             break;
         case DualAction::LeftTrigger:
@@ -88,38 +97,26 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             }
             break;
         case DualAction::RightBumper:
-            if (pressedP && m_shooter->OnTarget()) {
-              g_manualConveyorControl = true;
-              m_shooter->StartConveyor(m_conveyorSetpt);
-              m_shooter->StartAgitator(m_flailSetpt, true);
-              m_shooter->StartAgitator(m_flailSetpt, false);
+            if (pressedP) {
+              m_shooter->SetShooterState(Shooter::ShootingSequenceState::shooting);
             }
             else{
-              g_manualConveyorControl = false;
-              m_shooter->StopConveyor();
-              m_shooter->StopAgitator();
+              m_shooter->SetShooterState(Shooter::ShootingSequenceState::idle);
             }
             break;
         case DualAction::RightTrigger:
             if (pressedP) {
-              m_drive->SetBoilerPixyTargeting();
-              g_manualConveyorControl = true;
-              m_shooter->StartConveyor(m_conveyorSetpt);
-              m_shooter->StartAgitator(m_flailSetpt, true);
-              m_shooter->StartAgitator(m_flailSetpt, false);
+              m_shooter->SetShooterState(Shooter::ShootingSequenceState::targeting);
             }
             else{
               g_manualConveyorControl = false;
-              m_shooter->StopConveyor();
-              m_shooter->StopAgitator();
+              m_shooter->SetShooterState(Shooter::ShootingSequenceState::idle);
             }
             break;
         case DualAction::DPadUpVirtBtn:
             if (pressedP) {
-              m_gearIntake->SetSeeking(true);
             }
             else{
-              m_gearIntake->SetSeeking(false);
             }
             break;
         case DualAction::DPadDownVirtBtn:
@@ -150,24 +147,28 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         case DualAction::BtnY:
             if (pressedP) {
               m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
+              m_gearIntake->SetPickUpManual();
               }
             break;
         case DualAction::BtnA:
             if (pressedP) {
-                m_gearIntake->SetReleaseAutoEnable(true);
+              m_hanger->SetHangerState(Hanger::HangerState::armed);
+              m_compressor->Disable();
             }
             else{
-                m_gearIntake->SetReleaseAutoEnable(false);
+              m_hanger->SetHangerState(Hanger::HangerState::start);
             }
             break;
         case DualAction::BtnX:
             if (pressedP) {
               m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
+              m_gearIntake->SetPickUpManual();
             }
             break;
         case DualAction::BtnB:
             if (pressedP) {
-              m_gearIntake->ReleaseGear();
+            }
+            else{
             }
             break;
         case DualAction::LeftBumper:

@@ -15,9 +15,10 @@
 namespace frc973 {
 
 Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
-            CANTalon *leftAgitator) :
+            CANTalon *leftAgitator, Drive *drive, BoilerPixy *boilerPixy) :
         m_scheduler(scheduler),
         m_flywheelState(FlywheelState::notRunning),
+        m_shootingSequenceState(ShootingSequenceState::idle),
         m_flywheelMotorPrimary(new CANTalon(FLYWHEEL_PRIMARY_CAN_ID,
                                             FLYWHEEL_CONTROL_PERIOD_MS)),
         m_flywheelMotorReplica(new CANTalon(FLYWHEEL_REPLICA_CAN_ID)),
@@ -26,7 +27,9 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
         m_ballConveyor(new CANTalon(BALL_CONVEYOR_CAN_ID, 50)),
         m_flywheelPow(0.0),
         m_flywheelSpeedSetpt(0.0),
-        m_flywheelOnTargetFilter(0.5)
+        m_flywheelOnTargetFilter(0.5),
+        m_drive(drive),
+        m_boilerPixy(boilerPixy)
 {
     m_flywheelMotorPrimary->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
     m_flywheelMotorPrimary->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
@@ -55,6 +58,7 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
     m_leftAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
     m_rightAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
     m_ballConveyor->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
+    m_ballConveyor->SetVoltageRampRate(120.0);
 
     m_leftAgitator->EnableCurrentLimit(true);
     m_rightAgitator->EnableCurrentLimit(true);
@@ -93,7 +97,6 @@ void Shooter::SetFlywheelSpeed(double speed){
     m_flywheelState = FlywheelState::speed;
     m_flywheelSpeedSetpt = speed;
     m_flywheelMotorPrimary->Set(m_flywheelSpeedSetpt);
-    m_flywheelOnTargetFilter.Update(false);
 }
 
 void Shooter::SetFlywheelStop(){
@@ -137,6 +140,11 @@ void Shooter::StartAgitator(double speed, bool side){
     }
 }
 
+void Shooter::SetShooterState(ShootingSequenceState state){
+  m_shootingSequenceState = state;
+  m_flywheelOnTargetFilter.Update(false);
+}
+
 void Shooter::StopAgitator(){
     m_leftAgitator->Set(0.0);
     m_rightAgitator->Set(0.0);
@@ -158,6 +166,28 @@ void Shooter::TaskPeriodic(RobotMode mode) {
     printf("setpt %lf speed %lf\n",
             m_flywheelSpeedSetpt, GetFlywheelRate());
     DBStringPrintf(DB_LINE8,"shooterpow %2.1lf", m_flywheelMotorPrimary->GetOutputVoltage());
+    switch(m_shootingSequenceState){
+      case idle:
+        StopAgitator();
+        StopConveyor();
+        break;
+      case targeting:
+        m_drive->SetBoilerPixyTargeting();
+        SetFlywheelSpeed(2900);
+        if (OnTarget() && m_drive->OnTarget()) {
+          m_shootingSequenceState = ShootingSequenceState::shooting;
+        }
+        break;
+      case shooting:
+        SetFlywheelSpeed(2900);
+        if (OnTarget()) {
+          m_drive->ArcadeDrive(0.0,0.0);
+          StartAgitator(1.0, true);
+          StartAgitator(1.0, false);
+          StartConveyor(1.0);
+        }
+        break;
+    }
     switch(m_flywheelState){
         case power:
             m_flywheelMotorPrimary->Set(m_flywheelPow);

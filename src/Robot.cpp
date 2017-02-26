@@ -63,7 +63,7 @@ Robot::Robot(void
     m_leftDriveTalonA->SetF(0.5);
     m_leftDriveTalonA->EnableCurrentLimit(true);
     m_leftDriveTalonA->SetCurrentLimit(50);
-    m_leftDriveTalonA->SetVoltageRampRate(50.0);
+    m_leftDriveTalonA->SetVoltageRampRate(75.0);
 
     m_leftDriveTalonB->SetControlMode(
             CANSpeedController::ControlMode::kFollower);
@@ -73,7 +73,7 @@ Robot::Robot(void
     m_leftDriveTalonB->SetClosedLoopOutputDirection(false);
     m_leftDriveTalonB->EnableCurrentLimit(true);
     m_leftDriveTalonB->SetCurrentLimit(50);
-    m_leftDriveTalonB->SetVoltageRampRate(50.0);
+    m_leftDriveTalonB->SetVoltageRampRate(75.0);
 
     m_rightDriveTalonA->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
     m_rightDriveTalonA->ConfigNeutralMode(
@@ -91,7 +91,7 @@ Robot::Robot(void
     m_rightDriveTalonA->SetF(0.5);
     m_rightDriveTalonA->EnableCurrentLimit(true);
     m_rightDriveTalonA->SetCurrentLimit(50);
-    m_rightDriveTalonA->SetVoltageRampRate(50.0);
+    m_rightDriveTalonA->SetVoltageRampRate(75.0);
 
     m_rightDriveTalonB->SetControlMode(CANSpeedController::ControlMode::kFollower);
     m_rightDriveTalonB->ConfigNeutralMode(
@@ -100,7 +100,7 @@ Robot::Robot(void
     m_rightDriveTalonB->SetClosedLoopOutputDirection(false);
     m_rightDriveTalonB->EnableCurrentLimit(true);
     m_rightDriveTalonB->SetCurrentLimit(50);
-    m_rightDriveTalonB->SetVoltageRampRate(50.0);
+    m_rightDriveTalonB->SetVoltageRampRate(75.0);
 
     m_leftAgitatorTalon = new CANTalon(LEFT_AGITATOR_CAN_ID, 50);
     fprintf(stderr, "Initialized drive controllers\n");
@@ -135,7 +135,7 @@ Robot::Robot(void
     m_hanger = new Hanger(this);
     m_ballIntake = new BallIntake(this);
     m_gearIntake = new GearIntake(this, m_lights);
-    m_shooter = new Shooter(this, m_logger, m_leftAgitatorTalon);
+    m_shooter = new Shooter(this, m_logger, m_leftAgitatorTalon, m_drive, m_boilerPixy);
 
     m_airPressureSwitch = new DigitalInput(AIR_PRESSURE_DIN);
     m_compressorRelay = new Relay(COMPRESSOR_RELAY, Relay::kForwardOnly);
@@ -193,7 +193,7 @@ void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
     else if (this->IsDisabled()){
         HandleDisabledButton(port, button, pressedP);
     }
-}
+  }
 }
 
 #include "Disabled.h"

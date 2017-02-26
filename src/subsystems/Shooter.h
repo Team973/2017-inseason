@@ -11,6 +11,8 @@
 #include "lib/CoopTask.h"
 #include "CANTalon.h"
 #include "lib/filters/Debouncer.h"
+#include "Drive.h"
+#include "BoilerPixy.h"
 
 using namespace frc;
 
@@ -26,12 +28,18 @@ class LogSpreadsheet;
 class Shooter : public CoopTask
 {
 public:
-    Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgitator);
+    Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgitator, Drive *drive, BoilerPixy *boilerPixy);
     virtual ~Shooter();
     void TaskPeriodic(RobotMode mode);
     void SetFlywheelPow(double pow);
     void SetFlywheelStop();
     void SetFlywheelSpeed(double speed);
+
+    enum ShootingSequenceState{
+      idle,
+      targeting,
+      shooting
+    };
 
     bool OnTarget();
 
@@ -39,6 +47,7 @@ public:
     void StopAgitator();
     void StartConveyor(double speed);
     void StopConveyor();
+    void SetShooterState(ShootingSequenceState state);
 
     double GetFlywheelRate();
 
@@ -54,6 +63,7 @@ private:
     TaskMgr *m_scheduler;
 
     FlywheelState m_flywheelState;
+    ShootingSequenceState m_shootingSequenceState;
 
     CANTalon *m_flywheelMotorPrimary;
     CANTalon *m_flywheelMotorReplica;
@@ -75,6 +85,9 @@ private:
     LogCell *m_leftAgitatorLog;
     LogCell *m_rightAgitatorLog;
     Debouncer m_flywheelOnTargetFilter;
+    Drive *m_drive;
+    BoilerPixy  *m_boilerPixy;
+
 };
 
 }
