@@ -54,7 +54,6 @@ public:
             );
 
     virtual ~Drive() {}
-
     /**
      * Zero encoders and gyroscope.
      */
@@ -92,6 +91,7 @@ public:
      */
     void OpenloopArcadeDrive(double throttle, double turn);
 
+    void AssistedArcadeDrive(double throttle, double turn);
     /**
      * Set a target distance to be achieved by pid
      *
@@ -136,7 +136,7 @@ public:
 
     /*
      * Used by the DriveController to set motor values
-     * 
+     *
      * The unit of this command depends on the mode of the controller...
      * If in kPercentVbus mode (default), command is from -1.0 to 1.0 and
      *      scales to voltage sent to motors
