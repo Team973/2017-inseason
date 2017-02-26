@@ -29,6 +29,7 @@ set(SOURCE_FILES src/Robot.cpp src/lib/CoopMTRobot.cpp
     src/lib/filters/MedianFilter.cpp src/lib/filters/MovingAverageFilter.cpp
     src/lib/filters/PID.cpp src/lib/filters/RampedOutput.cpp
     src/controllers/ArcadeDriveController.cpp
+    src/controllers/AssistedArcadeDrive.cpp
     src/controllers/OpenloopArcadeDriveController.cpp
     src/controllers/BoilerPixyVisionDriveController.cpp
     src/controllers/OpenloopArcadeDriveController.cpp

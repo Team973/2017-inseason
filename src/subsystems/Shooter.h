@@ -38,7 +38,8 @@ public:
     enum ShootingSequenceState{
       idle,
       targeting,
-      shooting
+      shooting,
+      manual
     };
 
     bool OnTarget();

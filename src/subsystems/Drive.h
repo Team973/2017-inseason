@@ -20,6 +20,7 @@ class RampPIDDriveController;
 class BoilerPixyVisionDriveController;
 class GearPixyVisionDriveController;
 class OpenloopArcadeDriveController;
+class AssistedArcadeDriveController;
 class VelocityTurnPID;
 class LogSpreadsheet;
 class LogCell;
@@ -162,6 +163,7 @@ private:
 
     ArcadeDriveController *m_arcadeDriveController;
     OpenloopArcadeDriveController *m_openloopArcadeDriveController;
+    AssistedArcadeDriveController *m_assistedArcadeDriveController;
     CheesyDriveController *m_cheesyDriveController;
     PIDDriveController *m_pidDriveController;
     RampPIDDriveController *m_rampPidDriveController;

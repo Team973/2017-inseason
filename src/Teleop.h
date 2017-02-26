@@ -41,7 +41,7 @@ void Robot::TeleopContinuous(void) {
       g_manualConveyorControl = true;
     }
 
-    if (g_manualConveyorControl == false){
+    if (g_manualConveyorControl){
       double c = m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis);
 
       m_shooter->StartConveyor(c);
@@ -256,14 +256,15 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::RightBumper:
                 if (pressedP) {
-                    g_manualConveyorControl = true;
+                    m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
+                    g_manualConveyorControl = false;
                     printf("Start right bumper things\n");
-                    m_shooter->StartAgitator(m_flailSetpt, true);
-                    m_shooter->StartAgitator(m_flailSetpt, false);
-                    m_shooter->StartConveyor(0.5);
+                    m_shooter->StartAgitator(1.0, true);
+                    m_shooter->StartAgitator(1.0, false);
+                    m_shooter->StartConveyor(1.0);
                 }
                 else {
-                    g_manualConveyorControl = false;
+                    g_manualConveyorControl = true;
                     printf("end right bumper things\n");
                     m_shooter->StopAgitator();
                     m_shooter->StopConveyor();

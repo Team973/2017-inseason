@@ -13,6 +13,7 @@
 
 #include "controllers/ArcadeDriveController.h"
 #include "controllers/OpenloopArcadeDriveController.h"
+#include "controllers/AssistedArcadeDrive.h"
 #include "controllers/PIDDrive.h"
 #include "controllers/BoilerPixyVisionDriveController.h"
 #include "controllers/GearPixyVisionDriveController.h"
@@ -53,6 +54,7 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
 
     m_arcadeDriveController = new ArcadeDriveController();
     m_openloopArcadeDriveController = new OpenloopArcadeDriveController();
+    m_assistedArcadeDriveController = new AssistedArcadeDriveController();
     m_pidDriveController = new PIDDriveController();
     this->SetDriveController(m_arcadeDriveController);
     this->SetDriveControlMode(m_controlMode);
