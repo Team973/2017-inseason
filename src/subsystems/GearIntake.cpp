@@ -114,8 +114,6 @@ namespace frc973{
   }
 
   void GearIntake::SetReleaseManualEnable(bool request){
-      this->SetIndexerMode(Indexer::stop);
-      this->SetGearIntakeState(GearIntakeState::released);
       m_manualReleaseRequest = request;
   }
 
@@ -148,7 +146,7 @@ namespace frc973{
         this->SetIndexerMode(GearIntake::Indexer::intaking);
         this->SetGearPos(GearIntake::GearPosition::down);
         this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
-        if (m_rightIndexer->GetOutputCurrent() >= 50 || m_leftIndexer->GetOutputCurrent() >= 50){
+        if (m_rightIndexer->GetOutputCurrent() >= 30 || m_leftIndexer->GetOutputCurrent() >= 30){
           m_gearTimer = GetMsecTime();
           m_lights->NotifyFlash(2);
           m_pickUpState = PickUp::chewing;
