@@ -33,7 +33,7 @@ void Robot::TeleopContinuous(void) {
       }
       else{}
     }*/
-        m_drive->OpenloopArcadeDrive(y, 0.3 * x);
+        m_drive->OpenloopArcadeDrive(y, 0.2 * x);
 
 
     if (Util::abs(m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)) > 0.5 ||
