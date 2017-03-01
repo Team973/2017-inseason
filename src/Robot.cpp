@@ -32,7 +32,7 @@ Robot::Robot(void
     m_autoTimer(0),
     m_speedSetpt(3400),
     m_flailSetpt(1.0),
-    m_conveyorSetpt(1.0)
+    m_conveyorSetpt(0.75)
 {
     m_driverJoystick = new ObservableJoystick(DRIVER_JOYSTICK_PORT,
             this, this);

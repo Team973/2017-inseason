@@ -163,13 +163,14 @@ void Shooter::TaskPeriodic(RobotMode mode) {
     m_conveyorLog->LogDouble(m_ballConveyor->GetOutputCurrent());
     m_leftAgitatorLog->LogDouble(m_leftAgitator->GetOutputCurrent());
     m_rightAgitatorLog->LogDouble(m_rightAgitator->GetOutputCurrent());
-    DBStringPrintf(DB_LINE5,"shooterrate %2.1lf", GetFlywheelRate());
-    DBStringPrintf(DB_LINE6,"shootersetpt %2.1lf", m_flywheelSpeedSetpt);
-    //DBStringPrintf(DB_LINE3,"conv %2.1lf flail %2.1lf %2.1lf", m_ballConveyor->GetOutputVoltage(),
-                //  m_leftAgitator->GetOutputVoltage(), m_rightAgitator->GetOutputVoltage());
-    printf("setpt %lf speed %lf\n",
-            m_flywheelSpeedSetpt, GetFlywheelRate());
-    DBStringPrintf(DB_LINE8,"shooterpow %2.1lf", m_flywheelMotorPrimary->GetOutputVoltage());
+    DBStringPrintf(DB_LINE5,"s_rate %2.1lf", GetFlywheelRate());
+    DBStringPrintf(DB_LINE6,"s_goal %2.1lf c%2.1lf f%2.1lf", m_flywheelSpeedSetpt,
+            m_ballConveyor->GetOutputVoltage(),
+            m_leftAgitator->GetOutputVoltage());
+
+    DBStringPrintf(DB_LINE8,"shooterpow %2.1lf",
+            m_flywheelMotorPrimary->GetOutputVoltage());
+
     switch(m_shootingSequenceState){
       case idle:
         StopAgitator();

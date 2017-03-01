@@ -229,14 +229,20 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         switch (button) {
             case DualAction::DPadUpVirtBtn:
                 if (pressedP) {
+                    /*
                     g_manualControl = false;
                     m_drive->SetBoilerPixyTargeting();
+                    */
+                    m_conveyorSetpt += 0.1;
                 }
                 break;
             case DualAction::DPadDownVirtBtn:
                 if (pressedP) {
+                    /*
                     g_manualControl = false;
                     m_drive->SetGearPixyTargeting();
+                    */
+                    m_conveyorSetpt -= 0.1;
                 }
                 break;
             case DualAction::DPadRightVirtBtn:
@@ -259,9 +265,9 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                     m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
                     g_manualConveyorControl = false;
                     printf("Start right bumper things\n");
-                    m_shooter->StartAgitator(1.0, true);
-                    m_shooter->StartAgitator(1.0, false);
-                    m_shooter->StartConveyor(0.75);
+                    m_shooter->StartAgitator(m_flailSetpt, true);
+                    m_shooter->StartAgitator(m_flailSetpt, false);
+                    m_shooter->StartConveyor(m_conveyorSetpt);
                 }
                 else {
                     g_manualConveyorControl = true;
