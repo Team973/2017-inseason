@@ -34,7 +34,7 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
     m_flywheelMotorPrimary->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
     m_flywheelMotorPrimary->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
     m_flywheelMotorPrimary->SetClosedLoopOutputDirection(false);
-    m_flywheelMotorPrimary->SetNominalClosedLoopVoltage(12.0);
+    //m_flywheelMotorPrimary->SetNominalClosedLoopVoltage(12.0);
     m_flywheelMotorPrimary->ConfigLimitSwitchOverrides(false, false);
     m_flywheelMotorPrimary->SetSensorDirection(false);
     m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kSpeed);
@@ -46,8 +46,8 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
     m_flywheelMotorPrimary->SetD(0.00);
     m_flywheelMotorPrimary->SetF(0.022);
     m_flywheelMotorPrimary->SetIzone(1000);
-    m_flywheelMotorPrimary->SetVelocityMeasurementPeriod(CANTalon::Period_10Ms);
-    m_flywheelMotorPrimary->SetVelocityMeasurementWindow(32);
+    //m_flywheelMotorPrimary->SetVelocityMeasurementPeriod(CANTalon::Period_10Ms);
+    //m_flywheelMotorPrimary->SetVelocityMeasurementWindow(32);
 
     m_flywheelMotorReplica->ConfigNeutralMode(
             CANSpeedController::NeutralMode::kNeutralMode_Coast);
@@ -55,7 +55,7 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
             CANSpeedController::ControlMode::kFollower);
     m_flywheelMotorReplica->Set(m_flywheelMotorPrimary->GetDeviceID());
     m_flywheelMotorReplica->SetClosedLoopOutputDirection(true);
-    m_flywheelMotorReplica->SetNominalClosedLoopVoltage(12.0);
+    //m_flywheelMotorReplica->SetNominalClosedLoopVoltage(12.0);
 
     m_leftAgitator->SetControlMode(CANSpeedController::ControlMode::kVoltage);
     m_rightAgitator->SetControlMode(CANSpeedController::ControlMode::kVoltage);
