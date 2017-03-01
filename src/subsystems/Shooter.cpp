@@ -34,6 +34,7 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
     m_flywheelMotorPrimary->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
     m_flywheelMotorPrimary->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
     m_flywheelMotorPrimary->SetClosedLoopOutputDirection(false);
+    m_flywheelMotorPrimary->SetNominalClosedLoopVoltage(12.0);
     m_flywheelMotorPrimary->ConfigLimitSwitchOverrides(false, false);
     m_flywheelMotorPrimary->SetSensorDirection(false);
     m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kSpeed);
@@ -54,18 +55,21 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
             CANSpeedController::ControlMode::kFollower);
     m_flywheelMotorReplica->Set(m_flywheelMotorPrimary->GetDeviceID());
     m_flywheelMotorReplica->SetClosedLoopOutputDirection(true);
+    m_flywheelMotorReplica->SetNominalClosedLoopVoltage(12.0);
 
-    m_leftAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
-    m_rightAgitator->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
-    m_ballConveyor->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
-    m_ballConveyor->SetVoltageRampRate(120.0);
+    m_leftAgitator->SetControlMode(CANSpeedController::ControlMode::kVoltage);
+    m_rightAgitator->SetControlMode(CANSpeedController::ControlMode::kVoltage);
+    m_ballConveyor->SetControlMode(CANSpeedController::ControlMode::kVoltage);
 
     m_leftAgitator->EnableCurrentLimit(true);
     m_rightAgitator->EnableCurrentLimit(true);
-    m_leftAgitator->SetCurrentLimit(20);
-    m_rightAgitator->SetCurrentLimit(20);
-    m_leftAgitator->SetVoltageRampRate(120.0);
-    m_rightAgitator->SetVoltageRampRate(120.0);
+    m_ballConveyor->EnableCurrentLimit(true);
+    m_leftAgitator->SetCurrentLimit(10);
+    m_rightAgitator->SetCurrentLimit(10);
+    m_ballConveyor->SetCurrentLimit(10);
+    m_leftAgitator->SetVoltageRampRate(60.0);
+    m_rightAgitator->SetVoltageRampRate(60.0);
+    m_ballConveyor->SetVoltageRampRate(60.0);
 
     m_scheduler->RegisterTask("Shooter", this, TASK_PERIODIC);
     m_flywheelRate = new LogCell("FlywheelRate", 32);
@@ -117,7 +121,7 @@ bool Shooter::OnTarget() {
 }
 
 void Shooter::StartConveyor(double speed) {
-    m_ballConveyor->Set(speed);
+    m_ballConveyor->Set(speed * 12.0);
     printf("%lf pow on %d - conveyor\n", speed, BALL_CONVEYOR_CAN_ID);
     //DBStringPrintf(DB_LINE3, "conv pow %lf", speed);
 }
@@ -131,11 +135,11 @@ void Shooter::StopConveyor() {
 //side: true = right; false = left
 void Shooter::StartAgitator(double speed, bool side){
     if (side == false) {
-        m_leftAgitator->Set(speed);
+        m_leftAgitator->Set(speed * 12.0);
         printf("%lf pow on %d - left agitator\n", speed, LEFT_AGITATOR_CAN_ID);
     }
     else if (side == true) {
-        m_rightAgitator->Set(-speed);
+        m_rightAgitator->Set(-speed * 12.0);
         printf("%lf pow on %d - right agitator\n", speed, RIGHT_AGITATOR_CAN_ID);
     }
 }
