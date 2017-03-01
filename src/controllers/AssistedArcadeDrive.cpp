@@ -40,7 +40,7 @@ void AssistedArcadeDriveController::CalcDriveOutput(DriveStateProvider *state,
 
 	double setpoint = 5.0 * m_turn;
 	double error = setpoint - currAngRate;
-	double turnCorrection = Util::bound(error * 0.1, -0.2, 0.2);
+	double turnCorrection = Util::bound(error * 0.008, -0.2, 0.2);
 
 	leftOutput = m_throttle - m_turn - turnCorrection;
 	rightOutput = m_throttle + m_turn + turnCorrection;

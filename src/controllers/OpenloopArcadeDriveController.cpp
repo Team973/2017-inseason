@@ -41,8 +41,8 @@ void OpenloopArcadeDriveController::SetJoysticks(double throttle, double turn) {
 	throttle = Util::bound(throttle, -1.0, 1.0);
 	turn = Util::bound(turn, -1.0, 1.0);
 
-    m_leftOutput = throttle - 0.5 * DRIVE_WIDTH * turn;
-    m_rightOutput = throttle + 0.5 * DRIVE_WIDTH * turn;
+    m_leftOutput = throttle - turn;
+    m_rightOutput = throttle + turn;
 
     double maxSpeed = Util::max(m_leftOutput, m_rightOutput);
     if (maxSpeed > 1.0) {
@@ -54,4 +54,3 @@ void OpenloopArcadeDriveController::SetJoysticks(double throttle, double turn) {
 }
 
 }
-

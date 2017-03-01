@@ -110,7 +110,7 @@ namespace frc973{
   }
 
   bool GearIntake::IsGearReady(){
-    return (m_pushTopLeft->Get() + m_pushTopRight->Get() + m_pushBottom->Get() < 2);
+    return (m_pushTopLeft->Get() + m_pushTopRight->Get() + m_pushBottom->Get() <= 2);
   }
 
   void GearIntake::SetReleaseManualEnable(bool request){
@@ -178,8 +178,12 @@ namespace frc973{
         }
         break;
       case postVomit:
-        if(GetMsecTime() - m_gearTimer >= 1000){
+        if (m_seekingRequest) {
+          m_pickUpState = PickUp::seeking;
+        }
+        if(GetMsecTime() - m_gearTimer >= 3000){
           m_pickUpState = PickUp::idle;
+
         }
         break;
       case manual:

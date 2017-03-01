@@ -33,7 +33,7 @@ void Robot::TeleopContinuous(void) {
       }
       else{}
     }*/
-        m_drive->AssistedArcadeDrive(y, 0.2 * x);
+        m_drive->AssistedArcadeDrive(y, x);
 
 
     if (Util::abs(m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)) > 0.5 ||
@@ -107,8 +107,10 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         case DualAction::RightTrigger:
             if (pressedP) {
               m_shooter->SetShooterState(Shooter::ShootingSequenceState::targeting);
+              g_manualControl = false;
             }
             else{
+              g_manualControl = true;
               g_manualConveyorControl = false;
               m_shooter->SetShooterState(Shooter::ShootingSequenceState::idle);
             }
@@ -137,8 +139,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             }
             break;
         case DualAction::Back:
-            if (pressedP) {
-            }
+
             break;
         }
     }
@@ -218,7 +219,10 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 }
             break;
         case DualAction::Back:
-
+            if (pressedP) {
+              m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
+              m_gearIntake->SetPickUpManual();
+            }
             break;
         case DualAction::Start:
 
@@ -257,6 +261,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::RightTrigger:
                 if (pressedP) {
+                  m_compressor->Enable();
                     //m_conveyorSetpt += 0.1;
                 }
                 break;
@@ -280,12 +285,14 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 if (pressedP) {
                     m_speedSetpt += 10;
                     m_shooter->SetFlywheelSpeed(m_speedSetpt);
+                    m_compressor->Disable();
                 }
                 break;
             case DualAction::LeftTrigger:
                 if (pressedP) {
                     m_speedSetpt -= 10;
                     m_shooter->SetFlywheelSpeed(m_speedSetpt);
+                    m_compressor->Disable();
                 }
                 break;
             case DualAction::BtnA:
