@@ -7,11 +7,13 @@ namespace frc973 {
 
 void Robot::TeleopStart(void) {
     m_drive->ArcadeDrive(0.0, 0.0);
+    m_teleopTimer = GetMsecTime();
 }
 
 void Robot::TeleopStop(void) {
 }
 
+static bool g_hangSignalSent = false;
 static bool g_manualControl = true;
 static bool g_manualConveyorControl = true;
 static bool g_driveArcade = true;
@@ -20,21 +22,10 @@ void Robot::TeleopContinuous(void) {
     double y = -m_driverJoystick->GetRawAxisWithDeadband(DualAction::LeftYAxis);
     double x = -m_driverJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)
         + -m_tuningJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis);
-//  printf("throttle  %lf, turn  %lf\n", y, x);
-/*
-    if (m_driverJoystick->GetRawButton(DualAction::LeftBumper)) {
-        y *= 0.4;
-        x *= 0.4;
-    }*/
 
-/*    if (g_manualControl) {
-      if (g_driveArcade) {
-        m_drive->ArcadeDrive(y, x);
-      }
-      else{}
-    }*/
+    if (g_manualControl) {
         m_drive->AssistedArcadeDrive(y, x);
-
+    }
 
     if (Util::abs(m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)) > 0.5 ||
         Util::abs(m_operatorJoystick->GetRawAxisWithDeadband(DualAction::LeftYAxis)) > 0.5) {
@@ -51,6 +42,10 @@ void Robot::TeleopContinuous(void) {
 
       m_shooter->Shooter::StartAgitator(l, false);
       m_shooter->Shooter::StartAgitator(r, true);
+    }
+
+    if (g_hangSignalSent == false && GetMsecTime() - m_teleopTimer > 90000) {
+        m_lights->NotifyFlash(10);
     }
 }
 

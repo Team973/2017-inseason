@@ -30,6 +30,7 @@ Robot::Robot(void
     m_autoState(0),
     m_autoRoutine(AutonomousRoutine::NoAuto),
     m_autoTimer(0),
+    m_teleopTimer(0),
     m_speedSetpt(3400),
     m_flailSetpt(1.0),
     m_conveyorSetpt(0.75)

@@ -87,6 +87,7 @@ private:
     int 							m_autoState;
     AutonomousRoutine m_autoRoutine;
     uint32_t 					m_autoTimer;
+    uint32_t 					m_teleopTimer;
     int						m_speedSetpt;
     double						m_flailSetpt;
     double						m_conveyorSetpt;
