@@ -20,7 +20,7 @@ DATA_COLS = [17, 19, 18, 20] #flywheel tuning
 GRAPHS = [["Left Encoder Rate", "Left motor signal (pow or vel)"], ["Left motor voltage"]]
 titles = []
 
-#os.system('scp lvuser@roborio-%d-frc.local:/home/lvuser/*.txt .' % TEAM_NUMBER)
+os.system('scp lvuser@roborio-%d-frc.local:/home/lvuser/*.txt .' % TEAM_NUMBER)
 latest = sorted([f for f in os.listdir(".") if f[:4] == "log:"])[-1]
 
 with open(latest, "r") as f:
@@ -55,7 +55,7 @@ plt.xlabel('time')
 line2, = plt.plot(x1, y2, '-',color="blue", label="setpoint")
 setpt_line = plt.legend(handles=[line2], loc = 2)
 ax = plt.gca().add_artist(setpt_line)
-plt.ylim([3300, 3500])
+plt.ylim([2500, 3500])
 plt.subplot(2, 1, 2)
 line3, = plt.plot(x1, y3, '-', label="voltage")
 voltage_line = plt.legend(handles=[line3], loc = 1)

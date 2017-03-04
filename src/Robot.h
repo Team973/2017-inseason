@@ -40,6 +40,8 @@ private:
         FuelBallToBoiler,
         ShootFuelThenHopper,
         HopperThenShootFuel,
+        KpaGearAuto,
+        AimedAtBoilerAuto,
         NoAuto
     };
 
@@ -135,6 +137,8 @@ public:
     void FuelToBoiler(void);
     void HopperThenShoot(void);
     void ShootThenHopper(void);
+    void KpaAndGearAuto(void);
+    void AimedBoilerAuto(void);
 
     /**
      * Defined in Teleop.h

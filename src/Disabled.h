@@ -36,6 +36,14 @@ void Robot::DisabledContinuous(void) {
     DBStringPrintf(DBStringPos::DB_LINE0,
                       "HopperThenShoot Auto");
   }
+  else if (m_autoRoutine == AutonomousRoutine::KpaGearAuto){
+    DBStringPrintf(DBStringPos::DB_LINE0,
+                      "KpaGear Auto");
+  }
+  else if (m_autoRoutine == AutonomousRoutine::AimedAtBoilerAuto){
+    DBStringPrintf(DBStringPos::DB_LINE0,
+                      "AimedAtBoiler Auto");
+  }
   else if (m_autoRoutine == AutonomousRoutine::NoAuto){
     DBStringPrintf(DBStringPos::DB_LINE0,
                       "No Auto");
@@ -85,10 +93,12 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             break;
         case DualAction::DPadDownVirtBtn:
             if (pressedP) {
+              m_autoRoutine = AutonomousRoutine::KpaGearAuto;
             }
             break;
         case DualAction::DPadLeftVirtBtn:
             if (pressedP) {
+              m_autoRoutine = AutonomousRoutine::AimedAtBoilerAuto;
             }
             break;
         case DualAction::LeftBumper:
