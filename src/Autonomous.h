@@ -5,6 +5,7 @@ namespace frc973 {
     static constexpr double DRIVER_STATION_BASE_LINE_DIST = 87.0;
     static constexpr double DRIVER_STATION_LAUNCHPAD_DIST = 185.3;
     static constexpr double KEY_DIST = 52.0;
+    static constexpr double SHOOTER_RPM = 2900.0;
 
     void Robot::AutonomousStart(void) {
         printf("***auto start\n");
@@ -264,7 +265,7 @@ namespace frc973 {
         switch (m_autoState){
             case 0:
                 printf("gonna piddrive\n");
-                m_drive->PIDDrive(DRIVER_STATION_BASE_LINE_DIST, 0.0,
+                m_drive->PIDDrive(-(DRIVER_STATION_BASE_LINE_DIST - 19.0), 0.0,
                         DriveBase::RelativeTo::Now, 0.6);
                 printf("piddrived\n");
                 m_autoState++;
@@ -273,7 +274,7 @@ namespace frc973 {
                 printf("waiting for pid on target\n");
                 if (m_drive->OnTarget()) {
                     printf("pid on target moving on\n");
-                    m_drive->PIDDrive(0.0, 90.0 * m_autoDirection,
+                    m_drive->PIDTurn(-90.0 * m_autoDirection,
                             DriveBase::RelativeTo::SetPoint, 0.8);
                     m_autoState++;
                 }
@@ -305,22 +306,22 @@ namespace frc973 {
                 }
             case 5:
                 if (m_drive->OnTarget()) {
-                    m_drive->PIDDrive(0.0, 67.0 * m_autoDirection,
+                    m_drive->PIDTurn(67.0 * m_autoDirection,
                             DriveBase::RelativeTo::SetPoint, 0.8);
                     m_autoState++;
                 }
                 break;
             case 6:
                 if (m_drive->OnTarget()) {
-                    m_drive->PIDDrive(40.0, 0.0 * m_autoDirection,
+                    m_drive->PIDDrive(0.0, 0.0 * m_autoDirection,
                             DriveBase::RelativeTo::SetPoint, 0.8);
                     m_autoState++;
                 }
                 break;
             case 7:
                 if (m_drive->OnTarget()) {
-                    m_drive->SetBoilerPixyTargeting();
-                    m_shooter->SetFlywheelSpeed(3400.0);
+                    //m_drive->SetBoilerPixyTargeting();
+                    m_shooter->SetFlywheelSpeed(SHOOTER_RPM);
                     m_autoTimer = GetMsecTime();
                     m_autoState++;
                 }
@@ -387,7 +388,7 @@ namespace frc973 {
       switch(m_autoState){
         case 0:
           m_drive->PIDDrive(-55.5, 0.0, DriveBase::RelativeTo::SetPoint, 0.8);
-          m_shooter->SetFlywheelSpeed(3400.0);
+          m_shooter->SetFlywheelSpeed(SHOOTER_RPM);
           break;
         case 1:
           if(m_drive->OnTarget()){
@@ -466,7 +467,7 @@ namespace frc973 {
     void Robot::AimedBoilerAuto(){
       switch (m_autoState) {
         case 0:
-          m_shooter->SetFlywheelSpeed(3400.0);
+          m_shooter->SetFlywheelSpeed(SHOOTER_RPM);
           m_autoState++;
           break;
         case 1:

@@ -26,7 +26,10 @@ void Robot::TeleopContinuous(void) {
     if (g_manualControl) {
         m_drive->AssistedArcadeDrive(y, x);
     }
-
+    else if(m_drive->OnTarget()){
+      m_lights->NotifyFlash(3);
+      g_manualControl = true;
+    }
     if (Util::abs(m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)) > 0.5 ||
         Util::abs(m_operatorJoystick->GetRawAxisWithDeadband(DualAction::LeftYAxis)) > 0.5) {
       g_manualConveyorControl = true;
@@ -326,6 +329,13 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                     m_lights->DisableLights();
                 }
                 break;
+            case DualAction::Start:
+              if (pressedP) {
+                  g_manualControl = false;
+                  m_drive->PIDDrive(-120, 0,
+                          Drive::RelativeTo::Now, 0.5);
+              }
+              break;
         }
     }
 }
