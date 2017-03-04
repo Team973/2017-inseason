@@ -149,7 +149,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             if (pressedP) {
               m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
               m_gearIntake->SetPickUpManual();
-              }
+            }
             break;
         case DualAction::BtnA:
             if (pressedP) {
@@ -225,7 +225,10 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             }
             break;
         case DualAction::Start:
-
+            if (pressedP) {
+              m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
+              m_gearIntake->SetPickUpManual();
+            }
             break;
         }
     }

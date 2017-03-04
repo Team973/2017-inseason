@@ -34,6 +34,7 @@ Robot::Robot(void
     m_flailSetpt(1.0),
     m_conveyorSetpt(0.75)
 {
+    CameraServer::GetInstance()->StartAutomaticCapture();
     m_driverJoystick = new ObservableJoystick(DRIVER_JOYSTICK_PORT,
             this, this);
     m_operatorJoystick = new ObservableJoystick(OPERATOR_JOYSTICK_PORT,
