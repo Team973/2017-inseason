@@ -168,8 +168,8 @@ void Shooter::TaskPeriodic(RobotMode mode) {
             m_ballConveyor->GetOutputVoltage(),
             m_leftAgitator->GetOutputVoltage());
 
-    DBStringPrintf(DB_LINE8,"shooterpow %2.1lf",
-            m_flywheelMotorPrimary->GetOutputVoltage());
+//    DBStringPrintf(DB_LINE8,"shooterpow %2.1lf",
+//            m_flywheelMotorPrimary->GetOutputVoltage());
 
     switch(m_shootingSequenceState){
       case idle:

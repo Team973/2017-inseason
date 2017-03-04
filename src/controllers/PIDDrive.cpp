@@ -12,15 +12,15 @@
 
 namespace frc973 {
 
-static constexpr double DRIVE_PID_KP = 0.007;
+static constexpr double DRIVE_PID_KP = 0.025;// 0.030;
 static constexpr double DRIVE_PID_KI = 0.0;
-static constexpr double DRIVE_PID_KD = 0.007;
+static constexpr double DRIVE_PID_KD = 0.0;
 
-static constexpr double TURN_PID_KP = 0.00088;
+static constexpr double TURN_PID_KP = 0.0075;
 static constexpr double TURN_PID_KI = 0.0;
-static constexpr double TURN_PID_KD = 0.00088;
+static constexpr double TURN_PID_KD = 0.0;
 
-static constexpr double MAX_SPEED = 1000;
+static constexpr double MAX_SPEED = 150;
 
 PIDDriveController::PIDDriveController():
 	m_prevDist(0.0),
@@ -63,8 +63,8 @@ void PIDDriveController::CalcDriveOutput(DriveStateProvider *state,
 		throttle = 0.0;
 	}
 
-    if (throttle > m_lastThrottle + 0.06) {
-        throttle = m_lastThrottle + 0.06;
+    if (throttle > m_lastThrottle + 0.09) {
+        throttle = m_lastThrottle + 0.09;
     }
     m_lastThrottle = throttle;
 
@@ -86,10 +86,10 @@ void PIDDriveController::CalcDriveOutput(DriveStateProvider *state,
 	out->SetDriveOutput(MAX_SPEED * m_speedCap * (throttle - turn),
                         MAX_SPEED * m_speedCap * (throttle + turn));
 
-	if ((m_distEnabled == false || (Util::abs(m_targetDist - m_prevDist) < 5.0 &&
+	if ((m_distEnabled == false || (Util::abs(m_targetDist - m_prevDist) < 1.0 &&
                                     Util::abs(state->GetRate()) < 0.5)) &&
-            Util::abs(m_targetAngle - m_prevAngle) < 1.0 &&
-            Util::abs(state->GetAngularRate()) < 15.0) {
+            Util::abs(m_targetAngle - m_prevAngle) < 15.0 &&
+            Util::abs(state->GetAngularRate()) < 0.5) {
 		m_onTarget = true;
 	}
 	else {

@@ -243,11 +243,11 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::DPadDownVirtBtn:
                 if (pressedP) {
-                    /*
+                    
                     g_manualControl = false;
                     m_drive->SetGearPixyTargeting();
-                    */
-                    m_conveyorSetpt -= 0.1;
+                    
+                   // m_conveyorSetpt -= 0.1;
                 }
                 break;
             case DualAction::DPadRightVirtBtn:
@@ -299,8 +299,8 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             case DualAction::BtnA:
                 if (pressedP) {
                     g_manualControl = false;
-                    m_drive->PIDDrive(120, 0,
-                            Drive::RelativeTo::Now, 0.5);
+                    m_drive->PIDDrive(12 * 8, 0,
+                            Drive::RelativeTo::Now, 1.0);
                 }
                 break;
             case DualAction::BtnB:
@@ -332,8 +332,8 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             case DualAction::Start:
               if (pressedP) {
                   g_manualControl = false;
-                  m_drive->PIDDrive(-120, 0,
-                          Drive::RelativeTo::Now, 0.5);
+                  m_drive->PIDDrive(-12 * 8, 0,
+                          Drive::RelativeTo::Now, 1.0);
               }
               break;
         }

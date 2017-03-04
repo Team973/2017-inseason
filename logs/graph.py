@@ -15,8 +15,8 @@ time_window = 40 #time in seconds
 points = []
 
 TIME_COL = 0
-DATA_COLS = [17, 19, 18, 20] #flywheel tuning
-#DATA_COLS = [5, 4, 7, 10]
+#DATA_COLS = [17, 19, 18, 20] #flywheel tuning
+DATA_COLS = [4, 5, 2, 9]
 GRAPHS = [["Left Encoder Rate", "Left motor signal (pow or vel)"], ["Left motor voltage"]]
 titles = []
 
@@ -55,7 +55,7 @@ plt.xlabel('time')
 line2, = plt.plot(x1, y2, '-',color="blue", label="setpoint")
 setpt_line = plt.legend(handles=[line2], loc = 2)
 ax = plt.gca().add_artist(setpt_line)
-plt.ylim([2500, 3500])
+#plt.ylim([2500, 3500])
 plt.subplot(2, 1, 2)
 line3, = plt.plot(x1, y3, '-', label="voltage")
 voltage_line = plt.legend(handles=[line3], loc = 1)

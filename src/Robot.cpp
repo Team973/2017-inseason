@@ -31,7 +31,7 @@ Robot::Robot(void
     m_autoRoutine(AutonomousRoutine::NoAuto),
     m_autoTimer(0),
     m_teleopTimer(0),
-    m_speedSetpt(3400),
+    m_speedSetpt(2900),
     m_flailSetpt(1.0),
     m_conveyorSetpt(0.75)
 {
@@ -59,10 +59,10 @@ Robot::Robot(void
     m_leftDriveTalonA->ConfigPeakOutputVoltage(12, -12);
     m_leftDriveTalonA->SetSensorDirection(true);
     m_leftDriveTalonA->SelectProfileSlot(0);
-    m_leftDriveTalonA->SetP(0.3);
+    m_leftDriveTalonA->SetP(0.7);
     m_leftDriveTalonA->SetI(0);
     m_leftDriveTalonA->SetD(0);
-    m_leftDriveTalonA->SetF(0.5);
+    m_leftDriveTalonA->SetF(0.2);
     m_leftDriveTalonA->EnableCurrentLimit(true);
     m_leftDriveTalonA->SetCurrentLimit(50);
     m_leftDriveTalonA->SetVoltageRampRate(75.0);
@@ -87,10 +87,10 @@ Robot::Robot(void
     m_rightDriveTalonA->ConfigPeakOutputVoltage(12, -12);
     m_rightDriveTalonA->SetSensorDirection(true);
     m_rightDriveTalonA->SelectProfileSlot(0);
-    m_rightDriveTalonA->SetP(0.3);
+    m_rightDriveTalonA->SetP(0.7);
     m_rightDriveTalonA->SetI(0);
     m_rightDriveTalonA->SetD(0);
-    m_rightDriveTalonA->SetF(0.5);
+    m_rightDriveTalonA->SetF(0.2);
     m_rightDriveTalonA->EnableCurrentLimit(true);
     m_rightDriveTalonA->SetCurrentLimit(50);
     m_rightDriveTalonA->SetVoltageRampRate(75.0);
