@@ -12,41 +12,57 @@ void Robot::DisabledStop(void) {
 }
 
 void Robot::DisabledContinuous(void) {
+  if(m_alliance == Alliance::Red){
+      m_autoDirection = -1.0;
+  }
+  else if(m_alliance == Alliance::Blue){
+      m_autoDirection = 1.0;
+  }
+
   if (m_autoRoutine == AutonomousRoutine::GearLeftPeg){
     DBStringPrintf(DBStringPos::DB_LINE0,
-            "Gear to LeftPeg Auto");
+            "%c Gear to LeftPeg Auto",
+            (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
   else if (m_autoRoutine == AutonomousRoutine::GearMiddlePeg){
     DBStringPrintf(DBStringPos::DB_LINE0,
-            "Gear to Middle Peg Auto");
+            "%c Gear to Middle Peg Auto",
+            (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
   else if (m_autoRoutine == AutonomousRoutine::GearRightPeg){
     DBStringPrintf(DBStringPos::DB_LINE0,
-      "Gear to Right Peg Auto");
+      "%c Gear to Right Peg Auto",
+      (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
   else if (m_autoRoutine == AutonomousRoutine::FuelBallToBoiler){
     DBStringPrintf(DBStringPos::DB_LINE0,
-                      "FuelBallToBoiler Auto");
+                      "%c FuelBallToBoiler Auto",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
   else if (m_autoRoutine == AutonomousRoutine::ShootFuelThenHopper){
     DBStringPrintf(DBStringPos::DB_LINE0,
-                      "ShootFuel, GoToHopper, ShootFuel Auto");
+                      "%c ShootFuel, GoToHopper, ShootFuel Auto",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
   else if (m_autoRoutine == AutonomousRoutine::HopperThenShootFuel){
     DBStringPrintf(DBStringPos::DB_LINE0,
-                      "HopperThenShoot Auto");
+                      "%c HopperThenShoot Auto",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
   else if (m_autoRoutine == AutonomousRoutine::KpaGearAuto){
     DBStringPrintf(DBStringPos::DB_LINE0,
-                      "KpaGear Auto");
+                      "%c KpaGear Auto",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
   else if (m_autoRoutine == AutonomousRoutine::AimedAtBoilerAuto){
     DBStringPrintf(DBStringPos::DB_LINE0,
-                      "AimedAtBoiler Auto");
+                      "%c AimedAtBoiler Auto",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
   else if (m_autoRoutine == AutonomousRoutine::NoAuto){
     DBStringPrintf(DBStringPos::DB_LINE0,
-                      "No Auto");
+                      "%c No Auto",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
 //    fprintf(stderr, "***disabled continuous\n");
 }
@@ -103,10 +119,12 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             break;
         case DualAction::LeftBumper:
             if (pressedP) {
+              m_alliance = Alliance::Red;
             }
             break;
         case DualAction::LeftTrigger:
             if (pressedP) {
+              m_alliance = Alliance::Blue;
             }
             break;
         case DualAction::RightTrigger:

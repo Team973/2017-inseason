@@ -14,7 +14,7 @@ void Robot::TeleopStop(void) {
 }
 
 static bool g_hangSignalSent = false;
-static bool g_manualControl = true;
+static bool g_manualDriveControl = true;
 static bool g_manualConveyorControl = true;
 static bool g_driveArcade = true;
 
@@ -23,12 +23,12 @@ void Robot::TeleopContinuous(void) {
     double x = -m_driverJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)
         + -m_tuningJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis);
 
-    if (g_manualControl) {
+    if (g_manualDriveControl) {
         m_drive->AssistedArcadeDrive(y, x);
     }
     else if(m_drive->OnTarget()){
       m_lights->NotifyFlash(3);
-      g_manualControl = true;
+      g_manualDriveControl = true;
     }
     if (Util::abs(m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)) > 0.5 ||
         Util::abs(m_operatorJoystick->GetRawAxisWithDeadband(DualAction::LeftYAxis)) > 0.5) {
@@ -96,20 +96,26 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::RightBumper:
             if (pressedP) {
+              g_manualConveyorControl = false;
               m_shooter->SetShooterState(Shooter::ShootingSequenceState::shooting);
+              m_compressor->Disable();
             }
             else{
               m_shooter->SetShooterState(Shooter::ShootingSequenceState::idle);
+              m_compressor->Enable();
             }
             break;
         case DualAction::RightTrigger:
             if (pressedP) {
+              g_manualConveyorControl = false;
               m_shooter->SetShooterState(Shooter::ShootingSequenceState::targeting);
-              g_manualControl = false;
+              m_compressor->Disable();
+              g_manualDriveControl = false;
             }
             else{
-              g_manualControl = true;
+              g_manualDriveControl = true;
               g_manualConveyorControl = false;
+              m_compressor->Enable();
               m_shooter->SetShooterState(Shooter::ShootingSequenceState::idle);
             }
             break;
@@ -235,7 +241,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             case DualAction::DPadUpVirtBtn:
                 if (pressedP) {
                     /*
-                    g_manualControl = false;
+                    g_manualDriveControl = false;
                     m_drive->SetBoilerPixyTargeting();
                     */
                     m_conveyorSetpt += 0.1;
@@ -243,10 +249,10 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::DPadDownVirtBtn:
                 if (pressedP) {
-                    
-                    g_manualControl = false;
+
+                    g_manualDriveControl = false;
                     m_drive->SetGearPixyTargeting();
-                    
+
                    // m_conveyorSetpt -= 0.1;
                 }
                 break;
@@ -298,20 +304,20 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::BtnA:
                 if (pressedP) {
-                    g_manualControl = false;
+                    g_manualDriveControl = false;
                     m_drive->PIDDrive(12 * 8, 0,
                             Drive::RelativeTo::Now, 1.0);
                 }
                 break;
             case DualAction::BtnB:
                 if (pressedP) {
-                    g_manualControl = true;
+                    g_manualDriveControl = true;
                     m_drive->ArcadeDrive(0.0, 0.0);
                 }
                 break;
             case DualAction::BtnX:
                 if (pressedP) {
-                    g_manualControl = false;
+                    g_manualDriveControl = false;
                     m_drive->PIDTurn(90,
                             Drive::RelativeTo::Now, 1.0);
                 }
@@ -320,7 +326,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 if (pressedP) {
                     m_lights->EnableLights();
                     /*
-                    g_manualControl = false;
+                    g_manualDriveControl = false;
                     m_drive->PIDDrive(120, 0,
                             Drive::RelativeTo::Now, 0.1);
                             */
@@ -331,7 +337,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::Start:
               if (pressedP) {
-                  g_manualControl = false;
+                  g_manualDriveControl = false;
                   m_drive->PIDDrive(-12 * 8, 0,
                           Drive::RelativeTo::Now, 1.0);
               }

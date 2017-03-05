@@ -45,6 +45,11 @@ private:
         NoAuto
     };
 
+    enum Alliance{
+      Red,
+      Blue
+    };
+
     LogSpreadsheet *m_logger;
 
     PowerDistributionPanel *m_pdp;
@@ -87,11 +92,13 @@ private:
      */
     double 						m_autoDirection;
     int 							m_autoState;
-    AutonomousRoutine m_autoRoutine;
     uint32_t 					m_autoTimer;
     uint32_t 					m_teleopTimer;
+    AutonomousRoutine m_autoRoutine;
     int						m_speedSetpt;
     double						m_flailSetpt;
+    Alliance          m_alliance;
+
     double						m_conveyorSetpt;
 
     /**

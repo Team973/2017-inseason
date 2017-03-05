@@ -96,7 +96,7 @@ double PID::CalcOutput(double actual, uint32_t time) {
 		m_integral += error * deltaTimeSec;
 
 		if (m_prevPos != NAN) {
-			derivative = (actual - m_prevPos) / deltaTimeSec;
+			derivative = (m_prevPos - actual) / deltaTimeSec;
 		}
 	}
 	m_timeLastUpdateSec = GetSecTime();

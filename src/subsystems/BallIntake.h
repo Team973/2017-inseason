@@ -41,8 +41,8 @@ namespace frc973 {
 
     double m_ballIntakePow;
 
-    static constexpr int BALL_INTAKE_RUNNING_POW = 1.0;
-    static constexpr int BALL_INTAKE_REVERSE_POW = -1.0;
+    static constexpr int BALL_INTAKE_RUNNING_POW = 0.75;
+    static constexpr int BALL_INTAKE_REVERSE_POW = -0.75;
   };
 }
 
