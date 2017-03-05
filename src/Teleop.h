@@ -27,7 +27,7 @@ void Robot::TeleopContinuous(void) {
         m_drive->AssistedArcadeDrive(y, x);
     }
     else if(m_drive->OnTarget()){
-      m_lights->NotifyFlash(3);
+      m_lights->NotifyFlash(1);
       g_manualDriveControl = true;
     }
     if (Util::abs(m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)) > 0.5 ||
@@ -49,6 +49,7 @@ void Robot::TeleopContinuous(void) {
 
     if (g_hangSignalSent == false && GetMsecTime() - m_teleopTimer > 90000) {
         m_lights->NotifyFlash(10);
+        g_hangSignalSent = true;
     }
 }
 
@@ -305,7 +306,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             case DualAction::BtnA:
                 if (pressedP) {
                     g_manualDriveControl = false;
-                    m_drive->PIDDrive(12 * 8, 0,
+                    m_drive->PIDDrive(12 * 2, 0,
                             Drive::RelativeTo::Now, 1.0);
                 }
                 break;
@@ -318,12 +319,15 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             case DualAction::BtnX:
                 if (pressedP) {
                     g_manualDriveControl = false;
-                    m_drive->PIDTurn(90,
+                    m_drive->PIDTurn(9,
                             Drive::RelativeTo::Now, 1.0);
                 }
                 break;
             case DualAction::BtnY:
                 if (pressedP) {
+                    g_manualDriveControl = false;
+                    m_drive->PIDTurn(90,
+                            Drive::RelativeTo::Now, 1.0);
                     m_lights->EnableLights();
                     /*
                     g_manualDriveControl = false;
@@ -338,7 +342,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             case DualAction::Start:
               if (pressedP) {
                   g_manualDriveControl = false;
-                  m_drive->PIDDrive(-12 * 8, 0,
+                  m_drive->PIDDrive(-12 * 2, 0,
                           Drive::RelativeTo::Now, 1.0);
               }
               break;

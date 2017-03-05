@@ -16,9 +16,9 @@ static constexpr double DRIVE_PID_KP = 0.025;// 0.030;
 static constexpr double DRIVE_PID_KI = 0.0;
 static constexpr double DRIVE_PID_KD = 0.0;
 
-static constexpr double TURN_PID_KP = 0.0075;
+static constexpr double TURN_PID_KP = 0.0105;
 static constexpr double TURN_PID_KI = 0.0;
-static constexpr double TURN_PID_KD = 0.00075;
+static constexpr double TURN_PID_KD = 0.00135;
 
 static constexpr double MAX_SPEED = 150;
 
@@ -88,7 +88,7 @@ void PIDDriveController::CalcDriveOutput(DriveStateProvider *state,
 
 	if ((m_distEnabled == false || (Util::abs(m_targetDist - m_prevDist) < 2.0 &&
                                     Util::abs(state->GetRate()) < 2.0)) &&
-            Util::abs(m_targetAngle - m_prevAngle) < 15.0 &&
+            Util::abs(m_targetAngle - m_prevAngle) < 2.0 &&
             Util::abs(state->GetAngularRate()) < 2.0) {
 		m_onTarget = true;
 	}

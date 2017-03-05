@@ -397,13 +397,17 @@ namespace frc973 {
         case 0:
           m_drive->PIDDrive(-52.5, 0.0, DriveBase::RelativeTo::Now, 1.0);
           m_gearIntake->SetPickUpManual();
-          m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
+          m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
           m_shooter->SetFlywheelSpeed(SHOOTER_RPM);
           m_shooter->StopAgitator();
           m_shooter->StartConveyor(0.0);
+          m_autoTimer = GetMsecTime();
           m_autoState++;
           break;
         case 1:
+          if (GetMsecTime() - m_autoTimer > 250) {
+              m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
+          }
           if(m_drive->OnTarget()){
             m_drive->PIDTurn(-31.0 * m_autoDirection, DriveBase::RelativeTo::SetPoint, 1.0);
             m_autoState++;
@@ -413,7 +417,6 @@ namespace frc973 {
           if (m_drive->OnTarget()) {
              // m_drive->SetBoilerPixyTargeting();
               m_autoTimer = GetMsecTime();
-              m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
               m_autoState++;
           }
           break;
@@ -422,7 +425,6 @@ namespace frc973 {
                     GetMsecTime() - m_autoTimer > 3000) {
                 m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
                 m_drive->ArcadeDrive(0.0, 0.0);
-                m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
                 m_shooter->StartAgitator(1.0, true);
                 m_shooter->StartAgitator(1.0, false);
                 m_shooter->StartConveyor(1.0);
@@ -465,7 +467,7 @@ namespace frc973 {
             else if (GetMsecTime() - m_autoTimer > 3000) {
                 //we did not hit it after 3 seconds so back up and try again
                 m_drive->PIDDrive(20.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
-                m_autoState = 1;
+                m_autoState = 6;
             }
             break;
         case 9:

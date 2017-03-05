@@ -26,14 +26,17 @@ namespace frc973{
 
   void BallIntake::BallIntakeStart(){
     m_ballIntakeState = BallIntakeState::running;
+    m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
   }
 
   void BallIntake::BallIntakeStartReverse(){
     m_ballIntakeState = BallIntakeState::reverse;
+    m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
   }
 
   void BallIntake::BallIntakeStop(){
     m_ballIntakeState = BallIntakeState::notRunning;
+    m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
   }
 
   void BallIntake::SetIntakePower(double power){
@@ -45,17 +48,17 @@ namespace frc973{
   void BallIntake::TaskPeriodic(RobotMode mode){
       switch (m_ballIntakeState) {
         case running:
-          m_ballIntakeMotor->Set(BALL_INTAKE_RUNNING_POW);
-          printf("running ball Intake");
-        break;
+          m_ballIntakeMotor->Set(0.55);
+          break;
         case notRunning:
           m_ballIntakeMotor->Set(0.0);
-        break;
+          break;
         case reverse:
           m_ballIntakeMotor->Set(BALL_INTAKE_REVERSE_POW);
-        break;
+          break;
         case manual:
-        break;
+          m_ballIntakeMotor->Set(m_ballIntakePow);
+          break;
       }
   }
 }

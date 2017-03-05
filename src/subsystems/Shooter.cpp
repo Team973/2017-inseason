@@ -122,13 +122,13 @@ bool Shooter::OnTarget() {
 
 void Shooter::StartConveyor(double speed) {
     m_ballConveyor->Set(speed * 12.0);
-    printf("%lf pow on %d - conveyor\n", speed, BALL_CONVEYOR_CAN_ID);
+    //printf("%lf pow on %d - conveyor\n", speed, BALL_CONVEYOR_CAN_ID);
     //DBStringPrintf(DB_LINE3, "conv pow %lf", speed);
 }
 
 void Shooter::StopConveyor() {
     m_ballConveyor->Set(0.0);
-    printf("%lf pow on %d - conveyor\n", 0.0, BALL_CONVEYOR_CAN_ID);
+    //printf("%lf pow on %d - conveyor\n", 0.0, BALL_CONVEYOR_CAN_ID);
     //DBStringPrintf(DB_LINE3, "conv pow %lf", 0.0);
 }
 
@@ -136,11 +136,11 @@ void Shooter::StopConveyor() {
 void Shooter::StartAgitator(double speed, bool side){
     if (side == false) {
         m_leftAgitator->Set(speed * 12.0);
-        printf("%lf pow on %d - left agitator\n", speed, LEFT_AGITATOR_CAN_ID);
+        //printf("%lf pow on %d - left agitator\n", speed, LEFT_AGITATOR_CAN_ID);
     }
     else if (side == true) {
         m_rightAgitator->Set(-speed * 12.0);
-        printf("%lf pow on %d - right agitator\n", speed, RIGHT_AGITATOR_CAN_ID);
+        //printf("%lf pow on %d - right agitator\n", speed, RIGHT_AGITATOR_CAN_ID);
     }
 }
 
