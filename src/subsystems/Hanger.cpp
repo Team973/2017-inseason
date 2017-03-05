@@ -8,18 +8,21 @@
 #include "subsystems/Hanger.h"
 #include "lib/WrapDash.h"
 #include "lib/TaskMgr.h"
+#include "lib/logging/LogSpreadsheet.h"
 
 #include "WPILib.h"
 #include "RobotInfo.h"
 #include "CANTalon.h"
 
 namespace frc973 {
-    Hanger::Hanger(TaskMgr *scheduler):
+    Hanger::Hanger(TaskMgr *scheduler, LogSpreadsheet *logger):
              CoopTask(),
              m_scheduler(scheduler),
              m_crankMotor(new CANTalon(HANGER_CAN_ID)),
              m_crankMotorB(new CANTalon(HANGER_CAN_ID_B)),
-             m_hangerState(HangerState::start)
+             m_hangerState(HangerState::start),
+             m_hangStateLog(new LogCell("hanger state", 32)),
+             m_hangCurrentLog(new LogCell("hanger current amps", 32))
     {
         m_scheduler->RegisterTask("Hanger", this, TASK_PERIODIC);
         m_crankMotor->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
@@ -43,6 +46,9 @@ namespace frc973 {
         m_crankMotorB->Set(m_crankMotor->GetDeviceID());
         m_crankMotorB->SetClosedLoopOutputDirection(true);
         m_crankMotor->Set(0.0);
+
+        logger->RegisterCell(m_hangStateLog);
+        logger->RegisterCell(m_hangCurrentLog);
     }
 
     Hanger::~Hanger() {
@@ -90,6 +96,9 @@ namespace frc973 {
                 }
                 break;
         }
+
+        m_hangStateLog->LogInt(m_hangerState);
+        m_hangCurrentLog->LogInt(m_crankMotor->GetOutputCurrent());
     }
 
 } /* namespace frc973 */

@@ -35,6 +35,10 @@ void LogCell::LogText(const char *text) {
 	this->LogPrintf("%s", text);
 }
 
+void LogCell::LogInt(int val) {
+	this->LogPrintf("%d", val);
+}
+
 void LogCell::LogDouble(double val) {
 	this->LogPrintf("%lf", val);
 }

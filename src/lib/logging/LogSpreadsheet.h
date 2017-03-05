@@ -57,6 +57,13 @@ public:
 	void LogText(const char *text);
 
 	/**
+	 * Log an integer
+	 *
+	 * @param integer to be logged in the cell
+	 */
+	void LogInt(int val);
+
+	/**
 	 * Log a double
 	 *
 	 * @param double to be logged in the cell

@@ -16,6 +16,8 @@ using namespace frc;
 
 namespace frc973 {
   class TaskMgr;
+  class LogSpreadsheet;
+  class LogCell;
 
   class BallIntake : public CoopTask{
   public:
@@ -25,7 +27,7 @@ namespace frc973 {
       manual,
       reverse
     };
-    BallIntake(TaskMgr *scheduler);
+    BallIntake(TaskMgr *scheduler, LogSpreadsheet *logger);
     virtual ~BallIntake();
     void BallIntakeStart();
     void BallIntakeStop();

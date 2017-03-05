@@ -3,9 +3,10 @@
 #include "Robot.h"
 #include "RobotInfo.h"
 #include "lib/TaskMgr.h"
+#include "lib/logging/LogSpreadsheet.h"
 
 namespace frc973{
-  BallIntake::BallIntake(TaskMgr *scheduler)
+  BallIntake::BallIntake(TaskMgr *scheduler, LogSpreadsheet *logger)
   :
   m_scheduler(scheduler),
   m_ballIntakeMotor(new CANTalon(BALL_INTAKE_CAN_ID, 50)),

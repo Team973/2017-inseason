@@ -12,6 +12,8 @@ using namespace frc;
 
 namespace frc973{
   class TaskMgr;
+  class LogSpreadsheet;
+  class LogCell;
 
   class GearIntake : public CoopTask{
     public:
@@ -43,7 +45,7 @@ namespace frc973{
         manual
       };
 
-      GearIntake(TaskMgr *scheduler, Lights *lights);
+      GearIntake(TaskMgr *scheduler, Lights *lights, LogSpreadsheet *logger);
       virtual ~GearIntake();
 
       void SetSeeking(bool request);
@@ -85,5 +87,9 @@ namespace frc973{
       bool m_manualReleaseRequest;
       bool m_seekingRequest;
       bool m_autoReleaseRequest;
+
+      LogCell *m_gearStateLog;
+      LogCell *m_gearCurrentLog;
+      LogCell *m_gearInputsLog;
   };
 }

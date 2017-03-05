@@ -1,6 +1,7 @@
 #include "GearIntake.h"
 #include "RobotInfo.h"
 #include "Lights.h"
+#include "lib/logging/LogSpreadsheet.h"
 
 namespace frc973{
   static constexpr double RIGHT_INDEXER_POWER = -0.08;
@@ -9,7 +10,10 @@ namespace frc973{
   static constexpr double INTAKING_POWER = -0.70;
   static constexpr double HOLDING_POWER = -0.0;
 
-  GearIntake::GearIntake(TaskMgr *scheduler, Lights *lights) :
+  GearIntake::GearIntake(
+          TaskMgr *scheduler,
+          Lights *lights,
+          LogSpreadsheet *logger) :
     m_scheduler(scheduler),
     m_gearIntakeState(GearIntake::GearIntakeState::grabbed),
     m_gearPosition(GearPosition::up),
@@ -27,7 +31,10 @@ namespace frc973{
     m_lights(lights),
     m_manualReleaseRequest(false),
     m_seekingRequest(false),
-    m_autoReleaseRequest(false)
+    m_autoReleaseRequest(false),
+    m_gearStateLog(new LogCell("Gear state", 32)),
+    m_gearCurrentLog(new LogCell("Gear indexer current draw", 32)),
+    m_gearInputsLog(new LogCell("Gear inputs: manualRelease, intaing, autoRelease", 32))
   {
     m_rightIndexer->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
     m_leftIndexer->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
@@ -41,6 +48,10 @@ namespace frc973{
     m_leftIndexer->SetCurrentLimit(100);
     this->SetGearIntakeState(GearIntakeState::grabbed);
     this->m_scheduler->RegisterTask("GearIntake", this, TASK_PERIODIC);
+
+    logger->RegisterCell(m_gearStateLog);
+    logger->RegisterCell(m_gearCurrentLog);
+    logger->RegisterCell(m_gearInputsLog);
   }
 
   GearIntake::~GearIntake(){
@@ -195,5 +206,10 @@ namespace frc973{
         }
         break;
     }
+
+    m_gearStateLog->LogInt(m_pickUpState);
+    m_gearCurrentLog->LogDouble(m_leftIndexer->GetOutputCurrent());
+    m_gearInputsLog->LogPrintf("%d %d %d",
+            m_manualReleaseRequest, m_autoReleaseRequest, m_seekingRequest);
   }
 }

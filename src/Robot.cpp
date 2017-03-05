@@ -137,9 +137,9 @@ Robot::Robot(void
     m_logger->RegisterCell(m_yAccel);
     m_logger->RegisterCell(m_zAccel);
 
-    m_hanger = new Hanger(this);
-    m_ballIntake = new BallIntake(this);
-    m_gearIntake = new GearIntake(this, m_lights);
+    m_hanger = new Hanger(this, m_logger);
+    m_ballIntake = new BallIntake(this, m_logger);
+    m_gearIntake = new GearIntake(this, m_lights, m_logger);
     m_shooter = new Shooter(this, m_logger, m_leftAgitatorTalon, m_drive, m_boilerPixy);
 
     m_airPressureSwitch = new DigitalInput(AIR_PRESSURE_DIN);
