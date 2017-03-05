@@ -46,6 +46,7 @@ namespace frc973{
       switch (m_ballIntakeState) {
         case running:
           m_ballIntakeMotor->Set(BALL_INTAKE_RUNNING_POW);
+          printf("running ball Intake");
         break;
         case notRunning:
           m_ballIntakeMotor->Set(0.0);

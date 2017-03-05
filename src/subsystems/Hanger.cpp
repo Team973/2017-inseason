@@ -58,10 +58,14 @@ namespace frc973 {
             case armed:
                 m_hangerState = HangerState::armed;
                 m_crankMotor->ConfigPeakOutputVoltage(3, -3);
+                m_crankMotor->EnableCurrentLimit(true);
+                m_crankMotor->SetCurrentLimit(10.0);
                 m_crankMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
                 break;
             case autoHang:
                 m_hangerState = HangerState::autoHang;
+                m_crankMotor->EnableCurrentLimit(true);
+                m_crankMotor->SetCurrentLimit(30.0);
                 m_crankMotor->ConfigPeakOutputVoltage(12, -12);
                 m_crankMotor->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
                 break;

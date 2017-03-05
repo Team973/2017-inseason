@@ -178,13 +178,13 @@ void Shooter::TaskPeriodic(RobotMode mode) {
         break;
       case targeting:
         m_drive->SetBoilerPixyTargeting();
-        //SetFlywheelSpeed(m_boilerPixy->GetShooterRPM());
+        SetFlywheelSpeed(2900);
         if (OnTarget() && m_drive->OnTarget()) {
           m_shootingSequenceState = ShootingSequenceState::shooting;
         }
         break;
       case shooting:
-        //SetFlywheelSpeed(m_boilerPixy->GetShooterRPM());
+        SetFlywheelSpeed(2900);
         if (OnTarget()) {
           m_drive->ArcadeDrive(0.0,0.0);
           StartAgitator(1.0, true);

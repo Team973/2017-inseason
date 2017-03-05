@@ -28,11 +28,12 @@ Robot::Robot(void
     m_pdp(new PowerDistributionPanel()),
     m_autoDirection(0.0),
     m_autoState(0),
-    m_autoRoutine(AutonomousRoutine::NoAuto),
     m_autoTimer(0),
     m_teleopTimer(0),
+    m_autoRoutine(AutonomousRoutine::NoAuto),
     m_speedSetpt(2900),
     m_flailSetpt(1.0),
+    m_alliance(Alliance::Blue),
     m_conveyorSetpt(0.75)
 {
     CameraServer::GetInstance()->StartAutomaticCapture();
@@ -144,12 +145,6 @@ Robot::Robot(void
     m_compressor = new GreyCompressor(m_airPressureSwitch, m_compressorRelay, this);
 
     fprintf(stderr, "initializing aliance\n");
-    if(DriverStation::GetInstance().GetAlliance() == DriverStation::Alliance::kRed){
-        m_autoDirection = -1.0;
-    }
-    else{
-        m_autoDirection = 1.0;
-    }
     fprintf(stderr, "done w/ constructor\n");
 
 }
