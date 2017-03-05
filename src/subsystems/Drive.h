@@ -152,12 +152,15 @@ private:
     void TaskPeriodic(RobotMode mode) override;
 
     PigeonImu *m_gyro;
+    double m_gyroZero = 0.0;
 
     double m_leftCommand;
     double m_rightCommand;
 
     CANTalon *m_leftMotor;
     CANTalon *m_rightMotor;
+    double m_leftPosZero = 0.0;
+    double m_rightPosZero = 0.0;
 
     CANSpeedController::ControlMode m_controlMode;
 

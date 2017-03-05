@@ -78,8 +78,15 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
 }
 
 void Drive::Zero() {
-    if (m_gyro)
-        m_gyro->SetYaw(0.0);
+    if (m_gyro) {
+        m_gyroZero = GetAngle();
+    }
+    if (m_leftMotor) {
+        m_leftPosZero = GetLeftDist();
+    }
+    if (m_rightMotor) {
+        m_rightPosZero = GetRightdist();
+    }
 }
 
 void Drive::ArcadeDrive(double throttle, double turn) {
@@ -126,11 +133,13 @@ void Drive::PIDTurn(double turn, RelativeTo relativity, double powerCap) {
  * reported in inches
  */
 double Drive::GetLeftDist() {
-    return m_leftMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION;
+    return m_leftMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION -
+        m_leftPosZero;
 }
 
 double Drive::GetRightDist() {
-    return -m_rightMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION;
+    return -m_rightMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION -
+        m_rightPosZero;
 }
 
 /**
@@ -159,7 +168,7 @@ double Drive::GetDriveCurrent() {
 }
 
 double Drive::GetAngle() {
-    return m_gyro->GetFusedHeading();
+    return m_gyro->GetFusedHeading() - m_gyroZero;
 }
 
 double Drive::GetAngularRate() {

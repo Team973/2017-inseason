@@ -9,6 +9,7 @@ namespace frc973 {
 
     void Robot::AutonomousStart(void) {
         printf("***auto start\n");
+        m_drive->Zero();
 
         m_shooter->SetFlywheelStop();
         m_ballIntake->BallIntakeStop();
