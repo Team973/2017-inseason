@@ -85,7 +85,7 @@ void Drive::Zero() {
         m_leftPosZero = GetLeftDist();
     }
     if (m_rightMotor) {
-        m_rightPosZero = GetRightdist();
+        m_rightPosZero = GetRightDist();
     }
 }
 

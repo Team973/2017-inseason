@@ -54,6 +54,11 @@ void Robot::DisabledContinuous(void) {
                       "%c KpaGear Auto",
                       (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
+  else if (m_autoRoutine == AutonomousRoutine::CitrusKpaGearAuto){
+    DBStringPrintf(DBStringPos::DB_LINE0,
+                      "%c CitrusKpaGear Auto",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
+  }
   else if (m_autoRoutine == AutonomousRoutine::AimedAtBoilerAuto){
     DBStringPrintf(DBStringPos::DB_LINE0,
                       "%c AimedAtBoiler Auto",
@@ -129,6 +134,7 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             break;
         case DualAction::RightTrigger:
             if (pressedP) {
+              m_autoRoutine = AutonomousRoutine::CitrusKpaGearAuto;
             }
             break;
         case DualAction::Start:

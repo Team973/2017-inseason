@@ -41,6 +41,7 @@ private:
         ShootFuelThenHopper,
         HopperThenShootFuel,
         KpaGearAuto,
+        CitrusKpaGearAuto,
         AimedAtBoilerAuto,
         NoAuto
     };
@@ -145,6 +146,7 @@ public:
     void HopperThenShoot(void);
     void ShootThenHopper(void);
     void KpaAndGearAuto(void);
+    void CitrusKpaAndGearAuto(void);
     void AimedBoilerAuto(void);
 
     /**

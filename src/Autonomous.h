@@ -50,6 +50,9 @@ namespace frc973 {
             case AutonomousRoutine::AimedAtBoilerAuto:
                 AimedBoilerAuto();
                 break;
+            case AutonomousRoutine::CitrusKpaGearAuto:
+                CitrusKpaAndGearAuto();
+                break;
             case AutonomousRoutine::NoAuto:
                 //Don't do any auto
                 break;
@@ -396,7 +399,7 @@ namespace frc973 {
     void Robot::KpaAndGearAuto(){
       switch(m_autoState){
         case 0:
-          m_drive->PIDDrive(-52.5, 0.0, DriveBase::RelativeTo::Now, 1.0);
+          m_drive->PIDDrive(-12.0, 0.0, DriveBase::RelativeTo::Now, 1.0);
           m_gearIntake->SetPickUpManual();
           m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
           m_shooter->SetFlywheelSpeed(SHOOTER_RPM);
@@ -410,7 +413,7 @@ namespace frc973 {
               m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
           }
           if(m_drive->OnTarget()){
-            m_drive->PIDTurn(-31.0 * m_autoDirection, DriveBase::RelativeTo::SetPoint, 1.0);
+            m_drive->PIDTurn(-69.7 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
             m_autoState++;
           }
           break;
@@ -434,20 +437,21 @@ namespace frc973 {
               }
         case 4:
             if(GetMsecTime() - m_autoTimer >= 3000){
-              m_drive->PIDTurn(-29.0 * m_autoDirection, DriveBase::RelativeTo::SetPoint, 1.0);
+              m_drive->PIDTurn(0.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
               m_autoState++;
             }
             break;
         case 5:
           if(m_drive->OnTarget()){
-            m_drive->PIDDrive(-50.0, 0.0, DriveBase::RelativeTo::SetPoint, 1.0);
+            m_drive->PIDDrive(-66.4, 0.0, DriveBase::RelativeTo::SetPoint, 1.0);
             m_autoState++;
           }
           break;
         case 6:
             if (m_drive->OnTarget()) {
-               // m_drive->SetGearPixyTargeting();
-                m_autoState++;
+              m_drive->PIDTurn(-60.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
+           // m_drive->SetGearPixyTargeting();
+              m_autoState++;
             }
             break;
         case 7:
@@ -474,7 +478,98 @@ namespace frc973 {
         case 9:
             //should be done scoring gear... make hair merry red left
             if (m_drive->OnTarget()) {
-                m_drive->PIDTurn(90.0 * m_autoDirection, DriveBase::RelativeTo::SetPoint, 0.8);
+                m_drive->PIDTurn(-90.0 * m_autoDirection, DriveBase::RelativeTo::SetPoint, 0.8);
+                m_autoState++;
+            }
+            break;
+        default:
+            break;
+      }
+    }
+
+    void Robot::CitrusKpaAndGearAuto(){
+      switch(m_autoState){
+        case 0:
+          m_drive->PIDDrive(-55.5, 0.0, DriveBase::RelativeTo::Now, 1.0);
+          m_gearIntake->SetPickUpManual();
+          m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
+          m_shooter->SetFlywheelSpeed(SHOOTER_RPM);
+          m_shooter->StopAgitator();
+          m_shooter->StartConveyor(0.0);
+          m_autoTimer = GetMsecTime();
+          m_autoState++;
+          break;
+        case 1:
+          if (GetMsecTime() - m_autoTimer > 250) {
+              m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
+          }
+          if(m_drive->OnTarget()){
+            m_drive->PIDTurn(-31.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
+            m_autoState++;
+          }
+          break;
+        case 2:
+          if (m_drive->OnTarget()) {
+             // m_drive->SetBoilerPixyTargeting();
+              m_autoTimer = GetMsecTime();
+              m_autoState++;
+          }
+          break;
+        case 3:
+            if ((m_drive->OnTarget() && m_shooter->OnTarget()) ||
+                    GetMsecTime() - m_autoTimer > 3000) {
+                m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
+                m_drive->ArcadeDrive(0.0, 0.0);
+                m_shooter->StartAgitator(1.0, true);
+                m_shooter->StartAgitator(1.0, false);
+                m_shooter->StartConveyor(1.0);
+                m_autoTimer = GetMsecTime();
+                m_autoState++;
+              }
+        case 4:
+            if(GetMsecTime() - m_autoTimer >= 3000){
+              m_drive->PIDTurn(-60.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
+              m_autoState++;
+            }
+            break;
+        case 5:
+          if(m_drive->OnTarget()){
+            m_drive->PIDDrive(-50.0, 0.0, DriveBase::RelativeTo::SetPoint, 1.0);
+            m_autoState++;
+          }
+          break;
+        case 6:
+            if (m_drive->OnTarget()) {
+              m_drive->PIDTurn(-60.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
+           // m_drive->SetGearPixyTargeting();
+              m_autoState++;
+            }
+            break;
+        case 7:
+            if (m_drive->OnTarget()) {
+                m_autoTimer = GetMsecTime();
+                m_drive->ArcadeDrive(-0.3, 0.0);
+                m_autoState++;
+            }
+            break;
+        case 8:
+            if (m_gearIntake->IsGearReady()) {
+                //hit the gear, continue normally
+                m_drive->PIDDrive(30.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
+                m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
+                m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
+                m_autoState++;
+            }
+            else if (GetMsecTime() - m_autoTimer > 3000) {
+                //we did not hit it after 3 seconds so back up and try again
+                m_drive->PIDDrive(20.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
+                m_autoState = 6;
+            }
+            break;
+        case 9:
+            //should be done scoring gear... make hair merry red left
+            if (m_drive->OnTarget()) {
+                m_drive->PIDTurn(-90.0 * m_autoDirection, DriveBase::RelativeTo::SetPoint, 0.8);
                 m_autoState++;
             }
             break;
