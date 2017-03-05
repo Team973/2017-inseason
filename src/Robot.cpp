@@ -61,11 +61,11 @@ Robot::Robot(void
     m_leftDriveTalonA->SelectProfileSlot(0);
     m_leftDriveTalonA->SetP(0.7);
     m_leftDriveTalonA->SetI(0);
-    m_leftDriveTalonA->SetD(0);
+    m_leftDriveTalonA->SetD(0.7);
     m_leftDriveTalonA->SetF(0.2);
     m_leftDriveTalonA->EnableCurrentLimit(true);
-    m_leftDriveTalonA->SetCurrentLimit(50);
-    m_leftDriveTalonA->SetVoltageRampRate(75.0);
+    m_leftDriveTalonA->SetCurrentLimit(60);
+    m_leftDriveTalonA->SetVoltageRampRate(95.0);
 
     m_leftDriveTalonB->SetControlMode(
             CANSpeedController::ControlMode::kFollower);
@@ -73,9 +73,10 @@ Robot::Robot(void
             CANSpeedController::NeutralMode::kNeutralMode_Coast);
     m_leftDriveTalonB->Set(m_leftDriveTalonA->GetDeviceID());
     m_leftDriveTalonB->SetClosedLoopOutputDirection(false);
+    m_leftDriveTalonB->ConfigPeakOutputVoltage(12, -12);
     m_leftDriveTalonB->EnableCurrentLimit(true);
-    m_leftDriveTalonB->SetCurrentLimit(50);
-    m_leftDriveTalonB->SetVoltageRampRate(75.0);
+    m_leftDriveTalonB->SetCurrentLimit(60);
+    m_leftDriveTalonB->SetVoltageRampRate(95.0);
 
     m_rightDriveTalonA->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
     m_rightDriveTalonA->ConfigNeutralMode(
@@ -89,20 +90,21 @@ Robot::Robot(void
     m_rightDriveTalonA->SelectProfileSlot(0);
     m_rightDriveTalonA->SetP(0.7);
     m_rightDriveTalonA->SetI(0);
-    m_rightDriveTalonA->SetD(0);
+    m_rightDriveTalonA->SetD(0.7);
     m_rightDriveTalonA->SetF(0.2);
     m_rightDriveTalonA->EnableCurrentLimit(true);
-    m_rightDriveTalonA->SetCurrentLimit(50);
-    m_rightDriveTalonA->SetVoltageRampRate(75.0);
+    m_rightDriveTalonA->SetCurrentLimit(60);
+    m_rightDriveTalonA->SetVoltageRampRate(95.0);
 
     m_rightDriveTalonB->SetControlMode(CANSpeedController::ControlMode::kFollower);
     m_rightDriveTalonB->ConfigNeutralMode(
             CANSpeedController::NeutralMode::kNeutralMode_Coast);
     m_rightDriveTalonB->Set(m_rightDriveTalonA->GetDeviceID());
+    m_rightDriveTalonB->ConfigPeakOutputVoltage(12, -12);
     m_rightDriveTalonB->SetClosedLoopOutputDirection(false);
     m_rightDriveTalonB->EnableCurrentLimit(true);
-    m_rightDriveTalonB->SetCurrentLimit(50);
-    m_rightDriveTalonB->SetVoltageRampRate(75.0);
+    m_rightDriveTalonB->SetCurrentLimit(60);
+    m_rightDriveTalonB->SetVoltageRampRate(95.0);
 
     m_leftAgitatorTalon = new CANTalon(LEFT_AGITATOR_CAN_ID, 50);
     fprintf(stderr, "Initialized drive controllers\n");
