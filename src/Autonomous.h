@@ -269,11 +269,12 @@ namespace frc973 {
         switch (m_autoState){
             case 0:
                 printf("gonna piddrive\n");
-                m_shooter->SetFlywheelSpeed(SHOOTER_RPM);
-                m_drive->PIDDrive(-(DRIVER_STATION_BASE_LINE_DIST - 21.0), 0.0,
+                m_compressor->Disable();
+                m_shooter->SetFlywheelSpeed(3000);
+                m_drive->PIDDrive(-(DRIVER_STATION_BASE_LINE_DIST - 18.0), 0.0,
                         DriveBase::RelativeTo::Now, 0.9);
                 m_gearIntake->SetPickUpManual();
-                m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
+                m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
                 m_shooter->StopAgitator();
                 m_shooter->StartConveyor(0.0);
                 printf("piddrived\n");
@@ -283,7 +284,6 @@ namespace frc973 {
                 printf("waiting for pid on target\n");
                 if (m_drive->OnTarget()) {
                     printf("pid on target moving on\n");
-                    m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
                     m_drive->PIDTurn(-90.0 * m_autoDirection,
                             DriveBase::RelativeTo::SetPoint, 1.0);
                     m_autoState++;
@@ -310,15 +310,15 @@ namespace frc973 {
                 break;
             case 4:
                 if (GetMsecTime() - m_autoTimer > 3000) {
-                    m_drive->PIDDrive(-26.0, 0.0,
+                    m_drive->PIDDrive(-18.0, 0.0,
                             DriveBase::RelativeTo::Now, 1.0);
                     m_autoState++;
                 }
                 break;
             case 5:
                 if (m_drive->OnTarget()) {
-                    m_drive->PIDTurn(70.0 * m_autoDirection,
-                            DriveBase::RelativeTo::SetPoint, 1.0);
+                    m_drive->PIDTurn(-24.0 * m_autoDirection,
+                            DriveBase::RelativeTo::Absolute, 1.0);
                     m_autoTimer = GetMsecTime();
                     m_autoState++;
                 }
@@ -396,13 +396,14 @@ namespace frc973 {
         }
     }
 
-    void Robot::KpaAndGearAuto(){
+    void Robot::CitrusKpaAndGearAuto(){
       switch(m_autoState){
         case 0:
-          m_drive->PIDDrive(-12.0, 0.0, DriveBase::RelativeTo::Now, 1.0);
+          m_drive->PIDDrive(-15.0, 0.0, DriveBase::RelativeTo::Now, 1.0);
           m_gearIntake->SetPickUpManual();
+          m_compressor->Disable();
           m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
-          m_shooter->SetFlywheelSpeed(SHOOTER_RPM);
+          m_shooter->SetFlywheelSpeed(2950);
           m_shooter->StopAgitator();
           m_shooter->StartConveyor(0.0);
           m_autoTimer = GetMsecTime();
@@ -413,7 +414,7 @@ namespace frc973 {
               m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
           }
           if(m_drive->OnTarget()){
-            m_drive->PIDTurn(-69.7 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
+            m_drive->PIDTurn(-65.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
             m_autoState++;
           }
           break;
@@ -426,24 +427,28 @@ namespace frc973 {
           break;
         case 3:
             if ((m_drive->OnTarget() && m_shooter->OnTarget()) ||
-                    GetMsecTime() - m_autoTimer > 3000) {
+                    GetMsecTime() - m_autoTimer > 1500) {
                 m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
                 m_drive->ArcadeDrive(0.0, 0.0);
                 m_shooter->StartAgitator(1.0, true);
                 m_shooter->StartAgitator(1.0, false);
-                m_shooter->StartConveyor(1.0);
+                m_shooter->StartConveyor(0.7);
                 m_autoTimer = GetMsecTime();
                 m_autoState++;
               }
         case 4:
-            if(GetMsecTime() - m_autoTimer >= 3000){
+            if(GetMsecTime() - m_autoTimer >= 1500){
               m_drive->PIDTurn(0.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
+              m_shooter->StopAgitator();
+              m_shooter->StartConveyor(0.0);
+              m_shooter->SetFlywheelStop();
               m_autoState++;
             }
             break;
         case 5:
           if(m_drive->OnTarget()){
-            m_drive->PIDDrive(-66.4, 0.0, DriveBase::RelativeTo::SetPoint, 1.0);
+            m_drive->PIDDrive(-76.0, 0.0, DriveBase::RelativeTo::SetPoint, 1.0);
+            m_compressor->Enable();
             m_autoState++;
           }
           break;
@@ -487,7 +492,7 @@ namespace frc973 {
       }
     }
 
-    void Robot::CitrusKpaAndGearAuto(){
+    void Robot::KpaAndGearAuto(){
       switch(m_autoState){
         case 0:
           m_drive->PIDDrive(-55.5, 0.0, DriveBase::RelativeTo::Now, 1.0);
@@ -504,12 +509,13 @@ namespace frc973 {
               m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
           }
           if(m_drive->OnTarget()){
-            m_drive->PIDTurn(-31.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
+            m_drive->PIDTurn(-31.5 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
+            m_autoTimer = GetMsecTime();
             m_autoState++;
           }
           break;
         case 2:
-          if (m_drive->OnTarget()) {
+          if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2000) {
              // m_drive->SetBoilerPixyTargeting();
               m_autoTimer = GetMsecTime();
               m_autoState++;
@@ -527,14 +533,16 @@ namespace frc973 {
                 m_autoState++;
               }
         case 4:
-            if(GetMsecTime() - m_autoTimer >= 3000){
+            if(GetMsecTime() - m_autoTimer >= 2500){
               m_drive->PIDTurn(-60.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
+              m_shooter->StopAgitator();
+              m_shooter->StartConveyor(0.0);
               m_autoState++;
             }
             break;
         case 5:
           if(m_drive->OnTarget()){
-            m_drive->PIDDrive(-50.0, 0.0, DriveBase::RelativeTo::SetPoint, 1.0);
+            m_drive->PIDDrive(-50.0, 0.0, DriveBase::RelativeTo::Now, 1.0);
             m_autoState++;
           }
           break;

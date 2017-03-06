@@ -79,13 +79,13 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
 
 void Drive::Zero() {
     if (m_gyro) {
-        m_gyroZero = GetAngle();
+        m_gyroZero = m_gyro->GetFusedHeading();
     }
     if (m_leftMotor) {
-        m_leftPosZero = GetLeftDist();
+        m_leftPosZero = m_leftMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION;
     }
     if (m_rightMotor) {
-        m_rightPosZero = GetRightDist();
+        m_rightPosZero = -m_rightMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION;
     }
 }
 

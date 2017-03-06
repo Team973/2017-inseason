@@ -16,7 +16,7 @@ void Robot::TeleopStop(void) {
 static bool g_hangSignalSent = false;
 static bool g_manualDriveControl = true;
 static bool g_manualConveyorControl = true;
-static bool g_driveArcade = true;
+static bool g_driveArcade = false;
 
 void Robot::TeleopContinuous(void) {
     double y = -m_driverJoystick->GetRawAxisWithDeadband(DualAction::LeftYAxis);
@@ -24,8 +24,21 @@ void Robot::TeleopContinuous(void) {
         + -m_tuningJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis);
 
     if (g_manualDriveControl) {
+      if(m_driverJoystick->GetRawButton(DualAction::RightBumper)){
+        x /= 3.0;
+        y /= 3.0;
+      }
+
+      if (g_driveArcade) {
+        m_drive->ArcadeDrive(x, y);
+      }
+      else{
         m_drive->AssistedArcadeDrive(y, x);
+      }
     }
+
+
+
     else if(m_drive->OnTarget()){
       m_lights->NotifyFlash(1);
       g_manualDriveControl = true;
@@ -82,6 +95,8 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             if (pressedP) {
               //sw lowgear
               m_gearIntake->SetReleaseManualEnable(true);
+              m_compressor->Enable();
+              m_shooter->SetFlywheelStop();
             }
             else {
               m_gearIntake->SetReleaseManualEnable(false);
@@ -90,6 +105,8 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         case DualAction::LeftTrigger:
             if (pressedP) {
                 m_gearIntake->SetReleaseAutoEnable(true);
+                m_compressor->Enable();
+                m_shooter->SetFlywheelStop();
             }
             else{
                 m_gearIntake->SetReleaseAutoEnable(false);
@@ -98,18 +115,18 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         case DualAction::RightBumper:
             if (pressedP) {
               g_manualConveyorControl = false;
-              m_shooter->SetShooterState(Shooter::ShootingSequenceState::shooting);
+              //m_shooter->SetShooterState(Shooter::ShootingSequenceState::shooting);
               m_compressor->Disable();
             }
             else{
-              m_shooter->SetShooterState(Shooter::ShootingSequenceState::idle);
+              //m_shooter->SetShooterState(Shooter::ShootingSequenceState::idle);
               m_compressor->Enable();
             }
             break;
         case DualAction::RightTrigger:
             if (pressedP) {
               g_manualConveyorControl = false;
-              m_shooter->SetShooterState(Shooter::ShootingSequenceState::targeting);
+              m_shooter->SetShooterState(Shooter::ShootingSequenceState::shooting);
               m_compressor->Disable();
               g_manualDriveControl = false;
             }
@@ -153,6 +170,8 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         case DualAction::BtnY:
             if (pressedP) {
               m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
+              m_compressor->Enable();
+              m_shooter->SetFlywheelStop();
               m_gearIntake->SetPickUpManual();
             }
             break;
@@ -168,6 +187,8 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         case DualAction::BtnX:
             if (pressedP) {
               m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
+              m_compressor->Enable();
+              m_shooter->SetFlywheelStop();
               m_gearIntake->SetPickUpManual();
             }
             break;
@@ -204,6 +225,8 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         case DualAction::DPadUpVirtBtn:
             if (pressedP) {
               m_gearIntake->SetSeeking(true);
+              m_compressor->Enable();
+              m_shooter->SetFlywheelStop();
             }
             else{
               m_gearIntake->SetSeeking(false);
@@ -226,6 +249,8 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         case DualAction::Back:
             if (pressedP) {
               m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
+              m_compressor->Enable();
+              m_shooter->SetFlywheelStop();
               m_gearIntake->SetPickUpManual();
             }
             break;
@@ -233,6 +258,8 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             if (pressedP) {
               m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
               m_gearIntake->SetPickUpManual();
+              m_compressor->Enable();
+              m_shooter->SetFlywheelStop();
             }
             break;
         }
