@@ -30,7 +30,7 @@ public:
 	 * This controller is open-loop so OnTarget doesn't make sense here...
 	 * just return false I guess...
 	 */
-	bool OnTarget() override { return false; }
+	bool OnTarget() override { return true; }
 
 	/*
 	 * Set the joystick values (which in this case will be output)

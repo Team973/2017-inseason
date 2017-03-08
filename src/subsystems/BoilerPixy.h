@@ -6,6 +6,7 @@
 #include "lib/WrapDash.h"
 #include "lib/filters/MovingAverageFilter.h"
 #include "lib/InterpLookupTable.h"
+#include "lib/logging/LogSpreadsheet.h"
 
 using namespace frc;
 
@@ -15,7 +16,7 @@ namespace frc973{
 
   class BoilerPixy : public CoopTask{
     public:
-      BoilerPixy(TaskMgr *scheduler, Lights *lights);
+      BoilerPixy(TaskMgr *scheduler, Lights *lights, LogSpreadsheet *logger);
       virtual ~BoilerPixy();
 
       /**
@@ -45,5 +46,9 @@ namespace frc973{
       Lights *m_lights;
       InterpLookupTable *m_interpTable;
       InterpLookupTable *m_rpmInterpTable;
+      LogCell *m_pixyXOffsetLog;
+      LogCell *m_pixyYOffsetLog;
+      LogCell *m_lightLog;
+      bool m_lightEnabled;
   };
 }

@@ -5,7 +5,7 @@
 #include "lib/InterpLookupTable.h"
 
 namespace frc973{
-    BoilerPixy::BoilerPixy(TaskMgr *scheduler, Lights *lights) :
+    BoilerPixy::BoilerPixy(TaskMgr *scheduler, Lights *lights, LogSpreadsheet *logger) :
       m_scheduler(scheduler),
       m_pixyXOffset(new AnalogInput(BOILER_PIXY_CAM_X_ANALOG)),
       m_pixyYOffset(new AnalogInput(BOILER_PIXY_CAM_Y_ANALOG)),
@@ -15,7 +15,8 @@ namespace frc973{
       m_pixyYFilter(new MovingAverageFilter(0.9)),
       m_lights(lights),
       m_interpTable(new InterpLookupTable()),
-      m_rpmInterpTable(new InterpLookupTable())
+      m_rpmInterpTable(new InterpLookupTable()),
+      m_lightEnabled(false)
     {
         m_scheduler->RegisterTask("Boiler pixy", this, TASK_PERIODIC);
         m_lights->DisableLights();
@@ -57,6 +58,14 @@ namespace frc973{
         */
         m_rpmInterpTable->AddPoint(91,2900);
         //m_rpmInterpTable->AddPoint(,);
+
+        m_pixyXOffsetLog = new LogCell("X Offset", 32);
+        m_pixyYOffsetLog = new LogCell("Y Offset", 32);
+        m_lightLog = new LogCell("Light", 32);
+
+        logger->RegisterCell(m_pixyXOffsetLog);
+        logger->RegisterCell(m_pixyYOffsetLog);
+        logger->RegisterCell(m_lightLog);
     }
 
     BoilerPixy::~BoilerPixy(){
@@ -66,10 +75,12 @@ namespace frc973{
     void BoilerPixy::Enable() {
         printf("Enabling the boiler pixy light \n");
         m_lights->EnableLights();
+        m_lightEnabled = true;
         printf("did the boiler pixy\n");
     }
 
     void BoilerPixy::Disable() {
+      m_lightEnabled = false;
         m_lights->DisableLights();
     }
 
@@ -103,5 +114,8 @@ namespace frc973{
               GetSeesTargetX(), m_pixyXOffset->GetVoltage(),
               GetSeesTargetY(), m_pixyYOffset->GetVoltage());
         DBStringPrintf(DB_LINE3, "horizontal %2.4lf", GetXDistance());
+        m_pixyXOffsetLog->LogDouble(GetXOffset());
+        m_pixyYOffsetLog->LogDouble(GetHeight());
+        m_lightLog->LogInt(m_lightEnabled);
     }
 }
