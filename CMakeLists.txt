@@ -9,7 +9,10 @@ set(TEAM_NUMBER 973)
 # find src -iname "*.cpp"
 # in project root
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall")
-set(SOURCE_FILES src/Robot.cpp src/lib/CoopMTRobot.cpp
+set(SOURCE_FILES
+    src/Robot.cpp src/Autonomous.cpp src/Disabled.cpp
+    src/Teleop.cpp src/Test.cpp
+    src/lib/CoopMTRobot.cpp
     src/lib/util/Util.cpp src/lib/util/Matrix.cpp src/lib/jsoncpp.cpp
     src/lib/TaskMgr.cpp src/lib/ControllerBase.cpp src/lib/CoopTask.cpp
     src/lib/DriveBase.cpp src/lib/GreyCompressor.cpp src/lib/JoystickHelper.cpp

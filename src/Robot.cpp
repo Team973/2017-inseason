@@ -189,6 +189,7 @@ void Robot::AllStateContinuous(void) {
             "g %d %lf %d",
             m_pixyR->GetDataFresh(), m_pixyR->GetOffset(), m_gearIntake->IsGearReady());
 }
+
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
             bool pressedP) {
     fprintf(stderr, "joystick state change port %d button %d state %d\n",
@@ -199,12 +200,8 @@ void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
     else if (this->IsDisabled()){
         HandleDisabledButton(port, button, pressedP);
     }
-  }
 }
 
-#include "Disabled.h"
-#include "Autonomous.h"
-#include "Teleop.h"
-#include "Test.h"
+}
 
 START_ROBOT_CLASS(frc973::Robot);

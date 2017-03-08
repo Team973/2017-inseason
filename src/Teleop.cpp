@@ -1,3 +1,11 @@
+#include "Robot.h"
+#include "subsystems/Shooter.h"
+#include "subsystems/Drive.h"
+#include "subsystems/GearIntake.h"
+#include "subsystems/Hanger.h"
+#include "lib/GreyCompressor.h"
+#include "subsystems/BallIntake.h"
+#include "controllers/PIDDrive.h"
 #include "lib/JoystickHelper.h"
 #include "lib/WrapDash.h"
 

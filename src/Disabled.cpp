@@ -1,3 +1,10 @@
+#include "Robot.h"
+#include "subsystems/Shooter.h"
+#include "subsystems/Drive.h"
+#include "subsystems/GearIntake.h"
+#include "lib/GreyCompressor.h"
+#include "subsystems/BallIntake.h"
+#include "controllers/PIDDrive.h"
 #include "lib/JoystickHelper.h"
 
 using namespace frc;
