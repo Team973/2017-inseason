@@ -159,7 +159,7 @@ double Drive::GetDist() {
 }
 
 double Drive::GetRate() {
-    return GetLeftRate();
+    return (GetLeftRate() + GetRightRate()) / 2.0;
 }
 
 double Drive::GetDriveCurrent() {
