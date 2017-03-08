@@ -155,7 +155,7 @@ double Drive::GetRightRate() {
 }
 
 double Drive::GetDist() {
-    return GetLeftDist();
+    return (GetLeftDist() + GetRightDist()) / 2.0;
 }
 
 double Drive::GetRate() {
