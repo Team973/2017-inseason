@@ -113,20 +113,26 @@ void Drive::SetGearPixyTargeting(){
   this->SetDriveController(m_gearPixyDriveController);
 }
 
-void Drive::PIDDrive(double dist, double turn, RelativeTo relativity, double powerCap) {
+PIDDriveController *Drive::PIDDrive(double dist, double turn,
+        RelativeTo relativity, double powerCap)
+{
     this->SetDriveController(m_pidDriveController);
     m_pidDriveController->SetCap(powerCap);
     m_pidDriveController->SetTarget(dist, turn,
             relativity, this);
     m_pidDriveController->EnableDist();
+    return m_pidDriveController;
 }
 
-void Drive::PIDTurn(double turn, RelativeTo relativity, double powerCap) {
+PIDDriveController *Drive::PIDTurn(double turn, RelativeTo relativity,
+        double powerCap)
+{
     this->SetDriveController(m_pidDriveController);
     m_pidDriveController->SetCap(powerCap);
     m_pidDriveController->SetTarget(0.0, turn,
             relativity, this);
     m_pidDriveController->DisableDist();
+    return m_pidDriveController;
 }
 
 /**

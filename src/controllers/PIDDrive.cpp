@@ -32,7 +32,9 @@ PIDDriveController::PIDDriveController():
 	m_turnPID(nullptr),
 	m_distEnabled(true),
 	m_speedCap(1.0),
-    m_lastThrottle(0.0)
+    m_lastThrottle(0.0),
+    m_distTolerance(1.0),
+    m_angleTolerance(1.0)
 {
 	m_drivePID = new PID(DRIVE_PID_KP, DRIVE_PID_KI, DRIVE_PID_KD);
 	m_turnPID = new PID(TURN_PID_KP, TURN_PID_KI, TURN_PID_KD);
@@ -86,10 +88,11 @@ void PIDDriveController::CalcDriveOutput(DriveStateProvider *state,
 	out->SetDriveOutput(MAX_SPEED * m_speedCap * (throttle - turn),
                         MAX_SPEED * m_speedCap * (throttle + turn));
 
-	if ((m_distEnabled == false || (Util::abs(m_targetDist - m_prevDist) < 2.0 &&
-                                    Util::abs(state->GetRate()) < 2.0)) &&
-            Util::abs(m_targetAngle - m_prevAngle) < 2.0 &&
-            Util::abs(state->GetAngularRate()) < 2.0) {
+	if ((m_distEnabled == false ||
+                (Util::abs(m_targetDist - m_prevDist) < m_distTolerance &&
+                 Util::abs(state->GetRate()) < 4.0 * m_distTolerance)) &&
+            Util::abs(m_targetAngle - m_prevAngle) < m_angleTolerance &&
+            Util::abs(state->GetAngularRate()) < 4.0 * m_angleTolerance) {
 		m_onTarget = true;
 	}
 	else {

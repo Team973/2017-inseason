@@ -98,7 +98,8 @@ public:
      * @param dist Distance in inches to go
      * @param relativity What is that distance metric relative to?
      */
-    void PIDDrive(double dist, double turn, RelativeTo relativity, double powerCap);
+    PIDDriveController *PIDDrive(double dist, double turn,
+            RelativeTo relativity, double powerCap);
 
     /**
      * Set a target turn to be achieved by pid
@@ -106,7 +107,8 @@ public:
      * @param angle Angle in degrees to go
      * @param relativity What is that angle metric relative to?
      */
-    void PIDTurn(double angle, RelativeTo relativity, double powerCap);
+    PIDDriveController *PIDTurn(double angle, RelativeTo relativity,
+            double powerCap);
 
     void VelocityPIDTurn(double angle, RelativeTo relativity);
 

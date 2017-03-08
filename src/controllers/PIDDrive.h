@@ -71,6 +71,14 @@ public:
 		m_speedCap = newCap;
 	}
 
+    /*
+     * Set the tolerance for distance and angle exiting
+     */
+    void SetTolerance(double dist=2.0, double angle=2.0) {
+        m_distTolerance = dist;
+        m_angleTolerance = angle;
+    }
+
 	void Zero() {
 		m_prevDist = 0.0;
 		m_prevAngle = 0.0;
@@ -95,6 +103,9 @@ private:
 
 	double m_speedCap;
     double m_lastThrottle;
+
+    double m_distTolerance;
+    double m_angleTolerance;
 };
 
 }
