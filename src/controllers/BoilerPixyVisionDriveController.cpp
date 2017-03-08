@@ -5,15 +5,17 @@
 
 namespace frc973{
 
-  static constexpr double VISION_DRIVE_MULTIPLIER = 200.0;
+  static constexpr double VISION_DRIVE_MULTIPLIER = 180.0;
 
   BoilerPixyVisionDriveController::BoilerPixyVisionDriveController(BoilerPixy *boilerPixy) :
     m_onTarget(false),
     m_leftSetpoint(0.0),
     m_rightSetpoint(0.0),
     m_lightEnableTimeMs(0),
+    m_joyThrottle(0),
+    m_joyTurn(0),
     m_boilerPixy(boilerPixy),
-    m_pid(new PID(1.8, 0.0, 0.1))
+    m_pid(new PID(0.38, 0.0, 0.015))
   {
   }
 
@@ -37,8 +39,8 @@ namespace frc973{
     }
     else{
       double pidOut = m_pid->CalcOutput(offset);
-      m_leftSetpoint = -VISION_DRIVE_MULTIPLIER * pidOut;
-      m_rightSetpoint = VISION_DRIVE_MULTIPLIER * pidOut;
+      m_leftSetpoint = VISION_DRIVE_MULTIPLIER * (-pidOut + m_joyThrottle - m_joyTurn);
+      m_rightSetpoint = VISION_DRIVE_MULTIPLIER * (pidOut + m_joyThrottle + m_joyTurn);
     }
 
     out->SetDriveOutput(m_leftSetpoint, m_rightSetpoint);
@@ -51,5 +53,5 @@ namespace frc973{
   		m_onTarget = false;
   	}
   }
-\
+
 }

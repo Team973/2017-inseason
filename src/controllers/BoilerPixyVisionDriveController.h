@@ -34,12 +34,19 @@
         return m_onTarget;
       };
 
+      void SetJoystickTerm(double throttle, double turn) {
+          m_joyThrottle = throttle * 0.05;
+          m_joyTurn = turn * 0.05;
+      }
+
     private:
       bool m_needSetControlMode = true;
       bool m_onTarget;
       double m_leftSetpoint;
       double m_rightSetpoint;
       uint64_t m_lightEnableTimeMs;
+
+      double m_joyThrottle, m_joyTurn;
 
       BoilerPixy *m_boilerPixy;
       PID *m_pid;

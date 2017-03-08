@@ -242,4 +242,8 @@ void Drive::TaskPeriodic(RobotMode mode) {
     m_currentLog->LogDouble(GetDriveCurrent());
 }
 
+void Drive::SetBoilerJoystickTerm(double throttle, double turn) {
+    m_boilerPixyDriveController->SetJoystickTerm(throttle, turn);
+}
+
 }

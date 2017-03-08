@@ -74,7 +74,7 @@ namespace frc973{
     }
 
     double BoilerPixy::GetXOffset(){
-        return m_pixyXFilter->Update(m_pixyXOffset->GetVoltage() - 2.0);
+        return m_pixyXFilter->Update(m_pixyXOffset->GetVoltage() - 1.9);
     }
 
     double BoilerPixy::GetHeight(){
@@ -99,7 +99,7 @@ namespace frc973{
 
     void BoilerPixy::TaskPeriodic(RobotMode mode){
         DBStringPrintf(DB_LINE7,
-              "x %d %2.1lf y %d %2.4lf",
+              "x %d %2.4lf y %d %2.4lf",
               GetSeesTargetX(), m_pixyXOffset->GetVoltage(),
               GetSeesTargetY(), m_pixyYOffset->GetVoltage());
         DBStringPrintf(DB_LINE3, "horizontal %2.4lf", GetXDistance());

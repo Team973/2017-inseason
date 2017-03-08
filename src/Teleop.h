@@ -17,6 +17,7 @@ static bool g_hangSignalSent = false;
 static bool g_manualDriveControl = true;
 static bool g_manualConveyorControl = true;
 static bool g_driveArcade = false;
+static bool g_boilerControl = false;
 
 void Robot::TeleopContinuous(void) {
     double y = -m_driverJoystick->GetRawAxisWithDeadband(DualAction::LeftYAxis);
@@ -30,19 +31,21 @@ void Robot::TeleopContinuous(void) {
       }
 
       if (g_driveArcade) {
-        m_drive->ArcadeDrive(x, y);
+        m_drive->ArcadeDrive(y, x);
       }
       else{
         m_drive->AssistedArcadeDrive(y, x);
       }
     }
-
-
-
+    m_drive->SetBoilerJoystickTerm(y, x);
+    /*
     else if(m_drive->OnTarget()){
       m_lights->NotifyFlash(1);
       g_manualDriveControl = true;
     }
+    */
+
+
     if (Util::abs(m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)) > 0.5 ||
         Util::abs(m_operatorJoystick->GetRawAxisWithDeadband(DualAction::LeftYAxis)) > 0.5) {
       g_manualConveyorControl = true;
@@ -346,16 +349,16 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             case DualAction::BtnX:
                 if (pressedP) {
                     g_manualDriveControl = false;
-                    m_drive->PIDTurn(9,
+                    m_drive->PIDTurn(45,
                             Drive::RelativeTo::Now, 1.0);
                 }
                 break;
             case DualAction::BtnY:
                 if (pressedP) {
                     g_manualDriveControl = false;
-                    m_drive->PIDTurn(90,
-                            Drive::RelativeTo::Now, 1.0);
+                    g_boilerControl = true;
                     m_lights->EnableLights();
+                    m_drive->SetBoilerPixyTargeting();
                     /*
                     g_manualDriveControl = false;
                     m_drive->PIDDrive(120, 0,
@@ -363,6 +366,8 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                             */
                 }
                 else {
+                    g_manualDriveControl = true;
+                    g_boilerControl = false;
                     m_lights->DisableLights();
                 }
                 break;
