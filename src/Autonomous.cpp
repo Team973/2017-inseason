@@ -279,8 +279,10 @@ namespace frc973 {
                 printf("gonna piddrive\n");
                 m_compressor->Disable();
                 m_shooter->SetFlywheelSpeed(3000);
-                m_drive->PIDDrive(-(DRIVER_STATION_BASE_LINE_DIST - 18.0), 0.0,
-                        DriveBase::RelativeTo::Now, 0.9);
+                m_drive
+                    ->PIDDrive(-(DRIVER_STATION_BASE_LINE_DIST - 18.0), 0.0,
+                               DriveBase::RelativeTo::Now, 0.9)
+                    ->SetTolerance(10.0, 4.0);
                 m_gearIntake->SetPickUpManual();
                 m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
                 m_shooter->StopAgitator();
@@ -292,14 +294,16 @@ namespace frc973 {
                 printf("waiting for pid on target\n");
                 if (m_drive->OnTarget()) {
                     printf("pid on target moving on\n");
-                    m_drive->PIDTurn(-90.0 * m_autoDirection,
-                            DriveBase::RelativeTo::SetPoint, 1.0);
+                    m_drive
+                        ->PIDDrive(0.0, -90.0 * m_autoDirection,
+                                   DriveBase::RelativeTo::SetPoint, 1.0)
+                        ->SetTolerance(5.0, 4.0);
                     m_autoState++;
                 }
                 break;
             case 2:
                 if (m_drive->OnTarget()) {
-                    m_drive->ArcadeDrive(0.3, 0.0);
+                    m_drive->ArcadeDrive(0.6, 0.0);
                     m_autoTimer = GetMsecTime();
                     /*
                     m_drive->PIDDrive(26.0, 0.0,
@@ -318,15 +322,19 @@ namespace frc973 {
                 break;
             case 4:
                 if (GetMsecTime() - m_autoTimer > 3000) {
-                    m_drive->PIDDrive(-18.0, 0.0,
-                            DriveBase::RelativeTo::Now, 1.0);
+                    m_drive
+                        ->PIDDrive(-18.0, 0.0,
+                                   DriveBase::RelativeTo::Now, 1.0)
+                        ->SetTolerance(5.0, 4.0);
                     m_autoState++;
                 }
                 break;
             case 5:
                 if (m_drive->OnTarget()) {
-                    m_drive->PIDTurn(-24.0 * m_autoDirection,
-                            DriveBase::RelativeTo::Absolute, 1.0);
+                    m_drive
+                        ->PIDDrive(0.0, -24.0 * m_autoDirection,
+                                   DriveBase::RelativeTo::Absolute, 1.0)
+                        ->SetTolerance(5.0, 3.0);
                     m_autoTimer = GetMsecTime();
                     m_autoState++;
                 }
@@ -339,7 +347,7 @@ namespace frc973 {
                 }
                 break;
             case 7:
-                if (m_drive->OnTarget()) {
+                if (m_drive->OnTarget() || (GetMsecTime() - m_autoTimer >= 1500)) {
                     //m_drive->SetBoilerPixyTargeting();
                     m_autoTimer = GetMsecTime();
                     m_autoState++;
