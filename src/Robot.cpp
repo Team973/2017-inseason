@@ -122,7 +122,7 @@ Robot::Robot(void
     m_time = new LogCell("Time");
     m_logger->RegisterCell(m_time);
     m_lights = new Lights(this);
-    m_boilerPixy = new BoilerPixy(this, m_lights);
+    m_boilerPixy = new BoilerPixy(this, m_lights, m_logger);
     m_pixyR = new PixyThread(*this);
     m_drive = new Drive(this,
             m_leftDriveTalonA, m_rightDriveTalonA, m_leftAgitatorTalon,

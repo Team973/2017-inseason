@@ -16,28 +16,31 @@ void Robot::TeleopStop(void) {
 static bool g_hangSignalSent = false;
 static bool g_manualDriveControl = true;
 static bool g_manualConveyorControl = true;
-static bool g_driveArcade = false;
-static bool g_boilerControl = false;
+static bool g_driveOpenLoop = false; //true: Allow OpenloopArcadeDrive, false: AssistedArcadeDrive
+static bool g_bumperModePixy = false; // true: Allow BoilerPixyTargeting, false: Low Gear
 
 void Robot::TeleopContinuous(void) {
     double y = -m_driverJoystick->GetRawAxisWithDeadband(DualAction::LeftYAxis);
     double x = -m_driverJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)
         + -m_tuningJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis);
 
-    if (g_manualDriveControl) {
+    if(g_bumperModePixy && m_driverJoystick->GetRawButton(DualAction::RightBumper)){
+      m_drive->SetBoilerJoystickTerm(y, x);
+      m_drive->SetBoilerPixyTargeting();
+    }
+    else if(g_manualDriveControl){
       if(m_driverJoystick->GetRawButton(DualAction::RightBumper)){
         x /= 3.0;
         y /= 3.0;
       }
 
-      if (g_driveArcade) {
-        m_drive->ArcadeDrive(y, x);
+      if(g_driveOpenLoop){
+        m_drive->OpenloopArcadeDrive(y, x);
       }
       else{
         m_drive->AssistedArcadeDrive(y, x);
       }
     }
-    m_drive->SetBoilerJoystickTerm(y, x);
     /*
     else if(m_drive->OnTarget()){
       m_lights->NotifyFlash(1);
@@ -75,23 +78,22 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         switch (button) {
         case DualAction::BtnA:
             if (pressedP) {
-              g_driveArcade = false;
+              g_bumperModePixy = true;
             }
             break;
         case DualAction::BtnB:
             if (pressedP) {
-              g_driveArcade = true;
+              g_bumperModePixy = false;
             }
             break;
         case DualAction::BtnX:
             if (pressedP) {
-                //m_hanger->SetHangerState(Hanger::HangerState::autoHang);
-            }
-            else{
+              g_driveOpenLoop = true;
             }
             break;
         case DualAction::BtnY:
             if (pressedP) {
+              g_driveOpenLoop = false;
             }
             break;
         case DualAction::LeftBumper:
@@ -356,7 +358,6 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             case DualAction::BtnY:
                 if (pressedP) {
                     g_manualDriveControl = false;
-                    g_boilerControl = true;
                     m_lights->EnableLights();
                     m_drive->SetBoilerPixyTargeting();
                     /*
@@ -367,7 +368,6 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 }
                 else {
                     g_manualDriveControl = true;
-                    g_boilerControl = false;
                     m_lights->DisableLights();
                 }
                 break;

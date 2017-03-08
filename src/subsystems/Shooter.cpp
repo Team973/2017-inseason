@@ -176,21 +176,13 @@ void Shooter::TaskPeriodic(RobotMode mode) {
         StopAgitator();
         StopConveyor();
         break;
-      case targeting:
-        m_drive->SetBoilerPixyTargeting();
-        SetFlywheelSpeed(2900);
-        if (OnTarget() && m_drive->OnTarget()) {
-          m_shootingSequenceState = ShootingSequenceState::shooting;
-        }
-        break;
       case shooting:
         SetFlywheelSpeed(2900);
-        if (OnTarget()) {
+        /*if (OnTarget()) {
           m_drive->ArcadeDrive(0.0,0.0);
           StartAgitator(1.0, true);
           StartAgitator(1.0, false);
-          StartConveyor(1.0);
-        }
+          StartConveyor(1.0);}*/
         break;
       case manual:
         break;
@@ -205,7 +197,7 @@ void Shooter::TaskPeriodic(RobotMode mode) {
         case speed:
             m_flywheelMotorPrimary->Set(m_flywheelSpeedSetpt);
             break;
-    }
+    };
 }
 
 }
