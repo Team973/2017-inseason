@@ -123,13 +123,13 @@ private:
      * In in/sec
      */
     static constexpr double DEFAULT_DIST_TOLERANCE = 2.0;
-    static constexpr double DEFAULT_DIST_RATE_TOLERANCE = 2.0;
+    static constexpr double DEFAULT_DIST_RATE_TOLERANCE = 5.0;
 
     /**
      * In deg/sec
      */
     static constexpr double DEFAULT_ANGLE_TOLERANCE = 2.0;
-    static constexpr double DEFAULT_ANGLE_RATE_TOLERANCE = 2.0;
+    static constexpr double DEFAULT_ANGLE_RATE_TOLERANCE = 5.0;
 };
 
 }

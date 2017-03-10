@@ -279,9 +279,7 @@ namespace frc973 {
                 m_shooter->SetFlywheelSpeed(3000);
                 m_drive
                     ->PIDDrive(-(DRIVER_STATION_BASE_LINE_DIST - 18.0), 0.0,
-                               DriveBase::RelativeTo::Now, 0.9)
-                    ->SetDistTolerance(10.0, 40.0)
-                    ->SetAngleTolerance(10.0, 40.0);
+                               DriveBase::RelativeTo::Now, 0.9);
                 m_gearIntake->SetPickUpManual();
                 m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
                 m_shooter->StopAgitator();
@@ -295,9 +293,7 @@ namespace frc973 {
                     printf("pid on target moving on\n");
                     m_drive
                         ->PIDDrive(0.0, -90.0 * m_autoDirection,
-                                   DriveBase::RelativeTo::SetPoint, 1.0)
-                        ->SetDistTolerance(5.0, 4.0)
-                        ->SetAngleTolerance(5.0, 5.0);
+                                   DriveBase::RelativeTo::SetPoint, 1.0);
                     m_autoState++;
                 }
                 break;
@@ -324,9 +320,7 @@ namespace frc973 {
                 if (GetMsecTime() - m_autoTimer > 3000) {
                     m_drive
                         ->PIDDrive(-18.0, 0.0,
-                                   DriveBase::RelativeTo::Now, 1.0)
-                        ->SetDistTolerance(5.0, 5.0)
-                        ->SetAngleTolerance(5.0, 5.0);
+                                   DriveBase::RelativeTo::Now, 1.0);
                     m_autoState++;
                 }
                 break;
@@ -334,9 +328,7 @@ namespace frc973 {
                 if (m_drive->OnTarget()) {
                     m_drive
                         ->PIDDrive(0.0, -24.0 * m_autoDirection,
-                                   DriveBase::RelativeTo::Absolute, 1.0)
-                        ->SetDistTolerance(5.0, 5.0)
-                        ->SetAngleTolerance(5.0, 5.0);
+                                   DriveBase::RelativeTo::Absolute, 1.0);
                     m_autoTimer = GetMsecTime();
                     m_autoState++;
                 }
