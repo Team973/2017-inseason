@@ -31,7 +31,6 @@ namespace frc973 {
     }
 
     void Robot::AutonomousContinuous(void) {
-        printf("autonomous continuous\n");
         DBStringPrintf(DB_LINE0, "AutoState %d", m_autoState);
         switch (m_autoRoutine){
             case AutonomousRoutine::GearLeftPeg:
@@ -65,7 +64,6 @@ namespace frc973 {
                 //Don't do any auto
                 break;
         }
-        printf("did auto continuous\n");
     }
 
     void Robot::GearLtPeg(){
@@ -282,7 +280,8 @@ namespace frc973 {
                 m_drive
                     ->PIDDrive(-(DRIVER_STATION_BASE_LINE_DIST - 18.0), 0.0,
                                DriveBase::RelativeTo::Now, 0.9)
-                    ->SetTolerance(10.0, 4.0);
+                    ->SetDistTolerance(10.0, 40.0)
+                    ->SetAngleTolerance(10.0, 40.0);
                 m_gearIntake->SetPickUpManual();
                 m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
                 m_shooter->StopAgitator();
@@ -297,7 +296,8 @@ namespace frc973 {
                     m_drive
                         ->PIDDrive(0.0, -90.0 * m_autoDirection,
                                    DriveBase::RelativeTo::SetPoint, 1.0)
-                        ->SetTolerance(5.0, 4.0);
+                        ->SetDistTolerance(5.0, 4.0)
+                        ->SetAngleTolerance(5.0, 5.0);
                     m_autoState++;
                 }
                 break;
@@ -325,7 +325,8 @@ namespace frc973 {
                     m_drive
                         ->PIDDrive(-18.0, 0.0,
                                    DriveBase::RelativeTo::Now, 1.0)
-                        ->SetTolerance(5.0, 4.0);
+                        ->SetDistTolerance(5.0, 5.0)
+                        ->SetAngleTolerance(5.0, 5.0);
                     m_autoState++;
                 }
                 break;
@@ -334,7 +335,8 @@ namespace frc973 {
                     m_drive
                         ->PIDDrive(0.0, -24.0 * m_autoDirection,
                                    DriveBase::RelativeTo::Absolute, 1.0)
-                        ->SetTolerance(5.0, 3.0);
+                        ->SetDistTolerance(5.0, 5.0)
+                        ->SetAngleTolerance(5.0, 5.0);
                     m_autoTimer = GetMsecTime();
                     m_autoState++;
                 }

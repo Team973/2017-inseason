@@ -72,11 +72,21 @@ public:
 	}
 
     /*
-     * Set the tolerance for distance and angle exiting
+     * Set the tolerance for distance exiting
      */
-    void SetTolerance(double dist=2.0, double angle=2.0) {
+    PIDDriveController *SetDistTolerance(double dist=2.0, double rate=2.0) {
         m_distTolerance = dist;
+        m_distRateTolerance = rate;
+        return this;
+    }
+
+    /*
+     * Set the tolerance for distance exiting
+     */
+    PIDDriveController *SetAngleTolerance(double angle=2.0, double rate=2.0) {
         m_angleTolerance = angle;
+        m_angleRateTolerance = rate;
+        return this;
     }
 
 	void Zero() {
@@ -105,7 +115,9 @@ private:
     double m_lastThrottle;
 
     double m_distTolerance;
+    double m_distRateTolerance;
     double m_angleTolerance;
+    double m_angleRateTolerance;
 };
 
 }
