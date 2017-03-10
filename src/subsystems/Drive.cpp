@@ -214,11 +214,10 @@ void Drive::SetDriveControlMode(CANSpeedController::ControlMode mode){
 }
 
 void Drive::TaskPeriodic(RobotMode mode) {
-//	DBStringPrintf(DB_LINE0, "gyro r %2.1f p", this->GetAngularRate(),
-//            this->GetAngle());
-    DBStringPrintf(DB_LINE9, "l %2.1lf %2.1lf r %2.1lf %2.1lf",
-            this->GetLeftDist(), this->GetLeftRate(),
-            this->GetRightDist(), this->GetRightRate());
+    DBStringPrintf(DB_LINE9, "l %2.1lf r %2.1lf g %2.1lf",
+            this->GetLeftDist(),
+            this->GetRightDist(),
+            this->GetAngle());
 
     m_angleLog->LogDouble(GetAngle());
     m_angularRateLog->LogDouble(GetAngularRate());
