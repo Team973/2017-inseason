@@ -25,6 +25,8 @@ namespace frc973{
       Lights(TaskMgr *scheduler);
       virtual ~Lights();
 
+      void Flashlight(bool state);
+
       void EnableLights();
       void DisableLights();
       void NotifyFlash(int n);
@@ -37,5 +39,6 @@ namespace frc973{
 
       LightMode m_lightMode;
       Solenoid *m_pixyLight;
+      Solenoid *m_flashLight;
   };
 }

@@ -21,7 +21,7 @@
       virtual ~BoilerPixyVisionDriveController();
 
       void Start()  override{
-        m_boilerPixy->Enable();
+        //m_boilerPixy->Enable();
         m_needSetControlMode = true;
         m_lightEnableTimeMs = GetMsecTime();
         m_onTarget = false;

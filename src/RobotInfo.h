@@ -50,7 +50,7 @@ constexpr int GEAR_INTAKE_GRIP_CLOSE = 2;
 
 constexpr int BOILER_PIXY_LIGHT_SOL = 6;
 
-constexpr int GEAR_PIXY_LIGHT_SOL = 7;
+constexpr int FLASH_LIGHT_SOL = 4;
 //CANTalon
 constexpr int DRIVE_LEFT_A_CAN = 16;
 constexpr int DRIVE_LEFT_B_CAN = 15;

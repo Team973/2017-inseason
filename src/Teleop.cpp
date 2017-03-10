@@ -75,7 +75,7 @@ void Robot::TeleopContinuous(void) {
     }
 
     if (g_hangSignalSent == false && GetMsecTime() - m_teleopTimer > 90000) {
-        m_lights->NotifyFlash(10);
+        m_lights->NotifyFlash(3);
         g_hangSignalSent = true;
     }
 }
@@ -367,7 +367,6 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 if (pressedP) {
                     g_manualDriveControl = false;
                     m_lights->EnableLights();
-                    m_drive->SetBoilerPixyTargeting();
                     /*
                     g_manualDriveControl = false;
                     m_drive->PIDDrive(120, 0,

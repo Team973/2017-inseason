@@ -74,7 +74,7 @@ namespace frc973{
 
     void BoilerPixy::Enable() {
         printf("Enabling the boiler pixy light \n");
-        m_lights->EnableLights();
+        //m_lights->EnableLights();
         m_lightEnabled = true;
         printf("did the boiler pixy\n");
     }
