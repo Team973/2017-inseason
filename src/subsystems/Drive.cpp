@@ -41,8 +41,8 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
          , m_angularRateLog(new LogCell("Angular Rate"))
          , m_leftDistLog(new LogCell("Left Encoder Distance"))
          , m_leftDistRateLog(new LogCell("Left Encoder Rate"))
-         , m_rightDistLog(new LogCell("Left Encoder Distance"))
-         , m_rightDistRateLog(new LogCell("Left Encoder Rate"))
+         , m_rightDistLog(new LogCell("Right Encoder Distance"))
+         , m_rightDistRateLog(new LogCell("Right Encoder Rate"))
          , m_leftCommandLog(new LogCell("Left motor signal (pow or vel)"))
          , m_rightCommandLog(new LogCell("Right motor signal (pow or vel)"))
          , m_leftVoltageLog(new LogCell("Left motor voltage"))
@@ -225,8 +225,8 @@ void Drive::TaskPeriodic(RobotMode mode) {
     m_leftDistLog->LogDouble(GetLeftDist());
     m_leftDistRateLog->LogDouble(GetLeftRate());
 
-    m_rightDistLog->LogDouble(GetLeftDist());
-    m_rightDistRateLog->LogDouble(GetLeftRate());
+    m_rightDistLog->LogDouble(GetRightDist());
+    m_rightDistRateLog->LogDouble(GetRightRate());
 
     if (m_controlMode == CANSpeedController::ControlMode::kSpeed) {
         m_leftCommandLog->LogDouble(m_leftCommand * DRIVE_IPS_FROM_RPM);

@@ -1,5 +1,7 @@
 #include "JoystickHelper.h"
 #include "TaskMgr.h"
+#include "util/Util.h"
+#include <string>
 
 namespace frc973 {
 
@@ -14,6 +16,7 @@ ObservableJoystick::ObservableJoystick(
 	 , m_ds(ds)
 	 , m_prevBtn(0)
 	 , m_scheduler(scheduler)
+     , m_logCell(nullptr)
 	 , m_lastLXVal(false)
 	 , m_lastLYVal(false)
 	 , m_lastRXVal(false)
@@ -37,6 +40,18 @@ ObservableJoystick::~ObservableJoystick() {
 		m_scheduler->UnregisterTask(this);
 	}
 }
+
+ObservableJoystick *ObservableJoystick::RegisterLog(LogSpreadsheet *logger) {
+    if (m_logCell == nullptr) {
+        m_logCell = new LogCell(
+                ("Joystick Btn port " + std::to_string(m_port)).c_str(),
+                64);
+        logger->RegisterCell(m_logCell);
+    }
+
+    return this;
+}
+
 
 float ObservableJoystick::GetRawAxisWithDeadband(int axis, bool fSquared,
 		float threshold) {
@@ -184,6 +199,10 @@ void ObservableJoystick::TaskPrePeriodic(RobotMode mode) {
 		}
 	}
 	m_prevBtn = currBtn;
+
+    if (m_logCell) {
+        m_logCell->LogPrintf("%x", currBtn);
+    }
 }
 
 }

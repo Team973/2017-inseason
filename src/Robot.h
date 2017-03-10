@@ -115,6 +115,8 @@ private:
     LogCell *m_xAccel;
     LogCell *m_yAccel;
     LogCell *m_zAccel;
+    LogCell *m_autoStateLog;
+    LogCell *m_autoSelectLog;
 
     PixyThread *m_pixyR;
 public:

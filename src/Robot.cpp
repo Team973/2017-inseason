@@ -119,6 +119,8 @@ Robot::Robot(void
     fprintf(stderr, "Initialized drive controllers\n");
 
     m_logger = new LogSpreadsheet(this);
+    m_driverJoystick->RegisterLog(m_logger);
+    m_operatorJoystick->RegisterLog(m_logger);
     m_time = new LogCell("Time");
     m_logger->RegisterCell(m_time);
     m_lights = new Lights(this);
@@ -135,6 +137,8 @@ Robot::Robot(void
     m_xAccel = new LogCell("X acceleration", 32, true);
     m_yAccel = new LogCell("Y acceleration", 32, true);
     m_zAccel = new LogCell("Z acceleration", 32, true);
+    m_autoStateLog = new LogCell("Auto state", 32, true);
+    m_autoSelectLog = new LogCell("Selected auto routine", 32, true);
 
 
     m_logger->RegisterCell(m_battery);
@@ -144,6 +148,8 @@ Robot::Robot(void
     m_logger->RegisterCell(m_xAccel);
     m_logger->RegisterCell(m_yAccel);
     m_logger->RegisterCell(m_zAccel);
+    m_logger->RegisterCell(m_autoStateLog);
+    m_logger->RegisterCell(m_autoSelectLog);
 
     m_hanger = new Hanger(this, m_logger);
     m_ballIntake = new BallIntake(this, m_logger);
@@ -177,6 +183,7 @@ void Robot::AllStateContinuous(void) {
     m_xAccel->LogDouble(m_accel.GetX());
     m_yAccel->LogDouble(m_accel.GetY());
     m_zAccel->LogDouble(m_accel.GetZ());
+    m_autoStateLog->LogInt(m_autoState);
 
     DBStringPrintf(DB_LINE1,
             "angle %.2lf rate %.2lf",

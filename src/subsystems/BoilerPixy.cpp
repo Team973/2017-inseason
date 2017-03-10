@@ -115,7 +115,7 @@ namespace frc973{
               GetSeesTargetY(), m_pixyYOffset->GetVoltage());
         DBStringPrintf(DB_LINE3, "horizontal %2.4lf", GetXDistance());
         m_pixyXOffsetLog->LogDouble(GetXOffset());
-        m_pixyYOffsetLog->LogDouble(GetHeight());
+        m_pixyYOffsetLog->LogDouble(m_pixyYOffset->GetVoltage());
         m_lightLog->LogInt(m_lightEnabled);
     }
 }

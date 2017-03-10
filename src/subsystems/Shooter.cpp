@@ -82,8 +82,12 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
     m_rightAgitatorLog = new LogCell("RightAgitator curr", 32);
     logger->RegisterCell(m_flywheelRate);
     logger->RegisterCell(m_flywheelPowLog);
-    logger->RegisterCell(m_speedSetpoint);
     logger->RegisterCell(m_flywheelAmpsLog);
+    logger->RegisterCell(m_flywheelStateLog);
+    logger->RegisterCell(m_speedSetpoint);
+    logger->RegisterCell(m_conveyorLog);
+    logger->RegisterCell(m_leftAgitatorLog);
+    logger->RegisterCell(m_rightAgitatorLog);
 }
 
 Shooter::~Shooter() {

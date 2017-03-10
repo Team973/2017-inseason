@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include "CoopTask.h"
 #include "WPILib.h"
+#include "logging/LogSpreadsheet.h"
 
 using namespace frc;
 
@@ -19,58 +20,58 @@ namespace frc973 {
  * Button mapping for the DualAction joystick
  */
 namespace DualAction {
-	/*
-	 * Standard buttons... shouldn't need any explanation
-	 */
-	const unsigned int BtnX = 1;
-	const unsigned int BtnA = 2;
-	const unsigned int BtnB = 3;
-	const unsigned int BtnY = 4;
-	const unsigned int LeftBumper = 5;
-	const unsigned int RightBumper = 6;
-	const unsigned int LeftTrigger = 7;
-	const unsigned int RightTrigger = 8;
-	const unsigned int Back = 9;
-	const unsigned int Start = 10;
+    /*
+     * Standard buttons... shouldn't need any explanation
+     */
+    const unsigned int BtnX = 1;
+    const unsigned int BtnA = 2;
+    const unsigned int BtnB = 3;
+    const unsigned int BtnY = 4;
+    const unsigned int LeftBumper = 5;
+    const unsigned int RightBumper = 6;
+    const unsigned int LeftTrigger = 7;
+    const unsigned int RightTrigger = 8;
+    const unsigned int Back = 9;
+    const unsigned int Start = 10;
 
-	/*
-	 * When you push down on the left and right joystick, that registers
-	 * as a button press
-	 */
-	const unsigned int LJoystickBtn = 11;
-	const unsigned int RJoystickBtn = 12;
+    /*
+     * When you push down on the left and right joystick, that registers
+     * as a button press
+     */
+    const unsigned int LJoystickBtn = 11;
+    const unsigned int RJoystickBtn = 12;
 
-	const unsigned int DPadUpVirtBtn = 22;
-	const unsigned int DPadDownVirtBtn = 23;
-	const unsigned int DPadLeftVirtBtn = 24;
-	const unsigned int DPadRightVirtBtn = 25;
+    const unsigned int DPadUpVirtBtn = 22;
+    const unsigned int DPadDownVirtBtn = 23;
+    const unsigned int DPadLeftVirtBtn = 24;
+    const unsigned int DPadRightVirtBtn = 25;
 
-	/*
-	 * The following are 'virtual' buttons, one for each joystick axis.
-	 *  * Virtual buttons default to zero.
-	 *  * When you push the associated joystick axis above 0.5, it registers
-	 *  	as pressed
-	 *  * When you pull the associated joystick axis below -0.5, it registers
-	 *  	as released
-	 */
-	const unsigned int LXAxisVirtButton = 26;
-	const unsigned int LYAxisVirtButton = 27;
-	const unsigned int RXAxisVirtButton = 28;
-	const unsigned int RYAxisVirtButton = 29;
-	const unsigned int DXAxisVirtButton = 30;
-	const unsigned int DYAxisVirtButton = 31;
+    /*
+     * The following are 'virtual' buttons, one for each joystick axis.
+     *  * Virtual buttons default to zero.
+     *  * When you push the associated joystick axis above 0.5, it registers
+     *  	as pressed
+     *  * When you pull the associated joystick axis below -0.5, it registers
+     *  	as released
+     */
+    const unsigned int LXAxisVirtButton = 26;
+    const unsigned int LYAxisVirtButton = 27;
+    const unsigned int RXAxisVirtButton = 28;
+    const unsigned int RYAxisVirtButton = 29;
+    const unsigned int DXAxisVirtButton = 30;
+    const unsigned int DYAxisVirtButton = 31;
 
-	/*
-	 * Not buttons but the numbers for each axis... can be used with
-	 * joystick.GetRawAxis
-	 * DPad axis only return 0.0, -1.0, and 1.0
-	 */
-	const unsigned int LeftXAxis = 0;
-	const unsigned int LeftYAxis = 1;
-	const unsigned int RightXAxis = 2;
-	const unsigned int RightYAxis = 3;
-	const unsigned int DPadXAxis = 4;
-	const unsigned int DPadYAxis = 5;
+    /*
+     * Not buttons but the numbers for each axis... can be used with
+     * joystick.GetRawAxis
+     * DPad axis only return 0.0, -1.0, and 1.0
+     */
+    const unsigned int LeftXAxis = 0;
+    const unsigned int LeftYAxis = 1;
+    const unsigned int RightXAxis = 2;
+    const unsigned int RightYAxis = 3;
+    const unsigned int DPadXAxis = 4;
+    const unsigned int DPadYAxis = 5;
 }
 
 class ObservableJoystick;
@@ -83,8 +84,8 @@ class ObservableJoystick;
  */
 class JoystickObserver {
 public:
-	JoystickObserver() {}
-	virtual ~JoystickObserver() {}
+    JoystickObserver() {}
+    virtual ~JoystickObserver() {}
 
     /**
      * This function is provided by the subclass to handle a joystick
@@ -95,11 +96,11 @@ public:
      * @param newState If true, specifies the button has been pressed,
      *        if false, specifies the button has been released.
      */
-	virtual void ObserveJoystickStateChange(
-			uint32_t port,
-			uint32_t button,
-			bool newState
-			) = 0;
+    virtual void ObserveJoystickStateChange(
+            uint32_t port,
+            uint32_t button,
+            bool newState
+            ) = 0;
 };
 
 /**
@@ -109,11 +110,11 @@ public:
  * axis as a button in an easy way.
  */
 class ObservableJoystick: public CoopTask,
-						  public Joystick
+                          public Joystick
 {
 public:
-	static constexpr double DEADBAND_INPUT_THRESHOLD = 0.07;
-	static constexpr double VIRTUAL_JOYSTICK_THRESHOLD = 0.5;
+    static constexpr double DEADBAND_INPUT_THRESHOLD = 0.07;
+    static constexpr double VIRTUAL_JOYSTICK_THRESHOLD = 0.5;
 
 protected:
     uint32_t		m_port;
@@ -123,6 +124,7 @@ protected:
     DriverStation  *m_ds;
     uint32_t        m_prevBtn;
     TaskMgr		   *m_scheduler;
+    LogCell        *m_logCell;
 
     /* For remembering states of sticky buttons */
     bool m_lastLXVal;
@@ -145,9 +147,15 @@ public:
      * @param scheduler Points to the task manager this task will run on
      */
     ObservableJoystick(uint16_t port, JoystickObserver *observer,
-    		TaskMgr *scheduler, DriverStation *ds = nullptr);
-
+            TaskMgr *scheduler, DriverStation *ds = nullptr);
     ~ObservableJoystick();
+
+    /**
+     * Register this joystick with a logger so that button state can be logged
+     * every time the periodic funciton is called.  Only registers with the
+     * first call
+     */
+    ObservableJoystick *RegisterLog(LogSpreadsheet *logger);
 
     /**
      * Get the value of the given axis with deadband.
@@ -159,7 +167,7 @@ public:
      *        hand).
      */
     float GetRawAxisWithDeadband(int axis, bool fSquared = false,
-    		float threshold = DEADBAND_INPUT_THRESHOLD);
+            float threshold = DEADBAND_INPUT_THRESHOLD);
 
     /*
      * Check whether the up button on the d pad is pressed

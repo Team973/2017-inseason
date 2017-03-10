@@ -30,19 +30,31 @@ void Robot::DisabledContinuous(void) {
     DBStringPrintf(DBStringPos::DB_LINE0,
             "%c Gear to LeftPeg Auto",
             (m_alliance == Alliance::Red) ? 'R' : 'B');
+    m_autoSelectLog->LogPrintf(
+            "%c Gear to LeftPeg Auto",
+            (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
   else if (m_autoRoutine == AutonomousRoutine::GearMiddlePeg){
     DBStringPrintf(DBStringPos::DB_LINE0,
             "%c Gear to Middle Peg Auto",
             (m_alliance == Alliance::Red) ? 'R' : 'B');
+    m_autoSelectLog->LogPrintf(
+            "%c Gear to Middle Peg Auto",
+            (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
   else if (m_autoRoutine == AutonomousRoutine::GearRightPeg){
     DBStringPrintf(DBStringPos::DB_LINE0,
-      "%c Gear to Right Peg Auto",
-      (m_alliance == Alliance::Red) ? 'R' : 'B');
+            "%c Gear to Right Peg Auto",
+            (m_alliance == Alliance::Red) ? 'R' : 'B');
+    m_autoSelectLog->LogPrintf(
+            "%c Gear to Right Peg Auto",
+            (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
   else if (m_autoRoutine == AutonomousRoutine::FuelBallToBoiler){
     DBStringPrintf(DBStringPos::DB_LINE0,
+                      "%c FuelBallToBoiler Auto",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
+    m_autoSelectLog->LogPrintf(
                       "%c FuelBallToBoiler Auto",
                       (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
@@ -50,9 +62,15 @@ void Robot::DisabledContinuous(void) {
     DBStringPrintf(DBStringPos::DB_LINE0,
                       "%c ShootFuel, GoToHopper, ShootFuel Auto",
                       (m_alliance == Alliance::Red) ? 'R' : 'B');
+    m_autoSelectLog->LogPrintf(
+                      "%c ShootFuel, GoToHopper, ShootFuel Auto",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
   else if (m_autoRoutine == AutonomousRoutine::HopperThenShootFuel){
     DBStringPrintf(DBStringPos::DB_LINE0,
+                      "%c HopperThenShoot Auto",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
+    m_autoSelectLog->LogPrintf(
                       "%c HopperThenShoot Auto",
                       (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
@@ -60,9 +78,15 @@ void Robot::DisabledContinuous(void) {
     DBStringPrintf(DBStringPos::DB_LINE0,
                       "%c KpaGear Auto",
                       (m_alliance == Alliance::Red) ? 'R' : 'B');
+    m_autoSelectLog->LogPrintf(
+                      "%c KpaGear Auto",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
   else if (m_autoRoutine == AutonomousRoutine::CitrusKpaGearAuto){
     DBStringPrintf(DBStringPos::DB_LINE0,
+                      "%c CitrusKpaGear Auto",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
+    m_autoSelectLog->LogPrintf(
                       "%c CitrusKpaGear Auto",
                       (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
@@ -70,13 +94,18 @@ void Robot::DisabledContinuous(void) {
     DBStringPrintf(DBStringPos::DB_LINE0,
                       "%c AimedAtBoiler Auto",
                       (m_alliance == Alliance::Red) ? 'R' : 'B');
+    m_autoSelectLog->LogPrintf(
+                      "%c AimedAtBoiler Auto",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
   else if (m_autoRoutine == AutonomousRoutine::NoAuto){
     DBStringPrintf(DBStringPos::DB_LINE0,
                       "%c No Auto",
                       (m_alliance == Alliance::Red) ? 'R' : 'B');
+    m_autoSelectLog->LogPrintf(
+                      "%c No Auto",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
-//    fprintf(stderr, "***disabled continuous\n");
 }
 
 void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
