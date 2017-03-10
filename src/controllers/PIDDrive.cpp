@@ -33,8 +33,10 @@ PIDDriveController::PIDDriveController():
 	m_distEnabled(true),
 	m_speedCap(1.0),
     m_lastThrottle(0.0),
-    m_distTolerance(1.0),
-    m_angleTolerance(1.0)
+    m_distTolerance(DEFAULT_DIST_TOLERANCE),
+    m_distRateTolerance(DEFAULT_DIST_RATE_TOLERANCE),
+    m_angleTolerance(DEFAULT_ANGLE_TOLERANCE),
+    m_angleRateTolerance(DEFAULT_ANGLE_RATE_TOLERANCE)
 {
 	m_drivePID = new PID(DRIVE_PID_KP, DRIVE_PID_KI, DRIVE_PID_KD);
 	m_turnPID = new PID(TURN_PID_KP, TURN_PID_KI, TURN_PID_KD);
@@ -90,9 +92,9 @@ void PIDDriveController::CalcDriveOutput(DriveStateProvider *state,
 
 	if ((m_distEnabled == false ||
                 (Util::abs(m_targetDist - m_prevDist) < m_distTolerance &&
-                 Util::abs(state->GetRate()) < 4.0 * m_distTolerance)) &&
+                 Util::abs(state->GetRate()) < m_distRateTolerance)) &&
             Util::abs(m_targetAngle - m_prevAngle) < m_angleTolerance &&
-            Util::abs(state->GetAngularRate()) < 4.0 * m_angleTolerance) {
+            Util::abs(state->GetAngularRate()) < m_angleRateTolerance) {
 		m_onTarget = true;
 	}
 	else {
@@ -125,6 +127,11 @@ void PIDDriveController::SetTarget(double dist, double angle,
 
 	m_drivePID->SetTarget(m_targetDist);
 	m_turnPID->SetTarget(m_targetAngle);
+
+    m_distTolerance = DEFAULT_DIST_TOLERANCE;
+    m_distRateTolerance = DEFAULT_DIST_RATE_TOLERANCE;
+    m_angleTolerance = DEFAULT_ANGLE_TOLERANCE;
+    m_angleRateTolerance = DEFAULT_ANGLE_RATE_TOLERANCE;
 }
 
 }
