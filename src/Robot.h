@@ -40,6 +40,7 @@ private:
         FuelBallToBoiler,
         ShootFuelThenHopper,
         HopperThenShootFuel,
+        MadtownHopperThenShootFuel,
         KpaGearAuto,
         CitrusKpaGearAuto,
         AimedAtBoilerAuto,
@@ -146,6 +147,7 @@ public:
     void GearLtPeg(void);
     void FuelToBoiler(void);
     void HopperThenShoot(void);
+    void MadtownHopperThenShoot(void);
     void ShootThenHopper(void);
     void KpaAndGearAuto(void);
     void CitrusKpaAndGearAuto(void);

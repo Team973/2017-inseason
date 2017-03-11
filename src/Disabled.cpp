@@ -66,6 +66,14 @@ void Robot::DisabledContinuous(void) {
                       "%c ShootFuel, GoToHopper, ShootFuel Auto",
                       (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
+  else if (m_autoRoutine == AutonomousRoutine::MadtownHopperThenShootFuel){
+    DBStringPrintf(DBStringPos::DB_LINE0,
+                      "%c MadtownHopper",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
+    m_autoSelectLog->LogPrintf(
+                      "%c MadtownHopper",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
+  }
   else if (m_autoRoutine == AutonomousRoutine::HopperThenShootFuel){
     DBStringPrintf(DBStringPos::DB_LINE0,
                       "%c HopperThenShoot Auto",
@@ -175,6 +183,7 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             break;
         case DualAction::Start:
             if (pressedP) {
+                m_autoRoutine = AutonomousRoutine::MadtownHopperThenShootFuel;
             }
             break;
         case DualAction::Back:
