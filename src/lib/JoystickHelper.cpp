@@ -2,6 +2,7 @@
 #include "TaskMgr.h"
 #include "util/Util.h"
 #include <string>
+#include <stdlib.h>
 
 namespace frc973 {
 
@@ -43,9 +44,11 @@ ObservableJoystick::~ObservableJoystick() {
 
 ObservableJoystick *ObservableJoystick::RegisterLog(LogSpreadsheet *logger) {
     if (m_logCell == nullptr) {
-        m_logCell = new LogCell(
-                ("Joystick Btn port " + std::to_string(m_port)).c_str(),
-                64);
+        //TODO this memory is never freed
+        char *cellTitleBuf = (char*) malloc(32 * sizeof(char));
+        sprintf(cellTitleBuf, "Joystick Btn Port %d", m_port);
+
+        m_logCell = new LogCell(cellTitleBuf, 64);
         logger->RegisterCell(m_logCell);
     }
 

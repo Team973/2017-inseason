@@ -337,7 +337,7 @@ namespace frc973 {
             case 5:
                 if (m_drive->OnTarget()) {
                     m_drive
-                        ->PIDTurn(-22.0 * m_autoDirection,
+                        ->PIDTurn(-21.0 * m_autoDirection,
                                    DriveBase::RelativeTo::Absolute, 1.0)
                         ->SetDistTolerance(15.0, 25.0)
                         ->SetAngleTolerance(30.0, 60.0);

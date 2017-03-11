@@ -119,10 +119,10 @@ Robot::Robot(void
     fprintf(stderr, "Initialized drive controllers\n");
 
     m_logger = new LogSpreadsheet(this);
-    m_driverJoystick->RegisterLog(m_logger);
-    m_operatorJoystick->RegisterLog(m_logger);
     m_time = new LogCell("Time");
     m_logger->RegisterCell(m_time);
+    m_driverJoystick->RegisterLog(m_logger);
+    m_operatorJoystick->RegisterLog(m_logger);
     m_lights = new Lights(this);
     m_boilerPixy = new BoilerPixy(this, m_lights, m_logger);
     m_pixyR = new PixyThread(*this);
