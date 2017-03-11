@@ -359,7 +359,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             case DualAction::BtnX:
                 if (pressedP) {
                     g_manualDriveControl = false;
-                    m_drive->PIDTurn(45,
+                    m_drive->PIDDrive(0.0, 45,
                             Drive::RelativeTo::Now, 1.0);
                 }
                 break;

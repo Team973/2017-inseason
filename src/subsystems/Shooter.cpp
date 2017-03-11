@@ -181,12 +181,13 @@ void Shooter::TaskPeriodic(RobotMode mode) {
         StopConveyor();
         break;
       case shooting:
-        SetFlywheelSpeed(2900);
-        /*if (OnTarget()) {
+        SetFlywheelSpeed(2960);
+        if (OnTarget()) {
           m_drive->ArcadeDrive(0.0,0.0);
           StartAgitator(1.0, true);
           StartAgitator(1.0, false);
-          StartConveyor(1.0);}*/
+          StartConveyor(1.0);
+        }
         break;
       case manual:
         break;
