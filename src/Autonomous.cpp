@@ -14,6 +14,7 @@ namespace frc973 {
     static constexpr double DRIVER_STATION_LAUNCHPAD_DIST = 185.3;
     static constexpr double KEY_DIST = 52.0;
     static constexpr double SHOOTER_RPM = 2960.0;
+    //8.6 feet from side of field to side of airship
 
     void Robot::AutonomousStart(void) {
         printf("***auto start\n");
@@ -280,8 +281,8 @@ namespace frc973 {
                 m_drive
                     ->PIDDrive(-(DRIVER_STATION_BASE_LINE_DIST - 18.0) - 4.0, 0.0,
                                DriveBase::RelativeTo::Now, 0.9)
-                    ->SetDistTolerance(4.0, 900.0)
-                    ->SetAngleTolerance(999.0, 999.0);
+                    ->SetDistTolerance(4.0, 9000.0)
+                    ->SetAngleTolerance(9909.0, 9099.0);
                 m_gearIntake->SetPickUpManual();
                 m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
                 m_shooter->StopAgitator();
@@ -325,7 +326,7 @@ namespace frc973 {
                 }
                 break;
             case 4:
-                if (GetMsecTime() - m_autoTimer > 3000) {
+                if (GetMsecTime() - m_autoTimer > 2500) {
                     m_drive
                         ->PIDDrive(-18.0, 0.0,
                                    DriveBase::RelativeTo::Now, 1.0)
@@ -366,7 +367,7 @@ namespace frc973 {
                     m_drive->ArcadeDrive(0.0, 0.0);
                     m_shooter->StartAgitator(1.0, true);
                     m_shooter->StartAgitator(1.0, false);
-                    m_shooter->StartConveyor(1.0);
+                    m_shooter->StartConveyor(0.9);
                     m_autoState++;
                 }
                 break;

@@ -75,7 +75,7 @@ void Robot::TeleopContinuous(void) {
     }
 
     if (g_hangSignalSent == false && GetMsecTime() - m_teleopTimer > 90000) {
-        m_lights->NotifyFlash(3);
+        m_lights->NotifyFlash(10);
         g_hangSignalSent = true;
     }
 }

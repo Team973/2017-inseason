@@ -89,6 +89,11 @@ public:
         return this;
     }
 
+    PIDDriveController *SetQuickExit(bool quickExit) {
+        m_quickExit = quickExit;
+        return this;
+    }
+
 	void Zero() {
 		m_prevDist = 0.0;
 		m_prevAngle = 0.0;
@@ -98,6 +103,7 @@ public:
 	}
 private:
     bool m_needSetControlMode = true;
+    bool m_quickExit = false;
 	double m_prevDist;
 	double m_prevAngle;
 

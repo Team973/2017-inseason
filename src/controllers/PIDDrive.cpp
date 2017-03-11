@@ -90,16 +90,26 @@ void PIDDriveController::CalcDriveOutput(DriveStateProvider *state,
 	out->SetDriveOutput(MAX_SPEED * m_speedCap * (throttle - turn),
                         MAX_SPEED * m_speedCap * (throttle + turn));
 
-	if ((m_distEnabled == false ||
-                (Util::abs(m_targetDist - m_prevDist) < m_distTolerance &&
-                 Util::abs(state->GetRate()) < m_distRateTolerance)) &&
-            Util::abs(m_targetAngle - m_prevAngle) < m_angleTolerance &&
-            Util::abs(state->GetAngularRate()) < m_angleRateTolerance) {
-		m_onTarget = true;
-	}
-	else {
-		m_onTarget = false;
-	}
+    if (m_quickExit == false) {
+        if ((m_distEnabled == false ||
+                    (Util::abs(m_targetDist - m_prevDist) < m_distTolerance &&
+                     Util::abs(state->GetRate()) < m_distRateTolerance)) &&
+                Util::abs(m_targetAngle - m_prevAngle) < m_angleTolerance &&
+                Util::abs(state->GetAngularRate()) < m_angleRateTolerance) {
+            m_onTarget = true;
+        }
+        else {
+            m_onTarget = false;
+        }
+    }
+    else {
+        if (Util::abs(m_targetDist - m_prevDist) < m_distTolerance) {
+            m_onTarget = true;
+        }
+        else {
+            m_onTarget = false;
+        }
+    }
 }
 
 /*
@@ -132,6 +142,7 @@ void PIDDriveController::SetTarget(double dist, double angle,
     m_distRateTolerance = DEFAULT_DIST_RATE_TOLERANCE;
     m_angleTolerance = DEFAULT_ANGLE_TOLERANCE;
     m_angleRateTolerance = DEFAULT_ANGLE_RATE_TOLERANCE;
+    m_quickExit = false;
 }
 
 }
