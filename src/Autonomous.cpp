@@ -435,14 +435,15 @@ namespace frc973 {
           if (GetMsecTime() - m_autoTimer > 250) {
               m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
           }
-          if(m_drive->OnTarget()){
+          if(m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2500){
             m_drive->PIDTurn(-65.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0)
-                ->SetAngleTolerance(8.0, 4.0);
+                ->SetAngleTolerance(15.0, 4.0);
+            m_autoTimer = GetMsecTime();
             m_autoState++;
           }
           break;
         case 2:
-          if (m_drive->OnTarget()) {
+          if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500) {
              // m_drive->SetBoilerPixyTargeting();
               m_autoTimer = GetMsecTime();
               m_autoState++;
@@ -461,29 +462,34 @@ namespace frc973 {
               }
         case 4:
             if(GetMsecTime() - m_autoTimer >= 1500){
-              m_drive->PIDTurn(0.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
+              m_drive->PIDTurn(0.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0)
+                  ->SetAngleTolerance(10.0, 3.0);
               m_shooter->StopAgitator();
               m_shooter->StartConveyor(0.0);
               m_shooter->SetFlywheelStop();
+              m_autoTimer = GetMsecTime();
               m_autoState++;
             }
             break;
         case 5:
-          if(m_drive->OnTarget()){
+          if(m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500){
             m_drive->PIDDrive(-76.0, 0.0, DriveBase::RelativeTo::SetPoint, 1.0);
+            m_autoTimer = GetMsecTime();
             m_compressor->Enable();
             m_autoState++;
           }
           break;
         case 6:
-            if (m_drive->OnTarget()) {
-              m_drive->PIDTurn(-60.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
+            if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2000) {
+              m_drive->PIDTurn(-60.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0)
+                  ->SetAngleTolerance(10.0, 3.0);
            // m_drive->SetGearPixyTargeting();
+              m_autoTimer = GetMsecTime();
               m_autoState++;
             }
             break;
         case 7:
-            if (m_drive->OnTarget()) {
+            if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500) {
                 m_autoTimer = GetMsecTime();
                 m_drive->ArcadeDrive(-0.3, 0.0);
                 m_autoState++;
@@ -532,7 +538,8 @@ namespace frc973 {
               m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
           }
           if(m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2000){
-              m_drive->PIDTurn(-31.5 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
+              m_drive->PIDTurn(-31.5 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0)
+                  ->SetAngleTolerance(10.0, 2.0);
               m_autoTimer = GetMsecTime();
               m_autoState++;
           }
@@ -558,14 +565,16 @@ namespace frc973 {
             break;
         case 4:
             if(GetMsecTime() - m_autoTimer >= 2500){
-              m_drive->PIDTurn(-60.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
+              m_drive->PIDTurn(-60.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0)
+                  ->SetAngleTolerance(10.0, 2.0);
               m_shooter->StopAgitator();
               m_shooter->StartConveyor(0.0);
+              m_autoTimer = GetMsecTime();
               m_autoState++;
             }
             break;
         case 5:
-          if(m_drive->OnTarget()){
+          if(m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500){
             m_drive->PIDDrive(-50.0, 0.0, DriveBase::RelativeTo::Now, 1.0);
             m_autoState++;
           }
