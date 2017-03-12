@@ -550,7 +550,7 @@ namespace frc973 {
               m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
           }
           if(m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2500){
-            m_drive->PIDTurn(-65.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0)
+            m_drive->PIDTurn(-67.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0)
                 ->SetAngleTolerance(15.0, 4.0);
             m_autoTimer = GetMsecTime();
             m_autoState++;
@@ -587,7 +587,7 @@ namespace frc973 {
             break;
         case 5:
           if(m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500){
-            m_drive->PIDDrive(-76.0, 0.0, DriveBase::RelativeTo::SetPoint, 1.0);
+            m_drive->PIDDrive(-79.0, 0.0, DriveBase::RelativeTo::SetPoint, 1.0);
             m_autoTimer = GetMsecTime();
             m_compressor->Enable();
             m_autoState++;

@@ -123,22 +123,22 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
     switch (button) {
         case DualAction::BtnA:
             if (pressedP) {
-                m_autoRoutine = AutonomousRoutine::GearLeftPeg;
+                //m_autoRoutine = AutonomousRoutine::GearLeftPeg;
             }
             break;
         case DualAction::BtnB:
             if (pressedP) {
-                m_autoRoutine = AutonomousRoutine::GearMiddlePeg;
+                //m_autoRoutine = AutonomousRoutine::GearMiddlePeg;
             }
             break;
         case DualAction::BtnX:
             if (pressedP) {
-                m_autoRoutine = AutonomousRoutine::GearRightPeg;
+                //m_autoRoutine = AutonomousRoutine::GearRightPeg;
             }
             break;
         case DualAction::BtnY:
             if (pressedP) {
-                m_autoRoutine = AutonomousRoutine::FuelBallToBoiler;
+              //  m_autoRoutine = AutonomousRoutine::FuelBallToBoiler;
             }
             break;
         case DualAction::RightBumper:
@@ -148,7 +148,7 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             break;
         case DualAction::DPadUpVirtBtn:
             if (pressedP) {
-                m_autoRoutine = AutonomousRoutine::ShootFuelThenHopper;
+              //  m_autoRoutine = AutonomousRoutine::ShootFuelThenHopper;
             }
             break;
         case DualAction::DPadRightVirtBtn:
@@ -163,7 +163,7 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             break;
         case DualAction::DPadLeftVirtBtn:
             if (pressedP) {
-              m_autoRoutine = AutonomousRoutine::AimedAtBoilerAuto;
+            //  m_autoRoutine = AutonomousRoutine::AimedAtBoilerAuto;
             }
             break;
         case DualAction::LeftBumper:
