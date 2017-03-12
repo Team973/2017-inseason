@@ -225,12 +225,16 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::RightTrigger:
             if (pressedP) {
+                m_ballIntake->SetIntakePower(-1.0);
+            }
+            else {
+                m_ballIntake->BallIntakeStop();
             }
             break;
         case DualAction::RightBumper:
             if (pressedP) {
                 m_ballIntake->BallIntakeStart();
-                }
+            }
             else{
                 m_ballIntake->BallIntakeStop();
             }
