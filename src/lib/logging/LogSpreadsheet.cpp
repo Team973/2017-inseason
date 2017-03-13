@@ -8,9 +8,12 @@
 #include "lib/logging/LogSpreadsheet.h"
 #include "lib/CoopTask.h"
 
+#include "WPILib.h"
+
 #include <cstdio>
 #include <cstdarg>
-#include <ctime>
+#include <cerrno>
+#include <cstring>
 
 namespace frc973 {
 
@@ -113,18 +116,17 @@ void LogSpreadsheet::InitializeTable() {
 		return;
 	}
 
-    time_t rawTime;
-    struct tm * timeInfo;
-    char buffer[80];
+    char buffer[81];
 
-    time(&rawTime);
-    timeInfo = localtime(&rawTime);
-    strftime(buffer, 80, "/home/lvuser/log::%F::%X.txt", timeInfo);
+
+    snprintf(buffer, sizeof(buffer) - 1,
+             "/home/lvuser/log::%llu.txt", GetFPGATime());
 
 	m_oFile = new std::ofstream(buffer);
 
-	if (!m_oFile->is_open()) {
-		printf("Could not open file `%s` for writing\n", buffer);
+	if (m_oFile->fail()) {
+		printf("Could not open file `%s` for writing.  Errno %d (%s)\n",
+               buffer, errno, strerror(errno));
 		return;
 	}
 
