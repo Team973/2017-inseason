@@ -11,6 +11,8 @@ namespace frc973{
   m_scheduler(scheduler),
   m_ballIntakeMotor(new CANTalon(BALL_INTAKE_CAN_ID, 50)),
   m_ballIntakeState(BallIntakeState::notRunning),
+  m_hopperSolenoidLeft(new Solenoid(HOPPER_SOLENOID_LEFT)),
+  m_hopperSolenoidRight(new Solenoid(HOPPER_SOLENOID_RIGHT)),
   m_ballIntakePow(0.0)
   {
     this->m_scheduler->RegisterTask("BallIntake", this, TASK_PERIODIC);
@@ -44,6 +46,16 @@ namespace frc973{
     m_ballIntakePow = power;
     m_ballIntakeState = BallIntakeState::manual;
     m_ballIntakeMotor->Set(power);
+  }
+
+  void BallIntake::ExpandHopper(){
+    m_hopperSolenoidRight->Set(true);
+    m_hopperSolenoidLeft->Set(true);
+  }
+
+  void BallIntake::RetractHopper(){
+    m_hopperSolenoidRight->Set(false);
+    m_hopperSolenoidLeft->Set(false);
   }
 
   void BallIntake::TaskPeriodic(RobotMode mode){

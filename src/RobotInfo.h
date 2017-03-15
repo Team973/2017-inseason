@@ -47,10 +47,11 @@ constexpr int TUNING_JOYSTICK_PORT = 2;
 constexpr int GEAR_INTAKE_POS = 0;
 constexpr int GEAR_INTAKE_GRIP_OPEN = 1;
 constexpr int GEAR_INTAKE_GRIP_CLOSE = 2;
-
+constexpr int HOPPER_SOLENOID_LEFT = 3;
+constexpr int FLASH_LIGHT_SOL = 4;
+constexpr int HOPPER_SOLENOID_RIGHT = 5;
 constexpr int BOILER_PIXY_LIGHT_SOL = 6;
 
-constexpr int FLASH_LIGHT_SOL = 4;
 //CANTalon
 constexpr int DRIVE_LEFT_A_CAN = 16;
 constexpr int DRIVE_LEFT_B_CAN = 15;
@@ -85,6 +86,6 @@ constexpr double DRIVE_DIST_PER_REVOLUTION =
     DRIVE_WHEEL_DIAMETER * Constants::PI;
 constexpr double DRIVE_WIDTH = 23.0;
 //inches/sec from revolutions/minute
-constexpr double DRIVE_IPS_FROM_RPM = 
+constexpr double DRIVE_IPS_FROM_RPM =
     DRIVE_DIST_PER_REVOLUTION / 60.0;
 }

@@ -19,6 +19,7 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
         m_scheduler(scheduler),
         m_flywheelState(FlywheelState::notRunning),
         m_shootingSequenceState(ShootingSequenceState::idle),
+        m_side(Side::left),
         m_flywheelMotorPrimary(new CANTalon(FLYWHEEL_PRIMARY_CAN_ID,
                                             FLYWHEEL_CONTROL_PERIOD_MS)),
         m_flywheelMotorReplica(new CANTalon(FLYWHEEL_REPLICA_CAN_ID)),
@@ -137,12 +138,12 @@ void Shooter::StopConveyor() {
 }
 
 //side: true = right; false = left
-void Shooter::StartAgitator(double speed, bool side){
-    if (side == false) {
+void Shooter::StartAgitator(double speed, Side side){
+    if (side == Side::left) {
         m_leftAgitator->Set(speed * 12.0);
         //printf("%lf pow on %d - left agitator\n", speed, LEFT_AGITATOR_CAN_ID);
     }
-    else if (side == true) {
+    else if (side == Side::right) {
         m_rightAgitator->Set(-speed * 12.0);
         //printf("%lf pow on %d - right agitator\n", speed, RIGHT_AGITATOR_CAN_ID);
     }
@@ -184,8 +185,8 @@ void Shooter::TaskPeriodic(RobotMode mode) {
         SetFlywheelSpeed(2960);
         if (OnTarget()) {
           m_drive->ArcadeDrive(0.0,0.0);
-          StartAgitator(1.0, true);
-          StartAgitator(1.0, false);
+          StartAgitator(1.0, Side::right);
+          StartAgitator(1.0, Side::left);
           StartConveyor(1.0);
         }
         break;

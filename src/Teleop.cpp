@@ -24,15 +24,13 @@ void Robot::TeleopStop(void) {
 static bool g_hangSignalSent = false;
 static bool g_manualDriveControl = true;
 static bool g_manualConveyorControl = true;
-static bool g_driveOpenLoop = false; //true: Allow OpenloopArcadeDrive, false: AssistedArcadeDrive
-static bool g_bumperModePixy = false; // true: Allow BoilerPixyTargeting, false: Low Gear
 
 void Robot::TeleopContinuous(void) {
     double y = -m_driverJoystick->GetRawAxisWithDeadband(DualAction::LeftYAxis);
     double x = -m_driverJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)
         + -m_tuningJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis);
 
-    if(g_bumperModePixy && m_driverJoystick->GetRawButton(DualAction::RightBumper)){
+    if(m_driveMode == DriveMode::BoilerVision && m_driverJoystick->GetRawButton(DualAction::RightBumper)){
       m_drive->SetBoilerJoystickTerm(y, x);
       m_drive->SetBoilerPixyTargeting();
     }
@@ -42,10 +40,10 @@ void Robot::TeleopContinuous(void) {
         y /= 3.0;
       }
 
-      if(g_driveOpenLoop){
+      if(m_driveMode == DriveMode::OpenLoop){
         m_drive->OpenloopArcadeDrive(y, x);
       }
-      else{
+      else if(m_driveMode == DriveMode::AssistedArcade){
         m_drive->AssistedArcadeDrive(y, x);
       }
     }
@@ -55,7 +53,6 @@ void Robot::TeleopContinuous(void) {
       g_manualDriveControl = true;
     }
     */
-
 
     if (Util::abs(m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)) > 0.5 ||
         Util::abs(m_operatorJoystick->GetRawAxisWithDeadband(DualAction::LeftYAxis)) > 0.5) {
@@ -70,8 +67,8 @@ void Robot::TeleopContinuous(void) {
       double l = m_operatorJoystick->GetRawAxisWithDeadband(DualAction::LeftYAxis);
       double r = m_operatorJoystick->GetRawAxisWithDeadband(DualAction::RightYAxis);
 
-      m_shooter->Shooter::StartAgitator(l, false);
-      m_shooter->Shooter::StartAgitator(r, true);
+      m_shooter->Shooter::StartAgitator(l, Shooter::Side::left);
+      m_shooter->Shooter::StartAgitator(r, Shooter::Side::right);
     }
 
     if (g_hangSignalSent == false && GetMsecTime() - m_teleopTimer > 90000) {
@@ -86,22 +83,22 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         switch (button) {
         case DualAction::BtnA:
             if (pressedP) {
-              g_bumperModePixy = true;
+              m_driveMode = DriveMode::BoilerVision;
             }
             break;
         case DualAction::BtnB:
             if (pressedP) {
-              g_bumperModePixy = false;
+              m_driveMode = DriveMode::LowGear;
             }
             break;
         case DualAction::BtnX:
             if (pressedP) {
-              g_driveOpenLoop = true;
+              m_driveMode = DriveMode::OpenLoop;
             }
             break;
         case DualAction::BtnY:
             if (pressedP) {
-              g_driveOpenLoop = false;
+              m_driveMode = DriveMode::AssistedArcade;
             }
             break;
         case DualAction::LeftBumper:
@@ -322,8 +319,8 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                     m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
                     g_manualConveyorControl = false;
                     printf("Start right bumper things\n");
-                    m_shooter->StartAgitator(m_flailSetpt, true);
-                    m_shooter->StartAgitator(m_flailSetpt, false);
+                    m_shooter->StartAgitator(m_flailSetpt, Shooter::Side::right);
+                    m_shooter->StartAgitator(m_flailSetpt, Shooter::Side::left);
                     m_shooter->StartConveyor(m_conveyorSetpt);
                 }
                 else {

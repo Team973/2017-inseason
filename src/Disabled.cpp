@@ -25,47 +25,6 @@ void Robot::DisabledContinuous(void) {
   else if(m_alliance == Alliance::Blue){
       m_autoDirection = 1.0;
   }
-
-  if (m_autoRoutine == AutonomousRoutine::GearLeftPeg){
-    DBStringPrintf(DBStringPos::DB_LINE0,
-            "%c Gear to LeftPeg Auto",
-            (m_alliance == Alliance::Red) ? 'R' : 'B');
-    m_autoSelectLog->LogPrintf(
-            "%c Gear to LeftPeg Auto",
-            (m_alliance == Alliance::Red) ? 'R' : 'B');
-  }
-  else if (m_autoRoutine == AutonomousRoutine::GearMiddlePeg){
-    DBStringPrintf(DBStringPos::DB_LINE0,
-            "%c Gear to Middle Peg Auto",
-            (m_alliance == Alliance::Red) ? 'R' : 'B');
-    m_autoSelectLog->LogPrintf(
-            "%c Gear to Middle Peg Auto",
-            (m_alliance == Alliance::Red) ? 'R' : 'B');
-  }
-  else if (m_autoRoutine == AutonomousRoutine::GearRightPeg){
-    DBStringPrintf(DBStringPos::DB_LINE0,
-            "%c Gear to Right Peg Auto",
-            (m_alliance == Alliance::Red) ? 'R' : 'B');
-    m_autoSelectLog->LogPrintf(
-            "%c Gear to Right Peg Auto",
-            (m_alliance == Alliance::Red) ? 'R' : 'B');
-  }
-  else if (m_autoRoutine == AutonomousRoutine::FuelBallToBoiler){
-    DBStringPrintf(DBStringPos::DB_LINE0,
-                      "%c FuelBallToBoiler Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-    m_autoSelectLog->LogPrintf(
-                      "%c FuelBallToBoiler Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-  }
-  else if (m_autoRoutine == AutonomousRoutine::ShootFuelThenHopper){
-    DBStringPrintf(DBStringPos::DB_LINE0,
-                      "%c ShootFuel, GoToHopper, ShootFuel Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-    m_autoSelectLog->LogPrintf(
-                      "%c ShootFuel, GoToHopper, ShootFuel Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-  }
   else if (m_autoRoutine == AutonomousRoutine::MadtownHopperThenShootFuel){
     DBStringPrintf(DBStringPos::DB_LINE0,
                       "%c MadtownHopper",
@@ -96,14 +55,6 @@ void Robot::DisabledContinuous(void) {
                       (m_alliance == Alliance::Red) ? 'R' : 'B');
     m_autoSelectLog->LogPrintf(
                       "%c CitrusKpaGear Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-  }
-  else if (m_autoRoutine == AutonomousRoutine::AimedAtBoilerAuto){
-    DBStringPrintf(DBStringPos::DB_LINE0,
-                      "%c AimedAtBoiler Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-    m_autoSelectLog->LogPrintf(
-                      "%c AimedAtBoiler Auto",
                       (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
   else if (m_autoRoutine == AutonomousRoutine::NoAuto){

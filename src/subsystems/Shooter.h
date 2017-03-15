@@ -41,9 +41,14 @@ public:
       manual
     };
 
+    enum Side {
+      left,
+      right
+    };
+
     bool OnTarget();
 
-    void StartAgitator(double speed, bool side);
+    void StartAgitator(double speed, Side side);
     void StopAgitator();
     void StartConveyor(double speed);
     void StopConveyor();
@@ -64,6 +69,7 @@ private:
 
     FlywheelState m_flywheelState;
     ShootingSequenceState m_shootingSequenceState;
+    Side m_side;
 
     CANTalon *m_flywheelMotorPrimary;
     CANTalon *m_flywheelMotorReplica;

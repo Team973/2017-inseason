@@ -34,22 +34,23 @@ class Robot:
 {
 private:
     enum AutonomousRoutine {
-        GearLeftPeg,
-        GearMiddlePeg,
-        GearRightPeg,
-        FuelBallToBoiler,
-        ShootFuelThenHopper,
         HopperThenShootFuel,
         MadtownHopperThenShootFuel,
         KpaGearAuto,
         CitrusKpaGearAuto,
-        AimedAtBoilerAuto,
         NoAuto
     };
 
     enum Alliance{
       Red,
       Blue
+    };
+
+    enum DriveMode{
+      OpenLoop,
+      AssistedArcade,
+      BoilerVision,
+      LowGear
     };
 
     LogSpreadsheet *m_logger;
@@ -100,8 +101,8 @@ private:
     int						m_speedSetpt;
     double						m_flailSetpt;
     Alliance          m_alliance;
-
     double						m_conveyorSetpt;
+    DriveMode         m_driveMode;
 
     /**
      * Logging
@@ -142,16 +143,10 @@ public:
     void AutonomousStop(void) override;
     void AutonomousContinuous(void) override;
 
-    void GearRtPeg(void);
-    void GearMidPeg(void);
-    void GearLtPeg(void);
-    void FuelToBoiler(void);
     void HopperThenShoot(void);
     void MadtownHopperThenShoot(void);
-    void ShootThenHopper(void);
     void KpaAndGearAuto(void);
     void CitrusKpaAndGearAuto(void);
-    void AimedBoilerAuto(void);
 
     /**
      * Defined in Teleop.h

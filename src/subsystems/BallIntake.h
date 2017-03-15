@@ -33,6 +33,8 @@ namespace frc973 {
     void BallIntakeStop();
     void SetIntakePower(double power);
     void BallIntakeStartReverse();
+    void ExpandHopper();
+    void RetractHopper();
     void TaskPeriodic(RobotMode mode) override;
 
   private:
@@ -40,6 +42,8 @@ namespace frc973 {
     CANTalon *m_ballIntakeMotor;
 
     BallIntakeState m_ballIntakeState;
+    Solenoid *m_hopperSolenoidLeft;
+    Solenoid *m_hopperSolenoidRight;
 
     double m_ballIntakePow;
 
