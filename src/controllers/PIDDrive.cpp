@@ -12,22 +12,15 @@
 
 namespace frc973 {
 
-static constexpr double DRIVE_PID_KP = 0.05;
+static constexpr double DRIVE_PID_KP = 0.025;// 0.030;
 static constexpr double DRIVE_PID_KI = 0.0;
-static constexpr double DRIVE_PID_KD = 0;
+static constexpr double DRIVE_PID_KD = 0.0;
 
-static constexpr double TURN_PID_KP = 0.10;
+static constexpr double TURN_PID_KP = 0.0105;
 static constexpr double TURN_PID_KI = 0.0;
-static constexpr double TURN_PID_KD = 0;
+static constexpr double TURN_PID_KD = 0.00135;
 
-
-/*
-static constexpr double TURN_PID_KP = 0.17;
-static constexpr double TURN_PID_KI = 0.002;
-static constexpr double TURN_PID_KD = 0.0015;
-
-static constexpr double TURN_FEEDFORWARD = 0.06;
-*/
+static constexpr double MAX_SPEED = 150;
 
 PIDDriveController::PIDDriveController():
 	m_prevDist(0.0),
@@ -38,35 +31,50 @@ PIDDriveController::PIDDriveController():
 	m_drivePID(nullptr),
 	m_turnPID(nullptr),
 	m_distEnabled(true),
-	m_powerCap(1.0)
+	m_speedCap(1.0),
+    m_lastThrottle(0.0),
+    m_distTolerance(DEFAULT_DIST_TOLERANCE),
+    m_distRateTolerance(DEFAULT_DIST_RATE_TOLERANCE),
+    m_angleTolerance(DEFAULT_ANGLE_TOLERANCE),
+    m_angleRateTolerance(DEFAULT_ANGLE_RATE_TOLERANCE)
 {
 	m_drivePID = new PID(DRIVE_PID_KP, DRIVE_PID_KI, DRIVE_PID_KD);
 	m_turnPID = new PID(TURN_PID_KP, TURN_PID_KI, TURN_PID_KD);
 }
 
+PIDDriveController::~PIDDriveController() {
+    delete m_drivePID;
+    delete m_turnPID;
+}
+
 void PIDDriveController::CalcDriveOutput(DriveStateProvider *state,
 		DriveControlSignalReceiver *out) {
+	if(m_needSetControlMode == true){
+		out->SetDriveControlMode(CANSpeedController::ControlMode::kSpeed);
+		m_needSetControlMode = false;
+	}
+
 	m_prevDist = state->GetDist();
 	m_prevAngle = state->GetAngle();
 
 	double throttle;
 	double turn = Util::bound(m_turnPID->CalcOutput(m_prevAngle), -0.5, 0.5);
 
-	/*
-	double turn = m_turnPID->CalcOutput(m_prevAngle);
-	turn = Util::signedIncrease(turn, TURN_FEEDFORWARD);
-	turn = Util::bound(turn, -0.35, 0.35);
-	*/
-
-
 	if (m_distEnabled){
-		throttle = -Util::bound(m_drivePID->CalcOutput(m_prevDist), -m_powerCap, m_powerCap);
+		throttle = m_drivePID->CalcOutput(m_prevDist);
 	}
 	else {
 		throttle = 0.0;
 	}
 
-	DBStringPrintf(DBStringPos::DB_LINE9, "p %2.2lf t %2.2lf", throttle, turn);
+    if (throttle > m_lastThrottle + 0.09) {
+        throttle = m_lastThrottle + 0.09;
+    }
+    m_lastThrottle = throttle;
+
+	DBStringPrintf(DBStringPos::DB_LINE3, "p %2.2lf t %2.2lf",
+            MAX_SPEED * m_speedCap * throttle,
+            MAX_SPEED * m_speedCap * turn);
 
 	printf("dist target %lf, dist curr %lf, dist error: %lf \n",
 			m_targetDist, m_prevDist, m_targetDist - m_prevDist);
@@ -75,17 +83,33 @@ void PIDDriveController::CalcDriveOutput(DriveStateProvider *state,
 	printf("throttle %lf  turn %lf\n",
 			throttle, turn);
 
-	DBStringPrintf(DBStringPos::DB_LINE6, "error %lf", m_prevAngle - m_targetAngle);
+	DBStringPrintf(DBStringPos::DB_LINE6, "err d %.3lf a %.3lf",
+            m_prevDist - m_targetDist,
+            m_prevAngle - m_targetAngle);
 
-	out->SetDriveOutput(throttle + turn, throttle - turn);
+	out->SetDriveOutput(MAX_SPEED * m_speedCap * (throttle - turn),
+                        MAX_SPEED * m_speedCap * (throttle + turn));
 
-	if ((m_distEnabled == false || (Util::abs(m_targetDist - m_prevDist) < 2.0 && Util::abs(state->GetRate()) < 0.5)) &&
-			Util::abs(m_targetAngle - m_prevAngle) < 2.0 && Util::abs(state->GetAngularRate()) < 1.0) {
-		m_onTarget = true;
-	}
-	else {
-		m_onTarget = false;
-	}
+    if (m_quickExit == false) {
+        if ((m_distEnabled == false ||
+                    (Util::abs(m_targetDist - m_prevDist) < m_distTolerance &&
+                     Util::abs(state->GetRate()) < m_distRateTolerance)) &&
+                Util::abs(m_targetAngle - m_prevAngle) < m_angleTolerance &&
+                Util::abs(state->GetAngularRate()) < m_angleRateTolerance) {
+            m_onTarget = true;
+        }
+        else {
+            m_onTarget = false;
+        }
+    }
+    else {
+        if (Util::abs(m_targetDist - m_prevDist) < m_distTolerance) {
+            m_onTarget = true;
+        }
+        else {
+            m_onTarget = false;
+        }
+    }
 }
 
 /*
@@ -113,6 +137,12 @@ void PIDDriveController::SetTarget(double dist, double angle,
 
 	m_drivePID->SetTarget(m_targetDist);
 	m_turnPID->SetTarget(m_targetAngle);
+
+    m_distTolerance = DEFAULT_DIST_TOLERANCE;
+    m_distRateTolerance = DEFAULT_DIST_RATE_TOLERANCE;
+    m_angleTolerance = DEFAULT_ANGLE_TOLERANCE;
+    m_angleRateTolerance = DEFAULT_ANGLE_RATE_TOLERANCE;
+    m_quickExit = false;
 }
 
 }

@@ -9,7 +9,10 @@ set(TEAM_NUMBER 973)
 # find src -iname "*.cpp"
 # in project root
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall")
-set(SOURCE_FILES src/Robot.cpp src/lib/CoopMTRobot.cpp
+set(SOURCE_FILES
+    src/Robot.cpp src/Autonomous.cpp src/Disabled.cpp
+    src/Teleop.cpp src/Test.cpp
+    src/lib/CoopMTRobot.cpp
     src/lib/util/Util.cpp src/lib/util/Matrix.cpp src/lib/jsoncpp.cpp
     src/lib/TaskMgr.cpp src/lib/ControllerBase.cpp src/lib/CoopTask.cpp
     src/lib/DriveBase.cpp src/lib/GreyCompressor.cpp src/lib/JoystickHelper.cpp
@@ -18,15 +21,21 @@ set(SOURCE_FILES src/Robot.cpp src/lib/CoopMTRobot.cpp
     src/lib/filters/BullshitFilter.cpp src/lib/filters/CascadingFilter.cpp
     src/lib/filters/DelaySwitch.cpp src/lib/filters/FilterBase.cpp
     src/lib/SingleThreadTaskMgr.cpp src/lib/SmartPixy.cpp
+    src/lib/InterpLookupTable.cpp
     src/subsystems/PixyThread.cpp
     src/subsystems/BoilerPixy.cpp
-    src/subsystems/GearPixy.cpp
     src/subsystems/BallIntake.cpp
     src/subsystems/GearIntake.cpp
+    src/subsystems/Lights.cpp
     src/controllers/PIDDrive.cpp
+    src/controllers/GearPixyVisionDriveController.cpp
     src/lib/filters/MedianFilter.cpp src/lib/filters/MovingAverageFilter.cpp
     src/lib/filters/PID.cpp src/lib/filters/RampedOutput.cpp
     src/controllers/ArcadeDriveController.cpp
+    src/controllers/AssistedArcadeDrive.cpp
+    src/controllers/OpenloopArcadeDriveController.cpp
+    src/controllers/BoilerPixyVisionDriveController.cpp
+    src/controllers/OpenloopArcadeDriveController.cpp
     src/subsystems/Drive.cpp src/subsystems/Hanger.cpp
     src/subsystems/Shooter.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
@@ -73,3 +82,8 @@ if(DOXYGEN_FOUND)
     ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
   set_target_properties(doxygen PROPERTIES EXCLUDE_FROM_ALL TRUE)
 endif()
+
+# Lint target
+add_custom_target(lint
+    COMMAND sh -c "cppcheck src --enable=information,warning,style -I src"
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})

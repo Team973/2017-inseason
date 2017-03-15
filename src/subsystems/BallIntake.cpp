@@ -3,17 +3,24 @@
 #include "Robot.h"
 #include "RobotInfo.h"
 #include "lib/TaskMgr.h"
+#include "lib/logging/LogSpreadsheet.h"
 
 namespace frc973{
-  BallIntake::BallIntake(TaskMgr *scheduler)
+  BallIntake::BallIntake(TaskMgr *scheduler, LogSpreadsheet *logger)
   :
   m_scheduler(scheduler),
   m_ballIntakeMotor(new CANTalon(BALL_INTAKE_CAN_ID, 50)),
   m_ballIntakeState(BallIntakeState::notRunning),
+  m_hopperSolenoidLeft(new Solenoid(HOPPER_SOLENOID_LEFT)),
+  m_hopperSolenoidRight(new Solenoid(HOPPER_SOLENOID_RIGHT)),
   m_ballIntakePow(0.0)
   {
     this->m_scheduler->RegisterTask("BallIntake", this, TASK_PERIODIC);
     m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
+    m_ballIntakeMotor->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
+    m_ballIntakeMotor->EnableCurrentLimit(true);
+    m_ballIntakeMotor->SetCurrentLimit(20);
+    m_ballIntakeMotor->SetVoltageRampRate(120.0);
   }
 
   BallIntake::~BallIntake(){
@@ -22,14 +29,17 @@ namespace frc973{
 
   void BallIntake::BallIntakeStart(){
     m_ballIntakeState = BallIntakeState::running;
+    m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
   }
 
   void BallIntake::BallIntakeStartReverse(){
     m_ballIntakeState = BallIntakeState::reverse;
+    m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
   }
 
   void BallIntake::BallIntakeStop(){
     m_ballIntakeState = BallIntakeState::notRunning;
+    m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
   }
 
   void BallIntake::SetIntakePower(double power){
@@ -38,19 +48,30 @@ namespace frc973{
     m_ballIntakeMotor->Set(power);
   }
 
+  void BallIntake::ExpandHopper(){
+    m_hopperSolenoidRight->Set(true);
+    m_hopperSolenoidLeft->Set(true);
+  }
+
+  void BallIntake::RetractHopper(){
+    m_hopperSolenoidRight->Set(false);
+    m_hopperSolenoidLeft->Set(false);
+  }
+
   void BallIntake::TaskPeriodic(RobotMode mode){
       switch (m_ballIntakeState) {
         case running:
-          m_ballIntakeMotor->Set(BALL_INTAKE_RUNNING_POW);
-        break;
+          m_ballIntakeMotor->Set(0.55);
+          break;
         case notRunning:
           m_ballIntakeMotor->Set(0.0);
-        break;
+          break;
         case reverse:
           m_ballIntakeMotor->Set(BALL_INTAKE_REVERSE_POW);
-        break;
+          break;
         case manual:
-        break;
+          m_ballIntakeMotor->Set(m_ballIntakePow);
+          break;
       }
   }
 }

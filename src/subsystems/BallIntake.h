@@ -16,6 +16,8 @@ using namespace frc;
 
 namespace frc973 {
   class TaskMgr;
+  class LogSpreadsheet;
+  class LogCell;
 
   class BallIntake : public CoopTask{
   public:
@@ -25,12 +27,14 @@ namespace frc973 {
       manual,
       reverse
     };
-    BallIntake(TaskMgr *scheduler);
+    BallIntake(TaskMgr *scheduler, LogSpreadsheet *logger);
     virtual ~BallIntake();
     void BallIntakeStart();
     void BallIntakeStop();
     void SetIntakePower(double power);
     void BallIntakeStartReverse();
+    void ExpandHopper();
+    void RetractHopper();
     void TaskPeriodic(RobotMode mode) override;
 
   private:
@@ -38,11 +42,13 @@ namespace frc973 {
     CANTalon *m_ballIntakeMotor;
 
     BallIntakeState m_ballIntakeState;
+    Solenoid *m_hopperSolenoidLeft;
+    Solenoid *m_hopperSolenoidRight;
 
     double m_ballIntakePow;
 
-    static constexpr int BALL_INTAKE_RUNNING_POW = - 1.0;
-    static constexpr int BALL_INTAKE_REVERSE_POW = 1.0;
+    static constexpr int BALL_INTAKE_RUNNING_POW = 0.75;
+    static constexpr int BALL_INTAKE_REVERSE_POW = -0.75;
   };
 }
 

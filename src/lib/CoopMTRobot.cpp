@@ -46,6 +46,11 @@ void CoopMTRobot::RobotInit(void) {
 		   hostName, PROGRAM_NAME, __DATE__, __TIME__
 		   );
 
+    printf("Laws of robotics:\n"
+           "A Robot may not injure a human beig or, through inaction, alow a human being to come to harm.\n"
+           "A Robot must obey orders given to you by human beings, except where such orders would conflict with the first law.\n"
+           "A Robot must protect its own existence, as long as such protection does not conflict with the first or second laws. \n");
+
 	Initialize();
 }
 

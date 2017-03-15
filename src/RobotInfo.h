@@ -28,9 +28,9 @@ constexpr int BOILER_PIXY_CAM_X_DIGITAL = 4;
 constexpr int BOILER_PIXY_CAM_Y_DIGITAL = 5;
 constexpr int GEAR_PIXY_CAM_DIGITAL = 6;
 
-constexpr int BOILER_PIXY_CAM_X_ANALOG = 4;
-constexpr int BOILER_PIXY_CAM_Y_ANALOG = 5;
-constexpr int GEAR_PIXY_CAM_ANALOG = 6;
+constexpr int BOILER_PIXY_CAM_X_ANALOG = 0;
+constexpr int BOILER_PIXY_CAM_Y_ANALOG = 1;
+constexpr int GEAR_PIXY_CAM_ANALOG = 2;
 /**
  * Relays
  */
@@ -47,9 +47,11 @@ constexpr int TUNING_JOYSTICK_PORT = 2;
 constexpr int GEAR_INTAKE_POS = 0;
 constexpr int GEAR_INTAKE_GRIP_OPEN = 1;
 constexpr int GEAR_INTAKE_GRIP_CLOSE = 2;
+constexpr int HOPPER_SOLENOID_LEFT = 3;
+constexpr int FLASH_LIGHT_SOL = 4;
+constexpr int HOPPER_SOLENOID_RIGHT = 5;
+constexpr int BOILER_PIXY_LIGHT_SOL = 6;
 
-constexpr int POWER_TAKEOFF_SOL_A = 3;
-constexpr int POWER_TAKEOFF_SOL_B = 4;
 //CANTalon
 constexpr int DRIVE_LEFT_A_CAN = 16;
 constexpr int DRIVE_LEFT_B_CAN = 15;
@@ -78,13 +80,12 @@ constexpr int FLYWHEEL_CONTROL_PERIOD_MS = 5;
 /**
  * Distance (in inches) of the drive per click of the encoder
  */
-constexpr double DRIVE_WHEEL_DIAMETER = 4.0;
-constexpr double DRIVE_CLICKS_PER_REVOLUTION = 360.0;
-constexpr double DRIVE_GEAR_RATIO = 1.0;
-constexpr double DRIVE_DIST_PER_REVOLUTION = DRIVE_WHEEL_DIAMETER *
-		Constants::PI;
-constexpr double DRIVE_DIST_PER_CLICK = DRIVE_DIST_PER_REVOLUTION *
-		DRIVE_CLICKS_PER_REVOLUTION;
+constexpr double DRIVE_WHEEL_DIAMETER = 3.25;
 
-constexpr double SHOOTER_CLICKS_PER_REVOLUTION = 360.0;
+constexpr double DRIVE_DIST_PER_REVOLUTION =
+    DRIVE_WHEEL_DIAMETER * Constants::PI;
+constexpr double DRIVE_WIDTH = 23.0;
+//inches/sec from revolutions/minute
+constexpr double DRIVE_IPS_FROM_RPM =
+    DRIVE_DIST_PER_REVOLUTION / 60.0;
 }

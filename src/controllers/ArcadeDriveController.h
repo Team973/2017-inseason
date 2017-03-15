@@ -30,7 +30,7 @@ public:
 	 * This controller is open-loop so OnTarget doesn't make sense here...
 	 * just return false I guess...
 	 */
-	bool OnTarget() { return false; }
+	bool OnTarget() override { return false; }
 
 	/*
 	 * Set the joystick values (which in this case will be output)
@@ -49,6 +49,9 @@ private:
 	double m_leftOutput;
 	double m_rightOutput;
 	bool 	m_needSetControlMode;
+
+    static constexpr double THROTTLE_MAX = 130;  //in inches/sec
+    static constexpr double TURN_MAX = 4.0; //in radians/sec... 6.3radians ~= 360degrees
 };
 
 }

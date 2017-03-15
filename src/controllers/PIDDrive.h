@@ -18,7 +18,7 @@ class PID;
 class PIDDriveController : public DriveController {
 public:
 	PIDDriveController();
-	virtual ~PIDDriveController() {}
+	virtual ~PIDDriveController();
 
 	/*
 	 * Calculate the motor output to achieve the most recently set setpoint.
@@ -28,12 +28,16 @@ public:
 	void CalcDriveOutput(DriveStateProvider *state,
 			DriveControlSignalReceiver *out) override;
 
+	void Start() override {
+		m_needSetControlMode = true;
+	}
+
 	/*
 	 * On CalcDriveOutput, the robot sets the internal m_onTarget flag if it
 	 * is within tolerance of the target.  This method returns whether we are
 	 * on target.
 	 */
-	bool OnTarget() { return m_onTarget; }
+	bool OnTarget() override { return m_onTarget; }
 
 	/*
 	 * Set the target position/heading relative to absolute world
@@ -58,9 +62,37 @@ public:
 		m_distEnabled = false;
 	}
 
+    /*
+     * Scale the pseed down by |newCap|
+     *
+     * |newCap| of 1.0 means max speed
+     */
 	void SetCap (double newCap){
-		m_powerCap = newCap;
+		m_speedCap = newCap;
 	}
+
+    /*
+     * Set the tolerance for distance exiting
+     */
+    PIDDriveController *SetDistTolerance(double dist=2.0, double rate=2.0) {
+        m_distTolerance = dist;
+        m_distRateTolerance = rate;
+        return this;
+    }
+
+    /*
+     * Set the tolerance for distance exiting
+     */
+    PIDDriveController *SetAngleTolerance(double angle=2.0, double rate=2.0) {
+        m_angleTolerance = angle;
+        m_angleRateTolerance = rate;
+        return this;
+    }
+
+    PIDDriveController *SetQuickExit(bool quickExit) {
+        m_quickExit = quickExit;
+        return this;
+    }
 
 	void Zero() {
 		m_prevDist = 0.0;
@@ -70,6 +102,8 @@ public:
 		m_onTarget = false;
 	}
 private:
+    bool m_needSetControlMode = true;
+    bool m_quickExit = false;
 	double m_prevDist;
 	double m_prevAngle;
 
@@ -83,7 +117,25 @@ private:
 
 	bool m_distEnabled;
 
-	double m_powerCap;
+	double m_speedCap;
+    double m_lastThrottle;
+
+    double m_distTolerance;
+    double m_distRateTolerance;
+    double m_angleTolerance;
+    double m_angleRateTolerance;
+
+    /**
+     * In in/sec
+     */
+    static constexpr double DEFAULT_DIST_TOLERANCE = 2.0;
+    static constexpr double DEFAULT_DIST_RATE_TOLERANCE = 5.0;
+
+    /**
+     * In deg/sec
+     */
+    static constexpr double DEFAULT_ANGLE_TOLERANCE = 2.0;
+    static constexpr double DEFAULT_ANGLE_RATE_TOLERANCE = 5.0;
 };
 
 }

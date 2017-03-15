@@ -1,5 +1,8 @@
 #include "JoystickHelper.h"
 #include "TaskMgr.h"
+#include "util/Util.h"
+#include <string>
+#include <stdlib.h>
 
 namespace frc973 {
 
@@ -14,6 +17,7 @@ ObservableJoystick::ObservableJoystick(
 	 , m_ds(ds)
 	 , m_prevBtn(0)
 	 , m_scheduler(scheduler)
+     , m_logCell(nullptr)
 	 , m_lastLXVal(false)
 	 , m_lastLYVal(false)
 	 , m_lastRXVal(false)
@@ -37,6 +41,20 @@ ObservableJoystick::~ObservableJoystick() {
 		m_scheduler->UnregisterTask(this);
 	}
 }
+
+ObservableJoystick *ObservableJoystick::RegisterLog(LogSpreadsheet *logger) {
+    if (m_logCell == nullptr) {
+        //TODO this memory is never freed
+        char *cellTitleBuf = (char*) malloc(32 * sizeof(char));
+        sprintf(cellTitleBuf, "Joystick Btn Port %d", m_port);
+
+        m_logCell = new LogCell(cellTitleBuf, 64);
+        logger->RegisterCell(m_logCell);
+    }
+
+    return this;
+}
+
 
 float ObservableJoystick::GetRawAxisWithDeadband(int axis, bool fSquared,
 		float threshold) {
@@ -184,6 +202,10 @@ void ObservableJoystick::TaskPrePeriodic(RobotMode mode) {
 		}
 	}
 	m_prevBtn = currBtn;
+
+    if (m_logCell) {
+        m_logCell->LogPrintf("%x", currBtn);
+    }
 }
 
 }

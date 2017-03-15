@@ -10,6 +10,9 @@
 #include "WPILib.h"
 #include "lib/CoopTask.h"
 #include "CANTalon.h"
+#include "lib/filters/Debouncer.h"
+#include "Drive.h"
+#include "BoilerPixy.h"
 
 using namespace frc;
 
@@ -25,21 +28,35 @@ class LogSpreadsheet;
 class Shooter : public CoopTask
 {
 public:
-    Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgitator);
+    Shooter(TaskMgr *scheduler, LogSpreadsheet *logger, CANTalon *leftAgitator, Drive *drive, BoilerPixy *boilerPixy);
     virtual ~Shooter();
     void TaskPeriodic(RobotMode mode);
     void SetFlywheelPow(double pow);
     void SetFlywheelStop();
     void SetFlywheelSpeed(double speed);
 
-    void StartAgitator(double speed, bool side);
+    enum ShootingSequenceState{
+      idle,
+      shooting,
+      manual
+    };
+
+    enum Side {
+      left,
+      right
+    };
+
+    bool OnTarget();
+
+    void StartAgitator(double speed, Side side);
     void StopAgitator();
     void StartConveyor(double speed);
     void StopConveyor();
+    void SetShooterState(ShootingSequenceState state);
 
     double GetFlywheelRate();
 
-    static constexpr int DEFAULT_FLYWHEEL_SPEED_SETPOINT = 2700;
+    static constexpr int DEFAULT_FLYWHEEL_SPEED_SETPOINT = 3000;
 
     enum FlywheelState {
         power,
@@ -51,6 +68,8 @@ private:
     TaskMgr *m_scheduler;
 
     FlywheelState m_flywheelState;
+    ShootingSequenceState m_shootingSequenceState;
+    Side m_side;
 
     CANTalon *m_flywheelMotorPrimary;
     CANTalon *m_flywheelMotorReplica;
@@ -61,12 +80,20 @@ private:
     CANTalon *m_ballConveyor;
 
     double m_flywheelPow;
-  double m_flywheelSpeedSetpt;
+    double m_flywheelSpeedSetpt;
 
     LogCell *m_flywheelRate;
     LogCell *m_flywheelPowLog;
+    LogCell *m_flywheelAmpsLog;
     LogCell *m_flywheelStateLog;
     LogCell *m_speedSetpoint;
+    LogCell *m_conveyorLog;
+    LogCell *m_leftAgitatorLog;
+    LogCell *m_rightAgitatorLog;
+    Debouncer m_flywheelOnTargetFilter;
+    Drive *m_drive;
+    BoilerPixy  *m_boilerPixy;
+
 };
 
 }

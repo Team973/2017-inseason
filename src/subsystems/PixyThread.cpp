@@ -16,8 +16,10 @@ PixyThread::PixyThread(RobotStateInterface &stateProvider) :
     m_prevReadingTime(0),
     m_mutex(PTHREAD_MUTEX_INITIALIZER)
 {
-    m_thread->Start();
+    //m_thread->Start();
+    fprintf(stderr, "gonna register the pixy task\n");
     m_thread->RegisterTask("Pixy", this, TASK_PERIODIC);
+    fprintf(stderr, "registered the pixy task\n");
     m_prevReadingTime = GetMsecTime();
 }
 
@@ -36,27 +38,28 @@ void PixyThread::TaskPeriodic(RobotMode mode) {
     */
 
     int numBlocks = m_pixy->getBlocks(4);
+    double currentRead = m_prevReading;
 
 	pthread_mutex_lock(&m_mutex);
     if (numBlocks >= 2){
-        if (m_pixy->blocks[0].x <= m_pixy->blocks[1].x ){
-            m_prevReading = m_pixy->blocks[0].x;
-        }
-        else if (m_pixy->blocks[0].x > m_pixy->blocks[1].x) {
-            m_prevReading = m_pixy->blocks[1].x;
-        }
+        currentRead = (
+                (double) (m_pixy->blocks[0].x +
+                          m_pixy->blocks[1].x)) / 2.0;
         m_prevReadingTime = GetMsecTime();
     }
     else if (numBlocks == 1){
-        m_prevReading = m_pixy->blocks[0].x;
+        currentRead = m_pixy->blocks[0].x;
         m_prevReadingTime = GetMsecTime();
     }
+
+    m_prevReading = (m_prevReading + currentRead) / 2.0;
+    printf("reading %lf\n", m_prevReading);
 	pthread_mutex_unlock(&m_mutex);
 }
 
 double PixyThread::GetOffset() {
 	pthread_mutex_lock(&m_mutex);
-    double ret = (2.0 * m_prevReading / PIXY_MAX_X) - 0.5;
+    double ret = -((m_prevReading / 319.0) - 0.5);
 	pthread_mutex_unlock(&m_mutex);
     return ret;
 }

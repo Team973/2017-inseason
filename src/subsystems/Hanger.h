@@ -15,6 +15,9 @@ using namespace frc;
 
 namespace frc973 {
 
+class LogSpreadsheet;
+class LogCell;
+
 class Hanger : public CoopTask {
 public:
     enum HangerState {
@@ -23,16 +26,12 @@ public:
         armed
     };
 
-    Hanger(TaskMgr *scheduler);
+    Hanger(TaskMgr *scheduler, LogSpreadsheet *logger);
     virtual ~Hanger();
     void TaskPeriodic(RobotMode mode);
 
     void SetHangerState(HangerState hangerState);
-    void SetHangerClosedLoop(double position = HANGER_POS_SETPT);
     void SetAutoHang();
-
-    static constexpr double DEFAULT_HANG_POWER = 1.0;
-    static constexpr double HANGER_POS_SETPT = 90.0;
 private:
     TaskMgr *m_scheduler;
     CANTalon *m_crankMotor;
@@ -42,6 +41,9 @@ private:
 
     double m_crankCurrent;
     double m_hangerPositionSetpt;
+
+    LogCell *m_hangStateLog;
+    LogCell *m_hangCurrentLog;
 };
 
 } /* namespace frc973 */

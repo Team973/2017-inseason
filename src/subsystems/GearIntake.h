@@ -6,11 +6,14 @@
 #include "lib/TaskMgr.h"
 #include "CANTalon.h"
 #include "lib/WrapDash.h"
+#include "Lights.h"
 
 using namespace frc;
 
 namespace frc973{
   class TaskMgr;
+  class LogSpreadsheet;
+  class LogCell;
 
   class GearIntake : public CoopTask{
     public:
@@ -33,6 +36,7 @@ namespace frc973{
       };
 
       enum PickUp {
+        idle,
         seeking,
         chewing,
         digesting,
@@ -41,22 +45,26 @@ namespace frc973{
         manual
       };
 
-      GearIntake(TaskMgr *scheduler);
+      GearIntake(TaskMgr *scheduler, Lights *lights, LogSpreadsheet *logger);
       virtual ~GearIntake();
 
-      void StartPickupSequence();
-      void ReleaseGear();
-
+      void SetSeeking(bool request);
+      void SetReleaseManualEnable(bool request);
+      void SetPickUpState(PickUp state);
+      void SetPickUpManual();
       void SetGearIntakeState(GearIntakeState gearIntakeState);
       void SetGearPos(GearPosition gearPosition);
       void SetIndexerMode(Indexer indexerMode);
       void SetReleaseAutoEnable(bool driverInput);
+      /**
+       * Checks if the push sensors on the gear claw are pressed
+       * i.e., is the gear ready to be released?
+       */
       bool IsGearReady();
 
       void TaskPeriodic(RobotMode mode) override;
 
     private:
-
       TaskMgr *m_scheduler;
 
       GearIntakeState m_gearIntakeState;
@@ -75,6 +83,13 @@ namespace frc973{
       CANTalon *m_rightIndexer;
 
       uint32_t m_gearTimer;
-      bool m_driverReleased;
+      Lights *m_lights;
+      bool m_manualReleaseRequest;
+      bool m_seekingRequest;
+      bool m_autoReleaseRequest;
+
+      LogCell *m_gearStateLog;
+      LogCell *m_gearCurrentLog;
+      LogCell *m_gearInputsLog;
   };
 }

@@ -4,10 +4,12 @@
 #include "lib/JoystickHelper.h"
 #include "RobotInfo.h"
 #include "stdio.h"
+#include "lib/WrapDash.h"
 
 using namespace frc;
 #include "WPILib.h"
 #include "CANTalon.h"
+
 
 namespace frc973 {
 
@@ -17,13 +19,14 @@ class GearIntake;
 class Shooter;
 class GreyCompressor;
 class LogCell;
-class SPIGyro;
 class PoseManager;
 class Debouncer;
 class Hanger;
 class PixyThread;
 class BallIntake;
 class GreyCompressor;
+class BoilerPixy;
+class Lights;
 
 class Robot:
         public CoopMTRobot,
@@ -31,19 +34,28 @@ class Robot:
 {
 private:
     enum AutonomousRoutine {
-        GearLeftPeg,
-        GearMiddlePeg,
-        GearRightPeg,
-        FuelBallToBoiler,
-        ShootFuelThenHopper,
         HopperThenShootFuel,
+        MadtownHopperThenShootFuel,
+        KpaGearAuto,
+        CitrusKpaGearAuto,
         NoAuto
+    };
+
+    enum Alliance{
+      Red,
+      Blue
+    };
+
+    enum DriveMode{
+      OpenLoop,
+      AssistedArcade,
+      BoilerVision,
+      LowGear
     };
 
     LogSpreadsheet *m_logger;
 
     PowerDistributionPanel *m_pdp;
-    SPIGyro                *m_spiGyro;
 
     /**
      * Inputs (joysticks, sensors, etc...)
@@ -67,9 +79,10 @@ private:
      */
     Hanger			*m_hanger;
     BallIntake			*m_ballIntake;
-    GearIntake	*m_gearIntake;
     Shooter			*m_shooter;
-
+    Lights      *m_lights;
+    BoilerPixy      *m_boilerPixy;
+    GearIntake	*m_gearIntake;
     /*
      * Compressor
      */
@@ -82,21 +95,30 @@ private:
      */
     double 						m_autoDirection;
     int 							m_autoState;
-    AutonomousRoutine m_autoRoutine;
     uint32_t 					m_autoTimer;
+    uint32_t 					m_teleopTimer;
+    AutonomousRoutine m_autoRoutine;
     int						m_speedSetpt;
     double						m_flailSetpt;
+    Alliance          m_alliance;
     double						m_conveyorSetpt;
+    DriveMode         m_driveMode;
+
     /**
      * Logging
      */
+    BuiltInAccelerometer m_accel;//for testing the logger only
+
     LogCell *m_battery;
     LogCell *m_time;
     LogCell *m_state;
     LogCell *m_messages;
     LogCell *m_buttonPresses;
-
-    double m_teleopTimeSec;
+    LogCell *m_xAccel;
+    LogCell *m_yAccel;
+    LogCell *m_zAccel;
+    LogCell *m_autoStateLog;
+    LogCell *m_autoSelectLog;
 
     PixyThread *m_pixyR;
 public:
@@ -121,12 +143,10 @@ public:
     void AutonomousStop(void) override;
     void AutonomousContinuous(void) override;
 
-    void GearRtPeg(void);
-    void GearMidPeg(void);
-    void GearLtPeg(void);
-    void FuelToBoiler(void);
     void HopperThenShoot(void);
-    void ShootThenHopper(void);
+    void MadtownHopperThenShoot(void);
+    void KpaAndGearAuto(void);
+    void CitrusKpaAndGearAuto(void);
 
     /**
      * Defined in Teleop.h

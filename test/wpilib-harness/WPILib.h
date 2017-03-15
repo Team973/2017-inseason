@@ -4,3 +4,5 @@ class IterativeRobot
 {
 
 };
+
+class Solenoid;

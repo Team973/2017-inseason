@@ -36,6 +36,7 @@ GreyCompressor::GreyCompressor(DigitalInput *pressureSwitch, Relay *compressor,
 
 GreyCompressor::~GreyCompressor() {
 	this->m_scheduler->UnregisterTask(this);
+    delete m_pressureSwitchFilter;
 }
 
 void GreyCompressor::Enable() {

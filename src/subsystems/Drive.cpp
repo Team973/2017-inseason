@@ -12,43 +12,52 @@
 #include "lib/WrapDash.h"
 
 #include "controllers/ArcadeDriveController.h"
+#include "controllers/OpenloopArcadeDriveController.h"
+#include "controllers/AssistedArcadeDrive.h"
 #include "controllers/PIDDrive.h"
+#include "controllers/BoilerPixyVisionDriveController.h"
+#include "controllers/GearPixyVisionDriveController.h"
 
 namespace frc973 {
 
 Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
             CANTalon *spareTalon,
-            LogSpreadsheet *logger
+            LogSpreadsheet *logger, BoilerPixy *boilerPixy, PixyThread *gearPixy
             )
          : DriveBase(scheduler, this, this, nullptr)
          , m_gyro(new PigeonImu(spareTalon))
-         , m_leftPower(0.0)
-         , m_rightPower(0.0)
+         , m_leftCommand(0.0)
+         , m_rightCommand(0.0)
          , m_leftMotor(left)
          , m_rightMotor(right)
-         , m_leftMotorPowerFilter(dynamic_cast<FilterBase*>(new RampedOutput(10.0)))
-         , m_rightMotorPowerFilter(dynamic_cast<FilterBase*>(new RampedOutput(10.0)))
+         , m_controlMode(CANSpeedController::ControlMode::kPercentVbus)
          , m_arcadeDriveController(nullptr)
          , m_spreadsheet(logger)
+         , m_boilerPixyDriveController(
+                 new BoilerPixyVisionDriveController(boilerPixy))
+         , m_gearPixyDriveController(
+                 new GearPixyVisionDriveController(gearPixy))
          , m_angleLog(new LogCell("Angle"))
          , m_angularRateLog(new LogCell("Angular Rate"))
          , m_leftDistLog(new LogCell("Left Encoder Distance"))
          , m_leftDistRateLog(new LogCell("Left Encoder Rate"))
-         , m_leftPowerLog(new LogCell("Left motor power"))
-         , m_rightPowerLog(new LogCell("Right motor power"))
+         , m_rightDistLog(new LogCell("Right Encoder Distance"))
+         , m_rightDistRateLog(new LogCell("Right Encoder Rate"))
+         , m_leftCommandLog(new LogCell("Left motor signal (pow or vel)"))
+         , m_rightCommandLog(new LogCell("Right motor signal (pow or vel)"))
+         , m_leftVoltageLog(new LogCell("Left motor voltage"))
+         , m_rightVoltageLog(new LogCell("Right motor voltage"))
+         , m_currentLog(new LogCell("Drive current"))
 {
-    fprintf(stderr, "Initializing Drive Subsystem %p\n", m_leftEncoder);
+    fprintf(stderr, "Initializing Drive Subsystem %p\n", this);
     fprintf(stderr, "Survived fprintf yes its up to date\n");
 
-    if (m_leftEncoder != nullptr) {
-        fprintf(stderr, "Operating on left drive encoder\n");
-        m_leftEncoder->SetDistancePerPulse(1.0);
-    }
-
     m_arcadeDriveController = new ArcadeDriveController();
+    m_openloopArcadeDriveController = new OpenloopArcadeDriveController();
+    m_assistedArcadeDriveController = new AssistedArcadeDriveController();
     m_pidDriveController = new PIDDriveController();
     this->SetDriveController(m_arcadeDriveController);
-    //this->SetDriveControlMode(CANSpeedController::ControlMode::kPercentVbus);
+    this->SetDriveControlMode(m_controlMode);
 
     bool loggingEnabled = true;
     if (loggingEnabled) {
@@ -56,21 +65,28 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
         m_spreadsheet->RegisterCell(m_angularRateLog);
         m_spreadsheet->RegisterCell(m_leftDistLog);
         m_spreadsheet->RegisterCell(m_leftDistRateLog);
-        m_spreadsheet->RegisterCell(m_leftPowerLog);
-        m_spreadsheet->RegisterCell(m_rightPowerLog);
+        m_spreadsheet->RegisterCell(m_leftCommandLog);
+        m_spreadsheet->RegisterCell(m_rightCommandLog);
+        m_spreadsheet->RegisterCell(m_leftVoltageLog);
+        m_spreadsheet->RegisterCell(m_rightVoltageLog);
+        m_spreadsheet->RegisterCell(m_currentLog);
     }
+    fprintf(stderr, "Enabled spreadsheets\n");
 
     scheduler->RegisterTask("Drive", this, TASK_PERIODIC);
+    fprintf(stderr, "Scheduled task\n");
 }
 
 void Drive::Zero() {
-    if (m_leftEncoder)
-        m_leftEncoder->Reset();
-    if (m_rightEncoder)
-        m_rightEncoder->Reset();
-    if (m_gyro)
-        m_gyro->SetFusedHeading(0.0);
-    m_leftEncoder->SetDistancePerPulse(1.0);
+    if (m_gyro) {
+        m_gyroZero = m_gyro->GetFusedHeading();
+    }
+    if (m_leftMotor) {
+        m_leftPosZero = m_leftMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION;
+    }
+    if (m_rightMotor) {
+        m_rightPosZero = -m_rightMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION;
+    }
 }
 
 void Drive::ArcadeDrive(double throttle, double turn) {
@@ -78,72 +94,161 @@ void Drive::ArcadeDrive(double throttle, double turn) {
     m_arcadeDriveController->SetJoysticks(throttle, turn);
 }
 
-void Drive::PIDDrive(double dist, double turn, RelativeTo relativity, double powerCap) {
-    this->SetDriveController(m_pidDriveController);
-    m_pidDriveController->SetCap(powerCap);
-    m_pidDriveController->SetTarget(dist, turn, relativity, this);
+void Drive::OpenloopArcadeDrive(double throttle, double turn) {
+    this->SetDriveController(m_openloopArcadeDriveController);
+    m_openloopArcadeDriveController->SetJoysticks(throttle, turn);
 }
 
+void Drive::AssistedArcadeDrive(double throttle, double turn){
+  this->SetDriveController(m_assistedArcadeDriveController);
+  m_assistedArcadeDriveController->SetJoysticks(throttle, turn);
+}
+
+void Drive::SetBoilerPixyTargeting(){
+  printf("got here fam\n");
+  this->SetDriveController(m_boilerPixyDriveController);
+}
+
+void Drive::SetGearPixyTargeting(){
+  this->SetDriveController(m_gearPixyDriveController);
+}
+
+PIDDriveController *Drive::PIDDrive(double dist, double turn,
+        RelativeTo relativity, double powerCap)
+{
+    this->SetDriveController(m_pidDriveController);
+    m_pidDriveController->SetCap(powerCap);
+    m_pidDriveController->SetTarget(dist, turn,
+            relativity, this);
+    m_pidDriveController->EnableDist();
+    return m_pidDriveController;
+}
+
+PIDDriveController *Drive::PIDTurn(double turn, RelativeTo relativity,
+        double powerCap)
+{
+    this->SetDriveController(m_pidDriveController);
+    m_pidDriveController->SetCap(powerCap);
+    m_pidDriveController->SetTarget(0.0, turn,
+            relativity, this);
+    m_pidDriveController->DisableDist();
+    return m_pidDriveController;
+}
+
+/**
+ * reported in inches
+ */
 double Drive::GetLeftDist() {
-    return -m_leftMotor->GetPosition();
+    return m_leftMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION -
+        m_leftPosZero;
 }
 
 double Drive::GetRightDist() {
-    return m_rightMotor->GetPosition();
+    return -m_rightMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION -
+        m_rightPosZero;
 }
 
+/**
+ * Reported in inches per second
+ * As per manual 17.2.1, GetSpeed reports RPM
+ */
 double Drive::GetLeftRate() {
-    return -m_leftMotor->GetSpeed();
+    return m_leftMotor->GetSpeed() * DRIVE_IPS_FROM_RPM;
 }
 
 double Drive::GetRightRate() {
-    return m_rightMotor->GetSpeed();
+    return -m_rightMotor->GetSpeed() * DRIVE_IPS_FROM_RPM;
 }
 
 double Drive::GetDist() {
-    return GetLeftDist();
+    return (GetLeftDist() + GetRightDist()) / 2.0;
 }
 
 double Drive::GetRate() {
-    return GetLeftRate();
+    return (GetLeftRate() + GetRightRate()) / 2.0;
+}
+
+double Drive::GetDriveCurrent() {
+    return (m_rightMotor->GetOutputCurrent() +
+            m_leftMotor->GetOutputCurrent()) / 2.0;
 }
 
 double Drive::GetAngle() {
-    return -m_gyro->GetFusedHeading();
+    return m_gyro->GetFusedHeading() - m_gyroZero;
 }
 
 double Drive::GetAngularRate() {
     double xyz_dps[4];
     m_gyro->GetRawGyro(xyz_dps);
-    printf("a %lf b %lf c %lf\n", xyz_dps[0], xyz_dps[1], xyz_dps[2]);
+//    printf("a %lf b %lf c %lf\n", xyz_dps[0], xyz_dps[1], xyz_dps[2]);
     return xyz_dps[2];
 }
 
 void Drive::SetDriveOutput(double left, double right) {
-    m_leftPower = left;
-    m_rightPower = right;
+	m_leftCommand = left;
+	m_rightCommand = right;
 
-    if (isnan(m_leftPower) || isnan(m_rightPower)) {
-        m_leftMotor->Set(0.0);
-        m_rightMotor->Set(0.0);
+    if (m_controlMode == CANSpeedController::ControlMode::kSpeed) {
+        m_leftCommand /= DRIVE_IPS_FROM_RPM;
+        m_rightCommand /= DRIVE_IPS_FROM_RPM;
     }
-    else {
-        m_leftMotor->Set(
-                m_leftMotorPowerFilter->Update(
-                        Util::bound(m_leftPower, -1.0, 1.0)));
-        m_rightMotor->Set(
-                m_rightMotorPowerFilter->Update(
-                        Util::bound(-m_rightPower, -1.0, 1.0)));
+    else if (m_controlMode == CANSpeedController::ControlMode::kPosition) {
+        m_leftCommand /= DRIVE_DIST_PER_REVOLUTION;
+        m_rightCommand /= DRIVE_DIST_PER_REVOLUTION;
     }
+
+	if (isnan(m_leftCommand) || isnan(m_rightCommand)) {
+		m_leftMotor->Set(0.0);
+		m_rightMotor->Set(0.0);
+	}
+	else {
+		m_leftMotor->Set(m_leftCommand);
+		m_rightMotor->Set(-m_rightCommand);
+	}
 }
 
 void Drive::SetDriveControlMode(CANSpeedController::ControlMode mode){
     m_leftMotor->SetControlMode(mode);
     m_rightMotor->SetControlMode(mode);
+    m_controlMode = mode;
 }
 
 void Drive::TaskPeriodic(RobotMode mode) {
-    DBStringPrintf(DB_LINE0, "gyro %2.1f", this->GetAngularRate());
+    DBStringPrintf(DB_LINE9, "l %2.1lf r %2.1lf g %2.1lf",
+            this->GetLeftDist(),
+            this->GetRightDist(),
+            this->GetAngle());
+
+    m_angleLog->LogDouble(GetAngle());
+    m_angularRateLog->LogDouble(GetAngularRate());
+
+    m_leftDistLog->LogDouble(GetLeftDist());
+    m_leftDistRateLog->LogDouble(GetLeftRate());
+
+    m_rightDistLog->LogDouble(GetRightDist());
+    m_rightDistRateLog->LogDouble(GetRightRate());
+
+    if (m_controlMode == CANSpeedController::ControlMode::kSpeed) {
+        m_leftCommandLog->LogDouble(m_leftCommand * DRIVE_IPS_FROM_RPM);
+        m_rightCommandLog->LogDouble(m_rightCommand * DRIVE_IPS_FROM_RPM);
+    }
+    else if (m_controlMode == CANSpeedController::ControlMode::kPosition) {
+        m_leftCommandLog->LogDouble(m_leftCommand * DRIVE_DIST_PER_REVOLUTION);
+        m_rightCommandLog->LogDouble(m_rightCommand * DRIVE_DIST_PER_REVOLUTION);
+    }
+    else {
+        m_leftCommandLog->LogDouble(m_leftCommand);
+        m_rightCommandLog->LogDouble(m_rightCommand);
+    }
+
+    m_leftVoltageLog->LogDouble(m_leftMotor->GetOutputVoltage());
+    m_rightVoltageLog->LogDouble(m_rightMotor->GetOutputVoltage());
+
+    m_currentLog->LogDouble(GetDriveCurrent());
+}
+
+void Drive::SetBoilerJoystickTerm(double throttle, double turn) {
+    m_boilerPixyDriveController->SetJoystickTerm(throttle, turn);
 }
 
 }

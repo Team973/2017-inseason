@@ -1,19 +1,24 @@
 #include "GearIntake.h"
 #include "RobotInfo.h"
+#include "Lights.h"
+#include "lib/logging/LogSpreadsheet.h"
 
 namespace frc973{
-  static constexpr double RIGHT_INDEXER_POWER = 0.08;
-  static constexpr double LEFT_INDEXER_POWER = -0.04;
+  static constexpr double RIGHT_INDEXER_POWER = -0.08;
+  static constexpr double LEFT_INDEXER_POWER = 0.04;
 
-  static constexpr double INTAKING_POWER = 0.7;
-  static constexpr double HOLDING_POWER = 0.0;
+  static constexpr double INTAKING_POWER = -0.70;
+  static constexpr double HOLDING_POWER = -0.0;
 
-  GearIntake::GearIntake(TaskMgr *scheduler) :
+  GearIntake::GearIntake(
+          TaskMgr *scheduler,
+          Lights *lights,
+          LogSpreadsheet *logger) :
     m_scheduler(scheduler),
     m_gearIntakeState(GearIntake::GearIntakeState::grabbed),
     m_gearPosition(GearPosition::up),
     m_indexer(GearIntake::Indexer::holding),
-    m_pickUpState(GearIntake::PickUp::vomiting),
+    m_pickUpState(GearIntake::PickUp::idle),
     m_gearIntakeRelease(new Solenoid(GEAR_INTAKE_GRIP_OPEN)),
     m_gearIntakeGrab(new Solenoid(GEAR_INTAKE_GRIP_CLOSE)),
     m_gearIntakePos(new Solenoid(GEAR_INTAKE_POS)),
@@ -23,7 +28,13 @@ namespace frc973{
     m_leftIndexer(new CANTalon(LEFT_INDEXER_CAN_ID)),
     m_rightIndexer(new CANTalon(RIGHT_INDEXER_CAN_ID)),
     m_gearTimer(0),
-    m_driverReleased(false)
+    m_lights(lights),
+    m_manualReleaseRequest(false),
+    m_seekingRequest(false),
+    m_autoReleaseRequest(false),
+    m_gearStateLog(new LogCell("Gear state", 32)),
+    m_gearCurrentLog(new LogCell("Gear indexer current draw", 32)),
+    m_gearInputsLog(new LogCell("Gear inputs: manualRelease, intaing, autoRelease", 32))
   {
     m_rightIndexer->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
     m_leftIndexer->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
@@ -37,6 +48,10 @@ namespace frc973{
     m_leftIndexer->SetCurrentLimit(100);
     this->SetGearIntakeState(GearIntakeState::grabbed);
     this->m_scheduler->RegisterTask("GearIntake", this, TASK_PERIODIC);
+
+    logger->RegisterCell(m_gearStateLog);
+    logger->RegisterCell(m_gearCurrentLog);
+    logger->RegisterCell(m_gearInputsLog);
   }
 
   GearIntake::~GearIntake(){
@@ -44,7 +59,6 @@ namespace frc973{
   }
 
   void GearIntake::SetGearIntakeState(GearIntakeState gearIntakeState){
-    m_pickUpState = PickUp::manual;
     switch (gearIntakeState){
       case released:
         m_gearIntakeGrab->Set(true);
@@ -65,7 +79,6 @@ namespace frc973{
   }
 
   void GearIntake::SetGearPos(GearPosition gearPosition){
-    m_pickUpState = PickUp::manual;
     switch (gearPosition){
       case up:
         m_gearIntakePos->Set(false);
@@ -80,7 +93,6 @@ namespace frc973{
   }
 
   void GearIntake::SetIndexerMode(Indexer indexerMode){
-    m_pickUpState = PickUp::manual;
     switch (indexerMode) {
       case intaking:
         m_rightIndexer->Set(INTAKING_POWER);
@@ -109,80 +121,95 @@ namespace frc973{
   }
 
   bool GearIntake::IsGearReady(){
-    if (m_pushTopLeft->Get() + m_pushTopRight->Get() + m_pushBottom->Get() < 2){
-      return true;
-    }
-    else{
-      return false;
-    }
+    return (m_pushTopLeft->Get() + m_pushTopRight->Get() + m_pushBottom->Get() <= 2);
   }
 
-  void GearIntake::StartPickupSequence(){
-    m_pickUpState = PickUp::seeking;
+  void GearIntake::SetReleaseManualEnable(bool request){
+      m_manualReleaseRequest = request;
   }
 
-  void GearIntake::ReleaseGear(){
-      m_pickUpState = PickUp::vomiting;
-      this->SetIndexerMode(Indexer::stop);
-      this->SetGearIntakeState(GearIntakeState::released);
+  void GearIntake::SetPickUpManual(){
+    m_pickUpState = PickUp::manual;
   }
 
   void GearIntake::SetReleaseAutoEnable(bool driverInput){
-    m_driverReleased = driverInput;
+    m_autoReleaseRequest = driverInput;
+  }
+
+  void GearIntake::SetSeeking(bool request){
+    m_seekingRequest = request;
   }
 
   void GearIntake::TaskPeriodic(RobotMode mode){
-    DBStringPrintf(DB_LINE3,  "state %d curr %2.1f %2.1f",
-                   m_pickUpState, m_leftIndexer->GetOutputCurrent(),
-                   m_rightIndexer->GetOutputCurrent());
-    DBStringPrintf(DB_LINE1, "state ul %d ur %d b %d",m_pushTopLeft->Get(),
-                    m_pushTopRight->Get(),
-                    m_pushBottom->Get());
-
     if (m_indexer == Indexer::indexing && IsGearReady() == true){
       this->SetIndexerMode(Indexer::holding);
     }
     switch(m_pickUpState){
+      case idle:
+        this->SetGearPos(GearIntake::GearPosition::down);
+        this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
+        this->SetIndexerMode(Indexer::stop);
+        if (m_seekingRequest == true){
+          m_pickUpState = PickUp::seeking;
+        }
+        break;
       case seeking:
         this->SetIndexerMode(GearIntake::Indexer::intaking);
         this->SetGearPos(GearIntake::GearPosition::down);
         this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
-        m_pickUpState = PickUp:: seeking;
-        m_gearTimer = GetMsecTime();
-        if (m_rightIndexer->GetOutputCurrent() >= 50 || m_leftIndexer->GetOutputCurrent() >= 50){
-            m_pickUpState = GearIntake::PickUp::chewing;
-          }
+        if (m_rightIndexer->GetOutputCurrent() >= 30 || m_leftIndexer->GetOutputCurrent() >= 30){
+          m_gearTimer = GetMsecTime();
+          m_lights->NotifyFlash(2);
+          m_pickUpState = PickUp::chewing;
+        }
+        else if (m_seekingRequest == false){
+          m_pickUpState = PickUp::idle;
+        }
         break;
       case chewing:
         this->SetIndexerMode(GearIntake::Indexer::intaking);
-        m_pickUpState = PickUp:: chewing;
-        if (GetMsecTime() - m_gearTimer >= 200) {
-            m_pickUpState = GearIntake::PickUp::digesting;
+        if (GetMsecTime() - m_gearTimer >= 100) {
+          m_pickUpState = GearIntake::PickUp::digesting;
         }
         break;
       case digesting:
         this->SetIndexerMode(GearIntake::Indexer::holding);
         this->SetGearPos(GearIntake::GearPosition::up);
-        this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
-        if (IsGearReady() == true && m_driverReleased == true) {
+        if ((IsGearReady() == true && m_autoReleaseRequest) || m_manualReleaseRequest) {
+          m_gearTimer = GetMsecTime();
+          m_lights->NotifyFlash(2);
           m_pickUpState = PickUp::vomiting;
-        }
-        else{
-          m_pickUpState = PickUp::digesting;
         }
         break;
       case vomiting:
-        this->ReleaseGear();
-        m_gearTimer = GetMsecTime();
-        m_pickUpState = PickUp::postVomit;
+        this->SetGearPos(GearPosition::down);
+        this->SetGearIntakeState(GearIntake::GearIntakeState::released);
+        if(GetMsecTime() - m_gearTimer >= 100){
+          m_pickUpState = PickUp::postVomit;
+        }
         break;
       case postVomit:
-        if (m_gearTimer - GetMsecTime() == 3000) {
-          this->SetGearPos(GearPosition::down);
+        if (m_seekingRequest) {
+          m_pickUpState = PickUp::seeking;
+        }
+        if(GetMsecTime() - m_gearTimer >= 3000){
+          m_pickUpState = PickUp::idle;
+
         }
         break;
       case manual:
+        if(m_seekingRequest){
+          m_pickUpState = PickUp::seeking;
+        }
+        if (m_autoReleaseRequest || m_manualReleaseRequest) {
+          m_pickUpState = PickUp::digesting;
+        }
         break;
     }
+
+    m_gearStateLog->LogInt(m_pickUpState);
+    m_gearCurrentLog->LogDouble(m_leftIndexer->GetOutputCurrent());
+    m_gearInputsLog->LogPrintf("%d %d %d",
+            m_manualReleaseRequest, m_autoReleaseRequest, m_seekingRequest);
   }
 }

@@ -5,6 +5,9 @@
 #include "WPILib.h"
 #include "CANTalon.h"
 #include "PigeonImu.h"
+#include "BoilerPixy.h"
+#include "PixyThread.h"
+
 using namespace frc;
 
 namespace frc973 {
@@ -14,7 +17,10 @@ class ArcadeDriveController;
 class CheesyDriveController;
 class PIDDriveController;
 class RampPIDDriveController;
-class PixyVisionDriveController;
+class BoilerPixyVisionDriveController;
+class GearPixyVisionDriveController;
+class OpenloopArcadeDriveController;
+class AssistedArcadeDriveController;
 class VelocityTurnPID;
 class LogSpreadsheet;
 class LogCell;
@@ -42,11 +48,12 @@ public:
     Drive(TaskMgr *scheduler,
             CANTalon *left, CANTalon *right,
             CANTalon *spareTalon,
-            LogSpreadsheet *logger
+            LogSpreadsheet *logger,
+            BoilerPixy *BoilerPixy,
+            PixyThread *gearPixy
             );
 
     virtual ~Drive() {}
-
     /**
      * Zero encoders and gyroscope.
      */
@@ -68,8 +75,8 @@ public:
      */
     void SetCheesyQuickTurn(bool quickturn);
 
-    void SetVisionTargeting();
-
+    void SetBoilerPixyTargeting();
+    void SetGearPixyTargeting();
     /*
      * Sets drive to use standard arcade drive controller if it doesn't already
      * Also sets the input for the arcade drive controller.
@@ -80,87 +87,109 @@ public:
     void ArcadeDrive(double throttle, double turn);
 
     /**
+     * Set drive to use the open loop arcade drive controller and sets powers
+     */
+    void OpenloopArcadeDrive(double throttle, double turn);
+
+    void AssistedArcadeDrive(double throttle, double turn);
+    /**
      * Set a target distance to be achieved by pid
      *
      * @param dist Distance in inches to go
      * @param relativity What is that distance metric relative to?
      */
-    void PIDDrive(double dist, double turn, RelativeTo relativity, double powerCap);
+    PIDDriveController *PIDDrive(double dist, double turn,
+            RelativeTo relativity, double powerCap);
 
-/**
- * Set a target turn to be achieved by pid
- *
- * @param angle Angle in degrees to go
- * @param relativity What is that angle metric relative to?
- */
-void PIDTurn(double angle, RelativeTo relativity);
+    /**
+     * Set a target turn to be achieved by pid
+     *
+     * @param angle Angle in degrees to go
+     * @param relativity What is that angle metric relative to?
+     */
+    PIDDriveController *PIDTurn(double angle, RelativeTo relativity,
+            double powerCap);
 
-void VelocityPIDTurn(double angle, RelativeTo relativity);
+    void VelocityPIDTurn(double angle, RelativeTo relativity);
 
-void RampPIDDrive(double dist, RelativeTo relativity);
-void RampPIDTurn(double angle, RelativeTo relativity);
+    void RampPIDDrive(double dist, RelativeTo relativity);
+    void RampPIDTurn(double angle, RelativeTo relativity);
+
+    void SetBoilerJoystickTerm(double throttle, double turn);
 
     void SetDriveControlMode(CANSpeedController::ControlMode mode) override;
-/**
- * All distances given in inches
- * All velocities given in inches/second
- */
-double GetLeftDist() override;
-double GetRightDist() override;
-double GetLeftRate() override;
-double GetRightRate() override;
-double GetDist() override;
-double GetRate() override;
+    /**
+     * All distances given in inches
+     * All velocities given in inches/second
+     */
+    double GetLeftDist() override;
+    double GetRightDist() override;
+    double GetLeftRate() override;
+    double GetRightRate() override;
+    double GetDist() override;
+    double GetRate() override;
 
-/**
- * All angles given in degrees
- * All angular rates given in degrees/second
- */
-double GetAngle() override;
-double GetAngularRate() override;
+    double GetDriveCurrent();
 
-/*
- * Used by the DriveController to set motor values
- *
- * @param left power (from -1.0 to 1.0) for left motor
- * @param right power (from -1.0 to 1.0) for right motor
- */
-void SetDriveOutput(double left, double right) override;
+    /**
+     * All angles given in degrees
+     * All angular rates given in degrees/second
+     */
+    double GetAngle() override;
+    double GetAngularRate() override;
+
+    /*
+     * Used by the DriveController to set motor values
+     *
+     * The unit of this command depends on the mode of the controller...
+     * If in kPercentVbus mode (default), command is from -1.0 to 1.0 and
+     *      scales to voltage sent to motors
+     * If in kSpeed mode, the command is the speed setpoint in in/sec
+     * If in kPositon mode, the command is the position setpoint in inches
+     *
+     * @param command to send to left motor
+     * @param command to send to right motor
+     */
+    void SetDriveOutput(double left, double right) override;
 
 private:
-void TaskPeriodic(RobotMode mode) override;
+    void TaskPeriodic(RobotMode mode) override;
 
-Encoder *m_leftEncoder;
-Encoder *m_rightEncoder;
+    PigeonImu *m_gyro;
+    double m_gyroZero = 0.0;
 
-PigeonImu *m_gyro;
+    double m_leftCommand;
+    double m_rightCommand;
 
-double m_leftPower;
-double m_rightPower;
+    CANTalon *m_leftMotor;
+    CANTalon *m_rightMotor;
+    double m_leftPosZero = 0.0;
+    double m_rightPosZero = 0.0;
 
-CANTalon *m_leftMotor;
-CANTalon *m_rightMotor;
+    CANSpeedController::ControlMode m_controlMode;
 
-/* Filter to apply to left and right motor power so we don't tip or
- * break chains.
- */
-FilterBase *m_leftMotorPowerFilter;
-FilterBase *m_rightMotorPowerFilter;
+    ArcadeDriveController *m_arcadeDriveController;
+    OpenloopArcadeDriveController *m_openloopArcadeDriveController;
+    AssistedArcadeDriveController *m_assistedArcadeDriveController;
+    CheesyDriveController *m_cheesyDriveController;
+    PIDDriveController *m_pidDriveController;
+    RampPIDDriveController *m_rampPidDriveController;
+    VelocityTurnPID *m_velocityTurnController;
 
-ArcadeDriveController *m_arcadeDriveController;
-CheesyDriveController *m_cheesyDriveController;
-PIDDriveController *m_pidDriveController;
-RampPIDDriveController *m_rampPidDriveController;
-PixyVisionDriveController *m_visionDriveController;
-VelocityTurnPID *m_velocityTurnController;
-
-LogSpreadsheet *m_spreadsheet;
-LogCell *m_angleLog;
-LogCell *m_angularRateLog;
-LogCell *m_leftDistLog;
-LogCell *m_leftDistRateLog;
-LogCell *m_leftPowerLog;
-LogCell *m_rightPowerLog;
+    LogSpreadsheet *m_spreadsheet;
+    BoilerPixyVisionDriveController *m_boilerPixyDriveController;
+    GearPixyVisionDriveController   *m_gearPixyDriveController;
+    LogCell *m_angleLog;
+    LogCell *m_angularRateLog;
+    LogCell *m_leftDistLog;
+    LogCell *m_leftDistRateLog;
+    LogCell *m_rightDistLog;
+    LogCell *m_rightDistRateLog;
+    LogCell *m_leftCommandLog;
+    LogCell *m_rightCommandLog;
+    LogCell *m_leftVoltageLog;
+    LogCell *m_rightVoltageLog;
+    LogCell *m_currentLog;
 };
 
 }
