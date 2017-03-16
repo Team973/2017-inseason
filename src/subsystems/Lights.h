@@ -29,13 +29,14 @@ namespace frc973{
 
       void EnableLights();
       void DisableLights();
-      void NotifyFlash(int n);
+      void NotifyFlash(int n, uint32_t time);
 
       void TaskPeriodic(RobotMode mode);
     private:
       TaskMgr *m_scheduler;
       uint32_t m_lightsTimer;
       int m_flashOrder;
+      uint32_t m_timeFlash;
 
       LightMode m_lightMode;
       Solenoid *m_pixyLight;

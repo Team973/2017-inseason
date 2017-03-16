@@ -72,7 +72,7 @@ void Robot::TeleopContinuous(void) {
     }
 
     if (g_hangSignalSent == false && GetMsecTime() - m_teleopTimer > 90000) {
-        m_lights->NotifyFlash(10);
+        m_lights->NotifyFlash(10, 250);
         g_hangSignalSent = true;
     }
 }
@@ -88,7 +88,6 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::BtnB:
             if (pressedP) {
-              m_driveMode = DriveMode::LowGear;
             }
             break;
         case DualAction::BtnX:
@@ -125,6 +124,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         case DualAction::RightBumper:
             if (pressedP) {
               g_manualConveyorControl = false;
+              m_driveMode = DriveMode::LowGear;
               //m_shooter->SetShooterState(Shooter::ShootingSequenceState::shooting);
               m_compressor->Disable();
             }
@@ -253,11 +253,12 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::DPadLeftVirtBtn:
             if (pressedP){
+              m_ballIntake->ExpandHopper();
             }
             break;
         case DualAction::DPadRightVirtBtn:
             if (pressedP) {
-
+              m_ballIntake->RetractHopper();
                 }
             break;
         case DualAction::Back:

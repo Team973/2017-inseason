@@ -6,6 +6,7 @@ namespace frc973{
     m_scheduler(scheduler),
     m_lightsTimer(0),
     m_flashOrder(0),
+    m_timeFlash(0),
     m_lightMode(LightMode::off),
     m_pixyLight(new Solenoid(BOILER_PIXY_LIGHT_SOL)),
     m_flashLight(new Solenoid(FLASH_LIGHT_SOL))
@@ -28,9 +29,10 @@ namespace frc973{
       m_lightMode = off;
     }
 
-    void Lights::NotifyFlash(int n){
+    void Lights::NotifyFlash(int n, uint32_t time){
       m_lightMode = LightMode::blinkingOn;
       m_flashOrder = n;
+      m_timeFlash = time;
       m_lightsTimer = GetMsecTime();
     }
 
@@ -47,7 +49,7 @@ namespace frc973{
         case blinkingOn:
           m_pixyLight->Set(true);
           m_flashLight->Set(false);
-          if(GetMsecTime() - m_lightsTimer >= 250){
+          if(GetMsecTime() - m_lightsTimer >= m_timeFlash){
             m_lightsTimer = GetMsecTime();
             m_lightMode = LightMode::blinkingOff;
           }
@@ -55,7 +57,7 @@ namespace frc973{
         case blinkingOff:
           m_pixyLight->Set(false);
           m_flashLight->Set(true);
-          if (GetMsecTime() - m_lightsTimer >= 250){
+          if (GetMsecTime() - m_lightsTimer >= m_timeFlash){
             m_lightsTimer = GetMsecTime();
             m_flashOrder--;
             if (m_flashOrder > 0) {
