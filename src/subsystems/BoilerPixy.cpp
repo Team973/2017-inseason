@@ -5,6 +5,7 @@
 #include "lib/InterpLookupTable.h"
 
 namespace frc973{
+
     BoilerPixy::BoilerPixy(TaskMgr *scheduler, Lights *lights, LogSpreadsheet *logger) :
       m_scheduler(scheduler),
       m_pixyXOffset(new AnalogInput(BOILER_PIXY_CAM_X_ANALOG)),
