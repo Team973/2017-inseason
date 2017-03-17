@@ -16,7 +16,7 @@ PixyThread::PixyThread(RobotStateInterface &stateProvider) :
     m_prevReadingTime(0),
     m_mutex(PTHREAD_MUTEX_INITIALIZER)
 {
-    //m_thread->Start();
+    m_thread->Start();
     fprintf(stderr, "gonna register the pixy task\n");
     m_thread->RegisterTask("Pixy", this, TASK_PERIODIC);
     fprintf(stderr, "registered the pixy task\n");
@@ -54,6 +54,7 @@ void PixyThread::TaskPeriodic(RobotMode mode) {
 
     m_prevReading = (m_prevReading + currentRead) / 2.0;
     printf("reading %lf\n", m_prevReading);
+    printf("numBlocks %d\n", numBlocks);
 	pthread_mutex_unlock(&m_mutex);
 }
 
