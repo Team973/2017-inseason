@@ -224,17 +224,22 @@ namespace frc973 {
                                    DriveBase::RelativeTo::Now, 1.0)
                         ->SetDistTolerance(10.0, 10.0)
                         ->SetAngleTolerance(10.0, 60.0);
+                    m_autoTimer = GetMsecTime();
                     m_autoState++;
                 }
                 break;
             case 5:
-                if(m_drive->OnTarget()){
+                if(m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500){
                     m_drive->PIDTurn(-21.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
+                    m_autoTimer = GetMsecTime();
                     m_autoState++;
                 }
                 break;
             case 6:
-                if (m_drive->OnTarget()) {
+                if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1200) {
+                    if (Util::abs(m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT) >= 5.0) {
+                      m_autoState++;
+                    }
                     m_drive
                         ->PIDTurn(m_drive->GetAngle() + m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT,
                                    DriveBase::RelativeTo::Absolute, 1.0)
@@ -259,10 +264,6 @@ namespace frc973 {
                 if (m_drive->GetAngularRate() <= 10.0){
                   m_shooter->StartAgitator(1.0, Shooter::Side::right);
                   m_shooter->StartAgitator(1.0, Shooter::Side::left);
-
-                  if (Util::abs(m_boilerPixy->GetXOffset()) <= 1.0) {
-                    m_drive->SetBoilerPixyTargeting();
-                  }
                   m_autoState++;
                 }
                 break;
@@ -297,10 +298,17 @@ namespace frc973 {
           break;
         case 2:
           if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500) {
-             // m_drive->SetBoilerPixyTargeting();
-              m_autoTimer = GetMsecTime();
-              m_autoState++;
-          }
+                if (Util::abs(m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT) >= 5.0) {
+                  m_autoState++;
+                }
+                m_drive
+                    ->PIDTurn(m_drive->GetAngle() + m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT,
+                               DriveBase::RelativeTo::Absolute, 1.0)
+                    ->SetDistTolerance(15.0, 25.0)
+                    ->SetAngleTolerance(30.0, 60.0);
+                m_autoTimer = GetMsecTime();
+                m_autoState++;
+              }
           break;
         case 3:
             if ((m_drive->OnTarget() && m_shooter->OnTarget()) ||
@@ -336,7 +344,6 @@ namespace frc973 {
             if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2000) {
               m_drive->PIDTurn(-60.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0)
                   ->SetAngleTolerance(10.0, 3.0);
-           // m_drive->SetGearPixyTargeting();
               m_autoTimer = GetMsecTime();
               m_autoState++;
             }
@@ -399,10 +406,17 @@ namespace frc973 {
           break;
         case 2:
             if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2000) {
-                // m_drive->SetBoilerPixyTargeting();
-                 m_autoTimer = GetMsecTime();
-                 m_autoState++;
-            }
+                  if (Util::abs(m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT) >= 5.0) {
+                    m_autoState++;
+                  }
+                  m_drive
+                      ->PIDTurn(m_drive->GetAngle() + m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT,
+                                 DriveBase::RelativeTo::Absolute, 1.0)
+                      ->SetDistTolerance(15.0, 25.0)
+                      ->SetAngleTolerance(30.0, 60.0);
+                  m_autoTimer = GetMsecTime();
+                  m_autoState++;
+              }
             break;
         case 3:
             if ((m_drive->OnTarget() && m_shooter->OnTarget()) ||
@@ -435,7 +449,6 @@ namespace frc973 {
         case 6:
             if (m_drive->OnTarget()) {
               m_drive->PIDTurn(-60.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
-           // m_drive->SetGearPixyTargeting();
               m_autoState++;
             }
             break;
