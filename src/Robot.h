@@ -48,7 +48,10 @@ private:
 
     enum DriveMode{
       OpenLoop,
-      AssistedArcade,
+      AssistedArcade
+    };
+
+    enum BumperMode{
       BoilerVision,
       LowGear
     };
@@ -103,6 +106,7 @@ private:
     Alliance          m_alliance;
     double						m_conveyorSetpt;
     DriveMode         m_driveMode;
+    BumperMode        m_bumperMode;
 
     /**
      * Logging

@@ -228,9 +228,15 @@ namespace frc973 {
                 }
                 break;
             case 5:
+                if(m_drive->OnTarget()){
+                    m_drive->PIDTurn(-21.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
+                    m_autoState++;
+                }
+                break;
+            case 6:
                 if (m_drive->OnTarget()) {
                     m_drive
-                        ->PIDTurn((m_drive->GetAngle() + (m_boilerPixy->GetXOffset())) * m_autoDirection,
+                        ->PIDTurn(m_drive->GetAngle() + m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT,
                                    DriveBase::RelativeTo::Absolute, 1.0)
                         ->SetDistTolerance(15.0, 25.0)
                         ->SetAngleTolerance(30.0, 60.0);
@@ -238,19 +244,19 @@ namespace frc973 {
                     m_autoState++;
                 }
                 break;
-            case 6:
+            case 7:
                 if (m_drive->OnTarget() || (GetMsecTime() - m_autoTimer >= 1500 )) {
                   m_autoTimer = GetMsecTime();
                   m_autoState++;
                 }
                 break;
-            case 7:
-                if (m_drive->GetRate() <= 50.0) {
+            case 8:
+                if (m_drive->GetAngularRate() <= 5.0) {
                     m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
                     m_drive->ArcadeDrive(0.0, 0.0);
                     m_shooter->StartConveyor(0.9);
                 }
-                if (m_drive->GetAngularRate() <= 5.0){
+                if (m_drive->GetAngularRate() <= 10.0){
                   m_shooter->StartAgitator(1.0, Shooter::Side::right);
                   m_shooter->StartAgitator(1.0, Shooter::Side::left);
 
@@ -260,7 +266,7 @@ namespace frc973 {
                   m_autoState++;
                 }
                 break;
-            case 8:
+            case 9:
                 break;
         }
     }
