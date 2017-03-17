@@ -169,19 +169,20 @@ namespace frc973{
         break;
       case chewing:
         this->SetIndexerMode(GearIntake::Indexer::intaking);
-        if (GetMsecTime() - m_gearTimer >= 100) {
+        if (GetMsecTime() - m_gearTimer >= 500) {
+          if (m_rightIndexer->GetOutputCurrent() >= 30 || m_leftIndexer->GetOutputCurrent() >= 30){
+            m_lights->NotifyFlash(2, 250);
+          }
+          else{
+            m_lights->NotifyFlash(20, 100);
+          }
+
           m_pickUpState = GearIntake::PickUp::digesting;
         }
         break;
       case digesting:
         this->SetIndexerMode(GearIntake::Indexer::holding);
         this->SetGearPos(GearIntake::GearPosition::up);
-        if (m_rightIndexer->GetOutputCurrent() >= 30 || m_leftIndexer->GetOutputCurrent() >= 30){
-          m_lights->NotifyFlash(2, 250);
-        }
-        else{
-          m_lights->NotifyFlash(2, 100);
-        }
         if ((IsGearReady() == true && m_autoReleaseRequest) || m_manualReleaseRequest) {
           m_gearTimer = GetMsecTime();
           m_lights->NotifyFlash(2, 250);

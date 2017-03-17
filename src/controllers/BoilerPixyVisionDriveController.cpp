@@ -6,7 +6,6 @@
 namespace frc973{
 
   static constexpr double VISION_DRIVE_MULTIPLIER = 180.0;
-  static constexpr double OFFSET_CONSTANT = 1.0;
 
   BoilerPixyVisionDriveController::BoilerPixyVisionDriveController(BoilerPixy *boilerPixy) :
     m_onTarget(false),
@@ -31,7 +30,7 @@ namespace frc973{
       m_needSetControlMode = false;
     }
 
-    double offset =  OFFSET_CONSTANT * m_boilerPixy->GetXOffset();
+    double offset = m_boilerPixy->GetXOffset();
 
     if (m_boilerPixy->GetSeesTargetX() == false ||
         GetMsecTime() - m_lightEnableTimeMs < 1000){

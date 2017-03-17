@@ -30,12 +30,12 @@ void Robot::TeleopContinuous(void) {
     double x = -m_driverJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)
         + -m_tuningJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis);
 
-    if(m_driveMode == DriveMode::BoilerVision && m_driverJoystick->GetRawButton(DualAction::RightBumper)){
+    if(m_driverJoystick->GetRawButton(DualAction::RightBumper && m_bumperMode == BumperMode::BoilerVision)){
       m_drive->SetBoilerJoystickTerm(y, x);
       m_drive->SetBoilerPixyTargeting();
     }
     else if(g_manualDriveControl){
-      if(m_driverJoystick->GetRawButton(DualAction::RightBumper)){
+      if(m_driverJoystick->GetRawButton(DualAction::RightBumper) && m_bumperMode == BumperMode::LowGear){
         x /= 3.0;
         y /= 3.0;
       }
@@ -83,11 +83,12 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         switch (button) {
         case DualAction::BtnA:
             if (pressedP) {
-              m_driveMode = DriveMode::BoilerVision;
+              m_bumperMode = BumperMode::BoilerVision;
             }
             break;
         case DualAction::BtnB:
             if (pressedP) {
+              m_bumperMode = BumperMode::LowGear;
             }
             break;
         case DualAction::BtnX:
@@ -123,8 +124,6 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::RightBumper:
             if (pressedP) {
-              g_manualConveyorControl = false;
-              m_driveMode = DriveMode::LowGear;
               //m_shooter->SetShooterState(Shooter::ShootingSequenceState::shooting);
               m_compressor->Disable();
             }
@@ -301,7 +300,12 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::DPadRightVirtBtn:
                 if (pressedP) {
-                    m_flailSetpt += 0.1;
+                  g_manualDriveControl = false;
+                  m_drive
+                      ->PIDTurn(m_drive->GetAngle() + m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT,
+                                 DriveBase::RelativeTo::Absolute, 1.0)
+                      ->SetDistTolerance(15.0, 25.0)
+                      ->SetAngleTolerance(30.0, 60.0);
                 }
                 break;
             case DualAction::DPadLeftVirtBtn:

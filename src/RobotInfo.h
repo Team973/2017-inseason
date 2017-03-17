@@ -44,12 +44,11 @@ constexpr int OPERATOR_JOYSTICK_PORT = 1;
 constexpr int TUNING_JOYSTICK_PORT = 2;
 
 //solenoids
-constexpr int GEAR_INTAKE_POS = 0;
 constexpr int GEAR_INTAKE_GRIP_OPEN = 1;
 constexpr int GEAR_INTAKE_GRIP_CLOSE = 2;
-constexpr int HOPPER_SOLENOID_LEFT = 3;
+constexpr int GEAR_INTAKE_POS = 3;
 constexpr int FLASH_LIGHT_SOL = 4;
-constexpr int HOPPER_SOLENOID_RIGHT = 5;
+constexpr int HOPPER_SOLENOID = 5;
 constexpr int BOILER_PIXY_LIGHT_SOL = 6;
 
 //CANTalon
