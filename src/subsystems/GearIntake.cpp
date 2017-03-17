@@ -7,7 +7,7 @@ namespace frc973{
   static constexpr double RIGHT_INDEXER_POWER = -0.08;
   static constexpr double LEFT_INDEXER_POWER = 0.04;
 
-  static constexpr double INTAKING_POWER = -0.70;
+  static constexpr double INTAKING_CONSTANT = 1.0;
   static constexpr double HOLDING_POWER = -0.2;
 
   GearIntake::GearIntake(
@@ -95,8 +95,8 @@ namespace frc973{
   void GearIntake::SetIndexerMode(Indexer indexerMode){
     switch (indexerMode) {
       case intaking:
-        m_rightIndexer->Set(INTAKING_POWER);
-        m_leftIndexer->Set(INTAKING_POWER);
+        m_rightIndexer->Set(0.3 + INTAKING_CONSTANT * Util::max(m_rightIndexer->GetOutputCurrent() - 10.0, 0.0));
+        m_leftIndexer->Set(0.3 + INTAKING_CONSTANT * Util::max(m_rightIndexer->GetOutputCurrent() - 10.0, 0.0));
         m_indexer = GearIntake::Indexer::intaking;
         break;
       case indexing:

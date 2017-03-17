@@ -6,6 +6,7 @@
 #include "subsystems/BallIntake.h"
 #include "controllers/PIDDrive.h"
 #include "lib/JoystickHelper.h"
+#include "lib/WrapDash.h"
 
 using namespace frc;
 
@@ -25,7 +26,8 @@ void Robot::DisabledContinuous(void) {
   else if(m_alliance == Alliance::Blue){
       m_autoDirection = 1.0;
   }
-  else if (m_autoRoutine == AutonomousRoutine::MadtownHopperThenShootFuel){
+  
+  if (m_autoRoutine == AutonomousRoutine::MadtownHopperThenShootFuel){
     DBStringPrintf(DBStringPos::DB_LINE0,
                       "%c MadtownHopper",
                       (m_alliance == Alliance::Red) ? 'R' : 'B');
