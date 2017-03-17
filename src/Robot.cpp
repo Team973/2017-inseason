@@ -35,7 +35,8 @@ Robot::Robot(void
     m_flailSetpt(1.0),
     m_alliance(Alliance::Blue),
     m_conveyorSetpt(0.75),
-    m_driveMode(DriveMode::AssistedArcade)
+    m_driveMode(DriveMode::AssistedArcade),
+    m_bumperMode(BumperMode::LowGear)
 {
     CameraServer::GetInstance()->StartAutomaticCapture();
     m_driverJoystick = new ObservableJoystick(DRIVER_JOYSTICK_PORT,

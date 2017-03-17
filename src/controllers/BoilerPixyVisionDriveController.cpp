@@ -45,7 +45,7 @@ namespace frc973{
 
     out->SetDriveOutput(m_leftSetpoint, m_rightSetpoint);
 
-    if (Util::abs(m_boilerPixy->GetXOffset()) < 0.1 &&
+    if (Util::abs(offset) < 5.0 &&
             Util::abs(state->GetAngularRate()) < 1.0) {
   		m_onTarget = true;
   	}

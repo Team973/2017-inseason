@@ -212,12 +212,13 @@ namespace frc973 {
                 if (GetMsecTime() - m_autoTimer > 700 &&
                         m_drive->GetDriveCurrent() > 18.0) {
                     m_drive->ArcadeDrive(0.1, 0.0);
+                    m_ballIntake->ExpandHopper();
                     m_autoTimer = GetMsecTime();
                     m_autoState++;
                 }
                 break;
             case 4:
-                if (GetMsecTime() - m_autoTimer > 2500) {
+                if (GetMsecTime() - m_autoTimer > 2500 ) {
                     m_drive
                         ->PIDDrive(-18.0, 0.0,
                                    DriveBase::RelativeTo::Now, 1.0)
@@ -227,9 +228,15 @@ namespace frc973 {
                 }
                 break;
             case 5:
+                if(m_drive->OnTarget()){
+                    m_drive->PIDTurn(-21.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
+                    m_autoState++;
+                }
+                break;
+            case 6:
                 if (m_drive->OnTarget()) {
                     m_drive
-                        ->PIDTurn(-21.0 * m_autoDirection,
+                        ->PIDTurn(m_drive->GetAngle() + m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT,
                                    DriveBase::RelativeTo::Absolute, 1.0)
                         ->SetDistTolerance(15.0, 25.0)
                         ->SetAngleTolerance(30.0, 60.0);
@@ -237,29 +244,26 @@ namespace frc973 {
                     m_autoState++;
                 }
                 break;
-            case 6:
-                if (m_drive->OnTarget() || (GetMsecTime() - m_autoTimer >= 1500)) {
-                  //  m_drive->PIDDrive(0.0, 0.0 * m_autoDirection,
-                    //        DriveBase::RelativeTo::SetPoint, 0.8);
-                    m_autoState++;
-                }
-                break;
             case 7:
-                if (m_drive->OnTarget() || (GetMsecTime() - m_autoTimer >= 1500)) {
-                    //m_drive->SetBoilerPixyTargeting();
-                    m_autoTimer = GetMsecTime();
-                    m_autoState++;
+                if (m_drive->OnTarget() || (GetMsecTime() - m_autoTimer >= 1500 )) {
+                  m_autoTimer = GetMsecTime();
+                  m_autoState++;
                 }
                 break;
             case 8:
-                if ((m_drive->OnTarget() && m_shooter->OnTarget()) ||
-                        GetMsecTime() - m_autoTimer > 4000) {
+                if (m_drive->GetAngularRate() <= 5.0) {
                     m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
                     m_drive->ArcadeDrive(0.0, 0.0);
-                    m_shooter->StartAgitator(1.0, Shooter::Side::right);
-                    m_shooter->StartAgitator(1.0, Shooter::Side::left);
                     m_shooter->StartConveyor(0.9);
-                    m_autoState++;
+                }
+                if (m_drive->GetAngularRate() <= 10.0){
+                  m_shooter->StartAgitator(1.0, Shooter::Side::right);
+                  m_shooter->StartAgitator(1.0, Shooter::Side::left);
+
+                  if (Util::abs(m_boilerPixy->GetXOffset()) <= 1.0) {
+                    m_drive->SetBoilerPixyTargeting();
+                  }
+                  m_autoState++;
                 }
                 break;
             case 9:

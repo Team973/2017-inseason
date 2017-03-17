@@ -8,7 +8,7 @@ namespace frc973{
   static constexpr double LEFT_INDEXER_POWER = 0.04;
 
   static constexpr double INTAKING_POWER = -0.70;
-  static constexpr double HOLDING_POWER = -0.0;
+  static constexpr double HOLDING_POWER = -0.2;
 
   GearIntake::GearIntake(
           TaskMgr *scheduler,
@@ -157,9 +157,10 @@ namespace frc973{
         this->SetIndexerMode(GearIntake::Indexer::intaking);
         this->SetGearPos(GearIntake::GearPosition::down);
         this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
+        m_lights->DisableLights();
         if (m_rightIndexer->GetOutputCurrent() >= 30 || m_leftIndexer->GetOutputCurrent() >= 30){
           m_gearTimer = GetMsecTime();
-          m_lights->NotifyFlash(2);
+          m_lights->NotifyFlash(2, 250);
           m_pickUpState = PickUp::chewing;
         }
         else if (m_seekingRequest == false){
@@ -168,7 +169,14 @@ namespace frc973{
         break;
       case chewing:
         this->SetIndexerMode(GearIntake::Indexer::intaking);
-        if (GetMsecTime() - m_gearTimer >= 100) {
+        if (GetMsecTime() - m_gearTimer >= 500) {
+          if (m_rightIndexer->GetOutputCurrent() >= 30 || m_leftIndexer->GetOutputCurrent() >= 30){
+            m_lights->NotifyFlash(2, 250);
+          }
+          else{
+            m_lights->NotifyFlash(20, 100);
+          }
+
           m_pickUpState = GearIntake::PickUp::digesting;
         }
         break;
@@ -177,7 +185,7 @@ namespace frc973{
         this->SetGearPos(GearIntake::GearPosition::up);
         if ((IsGearReady() == true && m_autoReleaseRequest) || m_manualReleaseRequest) {
           m_gearTimer = GetMsecTime();
-          m_lights->NotifyFlash(2);
+          m_lights->NotifyFlash(2, 250);
           m_pickUpState = PickUp::vomiting;
         }
         break;

@@ -42,8 +42,7 @@ namespace frc973 {
     CANTalon *m_ballIntakeMotor;
 
     BallIntakeState m_ballIntakeState;
-    Solenoid *m_hopperSolenoidLeft;
-    Solenoid *m_hopperSolenoidRight;
+    Solenoid *m_hopperSolenoid;
 
     double m_ballIntakePow;
 
