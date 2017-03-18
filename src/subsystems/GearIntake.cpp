@@ -4,10 +4,7 @@
 #include "lib/logging/LogSpreadsheet.h"
 
 namespace frc973{
-  static constexpr double RIGHT_INDEXER_POWER = -0.08;
-  static constexpr double LEFT_INDEXER_POWER = 0.04;
-
-  static constexpr double INTAKING_POWER = -0.70;
+  static constexpr double INTAKING_CONSTANT = 1.0;
   static constexpr double HOLDING_POWER = -0.2;
 
   GearIntake::GearIntake(
@@ -95,13 +92,15 @@ namespace frc973{
   void GearIntake::SetIndexerMode(Indexer indexerMode){
     switch (indexerMode) {
       case intaking:
-        m_rightIndexer->Set(INTAKING_POWER);
-        m_leftIndexer->Set(INTAKING_POWER);
+        m_rightIndexer->Set(0.3 + INTAKING_CONSTANT * Util::max(m_rightIndexer->GetOutputCurrent() - 10.0, 0.0));
+        m_leftIndexer->Set(0.3 + INTAKING_CONSTANT * Util::max(m_rightIndexer->GetOutputCurrent() - 10.0, 0.0));
         m_indexer = GearIntake::Indexer::intaking;
         break;
-      case indexing:
-        m_rightIndexer->Set(RIGHT_INDEXER_POWER);
-        m_leftIndexer->Set(LEFT_INDEXER_POWER);
+      case indexing: //indexing will now be defined as the mode where the claw makes sure that there is a gear
+        m_leftIndexer->SetCurrentLimit(10);
+        m_rightIndexer->SetCurrentLimit(10);
+        m_rightIndexer->Set(1.0);
+        m_leftIndexer->Set(1.0);
         m_indexer = GearIntake::Indexer::indexing;
         if (IsGearReady() == true) {
             m_indexer = GearIntake::Indexer::holding;
@@ -168,12 +167,14 @@ namespace frc973{
         }
         break;
       case chewing:
-        this->SetIndexerMode(GearIntake::Indexer::intaking);
+        this->SetIndexerMode(GearIntake::Indexer::indexing);
         if (GetMsecTime() - m_gearTimer >= 500) {
           if (m_rightIndexer->GetOutputCurrent() >= 30 || m_leftIndexer->GetOutputCurrent() >= 30){
+            this->SetIndexerMode(GearIntake::Indexer::stop);
             m_lights->NotifyFlash(2, 250);
           }
           else{
+            this->SetIndexerMode(GearIntake::Indexer::stop);
             m_lights->NotifyFlash(20, 100);
           }
 
