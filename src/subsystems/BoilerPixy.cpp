@@ -74,7 +74,7 @@ namespace frc973{
 
     void BoilerPixy::Enable() {
         printf("Enabling the boiler pixy light \n");
-        //m_lights->EnableLights();
+        m_lights->EnableLights();
         m_lightEnabled = true;
         printf("did the boiler pixy\n");
     }
@@ -110,10 +110,10 @@ namespace frc973{
 
     void BoilerPixy::TaskPeriodic(RobotMode mode){
         DBStringPrintf(DB_LINE7,
-              "x %d %2.4lf y %d %2.4lf",
+              "x %d %2.4lf xd %2.4lf",
               GetSeesTargetX(), m_pixyXOffset->GetVoltage(),
-              GetSeesTargetY(), m_pixyYOffset->GetVoltage());
-        DBStringPrintf(DB_LINE3, "horizontal %2.4lf", GetXDistance());
+              GetXOffset() * PIXY_OFFSET_CONSTANT);
+        //DBStringPrintf(DB_LINE3, "horizontal %2.4lf", GetXDistance());
         m_pixyXOffsetLog->LogDouble(GetXOffset());
         m_pixyYOffsetLog->LogDouble(m_pixyYOffset->GetVoltage());
         m_lightLog->LogInt(m_lightEnabled);

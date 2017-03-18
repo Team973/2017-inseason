@@ -16,7 +16,7 @@ namespace frc973{
 
   class BoilerPixy : public CoopTask{
     public:
-      static constexpr double PIXY_OFFSET_CONSTANT = 1.0;
+      static constexpr double PIXY_OFFSET_CONSTANT = 34.0;
 
       BoilerPixy(TaskMgr *scheduler, Lights *lights, LogSpreadsheet *logger);
       virtual ~BoilerPixy();
