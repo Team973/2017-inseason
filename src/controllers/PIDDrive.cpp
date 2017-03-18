@@ -14,7 +14,7 @@ namespace frc973 {
 
 static constexpr double DRIVE_PID_KP = 0.025;// 0.030;
 static constexpr double DRIVE_PID_KI = 0.0;
-static constexpr double DRIVE_PID_KD = 0.0;
+static constexpr double DRIVE_PID_KD = 0.00;
 
 static constexpr double TURN_PID_KP = 0.0105;
 static constexpr double TURN_PID_KI = 0.0;

@@ -16,12 +16,12 @@ namespace frc973 {
 void Robot::TeleopStart(void) {
     m_drive->ArcadeDrive(0.0, 0.0);
     m_teleopTimer = GetMsecTime();
+    m_boilerPixy->Enable();
 }
 
 void Robot::TeleopStop(void) {
 }
 
-static bool g_hangSignalSent = false;
 static bool g_manualDriveControl = true;
 static bool g_manualConveyorControl = true;
 
@@ -69,11 +69,6 @@ void Robot::TeleopContinuous(void) {
 
       m_shooter->Shooter::StartAgitator(l, Shooter::Side::left);
       m_shooter->Shooter::StartAgitator(r, Shooter::Side::right);
-    }
-
-    if (g_hangSignalSent == false && GetMsecTime() - m_teleopTimer > 90000) {
-        m_lights->NotifyFlash(10, 250);
-        g_hangSignalSent = true;
     }
 }
 
@@ -203,8 +198,12 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::BtnB:
             if (pressedP) {
+              m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
+              m_gearIntake->SetPickUpManual();
             }
             else{
+              m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
+              m_gearIntake->SetPickUpManual();
             }
             break;
         case DualAction::LeftBumper:
@@ -302,10 +301,9 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 if (pressedP) {
                   g_manualDriveControl = false;
                   m_drive
-                      ->PIDTurn(m_drive->GetAngle() + m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT,
-                                 DriveBase::RelativeTo::Absolute, 1.0)
-                      ->SetDistTolerance(15.0, 25.0)
-                      ->SetAngleTolerance(30.0, 60.0);
+                      ->PIDTurn(m_drive->GetAngle() -
+                              m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT,
+                                 DriveBase::RelativeTo::Absolute, 1.0);
                 }
                 break;
             case DualAction::DPadLeftVirtBtn:

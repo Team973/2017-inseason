@@ -384,6 +384,7 @@ namespace frc973 {
     void Robot::KpaAndGearAuto(){
       switch(m_autoState){
         case 0:
+          m_boilerPixy->Enable();
           m_drive->PIDDrive(-55.5, 0.0, DriveBase::RelativeTo::Now, 1.0);
           m_gearIntake->SetPickUpManual();
           m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
@@ -406,23 +407,24 @@ namespace frc973 {
           break;
         case 2:
             if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2000) {
-                  if (Util::abs(m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT) >= 5.0) {
+                double angleOffset = m_boilerPixy->GetXOffset() *
+                    BoilerPixy::PIXY_OFFSET_CONSTANT;
+                if (Util::abs(angleOffset) >= 10.0) {
+                    //it's too big so screw it
                     m_autoState++;
-                  }
-                  m_drive
-                      ->PIDTurn(m_drive->GetAngle() + m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT,
-                                 DriveBase::RelativeTo::Absolute, 1.0)
-                      ->SetDistTolerance(15.0, 25.0)
-                      ->SetAngleTolerance(30.0, 60.0);
-                  m_autoTimer = GetMsecTime();
-                  m_autoState++;
+                }
+                m_drive
+                    ->PIDTurn(m_drive->GetAngle() - angleOffset,
+                               DriveBase::RelativeTo::Absolute, 1.0)
+                    ->SetAngleTolerance(0.0, 0.0);
+                m_autoTimer = GetMsecTime();
+                m_autoState++;
               }
             break;
         case 3:
             if ((m_drive->OnTarget() && m_shooter->OnTarget()) ||
                     GetMsecTime() - m_autoTimer > 3000) {
                 m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
-                m_drive->ArcadeDrive(0.0, 0.0);
                 m_shooter->StartAgitator(1.0, Shooter::Side::right);
                 m_shooter->StartAgitator(1.0, Shooter::Side::left);
                 m_shooter->StartConveyor(1.0);

@@ -92,15 +92,17 @@ namespace frc973{
   void GearIntake::SetIndexerMode(Indexer indexerMode){
     switch (indexerMode) {
       case intaking:
-        m_rightIndexer->Set(0.3 + INTAKING_CONSTANT * Util::max(m_rightIndexer->GetOutputCurrent() - 10.0, 0.0));
-        m_leftIndexer->Set(0.3 + INTAKING_CONSTANT * Util::max(m_rightIndexer->GetOutputCurrent() - 10.0, 0.0));
+        m_rightIndexer->Set(-(0.3 + INTAKING_CONSTANT * Util::max(m_rightIndexer->GetOutputCurrent() - 10.0, 0.0)));
+        m_leftIndexer->Set(-(0.3 + INTAKING_CONSTANT * Util::max(m_rightIndexer->GetOutputCurrent() - 10.0, 0.0)));
         m_indexer = GearIntake::Indexer::intaking;
+        m_rightIndexer->SetCurrentLimit(100);
+        m_leftIndexer->SetCurrentLimit(100);
         break;
       case indexing: //indexing will now be defined as the mode where the claw makes sure that there is a gear
         m_leftIndexer->SetCurrentLimit(10);
         m_rightIndexer->SetCurrentLimit(10);
-        m_rightIndexer->Set(1.0);
-        m_leftIndexer->Set(1.0);
+        m_rightIndexer->Set(-1.0);
+        m_leftIndexer->Set(-1.0);
         m_indexer = GearIntake::Indexer::indexing;
         if (IsGearReady() == true) {
             m_indexer = GearIntake::Indexer::holding;
@@ -143,6 +145,7 @@ namespace frc973{
     if (m_indexer == Indexer::indexing && IsGearReady() == true){
       this->SetIndexerMode(Indexer::holding);
     }
+
     switch(m_pickUpState){
       case idle:
         this->SetGearPos(GearIntake::GearPosition::down);
