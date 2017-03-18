@@ -237,16 +237,20 @@ namespace frc973 {
                 break;
             case 6:
                 if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1200) {
-                    if (Util::abs(m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT) >= 5.0) {
-                      m_autoState++;
+                    double angleOffset = m_boilerPixy->GetXOffset() *
+                        BoilerPixy::PIXY_OFFSET_CONSTANT;
+                    if (Util::abs(angleOffset) >= 10.0) {
+                        m_autoState++;
                     }
-                    m_drive
-                        ->PIDTurn(m_drive->GetAngle() + m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT,
-                                   DriveBase::RelativeTo::Absolute, 1.0)
-                        ->SetDistTolerance(15.0, 25.0)
-                        ->SetAngleTolerance(30.0, 60.0);
-                    m_autoTimer = GetMsecTime();
-                    m_autoState++;
+                    else {
+                        m_drive
+                            ->PIDTurn(m_drive->GetAngle() - angleOffset, 
+                                       DriveBase::RelativeTo::Absolute, 1.0)
+                            ->SetDistTolerance(15.0, 25.0)
+                            ->SetAngleTolerance(30.0, 60.0);
+                        m_autoTimer = GetMsecTime();
+                        m_autoState++;
+                    }
                 }
                 break;
             case 7:
@@ -298,17 +302,22 @@ namespace frc973 {
           break;
         case 2:
           if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500) {
-                if (Util::abs(m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT) >= 5.0) {
+              double angleOffset = m_boilerPixy->GetXOffset() *
+                  BoilerPixy::PIXY_OFFSET_CONSTANT;
+
+              if (Util::abs(angleOffset) >= 10.0) {
                   m_autoState++;
-                }
+              }
+              else {
                 m_drive
-                    ->PIDTurn(m_drive->GetAngle() + m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT,
+                    ->PIDTurn(m_drive->GetAngle() - angleOffset,
                                DriveBase::RelativeTo::Absolute, 1.0)
                     ->SetDistTolerance(15.0, 25.0)
                     ->SetAngleTolerance(30.0, 60.0);
                 m_autoTimer = GetMsecTime();
                 m_autoState++;
               }
+          }
           break;
         case 3:
             if ((m_drive->OnTarget() && m_shooter->OnTarget()) ||
@@ -413,12 +422,14 @@ namespace frc973 {
                     //it's too big so screw it
                     m_autoState++;
                 }
-                m_drive
-                    ->PIDTurn(m_drive->GetAngle() - angleOffset,
-                               DriveBase::RelativeTo::Absolute, 1.0)
-                    ->SetAngleTolerance(0.0, 0.0);
-                m_autoTimer = GetMsecTime();
-                m_autoState++;
+                else {
+                    m_drive
+                        ->PIDTurn(m_drive->GetAngle() - angleOffset,
+                                   DriveBase::RelativeTo::Absolute, 1.0)
+                        ->SetAngleTolerance(0.0, 0.0);
+                    m_autoTimer = GetMsecTime();
+                    m_autoState++;
+                }
               }
             break;
         case 3:
