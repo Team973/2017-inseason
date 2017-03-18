@@ -20,7 +20,7 @@ DATA_COLS = [4, 5, 2, 9]
 GRAPHS = [["Left Encoder Rate", "Left motor signal (pow or vel)"], ["Left motor voltage"]]
 titles = []
 
-os.system('scp lvuser@roborio-%d-frc.local:/home/lvuser/*.txt .' % TEAM_NUMBER)
+os.system('scp -p lvuser@roborio-%d-frc.local:/home/lvuser/*.txt .' % TEAM_NUMBER)
 latest = sorted([f for f in os.listdir(".") if f[:4] == "log:"])[-1]
 
 with open(latest, "r") as f:
