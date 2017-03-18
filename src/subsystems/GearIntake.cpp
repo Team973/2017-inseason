@@ -4,8 +4,8 @@
 #include "lib/logging/LogSpreadsheet.h"
 
 namespace frc973{
-  static constexpr double INTAKING_CONSTANT = 1.0;
-  static constexpr double HOLDING_POWER = -0.2;
+  static constexpr double INTAKING_CONSTANT = 5000;
+  static constexpr double HOLDING_POWER = -0.1;
 
   GearIntake::GearIntake(
           TaskMgr *scheduler,
@@ -43,6 +43,8 @@ namespace frc973{
     m_rightIndexer->SetCurrentLimit(100);
     m_rightIndexer->EnableCurrentLimit(true);
     m_leftIndexer->SetCurrentLimit(100);
+    m_rightIndexer->SetVoltageRampRate(80.0);
+    m_leftIndexer->SetVoltageRampRate(80.0);
     this->SetGearIntakeState(GearIntakeState::grabbed);
     this->m_scheduler->RegisterTask("GearIntake", this, TASK_PERIODIC);
 
@@ -92,9 +94,15 @@ namespace frc973{
   void GearIntake::SetIndexerMode(Indexer indexerMode){
     switch (indexerMode) {
       case intaking:
-        m_rightIndexer->Set(-(0.3 + INTAKING_CONSTANT * Util::max(m_rightIndexer->GetOutputCurrent() - 10.0, 0.0)));
-        m_leftIndexer->Set(-(0.3 + INTAKING_CONSTANT * Util::max(m_rightIndexer->GetOutputCurrent() - 10.0, 0.0)));
-        m_indexer = GearIntake::Indexer::intaking;
+        if (m_rightIndexer->GetOutputCurrent() > 5.0 &&
+                m_leftIndexer->GetOutputCurrent() > 5.0) {
+            m_rightIndexer->Set(-1.0);
+            m_leftIndexer->Set(-1.0);
+        }
+        else {
+            m_rightIndexer->Set(-0.3);
+            m_leftIndexer->Set(-0.3);
+        }
         m_rightIndexer->SetCurrentLimit(100);
         m_leftIndexer->SetCurrentLimit(100);
         break;
@@ -103,20 +111,16 @@ namespace frc973{
         m_rightIndexer->SetCurrentLimit(10);
         m_rightIndexer->Set(-1.0);
         m_leftIndexer->Set(-1.0);
-        m_indexer = GearIntake::Indexer::indexing;
-        if (IsGearReady() == true) {
-            m_indexer = GearIntake::Indexer::holding;
-          }
         break;
       case holding:
+        m_leftIndexer->SetCurrentLimit(10);
+        m_rightIndexer->SetCurrentLimit(10);
         m_rightIndexer->Set(HOLDING_POWER);
         m_leftIndexer->Set(HOLDING_POWER);
-        m_indexer = GearIntake::Indexer::holding;
         break;
        case stop:
         m_rightIndexer->Set(0.0);
         m_leftIndexer->Set(0.0);
-        m_indexer = GearIntake::Indexer::stop;
         break;
     }
   }
@@ -160,40 +164,43 @@ namespace frc973{
         this->SetGearPos(GearIntake::GearPosition::down);
         this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
         m_lights->DisableLights();
-        if (m_rightIndexer->GetOutputCurrent() >= 30 || m_leftIndexer->GetOutputCurrent() >= 30){
-          m_gearTimer = GetMsecTime();
-          m_lights->NotifyFlash(2, 250);
-          m_pickUpState = PickUp::chewing;
+        if (m_rightIndexer->GetOutputCurrent() >= 30 ||
+                m_leftIndexer->GetOutputCurrent() >= 30){
+            m_gearTimer = GetMsecTime();
+            m_pickUpState = PickUp::chewing;
         }
         else if (m_seekingRequest == false){
-          m_pickUpState = PickUp::idle;
+            m_pickUpState = PickUp::idle;
         }
         break;
       case chewing:
         this->SetIndexerMode(GearIntake::Indexer::indexing);
         if (GetMsecTime() - m_gearTimer >= 500) {
-          if (m_rightIndexer->GetOutputCurrent() >= 30 || m_leftIndexer->GetOutputCurrent() >= 30){
-            this->SetIndexerMode(GearIntake::Indexer::stop);
-            m_lights->NotifyFlash(2, 250);
-          }
-          else{
-            this->SetIndexerMode(GearIntake::Indexer::stop);
-            m_lights->NotifyFlash(20, 100);
-          }
+            if (m_rightIndexer->GetOutputCurrent() >= 9 ||
+                    m_leftIndexer->GetOutputCurrent() >= 9){
+                this->SetIndexerMode(GearIntake::Indexer::stop);
+                m_lights->NotifyFlash(2, 250);
+            }
+            else {
+                this->SetIndexerMode(GearIntake::Indexer::stop);
+                m_lights->NotifyFlash(15, 100);
+            }
 
-          m_pickUpState = GearIntake::PickUp::digesting;
+            m_pickUpState = GearIntake::PickUp::digesting;
         }
         break;
       case digesting:
         this->SetIndexerMode(GearIntake::Indexer::holding);
         this->SetGearPos(GearIntake::GearPosition::up);
-        if ((IsGearReady() == true && m_autoReleaseRequest) || m_manualReleaseRequest) {
+        if ((IsGearReady() == true && m_autoReleaseRequest) ||
+                m_manualReleaseRequest) {
           m_gearTimer = GetMsecTime();
           m_lights->NotifyFlash(2, 250);
           m_pickUpState = PickUp::vomiting;
         }
         break;
       case vomiting:
+        this->SetIndexerMode(GearIntake::Indexer::stop);
         this->SetGearPos(GearPosition::down);
         this->SetGearIntakeState(GearIntake::GearIntakeState::released);
         if(GetMsecTime() - m_gearTimer >= 100){
@@ -223,5 +230,8 @@ namespace frc973{
     m_gearCurrentLog->LogDouble(m_leftIndexer->GetOutputCurrent());
     m_gearInputsLog->LogPrintf("%d %d %d",
             m_manualReleaseRequest, m_autoReleaseRequest, m_seekingRequest);
+    DBStringPrintf(DB_LINE6, "l %lf r %lf", 
+            m_leftIndexer->GetOutputCurrent(),
+            m_rightIndexer->GetOutputCurrent());
   }
 }
