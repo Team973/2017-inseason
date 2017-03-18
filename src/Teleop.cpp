@@ -129,16 +129,16 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::RightTrigger:
             if (pressedP) {
-              g_manualConveyorControl = false;
-              m_shooter->SetShooterState(Shooter::ShootingSequenceState::shooting);
-              m_compressor->Disable();
-              g_manualDriveControl = false;
+                g_manualConveyorControl = false;
+                m_shooter->SetShooterState(Shooter::ShootingSequenceState::shooting);
+                m_compressor->Disable();
+                g_manualDriveControl = false;
             }
             else{
-              g_manualDriveControl = true;
-              g_manualConveyorControl = false;
-              m_compressor->Enable();
-              m_shooter->SetShooterState(Shooter::ShootingSequenceState::idle);
+                g_manualDriveControl = true;
+                g_manualConveyorControl = false;
+                m_compressor->Enable();
+                m_shooter->SetShooterState(Shooter::ShootingSequenceState::idle);
             }
             break;
         case DualAction::DPadUpVirtBtn:
@@ -149,16 +149,18 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::DPadDownVirtBtn:
             if (pressedP){
-              m_buttonPresses->LogPrintf("button down drive %d", 1);
+                m_buttonPresses->LogPrintf("button down drive %d", 1);
             }
             break;
         case DualAction::DPadLeftVirtBtn:
             if (pressedP){
+                m_ballIntake->ExpandHopper();
             }
             break;
         case DualAction::DPadRightVirtBtn:
             if (pressedP) {
-                }
+                m_ballIntake->RetractHopper();
+            }
             break;
         case DualAction::Start:
             if (pressedP) {
