@@ -48,7 +48,8 @@ private:
 
     enum DriveMode{
       OpenLoop,
-      AssistedArcade
+      AssistedArcade,
+      PixyDrive
     };
 
     enum BumperMode{
