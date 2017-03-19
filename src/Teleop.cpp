@@ -30,12 +30,8 @@ void Robot::TeleopContinuous(void) {
     double x = -m_driverJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis)
         + -m_tuningJoystick->GetRawAxisWithDeadband(DualAction::RightXAxis);
 
-    if(m_driverJoystick->GetRawButton(DualAction::RightBumper && m_bumperMode == BumperMode::BoilerVision)){
-      m_drive->SetBoilerJoystickTerm(y, x);
-      m_drive->SetBoilerPixyTargeting();
-    }
-    else if(g_manualDriveControl){
-      if(m_driverJoystick->GetRawButton(DualAction::RightBumper) && m_bumperMode == BumperMode::LowGear){
+    if(g_manualDriveControl){
+      if(m_driverJoystick->GetRawButton(DualAction::RightBumper)){
         x /= 3.0;
         y /= 3.0;
       }
@@ -45,6 +41,10 @@ void Robot::TeleopContinuous(void) {
       }
       else if(m_driveMode == DriveMode::AssistedArcade){
         m_drive->AssistedArcadeDrive(y, x);
+      }
+      else if (m_driveMode == DriveMode::PixyDrive) {
+        m_drive->SetBoilerJoystickTerm(y, x);
+        m_drive->SetBoilerPixyTargeting();
       }
     }
     /*
@@ -78,7 +78,14 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         switch (button) {
         case DualAction::BtnA:
             if (pressedP) {
-              m_bumperMode = BumperMode::BoilerVision;
+            }
+            break;
+        case DualAction::LJoystickBtn:
+            if (pressedP) {
+              m_driveMode = DriveMode::PixyDrive;
+            }
+            else {
+              m_driveMode = DriveMode::AssistedArcade;
             }
             break;
         case DualAction::BtnB:
@@ -315,8 +322,12 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::RightTrigger:
                 if (pressedP) {
-                  m_compressor->Enable();
-                    //m_conveyorSetpt += 0.1;
+                    m_drive->SetGearPixyTargeting();
+                    g_manualDriveControl = false;
+                }
+                else {
+                    m_drive->ArcadeDrive(0.0, 0.0);
+                    g_manualDriveControl = true;
                 }
                 break;
             case DualAction::RightBumper:
