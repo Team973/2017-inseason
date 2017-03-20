@@ -100,19 +100,19 @@ namespace frc973{
             m_leftIndexer->Set(-1.0);
         }
         else {
-            m_rightIndexer->Set(-0.3);
-            m_leftIndexer->Set(-0.3);
+            m_rightIndexer->Set(-0.5);
+            m_leftIndexer->Set(-0.5);
         }
         m_rightIndexer->SetCurrentLimit(100);
         m_leftIndexer->SetCurrentLimit(100);
         break;
-      case indexing: //indexing will now be defined as the mode where the claw makes sure that there is a gear
+      case indexing:
         m_leftIndexer->SetCurrentLimit(10);
         m_rightIndexer->SetCurrentLimit(10);
         m_rightIndexer->Set(-1.0);
         m_leftIndexer->Set(-1.0);
         break;
-      case holding:
+      case holding://holding will now be defined as the mode where the claw makes sure that there is a gear
         m_leftIndexer->SetCurrentLimit(10);
         m_rightIndexer->SetCurrentLimit(10);
         m_rightIndexer->Set(HOLDING_POWER);
@@ -230,7 +230,7 @@ namespace frc973{
     m_gearCurrentLog->LogDouble(m_leftIndexer->GetOutputCurrent());
     m_gearInputsLog->LogPrintf("%d %d %d",
             m_manualReleaseRequest, m_autoReleaseRequest, m_seekingRequest);
-    DBStringPrintf(DB_LINE6, "l %lf r %lf", 
+    DBStringPrintf(DB_LINE6, "l %lf r %lf",
             m_leftIndexer->GetOutputCurrent(),
             m_rightIndexer->GetOutputCurrent());
   }
