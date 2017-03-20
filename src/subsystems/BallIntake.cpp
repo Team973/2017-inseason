@@ -58,7 +58,7 @@ namespace frc973{
   void BallIntake::TaskPeriodic(RobotMode mode){
       switch (m_ballIntakeState) {
         case running:
-          m_ballIntakeMotor->Set(0.55);
+          m_ballIntakeMotor->Set(1.0);
           break;
         case notRunning:
           m_ballIntakeMotor->Set(0.0);
