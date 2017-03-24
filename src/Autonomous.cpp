@@ -171,9 +171,9 @@ namespace frc973 {
                 m_ballIntake->ExpandHopper();
                 m_shooter->SetFlywheelSpeed(3030);
                 m_drive
-                    ->PIDDrive(-(DRIVER_STATION_BASE_LINE_DIST - 18.0) + 9.0, 0.0,
+                    ->PIDDrive(-62.0, 0.0,
                                DriveBase::RelativeTo::Now, 0.9)
-                    ->SetDistTolerance(4.0, 9000.0)
+                    ->SetDistTolerance(2.0, 9000.0)
                     ->SetAngleTolerance(9909.0, 9099.0);
                 m_gearIntake->SetPickUpManual();
                 m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
@@ -260,6 +260,7 @@ namespace frc973 {
                 }
                 break;
             case 8:
+                  m_ballIntake->RetractHopper();
                   m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
                   m_shooter->StartConveyor(0.9);
                   m_shooter->StartAgitator(1.0, Shooter::Side::right);
