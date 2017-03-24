@@ -45,6 +45,8 @@ namespace frc973 {
 
         m_crankMotorB->Set(m_crankMotor->GetDeviceID());
         m_crankMotorB->SetClosedLoopOutputDirection(true);
+        m_crankMotorB->EnableCurrentLimit(true);
+        m_crankMotorB->SetCurrentLimit(40);
         m_crankMotor->Set(0.0);
 
         logger->RegisterCell(m_hangStateLog);

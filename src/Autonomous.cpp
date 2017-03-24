@@ -201,6 +201,7 @@ namespace frc973 {
             case 2:
                 if (m_drive->OnTarget()) {
                     m_drive->ArcadeDrive(0.6, 0.0);
+                    m_ballIntake->BallIntakeStart();
                     m_autoTimer = GetMsecTime();
                     /*
                     m_drive->PIDDrive(26.0, 0.0,
@@ -231,6 +232,7 @@ namespace frc973 {
             case 5:
                 if(m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500){
                     m_drive->PIDTurn(-21.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
+                    m_ballIntake->BallIntakeStop();
                     m_autoTimer = GetMsecTime();
                     m_autoState++;
                 }
