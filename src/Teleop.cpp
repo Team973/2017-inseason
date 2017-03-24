@@ -299,10 +299,11 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::DPadDownVirtBtn:
                 if (pressedP) {
-
                     g_manualDriveControl = false;
-                    m_drive->SetGearPixyTargeting();
-
+                    m_drive
+                        ->PIDTurn(m_drive->GetAngle() -
+                                m_pixyR->GetOffset() * PixyThread::GEAR_MULTIPLIER,
+                                   DriveBase::RelativeTo::Absolute, 1.0);
                    // m_conveyorSetpt -= 0.1;
                 }
                 break;
