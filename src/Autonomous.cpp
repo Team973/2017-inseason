@@ -168,9 +168,10 @@ namespace frc973 {
             case 0:
                 printf("gonna piddrive\n");
                 m_compressor->Disable();
+                m_ballIntake->ExpandHopper();
                 m_shooter->SetFlywheelSpeed(3030);
                 m_drive
-                    ->PIDDrive(-(DRIVER_STATION_BASE_LINE_DIST - 18.0) - 4.0, 0.0,
+                    ->PIDDrive(-(DRIVER_STATION_BASE_LINE_DIST - 18.0) + 9.0, 0.0,
                                DriveBase::RelativeTo::Now, 0.9)
                     ->SetDistTolerance(4.0, 9000.0)
                     ->SetAngleTolerance(9909.0, 9099.0);
@@ -212,7 +213,6 @@ namespace frc973 {
                 if (GetMsecTime() - m_autoTimer > 700 &&
                         m_drive->GetDriveCurrent() > 18.0) {
                     m_drive->ArcadeDrive(0.1, 0.0);
-                    m_ballIntake->ExpandHopper();
                     m_autoTimer = GetMsecTime();
                     m_autoState++;
                 }
@@ -244,7 +244,7 @@ namespace frc973 {
                     }
                     else {
                         m_drive
-                            ->PIDTurn(m_drive->GetAngle() - angleOffset, 
+                            ->PIDTurn(m_drive->GetAngle() - angleOffset,
                                        DriveBase::RelativeTo::Absolute, 1.0)
                             ->SetDistTolerance(15.0, 25.0)
                             ->SetAngleTolerance(30.0, 60.0);
@@ -254,22 +254,17 @@ namespace frc973 {
                 }
                 break;
             case 7:
-                if (m_drive->OnTarget() || (GetMsecTime() - m_autoTimer >= 1500 )) {
+                if (m_drive->OnTarget() || (GetMsecTime() - m_autoTimer >= 1000 )) {
                   m_autoTimer = GetMsecTime();
                   m_autoState++;
                 }
                 break;
             case 8:
-                if (m_drive->GetAngularRate() <= 5.0) {
-                    m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
-                    m_drive->ArcadeDrive(0.0, 0.0);
-                    m_shooter->StartConveyor(0.9);
-                }
-                if (m_drive->GetAngularRate() <= 10.0){
+                  m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
+                  m_shooter->StartConveyor(0.9);
                   m_shooter->StartAgitator(1.0, Shooter::Side::right);
                   m_shooter->StartAgitator(1.0, Shooter::Side::left);
                   m_autoState++;
-                }
                 break;
             case 9:
                 break;
@@ -302,15 +297,15 @@ namespace frc973 {
           break;
         case 2:
           if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500) {
-              double angleOffset = m_boilerPixy->GetXOffset() *
+              double boilerOffset = m_boilerPixy->GetXOffset() *
                   BoilerPixy::PIXY_OFFSET_CONSTANT;
 
-              if (Util::abs(angleOffset) >= 10.0) {
+              if (Util::abs(boilerOffset) >= 10.0) {
                   m_autoState++;
               }
               else {
                 m_drive
-                    ->PIDTurn(m_drive->GetAngle() - angleOffset,
+                    ->PIDTurn(m_drive->GetAngle() - boilerOffset,
                                DriveBase::RelativeTo::Absolute, 1.0)
                     ->SetDistTolerance(15.0, 25.0)
                     ->SetAngleTolerance(30.0, 60.0);
@@ -359,12 +354,31 @@ namespace frc973 {
             break;
         case 7:
             if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500) {
+                double gearOffset = m_pixyR->GetOffset() *
+                    PixyThread::GEAR_MULTIPLIER;
+
+                if (Util::abs(gearOffset) >= 10.0) {
+                    m_autoState++;
+                }
+                else {
+                  m_drive
+                      ->PIDTurn(m_drive->GetAngle() - gearOffset,
+                                 DriveBase::RelativeTo::Absolute, 1.0)
+                      ->SetDistTolerance(15.0, 25.0)
+                      ->SetAngleTolerance(30.0, 60.0);
+                  m_autoTimer = GetMsecTime();
+                  m_autoState++;
+                }
+            }
+            break;
+        case 8:
+            if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500) {
                 m_autoTimer = GetMsecTime();
                 m_drive->ArcadeDrive(-0.3, 0.0);
                 m_autoState++;
             }
             break;
-        case 8:
+        case 9:
             if (m_gearIntake->IsGearReady()) {
                 //hit the gear, continue normally
                 m_drive->PIDDrive(30.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
@@ -378,7 +392,7 @@ namespace frc973 {
                 m_autoState = 6;
             }
             break;
-        case 9:
+        case 10:
             //should be done scoring gear... make hair merry red left
             if (m_drive->OnTarget()) {
                 m_drive->PIDTurn(-90.0 * m_autoDirection, DriveBase::RelativeTo::SetPoint, 0.8);
@@ -416,15 +430,15 @@ namespace frc973 {
           break;
         case 2:
             if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2000) {
-                double angleOffset = m_boilerPixy->GetXOffset() *
+                double boilerOffset = m_boilerPixy->GetXOffset() *
                     BoilerPixy::PIXY_OFFSET_CONSTANT;
-                if (Util::abs(angleOffset) >= 10.0) {
+                if (Util::abs(boilerOffset) >= 10.0) {
                     //it's too big so screw it
                     m_autoState++;
                 }
                 else {
                     m_drive
-                        ->PIDTurn(m_drive->GetAngle() - angleOffset,
+                        ->PIDTurn(m_drive->GetAngle() - boilerOffset,
                                    DriveBase::RelativeTo::Absolute, 1.0)
                         ->SetAngleTolerance(0.0, 0.0);
                     m_autoTimer = GetMsecTime();
@@ -466,13 +480,32 @@ namespace frc973 {
             }
             break;
         case 7:
+            if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500) {
+                double gearOffset = m_pixyR->GetOffset() *
+                    PixyThread::GEAR_MULTIPLIER;
+
+                if (Util::abs(gearOffset) >= 10.0) {
+                    m_autoState++;
+                }
+                else {
+                  m_drive
+                      ->PIDTurn(m_drive->GetAngle() - gearOffset,
+                                 DriveBase::RelativeTo::Absolute, 1.0)
+                      ->SetDistTolerance(15.0, 25.0)
+                      ->SetAngleTolerance(30.0, 60.0);
+                  m_autoTimer = GetMsecTime();
+                  m_autoState++;
+                }
+            }
+            break;
+        case 8:
             if (m_drive->OnTarget()) {
                 m_autoTimer = GetMsecTime();
                 m_drive->ArcadeDrive(-0.3, 0.0);
                 m_autoState++;
             }
             break;
-        case 8:
+        case 9:
             if (m_gearIntake->IsGearReady()) {
                 //hit the gear, continue normally
                 m_drive->PIDDrive(30.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
@@ -486,7 +519,7 @@ namespace frc973 {
                 m_autoState = 6;
             }
             break;
-        case 9:
+        case 10:
             //should be done scoring gear... make hair merry red left
             if (m_drive->OnTarget()) {
                 m_drive->PIDTurn(-90.0 * m_autoDirection, DriveBase::RelativeTo::SetPoint, 0.8);
