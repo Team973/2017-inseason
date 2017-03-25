@@ -30,10 +30,10 @@ Robot::Robot(void
     m_autoState(0),
     m_autoTimer(0),
     m_teleopTimer(0),
-    m_autoRoutine(AutonomousRoutine::NoAuto),
+    m_autoRoutine(AutonomousRoutine::CitrusKpaGearAuto),
     m_speedSetpt(2900),
     m_flailSetpt(1.0),
-    m_alliance(Alliance::Blue),
+    m_alliance(Alliance::Red),
     m_conveyorSetpt(0.75),
     m_driveMode(DriveMode::AssistedArcade),
     m_bumperMode(BumperMode::LowGear)

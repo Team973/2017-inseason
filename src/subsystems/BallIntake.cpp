@@ -66,7 +66,7 @@ namespace frc973{
     m_current->LogDouble(m_ballIntakeMotor->GetOutputCurrent());
       switch (m_ballIntakeState) {
         case running:
-          m_ballIntakeMotor->Set(1.0);
+          m_ballIntakeMotor->Set(0.8);
           break;
         case notRunning:
           m_ballIntakeMotor->Set(0.0);
