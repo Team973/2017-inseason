@@ -43,6 +43,8 @@ namespace frc973 {
 
     BallIntakeState m_ballIntakeState;
     Solenoid *m_hopperSolenoid;
+    LogCell *m_voltage;
+    LogCell *m_current;
 
     double m_ballIntakePow;
 

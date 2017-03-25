@@ -124,6 +124,7 @@ private:
     LogCell *m_zAccel;
     LogCell *m_autoStateLog;
     LogCell *m_autoSelectLog;
+    LogCell *m_angleOffset;
 
     PixyThread *m_pixyR;
 public:
