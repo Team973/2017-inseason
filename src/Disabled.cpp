@@ -26,8 +26,8 @@ void Robot::DisabledContinuous(void) {
   else if(m_alliance == Alliance::Blue){
       m_autoDirection = 1.0;
   }
-  
-  if (m_autoRoutine == AutonomousRoutine::MadtownHopperThenShootFuel){
+
+  /*if (m_autoRoutine == AutonomousRoutine::MadtownHopperThenShootFuel){
     DBStringPrintf(DBStringPos::DB_LINE0,
                       "%c MadtownHopper",
                       (m_alliance == Alliance::Red) ? 'R' : 'B');
@@ -51,20 +51,20 @@ void Robot::DisabledContinuous(void) {
                       "%c KpaGear Auto",
                       (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
-  else if (m_autoRoutine == AutonomousRoutine::CitrusKpaGearAuto){
-    DBStringPrintf(DBStringPos::DB_LINE0,
-                      "%c CitrusKpaGear Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-    m_autoSelectLog->LogPrintf(
-                      "%c CitrusKpaGear Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-  }
   else if (m_autoRoutine == AutonomousRoutine::NoAuto){
     DBStringPrintf(DBStringPos::DB_LINE0,
                       "%c No Auto",
                       (m_alliance == Alliance::Red) ? 'R' : 'B');
     m_autoSelectLog->LogPrintf(
                       "%c No Auto",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
+  }*/
+  if (m_autoRoutine == AutonomousRoutine::CitrusKpaGearAuto){
+    DBStringPrintf(DBStringPos::DB_LINE0,
+                      "%c CitrusKpaGear Auto",
+                      (m_alliance == Alliance::Red) ? 'R' : 'B');
+    m_autoSelectLog->LogPrintf(
+                      "%c CitrusKpaGear Auto",
                       (m_alliance == Alliance::Red) ? 'R' : 'B');
   }
 }
@@ -73,7 +73,7 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
         bool pressedP){
     m_buttonPresses->LogPrintf("Button event port %d button %d pressed %d",
             port, button, pressedP);
-    switch (button) {
+    /*switch (button) {
         case DualAction::BtnA:
             if (pressedP) {
                 //m_autoRoutine = AutonomousRoutine::GearLeftPeg;
@@ -143,7 +143,7 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             if (pressedP) {
             }
             break;
-    }
+    }*/
 }
 
 }

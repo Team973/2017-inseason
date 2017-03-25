@@ -34,7 +34,8 @@ namespace frc973 {
 
     void Robot::AutonomousContinuous(void) {
         DBStringPrintf(DB_LINE0, "AutoState %d", m_autoState);
-        switch (m_autoRoutine){
+        CitrusKpaAndGearAuto();
+        /*switch (m_autoRoutine){
             case AutonomousRoutine::MadtownHopperThenShootFuel:
                 MadtownHopperThenShoot();
                 break;
@@ -44,13 +45,14 @@ namespace frc973 {
             case AutonomousRoutine::KpaGearAuto:
                 KpaAndGearAuto();
                 break;
-            case AutonomousRoutine::CitrusKpaGearAuto:
-                CitrusKpaAndGearAuto();
-                break;
             case AutonomousRoutine::NoAuto:
                 //Don't do any auto
                 break;
-        }
+            case AutonomousRoutine::CitrusKpaGearAuto:
+                CitrusKpaAndGearAuto();
+                break;
+
+        }*/
     }
 
     void Robot::MadtownHopperThenShoot(){
