@@ -170,15 +170,24 @@ namespace frc973 {
                 m_compressor->Disable();
                 m_ballIntake->ExpandHopper();
                 m_shooter->SetFlywheelSpeed(3030);
-                m_drive
-                    ->PIDDrive(-63.0, 0.0,
-                               DriveBase::RelativeTo::Now, 0.9)
-                    ->SetDistTolerance(2.0, 9000.0)
-                    ->SetAngleTolerance(9909.0, 9099.0);
                 m_gearIntake->SetPickUpManual();
                 m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
                 m_shooter->StopAgitator();
                 m_shooter->StartConveyor(0.0);
+                if(m_alliance == Alliance::Red){
+                  m_drive
+                      ->PIDDrive(-63.0, 0.0,
+                                 DriveBase::RelativeTo::Now, 0.9)
+                      ->SetDistTolerance(2.0, 5.0)
+                      ->SetAngleTolerance(9909.0, 9099.0);
+                  }
+                else{
+                  m_drive
+                      ->PIDDrive(-64.0, 0.0,
+                                 DriveBase::RelativeTo::Now, 0.9)
+                      ->SetDistTolerance(2.0, 5.0)
+                      ->SetAngleTolerance(9909.0, 9099.0);
+                }
                 printf("piddrived\n");
                 m_autoState++;
                 break;

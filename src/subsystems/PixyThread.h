@@ -16,7 +16,7 @@ class Pixy;
 
 class PixyThread : public CoopTask {
 public:
-    static constexpr double GEAR_MULTIPLIER = 34.0;
+    static constexpr double GEAR_MULTIPLIER = 82.14;
 
     explicit PixyThread(RobotStateInterface &stateProvider);
     virtual ~PixyThread();
