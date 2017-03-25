@@ -39,6 +39,7 @@ namespace frc973 {
 
   private:
     TaskMgr *m_scheduler;
+    LogSpreadsheet  *m_logger;
     CANTalon *m_ballIntakeMotor;
 
     BallIntakeState m_ballIntakeState;

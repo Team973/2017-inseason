@@ -141,7 +141,8 @@ Robot::Robot(void
     m_zAccel = new LogCell("Z acceleration", 32, true);
     m_autoStateLog = new LogCell("Auto state", 32, true);
     m_autoSelectLog = new LogCell("Selected auto routine", 32, true);
-    m_angleOffset = new LogCell("AngleOffset", 32, true);
+    m_boilerOffset = new LogCell("AngleOffset", 32, true);
+    m_gearOffset = new LogCell("GearOffset", 32, true);
 
     m_logger->RegisterCell(m_battery);
     m_logger->RegisterCell(m_state);
@@ -152,7 +153,8 @@ Robot::Robot(void
     m_logger->RegisterCell(m_zAccel);
     m_logger->RegisterCell(m_autoStateLog);
     m_logger->RegisterCell(m_autoSelectLog);
-    m_logger->RegisterCell(m_angleOffset);
+    m_logger->RegisterCell(m_boilerOffset);
+    m_logger->RegisterCell(m_gearOffset);
 
     m_hanger = new Hanger(this, m_logger);
     m_ballIntake = new BallIntake(this, m_logger);
@@ -186,8 +188,10 @@ void Robot::AllStateContinuous(void) {
     m_xAccel->LogDouble(m_accel.GetX());
     m_yAccel->LogDouble(m_accel.GetY());
     m_zAccel->LogDouble(m_accel.GetZ());
-    m_angleOffset->LogDouble(m_boilerPixy->GetXOffset() *
+    m_boilerOffset->LogDouble(m_boilerPixy->GetXOffset() *
         BoilerPixy::PIXY_OFFSET_CONSTANT);
+    m_gearOffset->LogDouble(m_pixyR->GetOffset() *
+        PixyThread::GEAR_MULTIPLIER);
     m_autoStateLog->LogInt(m_autoState);
 
     DBStringPrintf(DB_LINE1,
@@ -199,7 +203,7 @@ void Robot::AllStateContinuous(void) {
                    */
     DBStringPrintf(DB_LINE8,
             "g %d %lf %d",
-            m_pixyR->GetDataFresh(), m_pixyR->GetOffset(), m_gearIntake->IsGearReady());
+            m_pixyR->GetDataFresh(), m_pixyR->GetOffset() * PixyThread::GEAR_MULTIPLIER, m_gearIntake->IsGearReady());
 }
 
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,

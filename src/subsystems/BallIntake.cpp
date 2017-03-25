@@ -9,6 +9,7 @@ namespace frc973{
   BallIntake::BallIntake(TaskMgr *scheduler, LogSpreadsheet *logger)
   :
   m_scheduler(scheduler),
+  m_logger(logger),
   m_ballIntakeMotor(new CANTalon(BALL_INTAKE_CAN_ID, 50)),
   m_ballIntakeState(BallIntakeState::notRunning),
   m_hopperSolenoid(new Solenoid(HOPPER_SOLENOID)),
@@ -23,6 +24,8 @@ namespace frc973{
 
     m_voltage = new LogCell("BallIntake Voltage", 32, true);
     m_current = new LogCell("BallIntake Current", 32, true);
+    m_logger->RegisterCell(m_voltage);
+    m_logger->RegisterCell(m_current);
   }
 
   BallIntake::~BallIntake(){
