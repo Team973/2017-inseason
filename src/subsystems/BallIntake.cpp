@@ -20,6 +20,9 @@ namespace frc973{
     m_ballIntakeMotor->EnableCurrentLimit(true);
     m_ballIntakeMotor->SetCurrentLimit(40);
     m_ballIntakeMotor->SetVoltageRampRate(120.0);
+
+    m_voltage = new LogCell("BallIntake Voltage", 32, true);
+    m_current = new LogCell("BallIntake Current", 32, true);
   }
 
   BallIntake::~BallIntake(){
@@ -56,6 +59,8 @@ namespace frc973{
   }
 
   void BallIntake::TaskPeriodic(RobotMode mode){
+    m_voltage->LogDouble(m_ballIntakeMotor->GetOutputVoltage());
+    m_current->LogDouble(m_ballIntakeMotor->GetOutputCurrent());
       switch (m_ballIntakeState) {
         case running:
           m_ballIntakeMotor->Set(1.0);

@@ -171,7 +171,7 @@ namespace frc973 {
                 m_ballIntake->ExpandHopper();
                 m_shooter->SetFlywheelSpeed(3030);
                 m_drive
-                    ->PIDDrive(-62.0, 0.0,
+                    ->PIDDrive(-63.0, 0.0,
                                DriveBase::RelativeTo::Now, 0.9)
                     ->SetDistTolerance(2.0, 9000.0)
                     ->SetAngleTolerance(9909.0, 9099.0);
