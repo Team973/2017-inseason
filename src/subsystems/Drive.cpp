@@ -66,6 +66,8 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
         m_spreadsheet->RegisterCell(m_leftDistLog);
         m_spreadsheet->RegisterCell(m_leftDistRateLog);
         m_spreadsheet->RegisterCell(m_leftCommandLog);
+        m_spreadsheet->RegisterCell(m_rightDistLog);
+        m_spreadsheet->RegisterCell(m_rightDistRateLog);
         m_spreadsheet->RegisterCell(m_rightCommandLog);
         m_spreadsheet->RegisterCell(m_leftVoltageLog);
         m_spreadsheet->RegisterCell(m_rightVoltageLog);
