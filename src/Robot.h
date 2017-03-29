@@ -34,10 +34,10 @@ class Robot:
 {
 private:
     enum AutonomousRoutine {
-        /*HopperThenShootFuel,
+        HopperThenShootFuel,
         MadtownHopperThenShootFuel,
         KpaGearAuto,
-        NoAuto*/
+        NoAuto,
         CitrusKpaGearAuto
     };
 
