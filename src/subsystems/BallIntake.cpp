@@ -9,6 +9,7 @@ namespace frc973{
   BallIntake::BallIntake(TaskMgr *scheduler, LogSpreadsheet *logger)
   :
   m_scheduler(scheduler),
+  m_logger(logger),
   m_ballIntakeMotor(new CANTalon(BALL_INTAKE_CAN_ID, 50)),
   m_ballIntakeState(BallIntakeState::notRunning),
   m_hopperSolenoid(new Solenoid(HOPPER_SOLENOID)),
@@ -18,8 +19,13 @@ namespace frc973{
     m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
     m_ballIntakeMotor->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
     m_ballIntakeMotor->EnableCurrentLimit(true);
-    m_ballIntakeMotor->SetCurrentLimit(20);
+    m_ballIntakeMotor->SetCurrentLimit(40);
     m_ballIntakeMotor->SetVoltageRampRate(120.0);
+
+    m_voltage = new LogCell("BallIntake Voltage", 32, true);
+    m_current = new LogCell("BallIntake Current", 32, true);
+    m_logger->RegisterCell(m_voltage);
+    m_logger->RegisterCell(m_current);
   }
 
   BallIntake::~BallIntake(){
@@ -56,9 +62,11 @@ namespace frc973{
   }
 
   void BallIntake::TaskPeriodic(RobotMode mode){
+    m_voltage->LogDouble(m_ballIntakeMotor->GetOutputVoltage());
+    m_current->LogDouble(m_ballIntakeMotor->GetOutputCurrent());
       switch (m_ballIntakeState) {
         case running:
-          m_ballIntakeMotor->Set(1.0);
+          m_ballIntakeMotor->Set(0.8);
           break;
         case notRunning:
           m_ballIntakeMotor->Set(0.0);

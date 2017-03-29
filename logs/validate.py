@@ -12,8 +12,11 @@ for fName in [f for f in os.listdir(".") if f[:9] != "log::2017"]:
     with open(fName, "r") as f:
         print(os.path.getmtime(fName))
         statesSeen = set()
-        for row in csv.reader(f, delimiter=","):
-            statesSeen.add(row[16])
+        try:
+            for row in csv.reader(f, delimiter=","):
+                statesSeen.add(row[16])
+        except:
+            pass
 
         print(statesSeen)
         if statesSeen == set(["TeleOp", "Game State", "Disabled", "Auto"]):

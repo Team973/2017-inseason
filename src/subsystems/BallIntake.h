@@ -39,10 +39,13 @@ namespace frc973 {
 
   private:
     TaskMgr *m_scheduler;
+    LogSpreadsheet  *m_logger;
     CANTalon *m_ballIntakeMotor;
 
     BallIntakeState m_ballIntakeState;
     Solenoid *m_hopperSolenoid;
+    LogCell *m_voltage;
+    LogCell *m_current;
 
     double m_ballIntakePow;
 
