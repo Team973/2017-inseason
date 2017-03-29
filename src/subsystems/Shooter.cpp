@@ -127,8 +127,9 @@ bool Shooter::OnTarget() {
 
 void Shooter::StartConveyor(double speed) {
     m_ballConveyor->Set(speed * 12.0);
+
     //printf("%lf pow on %d - conveyor\n", speed, BALL_CONVEYOR_CAN_ID);
-    //DBStringPrintf(DB_LINE3, "conv pow %lf", speed);
+    DBStringPrintf(DB_LINE3, "conv pow %lf", speed);
 }
 
 void Shooter::StopConveyor() {
@@ -170,7 +171,9 @@ void Shooter::TaskPeriodic(RobotMode mode) {
     m_rightAgitatorLog->LogDouble(m_rightAgitator->GetOutputCurrent());
     DBStringPrintf(DB_LINE5,"s_rate %2.1lf g %2.1lf", GetFlywheelRate(),
             m_flywheelSpeedSetpt);
-
+    /*DBStringPrintf(DB_LINE5,"flail %2.1lf conv %2.1lf",
+                (m_leftAgitator->GetOutputCurrent() + m_rightAgitator->GetOutputCurrent()) / 2.0,
+                m_ballConveyor->GetOutputCurrent());*/
 //    DBStringPrintf(DB_LINE8,"shooterpow %2.1lf",
 //            m_flywheelMotorPrimary->GetOutputVoltage());
 
