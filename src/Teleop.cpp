@@ -299,12 +299,12 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::DPadDownVirtBtn:
                 if (pressedP) {
-                    g_manualDriveControl = false;
+                    /*g_manualDriveControl = false;
                     m_drive
                         ->PIDTurn(m_drive->GetAngle() -
                                 m_pixyR->GetOffset() * PixyThread::GEAR_MULTIPLIER,
-                                   DriveBase::RelativeTo::Absolute, 1.0);
-                   // m_conveyorSetpt -= 0.1;
+                                   DriveBase::RelativeTo::Absolute, 1.0);*/
+                    m_conveyorSetpt -= 0.1;
                 }
                 break;
             case DualAction::DPadRightVirtBtn:
@@ -403,6 +403,16 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                           Drive::RelativeTo::Now, 1.0);
               }
               break;
+            case DualAction::Back:
+              if (pressedP) {
+                  g_manualConveyorControl = false;
+                  m_shooter->SetFlywheelSpeed(1000);
+                  m_shooter->StartConveyor(m_conveyorSetpt);
+                  m_shooter->StartAgitator(m_flailSetpt, Shooter::Side::right);
+                  m_shooter->StartAgitator(m_flailSetpt, Shooter::Side::left);
+                  m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
+                  printf("conv %f",m_conveyorSetpt);
+              }
         }
     }
 }

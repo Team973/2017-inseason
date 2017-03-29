@@ -34,7 +34,7 @@ Robot::Robot(void
     m_speedSetpt(2900),
     m_flailSetpt(1.0),
     m_alliance(Alliance::Red),
-    m_conveyorSetpt(0.75),
+    m_conveyorSetpt(1.0),
     m_driveMode(DriveMode::AssistedArcade),
     m_bumperMode(BumperMode::LowGear)
 {

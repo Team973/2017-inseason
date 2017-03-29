@@ -7,7 +7,8 @@ namespace frc973 {
 static constexpr bool PIXY_SIM_NOISE = false;
 int num_cs_errors = 0;
 
-#define RUN_LOG_ERR(x) {int ret=x;if((ret)) { fprintf(stderr, "Warning: " #x " returned %d\n", ret);}}
+#define RUN_LOG_ERR(x) { x; }
+//{int ret=x;if((ret)) { fprintf(stderr, "Warning: " #x " returned %d\n", ret);}}
 
 Pixy::Pixy()
     : i2c(new I2C(I2C::Port::kOnboard, PIXY_I2C_DEFAULT_ADDR))
@@ -68,6 +69,7 @@ bool Pixy::getStart()
 		}
 		lastw = w;
         if (i++ == 100) {
+            usleep(5 * 1000);
             printf("done 100 iterations waiting for the start\n");
             i = 0;
         }
