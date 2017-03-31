@@ -191,7 +191,7 @@ void Robot::AllStateContinuous(void) {
     m_boilerOffset->LogDouble(m_boilerPixy->GetXOffset() *
         BoilerPixy::PIXY_OFFSET_CONSTANT);
     m_gearOffset->LogDouble(m_pixyR->GetOffset() *
-        PixyThread::GEAR_MULTIPLIER);
+        PixyThread::GEAR_DEGREES_PER_PIXEL);
     m_autoStateLog->LogInt(m_autoState);
 
     DBStringPrintf(DB_LINE1,
@@ -203,7 +203,7 @@ void Robot::AllStateContinuous(void) {
                    */
     DBStringPrintf(DB_LINE8,
             "g %d %lf %d",
-            m_pixyR->GetDataFresh(), m_pixyR->GetOffset() * PixyThread::GEAR_MULTIPLIER, m_gearIntake->IsGearReady());
+            m_pixyR->GetDataFresh(), m_pixyR->GetOffset() * PixyThread::GEAR_DEGREES_PER_PIXEL, m_gearIntake->IsGearReady());
 }
 
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
