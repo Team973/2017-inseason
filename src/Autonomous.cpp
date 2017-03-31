@@ -164,6 +164,13 @@ namespace frc973 {
 
     void Robot::HopperThenShoot(){
         printf("HopperThenShoot auto\n");
+        double dist;
+        if(m_alliance == Alliance::Red){
+          dist = -63.0;
+        }
+        else{
+          dist = -64.0;
+        }
         switch (m_autoState){
             case 0:
                 printf("gonna piddrive\n");
@@ -174,20 +181,11 @@ namespace frc973 {
                 m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
                 m_shooter->StopAgitator();
                 m_shooter->StartConveyor(0.0);
-                if(m_alliance == Alliance::Red){
-                  m_drive
-                      ->PIDDrive(-63.0, 0.0,
-                                 DriveBase::RelativeTo::Now, 0.9)
-                      ->SetDistTolerance(2.0, 5.0)
-                      ->SetAngleTolerance(9909.0, 9099.0);
-                  }
-                else{
-                  m_drive
-                      ->PIDDrive(-64.0, 0.0,
-                                 DriveBase::RelativeTo::Now, 0.9)
-                      ->SetDistTolerance(2.0, 5.0)
-                      ->SetAngleTolerance(9909.0, 9099.0);
-                }
+                m_drive
+                    ->PIDDrive(dist, 0.0,
+                               DriveBase::RelativeTo::Now, 0.9)
+                    ->SetDistTolerance(2.0, 5.0)
+                    ->SetAngleTolerance(9909.0, 9099.0);
                 printf("piddrived\n");
                 m_autoState++;
                 break;
@@ -228,7 +226,7 @@ namespace frc973 {
                 }
                 break;
             case 4:
-                if (GetMsecTime() - m_autoTimer > 2500 ) {
+                if (GetMsecTime() - m_autoTimer > 2500) {
                     m_drive
                         ->PIDDrive(-18.0, 0.0,
                                    DriveBase::RelativeTo::Now, 1.0)
@@ -367,7 +365,7 @@ namespace frc973 {
         case 7:
             if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500) {
                 double gearOffset = m_pixyR->GetOffset() *
-                    PixyThread::GEAR_MULTIPLIER;
+                    PixyThread::GEAR_DEGREES_PER_PIXEL;
 
                 if (Util::abs(gearOffset) >= 10.0) {
                     m_autoState++;
@@ -494,7 +492,7 @@ namespace frc973 {
         case 7:
             if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500) {
                 double gearOffset = m_pixyR->GetOffset() *
-                    PixyThread::GEAR_MULTIPLIER;
+                    PixyThread::GEAR_DEGREES_PER_PIXEL;
 
                 if (Util::abs(gearOffset) >= 10.0) {
                     m_autoState++;
