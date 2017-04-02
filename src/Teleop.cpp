@@ -309,16 +309,20 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::DPadRightVirtBtn:
                 if (pressedP) {
-                  g_manualDriveControl = false;
+                  /*g_manualDriveControl = false;
                   m_drive
                       ->PIDTurn(m_drive->GetAngle() -
                               m_boilerPixy->GetXOffset() * BoilerPixy::PIXY_OFFSET_CONSTANT,
-                                 DriveBase::RelativeTo::Absolute, 1.0);
+                                 DriveBase::RelativeTo::Absolute, 1.0);*/
+                  m_kickerSetpt += 10;
+                  m_shooter->StartKicker(m_kickerSetpt);
                 }
                 break;
             case DualAction::DPadLeftVirtBtn:
                 if (pressedP) {
-                    m_flailSetpt -= 0.1;
+                  m_kickerSetpt -= 10;
+                  m_shooter->StartKicker(m_kickerSetpt);
+                  //  m_flailSetpt -= 0.1;
                 }
                 break;
             case DualAction::RightTrigger:

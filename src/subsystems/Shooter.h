@@ -53,10 +53,12 @@ public:
     void StartConveyor(double speed);
     void StopConveyor();
     void SetShooterState(ShootingSequenceState state);
+    void StartKicker(double speed);
 
     double GetFlywheelRate();
+    double GetKickerRate();
 
-    static constexpr int DEFAULT_FLYWHEEL_SPEED_SETPOINT = 3000;
+    static constexpr int DEFAULT_FLYWHEEL_SPEED_SETPOINT = 2960;
 
     enum FlywheelState {
         power,
@@ -73,6 +75,7 @@ private:
 
     CANTalon *m_flywheelMotorPrimary;
     CANTalon *m_flywheelMotorReplica;
+    CANTalon *m_kicker;
 
     CANTalon *m_leftAgitator;
     CANTalon *m_rightAgitator;
@@ -81,6 +84,7 @@ private:
 
     double m_flywheelPow;
     double m_flywheelSpeedSetpt;
+    double m_kickerSpeedSetpt;
 
     LogCell *m_flywheelRate;
     LogCell *m_flywheelPowLog;
