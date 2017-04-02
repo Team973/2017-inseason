@@ -102,10 +102,11 @@ private:
     uint32_t 					m_autoTimer;
     uint32_t 					m_teleopTimer;
     AutonomousRoutine m_autoRoutine;
-    int						m_speedSetpt;
+    int						    m_speedSetpt;
     double						m_flailSetpt;
     Alliance          m_alliance;
     double						m_conveyorSetpt;
+    int               m_kickerSetpt;
     DriveMode         m_driveMode;
     BumperMode        m_bumperMode;
 

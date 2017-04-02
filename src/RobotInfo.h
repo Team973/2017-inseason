@@ -62,6 +62,7 @@ constexpr int HANGER_CAN_ID_B = 13;
 
 constexpr int FLYWHEEL_PRIMARY_CAN_ID = 14;
 constexpr int FLYWHEEL_REPLICA_CAN_ID = 3;
+constexpr int KICKER_CAN_ID = 9;
 
 constexpr int LEFT_INDEXER_CAN_ID = 12;
 constexpr int RIGHT_INDEXER_CAN_ID = 11;
