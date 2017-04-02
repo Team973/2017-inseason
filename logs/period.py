@@ -2,22 +2,26 @@
 Determine the average loop period during enabled state
 """
 
-import sys
+import sys, csv
 
 period = []
-sum = 0
-count = 1
+diff = 0.0
+sum = 0.0
+count = 0.0
 print("Running script")
 
-with open(sys.argv[1]) as file:
+with open(sys.argv[1]) as f:
     try:
         for row in csv.reader(f, delimiter=","):
             period.append(row[0])
     except:
         pass
+    period.pop(0) #Take out "Time" cell
     for x in period:
-        sum += x
-        count += 1
-    average = sum / count
+        diff = float(x) - diff
+        sum = sum + diff
+        count = count + 1
     print(period)
-print(average / count)
+    print(sum, diff, count)
+    average = diff / count
+print(average)

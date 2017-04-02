@@ -82,10 +82,8 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::LJoystickBtn:
             if (pressedP) {
-              m_driveMode = DriveMode::PixyDrive;
             }
-            else {
-              m_driveMode = DriveMode::AssistedArcade;
+            else{
             }
             break;
         case DualAction::BtnB:
@@ -150,8 +148,10 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::DPadUpVirtBtn:
             if (pressedP) {
+              m_driveMode = DriveMode::PixyDrive;
             }
-            else{
+            else {
+              m_driveMode = DriveMode::AssistedArcade;
             }
             break;
         case DualAction::DPadDownVirtBtn:
