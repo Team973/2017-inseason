@@ -133,7 +133,7 @@ namespace Util {
 	}
 
 	/* Return the absolute of the given number */
-	constexpr inline double abs(double x) {
+	constexpr inline double abs(double const x) {
         return (x > 0.0) ? x : -x;
 	}
 
@@ -213,16 +213,9 @@ namespace Util {
     /*
      * Return a unit scalar with the same sign as the argument
      */
-    inline double signum(double x) {
-        if (x < 0) {
-            return -1;
-        }
-        else if (x > 0) {
-            return 1;
-        }
-        else {
-            return 0;
-        }
+    constexpr inline double signum(double x) {
+        return (x < 0) ? -1 :
+            (x > 0) ? 1 : 0;
     }
 }
 
