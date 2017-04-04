@@ -17,6 +17,7 @@
 #include "controllers/PIDDrive.h"
 #include "controllers/BoilerPixyVisionDriveController.h"
 #include "controllers/GearPixyVisionDriveController.h"
+#include "controllers/TrapDriveController.h"
 
 namespace frc973 {
 
@@ -31,7 +32,6 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
          , m_leftMotor(left)
          , m_rightMotor(right)
          , m_controlMode(CANSpeedController::ControlMode::kPercentVbus)
-         , m_arcadeDriveController(nullptr)
          , m_spreadsheet(logger)
          , m_boilerPixyDriveController(
                  new BoilerPixyVisionDriveController(boilerPixy))
@@ -56,6 +56,7 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
     m_openloopArcadeDriveController = new OpenloopArcadeDriveController();
     m_assistedArcadeDriveController = new AssistedArcadeDriveController();
     m_pidDriveController = new PIDDriveController();
+    m_trapDriveController = new TrapDriveController(this);
     this->SetDriveController(m_arcadeDriveController);
     this->SetDriveControlMode(m_controlMode);
 
@@ -251,6 +252,13 @@ void Drive::TaskPeriodic(RobotMode mode) {
 
 void Drive::SetBoilerJoystickTerm(double throttle, double turn) {
     m_boilerPixyDriveController->SetJoystickTerm(throttle, turn);
+}
+
+TrapDriveController *Drive::TrapDrive(RelativeTo relativeTo,
+        double dist, double angle) {
+    this->SetDriveController(m_trapDriveController);
+    m_trapDriveController->SetTarget(relativeTo, dist, angle);
+    return m_trapDriveController;
 }
 
 }

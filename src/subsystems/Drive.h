@@ -21,6 +21,7 @@ class BoilerPixyVisionDriveController;
 class GearPixyVisionDriveController;
 class OpenloopArcadeDriveController;
 class AssistedArcadeDriveController;
+class TrapDriveController;
 class VelocityTurnPID;
 class LogSpreadsheet;
 class LogCell;
@@ -91,7 +92,12 @@ public:
      */
     void OpenloopArcadeDrive(double throttle, double turn);
 
+    /**
+     * Set a drive to use the mostly open loop arcade controller plus
+     * some gyro velocity help
+     */
     void AssistedArcadeDrive(double throttle, double turn);
+
     /**
      * Set a target distance to be achieved by pid
      *
@@ -110,12 +116,13 @@ public:
     PIDDriveController *PIDTurn(double angle, RelativeTo relativity,
             double powerCap);
 
-    void VelocityPIDTurn(double angle, RelativeTo relativity);
-
-    void RampPIDDrive(double dist, RelativeTo relativity);
-    void RampPIDTurn(double angle, RelativeTo relativity);
-
     void SetBoilerJoystickTerm(double throttle, double turn);
+
+    /**
+     * Use the trap profile drive controller
+     */
+    TrapDriveController *TrapDrive(RelativeTo relativeTo,
+            double dist, double angle);
 
     void SetDriveControlMode(CANSpeedController::ControlMode mode) override;
     /**
@@ -171,10 +178,8 @@ private:
     ArcadeDriveController *m_arcadeDriveController;
     OpenloopArcadeDriveController *m_openloopArcadeDriveController;
     AssistedArcadeDriveController *m_assistedArcadeDriveController;
-    CheesyDriveController *m_cheesyDriveController;
     PIDDriveController *m_pidDriveController;
-    RampPIDDriveController *m_rampPidDriveController;
-    VelocityTurnPID *m_velocityTurnController;
+    TrapDriveController *m_trapDriveController;
 
     LogSpreadsheet *m_spreadsheet;
     BoilerPixyVisionDriveController *m_boilerPixyDriveController;

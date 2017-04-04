@@ -14,6 +14,8 @@ TrapDriveController::TrapDriveController(DriveStateProvider *state):
     m_dist_offset(0.0),
     m_angle_offset(0.0),
     m_time_offset(0.0),
+    m_max_vel(MAX_VELOCITY),
+    m_max_acc(MAX_VELOCITY),
     m_start_halt(true),
     m_end_halt(true),
     m_l_pos_pid(1.0, 0.0, 0.0),
@@ -30,8 +32,7 @@ TrapDriveController::~TrapDriveController() {
 }
 
 void TrapDriveController::SetTarget(DriveBase::RelativeTo relativeTo,
-        double dist, double angle,
-        bool start_halt, bool end_halt) {
+        double dist, double angle) {
     m_time_offset = GetSecTime();
 
     switch (relativeTo) {
@@ -52,8 +53,25 @@ void TrapDriveController::SetTarget(DriveBase::RelativeTo relativeTo,
     m_dist = dist;
     m_angle = angle;
 
+    m_max_vel = MAX_VELOCITY;
+    m_max_acc = MAX_ACCELERATION;
+
+    m_start_halt = true;
+    m_end_halt = true;
+}
+
+TrapDriveController *TrapDriveController::SetHalt(
+        bool start_halt, bool end_halt) {
     m_start_halt = start_halt;
     m_end_halt = end_halt;
+    return this;
+}
+
+TrapDriveController *TrapDriveController::SetConstraints(
+        double max_vel, double max_acc) {
+    m_max_vel = max_vel;
+    m_max_acc = max_acc;
+    return this;
 }
 
 void TrapDriveController::CalcDriveOutput(DriveStateProvider *state,
@@ -67,8 +85,13 @@ void TrapDriveController::CalcDriveOutput(DriveStateProvider *state,
 
     Profiler::Waypoint goal = Profiler::TrapProfileUnsafe(time,
             m_dist, m_angle,
-            MAX_VELOCITY, MAX_ACCELERATION,
+            m_max_vel, m_max_acc,
             m_start_halt, m_end_halt);
+
+    if (goal.error) {
+        out->SetDriveOutput(1.0, -1.0);
+        return;
+    }
 
     m_l_pos_pid.SetTarget(goal.linear_dist);
     m_l_vel_pid.SetTarget(goal.linear_vel);
