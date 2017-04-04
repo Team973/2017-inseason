@@ -28,6 +28,7 @@ set(SOURCE_FILES
     src/subsystems/GearIntake.cpp
     src/subsystems/Lights.cpp
     src/controllers/PIDDrive.cpp
+    src/controllers/TrapDriveController.cpp
     src/lib/TrapProfile.cpp
     src/controllers/GearPixyVisionDriveController.cpp
     src/lib/filters/MedianFilter.cpp src/lib/filters/MovingAverageFilter.cpp
