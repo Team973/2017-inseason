@@ -112,7 +112,6 @@ void TrapDriveController::CalcDriveOutput(DriveStateProvider *state,
     double angular_dist_term = m_a_pos_pid.CalcOutput(AngleFromStart());
     double angular_vel_term = m_a_vel_pid.CalcOutput(state->GetAngularRate());
 
-
     /* right side receives positive angle correction */
     double right_output = right_l_vel_ff + right_a_vel_ff
          + linear_dist_term + linear_vel_term
