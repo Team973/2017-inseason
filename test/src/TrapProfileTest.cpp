@@ -34,6 +34,15 @@ struct ProfileParams {
     }
 };
 
+void print_point(const Waypoint& point) {
+    if (g_debugPrint) {
+        printf("point: t=%f d=%f d_hat=%f a=%f a_hat=%f done %d\n", point.time,
+                point.linear_dist, point.linear_vel,
+                point.angular_dist, point.angular_vel,
+                point.done);
+    }
+}
+
 /**
  * assuming constant timestamp,
  * assert the integral of velocity is about equal to distance at every step
@@ -43,19 +52,14 @@ void assert_velocity_integral(vector<Waypoint>& points,
     const double timestep = points[1].time - points[0].time;
     double dist_integral = 0.0;
     double angle_integral = 0.0;
-    Waypoint& prev = points[0];
+    Waypoint prev = points[0];
 
     if (g_debugPrint) {
         printf("timestep=%lf points.size() = %ld\n", timestep, points.size());
     }
-    params.print();
+
     for (auto& point : points) {
-        /*
-        printf("point: t=%f d=%f d_hat=%f a=%f a_hat=%f done %d\n", point.time,
-                point.linear_dist, point.linear_vel,
-                point.angular_dist, point.angular_vel,
-                point.done);
-                */
+        //print_point(point);
         dist_integral += (point.linear_vel + prev.linear_vel) / 2.0
              * timestep;
         angle_integral += (point.angular_vel + prev.angular_vel) / 2.0
@@ -73,58 +77,55 @@ void assert_velocity_integral(vector<Waypoint>& points,
     }
 }
 
-/*
-def assert_vel_integral(points, params):
-    """
-    Assume constant timestep
-    Assert that the integral of velocity is about equal to the distance at every step
-    """
-    timestep = points[1].time - points[0].time
-    dist_integral = 0.0
-    angle_integral = 0.0
-    prev = points[0]
-    for point in points:
-        #print(point)
-        dist_integral += (point.linear_velocity + prev.linear_velocity) / 2.0 * timestep
-        angle_integral += (point.angular_velocity + prev.angular_velocity) / 2.0 * timestep
-        
-        tolerance = 2.0 * timestep * params.max_velocity + 0.001
-        assert_near(angle_integral, point.angular_dist, tolerance)
-        assert_near(dist_integral, point.linear_dist, tolerance)
-        prev = point
+/**
+ * Assert that the beginning and end of profile are as expected
+ * i.e., does it get there?  does it have the right start and stop velocity?
+ */
+void assert_dist_range(vector<Waypoint>& points,
+        const ProfileParams& params) {
+    params.print();
+    print_point(points[0]);
+    print_point(points[1]);
+    print_point(points.back());
+    BOOST_ASSERT(points[0].linear_dist == 0.0);
+    BOOST_ASSERT(points[0].angular_dist == 0.0);
+    BOOST_ASSERT(points.back().linear_dist == params.dist);
+    BOOST_ASSERT(points.back().angular_dist == params.angle);
 
-def assert_dist_range(points, params):
-    """
-    Assert that the beginning and end of the profile are as expected (does it get there ever?)
-    """
-    assert points[0].linear_dist == 0
-    assert points[0].angular_dist == 0
-    assert points[-1].linear_dist == params.distance
-    assert points[-1].angular_dist == params.angle
-    
-    if params.halt:
-        assert points[-1].linear_velocity == 0
-        assert points[-1].angular_velocity == 0
-    else:
-        assert points[-1].linear_velocity != 0
-        if params.angle != 0.0:
-            assert points[-1].angular_velocity != 0
+    if (params.end_halt) {
+        BOOST_ASSERT(points.back().linear_vel== 0.0);
+        BOOST_ASSERT(points.back().angular_vel== 0.0);
+    }
+    else {
+        BOOST_ASSERT(points.back().linear_vel!= 0.0);
+        if (params.angle != 0.0) {
+            BOOST_ASSERT(points.back().angular_vel!= 0.0);
+        }
+    }
+}
 
-def assert_v_a_constraints(points, params):
-    """
-    Assert that at no point velocity exceeds maximum velocity
-    and that at no point acceleration exceeds maximum acceleration
-    """
-    prev = points[0]
-    for point in points:
-        assert(abs(point.linear_velocity) <= abs(params.max_velocity))
-        assert(abs(point.linear_velocity - prev.linear_velocity) <= abs(params.max_acceleration))
-        prev = point
+/**
+ * Assert that velocity and acceleration never exceed given constraints
+ */
+void assert_v_a_constraints(vector<Waypoint>& points,
+        const ProfileParams& params) {
+    Waypoint prev = points[0];
 
-        */
+    for (auto& point : points) {
+        BOOST_ASSERT(
+                Util::abs(point.linear_vel) <= Util::abs(params.max_vel));
+        BOOST_ASSERT(
+                Util::abs(point.linear_vel - prev.linear_vel)
+                 <= Util::abs(params.max_acc));
+        prev = point;
+    }
+}
+
+/**
+ * Generate a profile with the given params and verify properties
+ */
 void check_profile(const ProfileParams &params,
         double timestep=0.05) {
-
     params.print();
 
     if (!params.valid()) {
@@ -145,6 +146,7 @@ void check_profile(const ProfileParams &params,
                     params.dist, params.angle,
                     params.max_vel, params.max_acc,
                     params.start_halt, params.end_halt);
+            print_point(curr);
             points.push_back(curr);
             if (curr.done) {
                 break;
@@ -153,6 +155,8 @@ void check_profile(const ProfileParams &params,
         }
 
         assert_velocity_integral(points, params);
+        assert_dist_range(points, params);
+        assert_v_a_constraints(points, params);
     }
 }
 
