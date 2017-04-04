@@ -56,7 +56,7 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
     m_openloopArcadeDriveController = new OpenloopArcadeDriveController();
     m_assistedArcadeDriveController = new AssistedArcadeDriveController();
     m_pidDriveController = new PIDDriveController();
-    m_trapDriveController = new TrapDriveController(this);
+    m_trapDriveController = new TrapDriveController(this, logger);
     this->SetDriveController(m_arcadeDriveController);
     this->SetDriveControlMode(m_controlMode);
 

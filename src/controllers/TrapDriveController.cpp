@@ -7,7 +7,8 @@ namespace frc973 {
 
 using namespace Constants;
 
-TrapDriveController::TrapDriveController(DriveStateProvider *state):
+TrapDriveController::TrapDriveController(DriveStateProvider *state,
+        LogSpreadsheet *logger):
     m_state(state),
     m_dist(0.0),
     m_angle(0.0),
@@ -23,8 +24,26 @@ TrapDriveController::TrapDriveController(DriveStateProvider *state):
     m_a_pos_pid(1.0, 0.0, 0.0),
     m_a_vel_pid(1.0, 0.0, 0.0),
     m_done(false),
-    m_needSetControlMode(false) {
-    ;
+    m_needSetControlMode(false),
+    m_l_pos_setpt_log(new LogCell("linear pos incr goal")),
+    m_l_vel_setpt_log(new LogCell("linear vel incr goal")),
+    m_a_pos_setpt_log(new LogCell("angular pos incr goal")),
+    m_a_vel_setpt_log(new LogCell("angular vel incr goal")),
+    m_max_vel_log(new LogCell("trap max velocity")),
+    m_max_acc_log(new LogCell("trap max accel")),
+    m_dist_endgoal_log(new LogCell("linear pos end goal")),
+    m_angle_endgoal_log(new LogCell("angle pos end goal"))
+{
+    if (logger) {
+        logger->RegisterCell(m_l_pos_setpt_log);
+        logger->RegisterCell(m_l_vel_setpt_log);
+        logger->RegisterCell(m_a_pos_setpt_log);
+        logger->RegisterCell(m_a_vel_setpt_log);
+        logger->RegisterCell(m_max_vel_log);
+        logger->RegisterCell(m_max_acc_log);
+        logger->RegisterCell(m_dist_endgoal_log);
+        logger->RegisterCell(m_angle_endgoal_log);
+    }
 }
 
 TrapDriveController::~TrapDriveController() {
@@ -124,6 +143,15 @@ void TrapDriveController::CalcDriveOutput(DriveStateProvider *state,
     out->SetDriveOutput(left_output, right_output);
 
     m_done = goal.done;
+
+    m_l_pos_setpt_log->LogDouble(goal.linear_dist);
+    m_l_vel_setpt_log->LogDouble(goal.linear_vel);
+    m_a_pos_setpt_log->LogDouble(goal.angular_dist);
+    m_a_vel_setpt_log->LogDouble(goal.angular_vel);
+    m_max_vel_log->LogDouble(m_max_vel);
+    m_max_acc_log->LogDouble(m_max_acc);
+    m_dist_endgoal_log->LogDouble(m_dist);
+    m_angle_endgoal_log->LogDouble(m_angle);
 }
 
 void TrapDriveController::Start() {

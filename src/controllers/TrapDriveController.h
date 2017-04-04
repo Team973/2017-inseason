@@ -6,6 +6,7 @@
 
 #include "lib/DriveBase.h"
 #include "lib/filters/PID.h"
+#include "lib/logging/LogSpreadsheet.h"
 #include <stdio.h>
 
 using namespace frc;
@@ -14,7 +15,7 @@ namespace frc973 {
 
 class TrapDriveController: public DriveController {
 public:
-	TrapDriveController(DriveStateProvider *state);
+	TrapDriveController(DriveStateProvider *state, LogSpreadsheet *logger);
 	virtual ~TrapDriveController();
 
     void SetTarget(DriveBase::RelativeTo relativeTo,
@@ -52,6 +53,15 @@ private:
 
     static constexpr double MAX_VELOCITY = 130;     //in/sec
     static constexpr double MAX_ACCELERATION = 10.0; //in/sec^2
+
+    LogCell *m_l_pos_setpt_log;
+    LogCell *m_l_vel_setpt_log;
+    LogCell *m_a_pos_setpt_log;
+    LogCell *m_a_vel_setpt_log;
+    LogCell *m_max_vel_log;
+    LogCell *m_max_acc_log;
+    LogCell *m_dist_endgoal_log;
+    LogCell *m_angle_endgoal_log;
 };
 
 }
