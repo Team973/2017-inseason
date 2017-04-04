@@ -56,7 +56,7 @@ struct FakeFloat {
 Waypoint TrapProfileUnsafe(double time,
         double distance, double angle,
         double max_velocity, double max_acceleration,
-        bool end_halt, bool start_halt);
+        bool start_halt, bool end_halt);
 
 /**
  * Safely generates a trapazoidal motion profile.  Checks at compile time
