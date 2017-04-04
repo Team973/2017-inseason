@@ -18,8 +18,10 @@ public:
 	virtual ~TrapDriveController();
 
     void SetTarget(DriveBase::RelativeTo relativeTo,
-            double dist, double angle,
-            bool start_halt = true, bool end_halt = true);
+            double dist, double angle);
+
+    TrapDriveController *SetHalt(bool start_halt, bool end_halt);
+    TrapDriveController *SetConstraints(double max_vel, double max_acc);
 
 	void CalcDriveOutput(DriveStateProvider *state,
 			DriveControlSignalReceiver *out) override;
@@ -36,6 +38,7 @@ private:
     DriveStateProvider *m_state;
     double m_dist, m_angle;
     double m_dist_offset, m_angle_offset, m_time_offset;
+    double m_max_vel, m_max_acc;
     bool m_start_halt, m_end_halt;
 
     /* pid for linear {pos,vel} */
