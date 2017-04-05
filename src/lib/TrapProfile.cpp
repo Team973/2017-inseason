@@ -80,7 +80,7 @@ Waypoint TrapProfileUnsafe(double time,
 
     if (time < t_0) {
         // pre mortem
-        return Waypoint(time, 0.0, 0.0, 0.0, 0.0, false, true);
+        return Waypoint(time, 0.0, 0.0, 0.0, 0.0, false, false);
     }
     else if (t_0 <= time && time < t_1) {
         // ramping up
@@ -98,7 +98,7 @@ Waypoint TrapProfileUnsafe(double time,
                         dist_now * Util::signum(distance),
                         angle_vel_now * Util::signum(angle),
                         angle_now * Util::signum(angle),
-                        false, true);
+                        false, false);
     }
     else if (t_1 <= time && time < t_2) {
         // coasting
@@ -124,7 +124,7 @@ Waypoint TrapProfileUnsafe(double time,
                         dist_now * Util::signum(distance),
                         angle_vel_now * Util::signum(angle),
                         angle_now * Util::signum(angle),
-                        false, true);
+                        false, false);
     }
     else if (t_2 <= time && time < t_3) {
         // halting
@@ -142,13 +142,13 @@ Waypoint TrapProfileUnsafe(double time,
                         dist_now * Util::signum(distance),
                         angle_vel_now * Util::signum(angle),
                         angle_now * Util::signum(angle),
-                        false, true);
+                        false, false);
     }
     else {
         // t_3 <= time
         // post mortem
         if (end_halt) {
-            return Waypoint(time, 0.0, distance, 0.0, angle, true, true);
+            return Waypoint(time, 0.0, distance, 0.0, angle, true, false);
         }
             else {
             double velocity_now;
@@ -167,7 +167,7 @@ Waypoint TrapProfileUnsafe(double time,
                             distance,
                             angle_vel_now * Util::signum(angle),
                             angle,
-                            true, true);
+                            true, false);
         }
     }
 }
