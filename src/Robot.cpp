@@ -118,7 +118,7 @@ Robot::Robot(void
     m_rightDriveTalonB->SetCurrentLimit(50);
     m_rightDriveTalonB->SetVoltageRampRate(95.0);
 
-    m_leftAgitatorTalon = new CANTalon(LEFT_AGITATOR_CAN_ID, 50);
+    m_leftAgitatorTalon = new CANTalon(LEFT_AGITATOR_CAN_ID, 5);
     fprintf(stderr, "Initialized drive controllers\n");
 
     m_logger = new LogSpreadsheet(this);

@@ -27,6 +27,8 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
             )
          : DriveBase(scheduler, this, this, nullptr)
          , m_gyro(new PigeonImu(spareTalon))
+         , m_angle(0.0)
+         , m_angleRate(0.0)
          , m_leftCommand(0.0)
          , m_rightCommand(0.0)
          , m_leftMotor(left)
@@ -177,14 +179,11 @@ double Drive::GetDriveCurrent() {
 }
 
 double Drive::GetAngle() {
-    return m_gyro->GetFusedHeading() - m_gyroZero;
+    return m_angle - m_gyroZero;
 }
 
 double Drive::GetAngularRate() {
-    double xyz_dps[4];
-    m_gyro->GetRawGyro(xyz_dps);
-//    printf("a %lf b %lf c %lf\n", xyz_dps[0], xyz_dps[1], xyz_dps[2]);
-    return xyz_dps[2];
+    return m_angleRate;
 }
 
 void Drive::SetDriveOutput(double left, double right) {
@@ -217,6 +216,12 @@ void Drive::SetDriveControlMode(CANSpeedController::ControlMode mode){
 }
 
 void Drive::TaskPeriodic(RobotMode mode) {
+    m_angle = m_gyro->GetFusedHeading();
+
+    double xyz_dps[4];
+    m_gyro->GetRawGyro(xyz_dps);
+    m_angleRate = xyz_dps[2];
+
     DBStringPrintf(DB_LINE9, "l %2.1lf r %2.1lf g %2.1lf",
             this->GetLeftDist(),
             this->GetRightDist(),

@@ -163,6 +163,7 @@ private:
     void TaskPeriodic(RobotMode mode) override;
 
     PigeonImu *m_gyro;
+    double m_angle, m_angleRate;
     double m_gyroZero = 0.0;
 
     double m_leftCommand;

@@ -370,9 +370,9 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 if (pressedP) {
                     g_manualDriveControl = false;
                     m_drive
-                        ->TrapDrive(DriveBase::RelativeTo::Now, -6.0 * 12.0, 0.0)
+                        ->TrapDrive(DriveBase::RelativeTo::Now, -8.0 * 12.0, 0.0)
                         ->SetHalt(true, true)
-                        ->SetConstraints(24.0, 12.0);
+                        ->SetConstraints(48.0, 36.0);
                 }
                 break;
             case DualAction::BtnB:
@@ -381,7 +381,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                     m_drive
                         ->TrapDrive(DriveBase::RelativeTo::Now, -3.0 * 12.0, -45.0)
                         ->SetHalt(true, true)
-                        ->SetConstraints(24.0, 12.0);
+                        ->SetConstraints(48.0, 24.0);
                 }
                 break;
             case DualAction::BtnX:
@@ -390,16 +390,16 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                     m_drive
                         ->TrapDrive(DriveBase::RelativeTo::Now, 3.0 * 12.0, 45.0)
                         ->SetHalt(true, true)
-                        ->SetConstraints(24.0, 12.0);
+                        ->SetConstraints(48.0, 24.0);
                 }
                 break;
             case DualAction::BtnY:
                 if (pressedP) {
                     g_manualDriveControl = false;
                     m_drive
-                        ->TrapDrive(DriveBase::RelativeTo::Now, -6.0 * 12.0, 0.0)
+                        ->TrapDrive(DriveBase::RelativeTo::Now, 8.0 * 12.0, 0.0)
                         ->SetHalt(true, true)
-                        ->SetConstraints(24.0, 12.0);
+                        ->SetConstraints(48.0, 36.0);
                 }
                 break;
             case DualAction::Start:
