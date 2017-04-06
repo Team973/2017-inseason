@@ -33,8 +33,8 @@ public:
 
 	void Stop() override;
 
-    double DistFromStart();
-    double AngleFromStart();
+    double DistFromStart() const;
+    double AngleFromStart() const;
 private:
     DriveStateProvider *m_state;
     double m_dist, m_angle;
