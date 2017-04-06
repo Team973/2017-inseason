@@ -193,6 +193,10 @@ void Robot::AllStateContinuous(void) {
     m_time->LogDouble(GetSecTime());
     m_state->LogPrintf("%s", GetRobotModeString());
 
+    m_autoSelectLog->LogPrintf("%c %s",
+            (m_alliance == Alliance::Red) ? 'R' : 'B',
+            GetAutoName(m_autoRoutine));
+
     m_xAccel->LogDouble(m_accel.GetX());
     m_yAccel->LogDouble(m_accel.GetY());
     m_zAccel->LogDouble(m_accel.GetZ());

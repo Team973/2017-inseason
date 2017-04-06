@@ -39,8 +39,11 @@ private:
         MadtownHopperThenShootFuel,
         KpaGearAuto,
         NoAuto,
-        CitrusKpaGearAuto
+        CitrusKpaGearAuto,
+        SpartanHopper
     };
+
+    const char *GetAutoName(AutonomousRoutine routine);
 
     enum Alliance{
       Red,
@@ -158,7 +161,9 @@ public:
     void HopperThenShoot(void);
     void MadtownHopperThenShoot(void);
     void KpaAndGearAuto(void);
+    void HaltAuto(void);
     void CitrusKpaAndGearAuto(void);
+    void SpartanHopperAuto(void);
 
     /**
      * Defined in Teleop.h
