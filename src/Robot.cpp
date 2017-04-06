@@ -6,6 +6,7 @@
 #include "lib/GreyCompressor.h"
 #include "lib/logging/LogSpreadsheet.h"
 #include "lib/WrapDash.h"
+#include "lib/SPIGyro.h"
 #include "subsystems/Drive.h"
 #include "subsystems/Hanger.h"
 #include "subsystems/BallIntake.h"
@@ -129,6 +130,7 @@ Robot::Robot(void
     m_lights = new Lights(this);
     m_boilerPixy = new BoilerPixy(this, m_lights, m_logger);
     m_pixyR = new PixyThread(*this);
+    m_austinGyro = new SPIGyro();
     m_drive = new Drive(this,
             m_leftDriveTalonA, m_rightDriveTalonA, m_leftAgitatorTalon,
             m_logger, m_boilerPixy, m_pixyR);
@@ -145,6 +147,9 @@ Robot::Robot(void
     m_boilerOffset = new LogCell("AngleOffset", 32, true);
     m_gearOffset = new LogCell("GearOffset", 32, true);
 
+    m_austinGyroLog = new LogCell("Austin Gyro Angle");
+    m_austinGyroRateLog = new LogCell("Austin Gyro Angular Rate");
+
     m_logger->RegisterCell(m_battery);
     m_logger->RegisterCell(m_state);
     m_logger->RegisterCell(m_messages);
@@ -156,6 +161,8 @@ Robot::Robot(void
     m_logger->RegisterCell(m_autoSelectLog);
     m_logger->RegisterCell(m_boilerOffset);
     m_logger->RegisterCell(m_gearOffset);
+    m_logger->RegisterCell(m_austinGyroLog);
+    m_logger->RegisterCell(m_austinGyroRateLog);
 
     m_hanger = new Hanger(this, m_logger);
     m_ballIntake = new BallIntake(this, m_logger);
@@ -205,6 +212,9 @@ void Robot::AllStateContinuous(void) {
     DBStringPrintf(DB_LINE8,
             "g %d %lf %d",
             m_pixyR->GetDataFresh(), m_pixyR->GetOffset() * PixyThread::GEAR_DEGREES_PER_PIXEL, m_gearIntake->IsGearReady());
+
+    m_austinGyroLog->LogDouble(m_austinGyro->GetDegrees());
+    m_austinGyroRateLog->LogDouble(m_austinGyro->GetDegreesPerSec());
 }
 
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
