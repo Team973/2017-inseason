@@ -27,6 +27,7 @@ class BallIntake;
 class GreyCompressor;
 class BoilerPixy;
 class Lights;
+class SPIGyro;
 
 class Robot:
         public CoopMTRobot,
@@ -76,6 +77,7 @@ private:
     CANTalon		*m_rightDriveTalonA;
     CANTalon		*m_rightDriveTalonB;
     CANTalon        *m_leftAgitatorTalon;
+    SPIGyro         *m_austinGyro;
     Drive			*m_drive;
 
     /**
@@ -127,6 +129,8 @@ private:
     LogCell *m_autoSelectLog;
     LogCell *m_boilerOffset;
     LogCell *m_gearOffset;
+    LogCell *m_austinGyroLog;
+    LogCell *m_austinGyroRateLog;
 
     PixyThread *m_pixyR;
 public:

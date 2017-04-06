@@ -17,10 +17,11 @@ points = []
 TIME_COL = 0
 #DATA_COLS = [17, 19, 18, 20] #flywheel tuning
 #DATA_COLS = [4, 5, 2, 9]
-fields = ["linear vel incr goal", "linear vel incr actual",
-          "angular vel incr goal", "Angular Rate",
-          "linear pos incr goal", "linear pos incr actual",
-          "angular pos incr goal", "angular pos incr actual"]
+fields = [
+        "linear vel incr goal", "linear vel incr actual",
+        "angular vel incr goal", "Angular Rate",
+        "linear pos incr goal", "linear pos incr actual",
+        "angular pos incr goal", "angular pos incr actual"]
 DATA_COLS = []
 titles = []
 
