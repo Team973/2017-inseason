@@ -32,10 +32,10 @@ public:
 	void Start() override;
 
 	void Stop() override;
-private:
+
     double DistFromStart();
     double AngleFromStart();
-
+private:
     DriveStateProvider *m_state;
     double m_dist, m_angle;
     double m_dist_offset, m_angle_offset, m_time_offset;

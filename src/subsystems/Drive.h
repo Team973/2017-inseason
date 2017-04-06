@@ -124,6 +124,10 @@ public:
     TrapDriveController *TrapDrive(RelativeTo relativeTo,
             double dist, double angle);
 
+    TrapDriveController *GetTrapDriveController() {
+        return m_trapDriveController;
+    }
+
     void SetDriveControlMode(CANSpeedController::ControlMode mode) override;
     /**
      * All distances given in inches
