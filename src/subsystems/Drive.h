@@ -124,7 +124,7 @@ public:
     TrapDriveController *TrapDrive(RelativeTo relativeTo,
             double dist, double angle);
 
-    TrapDriveController *GetTrapDriveController() {
+    const TrapDriveController *GetTrapDriveController() {
         return m_trapDriveController;
     }
 
@@ -133,21 +133,21 @@ public:
      * All distances given in inches
      * All velocities given in inches/second
      */
-    double GetLeftDist() override;
-    double GetRightDist() override;
-    double GetLeftRate() override;
-    double GetRightRate() override;
-    double GetDist() override;
-    double GetRate() override;
+    double GetLeftDist() const override;
+    double GetRightDist() const override;
+    double GetLeftRate() const override;
+    double GetRightRate() const override;
+    double GetDist() const override;
+    double GetRate() const override;
 
-    double GetDriveCurrent();
+    double GetDriveCurrent() const;
 
     /**
      * All angles given in degrees
      * All angular rates given in degrees/second
      */
-    double GetAngle() override;
-    double GetAngularRate() override;
+    double GetAngle() const override;
+    double GetAngularRate() const override;
 
     /*
      * Used by the DriveController to set motor values

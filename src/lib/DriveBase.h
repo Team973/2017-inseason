@@ -25,14 +25,14 @@ class DriveStateProvider {
 public:
 	DriveStateProvider() {}
 	virtual ~DriveStateProvider() {}
-	virtual double GetAngle() = 0;
-	virtual double GetAngularRate() = 0;
-	virtual double GetLeftDist() = 0;
-	virtual double GetRightDist() = 0;
-	virtual double GetLeftRate() = 0;
-	virtual double GetRightRate() = 0;
-	virtual double GetDist() = 0;
-	virtual double GetRate() = 0;
+	virtual double GetAngle() const = 0;
+	virtual double GetAngularRate() const = 0;
+	virtual double GetLeftDist() const = 0;
+	virtual double GetRightDist() const = 0;
+	virtual double GetLeftRate() const = 0;
+	virtual double GetRightRate() const = 0;
+	virtual double GetDist() const = 0;
+	virtual double GetRate() const = 0;
 };
 
 /*

@@ -185,11 +185,11 @@ void TrapDriveController::Start() {
 void TrapDriveController::Stop() {
 }
 
-double TrapDriveController::DistFromStart() {
+double TrapDriveController::DistFromStart() const {
     return m_state->GetDist() - m_dist_offset;
 }
 
-double TrapDriveController::AngleFromStart() {
+double TrapDriveController::AngleFromStart() const {
     return m_state->GetAngle() - m_angle_offset;
 }
 

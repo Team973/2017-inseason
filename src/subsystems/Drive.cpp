@@ -143,12 +143,12 @@ PIDDriveController *Drive::PIDTurn(double turn, RelativeTo relativity,
 /**
  * reported in inches
  */
-double Drive::GetLeftDist() {
+double Drive::GetLeftDist() const {
     return m_leftMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION -
         m_leftPosZero;
 }
 
-double Drive::GetRightDist() {
+double Drive::GetRightDist() const {
     return -m_rightMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION -
         m_rightPosZero;
 }
@@ -157,32 +157,32 @@ double Drive::GetRightDist() {
  * Reported in inches per second
  * As per manual 17.2.1, GetSpeed reports RPM
  */
-double Drive::GetLeftRate() {
+double Drive::GetLeftRate() const {
     return m_leftMotor->GetSpeed() * DRIVE_IPS_FROM_RPM;
 }
 
-double Drive::GetRightRate() {
+double Drive::GetRightRate() const {
     return -m_rightMotor->GetSpeed() * DRIVE_IPS_FROM_RPM;
 }
 
-double Drive::GetDist() {
+double Drive::GetDist() const {
     return (GetLeftDist() + GetRightDist()) / 2.0;
 }
 
-double Drive::GetRate() {
+double Drive::GetRate() const {
     return (GetLeftRate() + GetRightRate()) / 2.0;
 }
 
-double Drive::GetDriveCurrent() {
+double Drive::GetDriveCurrent() const {
     return (m_rightMotor->GetOutputCurrent() +
             m_leftMotor->GetOutputCurrent()) / 2.0;
 }
 
-double Drive::GetAngle() {
+double Drive::GetAngle() const {
     return m_angle - m_gyroZero;
 }
 
-double Drive::GetAngularRate() {
+double Drive::GetAngularRate() const {
     return m_angleRate;
 }
 
