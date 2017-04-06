@@ -54,6 +54,7 @@ public:
     void StopConveyor();
     void SetShooterState(ShootingSequenceState state);
     void StartKicker(double speed);
+    void StopKicker();
 
     double GetFlywheelRate();
     double GetKickerRate();
