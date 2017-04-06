@@ -27,46 +27,10 @@ void Robot::DisabledContinuous(void) {
       m_autoDirection = 1.0;
   }
 
-  if (m_autoRoutine == AutonomousRoutine::MadtownHopperThenShootFuel){
-    DBStringPrintf(DBStringPos::DB_LINE0,
-                      "%c MadtownHopper",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-    m_autoSelectLog->LogPrintf(
-                      "%c MadtownHopper",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-  }
-  else if (m_autoRoutine == AutonomousRoutine::HopperThenShootFuel){
-    DBStringPrintf(DBStringPos::DB_LINE0,
-                      "%c HopperThenShoot Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-    m_autoSelectLog->LogPrintf(
-                      "%c HopperThenShoot Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-  }
-  else if (m_autoRoutine == AutonomousRoutine::KpaGearAuto){
-    DBStringPrintf(DBStringPos::DB_LINE0,
-                      "%c KpaGear Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-    m_autoSelectLog->LogPrintf(
-                      "%c KpaGear Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-  }
-  else if (m_autoRoutine == AutonomousRoutine::NoAuto){
-    DBStringPrintf(DBStringPos::DB_LINE0,
-                      "%c No Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-    m_autoSelectLog->LogPrintf(
-                      "%c No Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-  }
-  if (m_autoRoutine == AutonomousRoutine::CitrusKpaGearAuto){
-    DBStringPrintf(DBStringPos::DB_LINE0,
-                      "%c CitrusKpaGear Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-    m_autoSelectLog->LogPrintf(
-                      "%c CitrusKpaGear Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-  }
+  DBStringPrintf(DBStringPos::DB_LINE0,
+                 "%c %s",
+                 (m_alliance == Alliance::Red) ? 'R' : 'B',
+                 GetAutoName(m_autoRoutine));
 }
 
 void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
