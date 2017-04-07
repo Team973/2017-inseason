@@ -25,6 +25,7 @@ class TrapDriveController;
 class VelocityTurnPID;
 class LogSpreadsheet;
 class LogCell;
+class SPIGyro;
 
 /*
  * Drive provides an interface to control the drive-base (to do both
@@ -51,7 +52,8 @@ public:
             CANTalon *spareTalon,
             LogSpreadsheet *logger,
             BoilerPixy *BoilerPixy,
-            PixyThread *gearPixy
+            PixyThread *gearPixy,
+            SPIGyro *gyro
             );
 
     virtual ~Drive() {}
@@ -167,6 +169,7 @@ private:
     void TaskPeriodic(RobotMode mode) override;
 
     PigeonImu *m_gyro;
+    SPIGyro *m_austinGyro;
     double m_angle, m_angleRate;
     double m_gyroZero = 0.0;
 
