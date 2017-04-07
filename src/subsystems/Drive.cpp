@@ -18,15 +18,18 @@
 #include "controllers/BoilerPixyVisionDriveController.h"
 #include "controllers/GearPixyVisionDriveController.h"
 #include "controllers/TrapDriveController.h"
+#include "lib/SPIGyro.h"
 
 namespace frc973 {
 
 Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
             CANTalon *spareTalon,
-            LogSpreadsheet *logger, BoilerPixy *boilerPixy, PixyThread *gearPixy
+            LogSpreadsheet *logger, BoilerPixy *boilerPixy, PixyThread *gearPixy,
+            SPIGyro *gyro
             )
          : DriveBase(scheduler, this, this, nullptr)
          , m_gyro(new PigeonImu(spareTalon))
+         , m_austinGyro(gyro)
          , m_angle(0.0)
          , m_angleRate(0.0)
          , m_leftCommand(0.0)
@@ -84,7 +87,7 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
 
 void Drive::Zero() {
     if (m_gyro) {
-        m_gyroZero = m_gyro->GetFusedHeading();
+        m_gyroZero = m_austinGyro->GetDegrees();
     }
     if (m_leftMotor) {
         m_leftPosZero = m_leftMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION;
@@ -216,11 +219,14 @@ void Drive::SetDriveControlMode(CANSpeedController::ControlMode mode){
 }
 
 void Drive::TaskPeriodic(RobotMode mode) {
-    m_angle = m_gyro->GetFusedHeading();
+    m_angle = m_austinGyro->GetDegrees();
 
+    /*
     double xyz_dps[4];
     m_gyro->GetRawGyro(xyz_dps);
     m_angleRate = xyz_dps[2];
+    */
+    m_angleRate = m_austinGyro->GetDegreesPerSec();
 
     DBStringPrintf(DB_LINE9, "l %2.1lf r %2.1lf g %2.1lf",
             this->GetLeftDist(),
