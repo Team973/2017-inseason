@@ -53,7 +53,7 @@ public:
             LogSpreadsheet *logger,
             BoilerPixy *BoilerPixy,
             PixyThread *gearPixy,
-            SPIGyro *gyro
+            ADXRS450_Gyro *gyro
             );
 
     virtual ~Drive() {}
@@ -169,7 +169,7 @@ private:
     void TaskPeriodic(RobotMode mode) override;
 
     PigeonImu *m_gyro;
-    SPIGyro *m_austinGyro;
+    ADXRS450_Gyro *m_austinGyro;
     double m_angle, m_angleRate;
     double m_gyroZero = 0.0;
 

@@ -3,13 +3,13 @@
 #include "lib/TrapProfile.h"
 
 namespace frc973 {
-    
+
 /**
  * This auto routine must start with the hopper away from the wall
  * because we move forward.
  */
 void Robot::SpartanHopperAuto(){
-    double initial_dist = 48.0;
+    double initial_dist = 53.0;
 
     if(m_alliance == Alliance::Red){
         initial_dist += 0.0;
@@ -30,7 +30,7 @@ void Robot::SpartanHopperAuto(){
             m_drive
                 ->TrapDrive(DriveBase::RelativeTo::Now, initial_dist, 0.0)
                 ->SetHalt(true, false)
-                ->SetConstraints(80.0, 48.0);
+                ->SetConstraints(40.0, 48.0);
             m_autoState++;
             break;
         case 1:
@@ -39,66 +39,45 @@ void Robot::SpartanHopperAuto(){
             }
             if (m_drive->OnTarget()) {
                 m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
+                using namespace Profiler;
+                TrapProfile<FakeFloat<42>, FakeFloat<0>,
+                    FakeFloat<60>, FakeFloat<48>,
+                    false, true>(0);
                 m_drive
-                    ->TrapDrive(DriveBase::RelativeTo::Now, 3.0 * 12.0,
-                                m_autoDirection * -90.0)
-                    ->SetHalt(false, false)
-                    ->SetConstraints(80.0, 48.0);
+                    ->TrapDrive(DriveBase::RelativeTo::Now, 4.0 * 12.0,
+                                m_autoDirection * 90.0)
+                    ->SetHalt(false, true)
+                    ->SetConstraints(40.0, 48.0);
                 m_autoState++;
             }
             break;
         case 2:
-            if (m_drive->OnTarget()) {
-                /*
-                 * the TrapProfile template is a compile-time hack to make
-                 * sure the profile won't mess up at runtime.  We aren't
-                 * going to follow the whole thing; we're going to switch to
-                 * a regular drive after a few inches.  TrapDrive just makes
-                 * absolute certain that we don't have angular momentum
-                 * when we transition to that regular arcade drive.  The
-                 * arcade drive will press against the hopper.
-                 */
-                using namespace Profiler;
-                TrapProfile<FakeFloat<80>, FakeFloat<0>,
-                    FakeFloat<80>, FakeFloat<48>,
-                    false, true>(0);
-                m_drive
-                    ->TrapDrive(DriveBase::RelativeTo::Now, 80.0, 0.0)
-                    ->SetHalt(false, true)
-                    ->SetConstraints(80.0, 48.0);
-                m_ballIntake->BallIntakeStart();
-                m_autoTimer = GetMsecTime();
-                m_autoState++;
-            }
-            break;
-        case 3:
             /*
              * Advance after 18 inches of trap driving.  We can generalize
              * the trap profiler in offseason to exit on arbitrary velocity
              * but for now we have to make an extra long profile and exit
              * early.
              */
-            if (GetMsecTime() - m_autoTimer > 700 &&
-                    m_drive->GetTrapDriveController()
-                           ->DistFromStart() > 18.0) {
+            if (GetMsecTime() - m_autoTimer > 1500 &&
+                    m_drive->OnTarget()) {
                 m_drive->ArcadeDrive(0.1, 0.0);
                 m_autoTimer = GetMsecTime();
                 m_autoState++;
             }
             break;
-        case 4:
+        case 3:
             if (GetMsecTime() - m_autoTimer > 2500) {
                 m_drive
                     ->TrapDrive(DriveBase::RelativeTo::Now, -24.0,
-                                m_autoDirection * 90.0)
+                                m_autoDirection * 60.0)
                     ->SetHalt(true, true)
-                    ->SetConstraints(80.0, 48.0);
+                    ->SetConstraints(40.0, 38.0);
                 m_autoTimer = GetMsecTime();
-                m_autoState++;
+                m_autoState = 900;
             }
             break;
-        case 5:
-            if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2000) {
+        case 4:
+            if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2500) {
                 m_ballIntake->BallIntakeStop();
                 double angleOffset = m_boilerPixy->GetXOffset() *
                     BoilerPixy::PIXY_OFFSET_CONSTANT;
@@ -116,13 +95,13 @@ void Robot::SpartanHopperAuto(){
                 }
             }
             break;
-        case 6:
+        case 5:
             if (m_drive->OnTarget() || (GetMsecTime() - m_autoTimer >= 1000 )) {
               m_autoTimer = GetMsecTime();
               m_autoState++;
             }
             break;
-        case 7:
+        case 6:
               m_ballIntake->RetractHopper();
               m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
               m_shooter->StartConveyor(0.9);
@@ -130,7 +109,7 @@ void Robot::SpartanHopperAuto(){
               m_shooter->StartAgitator(1.0, Shooter::Side::left);
               m_autoState++;
             break;
-        case 8:
+        case 7:
             break;
     }
 }
