@@ -133,7 +133,8 @@ Robot::Robot(void
     m_austinGyro = new SPIGyro();
     m_drive = new Drive(this,
             m_leftDriveTalonA, m_rightDriveTalonA, m_leftAgitatorTalon,
-            m_logger, m_boilerPixy, m_pixyR);
+            m_logger, m_boilerPixy, m_pixyR,
+            m_austinGyro);
 
     m_battery = new LogCell("Battery voltage");
     m_state = new LogCell("Game State");
