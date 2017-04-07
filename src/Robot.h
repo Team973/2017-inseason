@@ -80,7 +80,7 @@ private:
     CANTalon		*m_rightDriveTalonA;
     CANTalon		*m_rightDriveTalonB;
     CANTalon        *m_leftAgitatorTalon;
-    SPIGyro         *m_austinGyro;
+    ADXRS450_Gyro        *m_austinGyro;
     Drive			*m_drive;
 
     /**

@@ -25,7 +25,7 @@ namespace frc973 {
 Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
             CANTalon *spareTalon,
             LogSpreadsheet *logger, BoilerPixy *boilerPixy, PixyThread *gearPixy,
-            SPIGyro *gyro
+            ADXRS450_Gyro *gyro
             )
          : DriveBase(scheduler, this, this, nullptr)
          , m_gyro(new PigeonImu(spareTalon))
@@ -87,7 +87,7 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
 
 void Drive::Zero() {
     if (m_gyro) {
-        m_gyroZero = m_austinGyro->GetDegrees();
+        m_gyroZero = m_austinGyro->GetAngle();
     }
     if (m_leftMotor) {
         m_leftPosZero = m_leftMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION;
@@ -182,11 +182,11 @@ double Drive::GetDriveCurrent() const {
 }
 
 double Drive::GetAngle() const {
-    return m_angle - m_gyroZero;
+    return -(m_angle - m_gyroZero);
 }
 
 double Drive::GetAngularRate() const {
-    return m_angleRate;
+    return -m_angleRate;
 }
 
 void Drive::SetDriveOutput(double left, double right) {
@@ -219,14 +219,19 @@ void Drive::SetDriveControlMode(CANSpeedController::ControlMode mode){
 }
 
 void Drive::TaskPeriodic(RobotMode mode) {
-    m_angle = m_austinGyro->GetDegrees();
+    m_angle = m_austinGyro->GetAngle();
 
     /*
     double xyz_dps[4];
     m_gyro->GetRawGyro(xyz_dps);
     m_angleRate = xyz_dps[2];
     */
-    m_angleRate = m_austinGyro->GetDegreesPerSec();
+    double currRate = m_austinGyro->GetRate();
+    if(currRate == 0){
+    }
+    else{
+      m_angleRate = currRate;
+    }
 
     DBStringPrintf(DB_LINE9, "l %2.1lf r %2.1lf g %2.1lf",
             this->GetLeftDist(),

@@ -375,9 +375,10 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 if (pressedP) {
                     g_manualDriveControl = false;
                     m_drive
-                        ->TrapDrive(DriveBase::RelativeTo::Now, -3.0 * 12.0, -45.0)
+                        ->TrapDrive(DriveBase::RelativeTo::Now, -24.0,
+                                    m_autoDirection * 60.0)
                         ->SetHalt(true, true)
-                        ->SetConstraints(48.0, 24.0);
+                        ->SetConstraints(40.0, 38.0);
                 }
                 break;
             case DualAction::BtnX:

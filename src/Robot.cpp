@@ -130,7 +130,7 @@ Robot::Robot(void
     m_lights = new Lights(this);
     m_boilerPixy = new BoilerPixy(this, m_lights, m_logger);
     m_pixyR = new PixyThread(*this);
-    m_austinGyro = new SPIGyro();
+    m_austinGyro = new ADXRS450_Gyro();
     m_drive = new Drive(this,
             m_leftDriveTalonA, m_rightDriveTalonA, m_leftAgitatorTalon,
             m_logger, m_boilerPixy, m_pixyR,
@@ -185,6 +185,7 @@ Robot::~Robot(void) {
 void Robot::Initialize(void) {
     printf("gonna initialize logger\n");
     m_logger->InitializeTable();
+    m_austinGyro->Calibrate();
     printf("initialized\n");
  }
 
@@ -218,8 +219,8 @@ void Robot::AllStateContinuous(void) {
             "g %d %lf %d",
             m_pixyR->GetDataFresh(), m_pixyR->GetOffset() * PixyThread::GEAR_DEGREES_PER_PIXEL, m_gearIntake->IsGearReady());
 
-    m_austinGyroLog->LogDouble(m_austinGyro->GetDegrees());
-    m_austinGyroRateLog->LogDouble(m_austinGyro->GetDegreesPerSec());
+    m_austinGyroLog->LogDouble(m_austinGyro->GetAngle());
+    m_austinGyroRateLog->LogDouble(m_austinGyro->GetRate());
 }
 
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,
