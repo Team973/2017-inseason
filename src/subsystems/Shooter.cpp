@@ -126,6 +126,8 @@ void Shooter::SetFlywheelSpeed(double speed){
     m_flywheelState = FlywheelState::speed;
     m_flywheelSpeedSetpt = speed;
     m_flywheelMotorPrimary->Set(m_flywheelSpeedSetpt);
+    m_kicker->Set(3000);
+    m_kickerSpeedSetpt = 3000;
 }
 
 void Shooter::SetFlywheelStop(){
@@ -134,6 +136,8 @@ void Shooter::SetFlywheelStop(){
     m_flywheelMotorPrimary->Set(0.0);
     m_flywheelState = FlywheelState::notRunning;
     m_flywheelOnTargetFilter.Update(false);
+    m_kicker->Set(0.0);
+    m_kickerSpeedSetpt = 0.0;
 }
 
 double Shooter::GetFlywheelRate(){
@@ -180,16 +184,6 @@ void Shooter::StopAgitator(){
     m_rightAgitator->Set(0.0);
 }
 
-void Shooter::StartKicker(double speed){
-  m_kicker->Set(speed);
-  m_kickerSpeedSetpt = speed;
-}
-
-void Shooter::StopKicker(){
-  m_kicker->Set(0.0);
-  m_kickerSpeedSetpt = 0.0;
-}
-
 double Shooter::GetKickerRate(){
   return m_kicker->GetSpeed();
 }
@@ -217,11 +211,9 @@ void Shooter::TaskPeriodic(RobotMode mode) {
       case idle:
         StopAgitator();
         StopConveyor();
-        StopKicker();
         break;
       case shooting:
         SetFlywheelSpeed(DEFAULT_FLYWHEEL_SPEED_SETPOINT);
-        StartKicker(3000);
         if (OnTarget()) {
           m_drive->ArcadeDrive(0.0,0.0);
           StartAgitator(1.0, Side::right);
