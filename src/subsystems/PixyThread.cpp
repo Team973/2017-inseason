@@ -53,8 +53,10 @@ void PixyThread::TaskPeriodic(RobotMode mode) {
     }
 
     m_prevReading = (m_prevReading + currentRead) / 2.0;
+    /*
     printf("reading %lf\n", m_prevReading);
     printf("numBlocks %d\n", numBlocks);
+    */
 	pthread_mutex_unlock(&m_mutex);
 }
 

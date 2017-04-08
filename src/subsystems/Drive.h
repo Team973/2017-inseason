@@ -21,6 +21,7 @@ class BoilerPixyVisionDriveController;
 class GearPixyVisionDriveController;
 class OpenloopArcadeDriveController;
 class AssistedArcadeDriveController;
+class StraightDriveController;
 class TrapDriveController;
 class VelocityTurnPID;
 class LogSpreadsheet;
@@ -120,6 +121,9 @@ public:
 
     void SetBoilerJoystickTerm(double throttle, double turn);
 
+    void DriveStraight(RelativeTo relativeTo,
+            double throttle, double angle);
+
     /**
      * Use the trap profile drive controller
      */
@@ -188,6 +192,7 @@ private:
     AssistedArcadeDriveController *m_assistedArcadeDriveController;
     PIDDriveController *m_pidDriveController;
     TrapDriveController *m_trapDriveController;
+    StraightDriveController *m_straightDriveController;
 
     LogSpreadsheet *m_spreadsheet;
     BoilerPixyVisionDriveController *m_boilerPixyDriveController;
