@@ -37,13 +37,14 @@ namespace frc973{
     }
 
     void Lights::TaskPeriodic(RobotMode mode){
+        printf("light state %d\n", m_lightMode);
       switch(m_lightMode){
         case on:
           m_pixyLight->Set(true);
-          m_flashLight->Set(false);
+          m_flashLight->Set(true);
           break;
         case off:
-          m_pixyLight->Set(false);
+          m_pixyLight->Set(true);
           m_flashLight->Set(true);
           break;
         case blinkingOn:

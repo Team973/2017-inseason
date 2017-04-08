@@ -85,9 +85,9 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
     m_leftAgitator->EnableCurrentLimit(true);
     m_rightAgitator->EnableCurrentLimit(true);
     m_ballConveyor->EnableCurrentLimit(true);
-    m_leftAgitator->SetCurrentLimit(10);
-    m_rightAgitator->SetCurrentLimit(10);
-    m_ballConveyor->SetCurrentLimit(10);
+    m_leftAgitator->SetCurrentLimit(40);
+    m_rightAgitator->SetCurrentLimit(40);
+    m_ballConveyor->SetCurrentLimit(40);
     m_leftAgitator->SetVoltageRampRate(60.0);
     m_rightAgitator->SetVoltageRampRate(60.0);
     m_ballConveyor->SetVoltageRampRate(60.0);
