@@ -8,8 +8,11 @@ namespace frc973 {
  * This auto routine must start with the hopper away from the wall
  * because we move forward.
  */
+int didPixy = 0;
+double angle = -99;
+
 void Robot::SpartanHopperAuto(){
-    double initial_dist = 53.0;
+    double initial_dist = 51.0;
 
     if(m_alliance == Alliance::Red){
         initial_dist += 0.0;
@@ -30,7 +33,7 @@ void Robot::SpartanHopperAuto(){
             m_drive
                 ->TrapDrive(DriveBase::RelativeTo::Now, initial_dist, 0.0)
                 ->SetHalt(true, false)
-                ->SetConstraints(40.0, 48.0);
+                ->SetConstraints(70.0, 54.0);
             m_autoState++;
             break;
         case 1:
@@ -40,27 +43,21 @@ void Robot::SpartanHopperAuto(){
             if (m_drive->OnTarget()) {
                 m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
                 using namespace Profiler;
-                TrapProfile<FakeFloat<42>, FakeFloat<0>,
-                    FakeFloat<60>, FakeFloat<48>,
+                TrapProfile<FakeFloat<4 * 12>, FakeFloat<90>,
+                    FakeFloat<70>, FakeFloat<54>,
                     false, true>(0);
                 m_drive
                     ->TrapDrive(DriveBase::RelativeTo::Now, 4.0 * 12.0,
                                 m_autoDirection * 90.0)
                     ->SetHalt(false, true)
-                    ->SetConstraints(40.0, 48.0);
+                    ->SetConstraints(70.0, 54.0);
                 m_autoState++;
             }
             break;
         case 2:
-            /*
-             * Advance after 18 inches of trap driving.  We can generalize
-             * the trap profiler in offseason to exit on arbitrary velocity
-             * but for now we have to make an extra long profile and exit
-             * early.
-             */
-            if (GetMsecTime() - m_autoTimer > 1500 &&
+            if (GetMsecTime() - m_autoTimer > 2500 ||
                     m_drive->OnTarget()) {
-                m_drive->ArcadeDrive(0.1, 0.0);
+                m_drive->AssistedArcadeDrive(0.1, 0.0);
                 m_autoTimer = GetMsecTime();
                 m_autoState++;
             }
@@ -69,20 +66,22 @@ void Robot::SpartanHopperAuto(){
             if (GetMsecTime() - m_autoTimer > 2500) {
                 m_drive
                     ->TrapDrive(DriveBase::RelativeTo::Now, -24.0,
-                                m_autoDirection * 60.0)
+                                m_autoDirection * 71.0)
                     ->SetHalt(true, true)
-                    ->SetConstraints(40.0, 38.0);
+                    ->SetConstraints(60.0, 38.0);
                 m_autoTimer = GetMsecTime();
-                m_autoState = 900;
+                m_autoState++;
             }
             break;
         case 4:
-            if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2500) {
+            if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 3000) {
                 m_ballIntake->BallIntakeStop();
                 double angleOffset = m_boilerPixy->GetXOffset() *
                     BoilerPixy::PIXY_OFFSET_CONSTANT;
+                angle = angleOffset;
                 if (Util::abs(angleOffset) >= 10.0) {
                     m_autoState++;
+                    didPixy = 1;
                 }
                 else {
                     m_drive
@@ -92,7 +91,12 @@ void Robot::SpartanHopperAuto(){
                         ->SetAngleTolerance(30.0, 60.0);
                     m_autoTimer = GetMsecTime();
                     m_autoState++;
+                    didPixy = 2;
                 }
+                m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
+                m_shooter->StartConveyor(0.9);
+                m_shooter->StartAgitator(1.0, Shooter::Side::right);
+                m_shooter->StartAgitator(1.0, Shooter::Side::left);
             }
             break;
         case 5:
@@ -103,15 +107,14 @@ void Robot::SpartanHopperAuto(){
             break;
         case 6:
               m_ballIntake->RetractHopper();
-              m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
-              m_shooter->StartConveyor(0.9);
-              m_shooter->StartAgitator(1.0, Shooter::Side::right);
-              m_shooter->StartAgitator(1.0, Shooter::Side::left);
               m_autoState++;
             break;
         case 7:
             break;
     }
+        
+    DBStringPrintf(DB_LINE2, "auto %d %d %lf",
+            m_autoState, didPixy, angle);
 }
 
 }
