@@ -21,6 +21,8 @@ namespace frc973 {
                 return "No auto";
             case AutonomousRoutine::CitrusKpaGearAuto:
                 return "CitrusKpaGear";
+            case Autonomousroutine::CitrusHopper:
+                return "CitrusHopper";
             case AutonomousRoutine::SpartanHopper:
                 return "SpartanHopper";
             default:
@@ -61,6 +63,9 @@ namespace frc973 {
                 break;
             case AutonomousRoutine::CitrusKpaGearAuto:
                 CitrusKpaAndGearAuto();
+                break;
+            case AutonomousRoutine::CitrusHopper:
+                CitrusHopper();
                 break;
             case AutonomousRoutine::SpartanHopper:
                 SpartanHopperAuto();

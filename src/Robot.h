@@ -40,6 +40,7 @@ private:
         KpaGearAuto,
         NoAuto,
         CitrusKpaGearAuto,
+        CitrusHopper,
         SpartanHopper
     };
 
@@ -163,6 +164,7 @@ public:
     void KpaAndGearAuto(void);
     void HaltAuto(void);
     void CitrusKpaAndGearAuto(void);
+    void CitrusHopperAuto(void);
     void SpartanHopperAuto(void);
 
     /**
