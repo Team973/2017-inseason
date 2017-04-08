@@ -95,7 +95,7 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             break;
         case DualAction::RightTrigger:
             if (pressedP) {
-              m_autoRoutine = AutonomousRoutine::CitrusKpaGearAuto
+              m_autoRoutine = AutonomousRoutine::CitrusKpaGearAuto;
             }
             break;
         case DualAction::Start:
