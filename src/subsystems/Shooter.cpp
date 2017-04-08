@@ -126,8 +126,8 @@ void Shooter::SetFlywheelSpeed(double speed){
     m_flywheelState = FlywheelState::speed;
     m_flywheelSpeedSetpt = speed;
     m_flywheelMotorPrimary->Set(m_flywheelSpeedSetpt);
-    m_kicker->Set(3000);
-    m_kickerSpeedSetpt = 3000;
+    m_kicker->Set(3500);
+    m_kickerSpeedSetpt = 3500;
 }
 
 void Shooter::SetFlywheelStop(){

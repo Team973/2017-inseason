@@ -41,7 +41,8 @@ private:
         NoAuto,
         CitrusKpaGearAuto,
         CitrusHopper,
-        SpartanHopper
+        SpartanHopper,
+        KillerHopper
     };
 
     const char *GetAutoName(AutonomousRoutine routine);
@@ -166,7 +167,7 @@ public:
     void CitrusKpaAndGearAuto(void);
     void CitrusHopperAuto(void);
     void SpartanHopperAuto(void);
-
+    void KillerHopperAuto(void);
     /**
      * Defined in Teleop.h
      */
