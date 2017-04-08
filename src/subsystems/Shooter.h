@@ -57,7 +57,7 @@ public:
     double GetFlywheelRate();
     double GetKickerRate();
 
-    static constexpr int DEFAULT_FLYWHEEL_SPEED_SETPOINT = 2960;
+    static constexpr int DEFAULT_FLYWHEEL_SPEED_SETPOINT = 2950;
 
     enum FlywheelState {
         power,

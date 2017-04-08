@@ -93,13 +93,13 @@ void assert_dist_range(vector<Waypoint>& points,
     BOOST_ASSERT(points.back().angular_dist == params.angle);
 
     if (params.end_halt) {
-        BOOST_ASSERT(points.back().linear_vel== 0.0);
-        BOOST_ASSERT(points.back().angular_vel== 0.0);
+        BOOST_ASSERT(points.back().linear_vel == 0.0);
+        BOOST_ASSERT(points.back().angular_vel == 0.0);
     }
     else {
-        BOOST_ASSERT(points.back().linear_vel!= 0.0);
+        BOOST_ASSERT(Util::abs(points.back().linear_vel) != 1.0);
         if (params.angle != 0.0) {
-            BOOST_ASSERT(points.back().angular_vel!= 0.0);
+            BOOST_ASSERT(points.back().angular_vel != 0.0);
         }
     }
 }
