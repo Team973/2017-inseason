@@ -33,7 +33,7 @@ void Robot::SpartanHopperAuto(){
             m_drive
                 ->TrapDrive(DriveBase::RelativeTo::Now, initial_dist, 0.0)
                 ->SetHalt(true, false)
-                ->SetConstraints(70.0, 54.0);
+                ->SetConstraints(70.0, 64.0);
             m_autoState++;
             break;
         case 1:
@@ -47,7 +47,7 @@ void Robot::SpartanHopperAuto(){
                     FakeFloat<70>, FakeFloat<54>,
                     false, true>(0);
                 m_drive
-                    ->TrapDrive(DriveBase::RelativeTo::Now, 4.0 * 12.0,
+                    ->TrapDrive(DriveBase::RelativeTo::SetPoint, 4.0 * 12.0,
                                 m_autoDirection * 90.0)
                     ->SetHalt(false, true)
                     ->SetConstraints(70.0, 54.0);
@@ -57,7 +57,9 @@ void Robot::SpartanHopperAuto(){
         case 2:
             if (GetMsecTime() - m_autoTimer > 2500 ||
                     m_drive->OnTarget()) {
-                m_drive->AssistedArcadeDrive(0.1, 0.0);
+                m_drive->DriveStraight(Drive::RelativeTo::Absolute, 0.4,
+                        m_autoDirection * 90.0);
+                m_ballIntake->BallIntakeStart();
                 m_autoTimer = GetMsecTime();
                 m_autoState++;
             }
@@ -66,7 +68,7 @@ void Robot::SpartanHopperAuto(){
             if (GetMsecTime() - m_autoTimer > 2500) {
                 m_drive
                     ->TrapDrive(DriveBase::RelativeTo::Now, -24.0,
-                                m_autoDirection * 71.0)
+                                m_autoDirection * 65.0)
                     ->SetHalt(true, true)
                     ->SetConstraints(60.0, 38.0);
                 m_autoTimer = GetMsecTime();
@@ -85,8 +87,8 @@ void Robot::SpartanHopperAuto(){
                 }
                 else {
                     m_drive
-                        ->PIDTurn(m_drive->GetAngle() - angleOffset,
-                                   DriveBase::RelativeTo::Absolute, 1.0)
+                        ->PIDTurn(-angleOffset,
+                                  DriveBase::RelativeTo::Now, 1.0)
                         ->SetDistTolerance(15.0, 25.0)
                         ->SetAngleTolerance(30.0, 60.0);
                     m_autoTimer = GetMsecTime();

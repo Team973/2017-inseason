@@ -32,6 +32,7 @@ set(SOURCE_FILES
     src/auto/CitrusKpaAndGearAuto.cpp src/auto/SpartanHopperAuto.cpp
     src/auto/CitrusHopperAuto.cpp
     src/controllers/PIDDrive.cpp
+    src/controllers/StraightDriveController.cpp
     src/controllers/TrapDriveController.cpp
     src/lib/TrapProfile.cpp
     src/controllers/GearPixyVisionDriveController.cpp
