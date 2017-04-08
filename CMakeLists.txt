@@ -30,6 +30,7 @@ set(SOURCE_FILES
     src/auto/HaltAuto.cpp src/auto/MadtownHopperThenshoot.cpp
     src/auto/KpaAndGearAuto.cpp src/auto/HopperThenshoot.cpp
     src/auto/CitrusKpaAndGearAuto.cpp src/auto/SpartanHopperAuto.cpp
+    src/auto/CitrusHopperAuto.cpp
     src/controllers/PIDDrive.cpp
     src/controllers/TrapDriveController.cpp
     src/lib/TrapProfile.cpp
