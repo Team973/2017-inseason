@@ -31,6 +31,7 @@ set(SOURCE_FILES
     src/auto/KpaAndGearAuto.cpp src/auto/HopperThenshoot.cpp
     src/auto/CitrusKpaAndGearAuto.cpp src/auto/KillerBeeHopperAuto.cpp
     src/auto/CitrusHopperAuto.cpp src/auto/SpartanHopperAuto.cpp
+    src/auto/MidPegKpaAuto.cpp
     src/controllers/PIDDrive.cpp
     src/controllers/StraightDriveController.cpp
     src/controllers/TrapDriveController.cpp
