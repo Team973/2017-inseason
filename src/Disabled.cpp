@@ -50,7 +50,7 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             break;
         case DualAction::BtnX:
             if (pressedP) {
-                //m_autoRoutine = AutonomousRoutine::GearRightPeg;
+                m_autoRoutine = AutonomousRoutine::MidPegKpa;
             }
             break;
         case DualAction::BtnY:
