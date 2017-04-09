@@ -105,6 +105,7 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             break;
         case DualAction::Back:
             if (pressedP) {
+                m_austinGyro->Calibrate();
             }
             break;
     }
