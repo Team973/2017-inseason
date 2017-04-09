@@ -27,6 +27,8 @@ namespace frc973 {
                 return "SpartanHopper";
             case AutonomousRoutine::KillerHopper:
                 return "KillerHopper";
+            case AutonomousRoutine::MidPegKpa:
+                return "MidPegKpa";
             default:
                 return "Error. RESTART!";
         }
@@ -74,6 +76,9 @@ namespace frc973 {
                 break;
             case AutonomousRoutine::KillerHopper:
                 KillerHopperAuto();
+                break;
+            case AutonomousRoutine::MidPegKpa:
+                MidPegKpaAuto();
                 break;
         }
     }

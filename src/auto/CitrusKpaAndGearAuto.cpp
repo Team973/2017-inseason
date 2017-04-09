@@ -2,15 +2,18 @@
 #include "AutoCommon.h"
 
 namespace frc973 {
-    
+
+double offangle = -10000000000.0;
+
 void Robot::CitrusKpaAndGearAuto(){
+
   switch(m_autoState){
     case 0:
-      m_drive->PIDDrive(-15.0, 0.0, DriveBase::RelativeTo::Now, 1.0);
+      m_drive->PIDDrive(-38.0, 0.0, DriveBase::RelativeTo::Now, 1.0);
       m_gearIntake->SetPickUpManual();
       m_compressor->Disable();
       m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
-      m_shooter->SetFlywheelSpeed(2990);
+      m_shooter->SetFlywheelSpeed(2950);
       m_shooter->StopAgitator();
       m_shooter->StartConveyor(0.0);
       m_autoTimer = GetMsecTime();
@@ -21,17 +24,17 @@ void Robot::CitrusKpaAndGearAuto(){
           m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
       }
       if(m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2500){
-        m_drive->PIDTurn(-67.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0)
+        m_drive->PIDTurn(-52.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0)
             ->SetAngleTolerance(15.0, 4.0);
         m_autoTimer = GetMsecTime();
         m_autoState++;
       }
       break;
     case 2:
-      if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500) {
+      if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2000) {
           double boilerOffset = m_boilerPixy->GetXOffset() *
               BoilerPixy::PIXY_OFFSET_CONSTANT;
-
+          offangle = boilerOffset;
           if (Util::abs(boilerOffset) >= 10.0) {
               m_autoState++;
           }
@@ -50,7 +53,6 @@ void Robot::CitrusKpaAndGearAuto(){
         if ((m_drive->OnTarget() && m_shooter->OnTarget()) ||
                 GetMsecTime() - m_autoTimer > 1500) {
             m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
-            m_drive->ArcadeDrive(0.0, 0.0);
             m_shooter->StartAgitator(1.0, Shooter::Side::right);
             m_shooter->StartAgitator(1.0, Shooter::Side::left);
             m_shooter->StartConveyor(0.7);
@@ -70,7 +72,7 @@ void Robot::CitrusKpaAndGearAuto(){
         break;
     case 5:
       if(m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500){
-        m_drive->PIDDrive(-79.0, 0.0, DriveBase::RelativeTo::SetPoint, 1.0);
+        m_drive->PIDDrive(-76.0, 0.0, DriveBase::RelativeTo::SetPoint, 1.0);
         m_autoTimer = GetMsecTime();
         m_compressor->Enable();
         m_autoState++;
@@ -134,6 +136,8 @@ void Robot::CitrusKpaAndGearAuto(){
     default:
         break;
   }
-}
+  DBStringPrintf(DB_LINE2,"off %2.2lf state %d", offangle,
+          m_autoState);
+  }
 
 }

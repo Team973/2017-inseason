@@ -2,7 +2,7 @@
 #include "AutoCommon.h"
 
 namespace frc973 {
-    
+
 void Robot::KpaAndGearAuto(){
   switch(m_autoState){
     case 0:
@@ -10,7 +10,7 @@ void Robot::KpaAndGearAuto(){
       m_drive->PIDDrive(-55.5, 0.0, DriveBase::RelativeTo::Now, 1.0);
       m_gearIntake->SetPickUpManual();
       m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
-      m_shooter->SetFlywheelSpeed(SHOOTER_RPM);
+      m_shooter->SetFlywheelSpeed(2850);
       m_shooter->StopAgitator();
       m_shooter->StartConveyor(0.0);
       m_autoTimer = GetMsecTime();
@@ -39,7 +39,8 @@ void Robot::KpaAndGearAuto(){
                 m_drive
                     ->PIDTurn(m_drive->GetAngle() - boilerOffset,
                                DriveBase::RelativeTo::Absolute, 1.0)
-                    ->SetAngleTolerance(0.0, 0.0);
+                     ->SetDistTolerance(15.0, 25.0)
+                     ->SetAngleTolerance(30.0, 60.0);
                 m_autoTimer = GetMsecTime();
                 m_autoState++;
             }
@@ -47,7 +48,7 @@ void Robot::KpaAndGearAuto(){
         break;
     case 3:
         if ((m_drive->OnTarget() && m_shooter->OnTarget()) ||
-                GetMsecTime() - m_autoTimer > 3000) {
+                GetMsecTime() - m_autoTimer > 1500) {
             m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
             m_shooter->StartAgitator(1.0, Shooter::Side::right);
             m_shooter->StartAgitator(1.0, Shooter::Side::left);
