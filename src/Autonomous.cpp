@@ -25,6 +25,8 @@ namespace frc973 {
                 return "CitrusHopper";
             case AutonomousRoutine::SpartanHopper:
                 return "SpartanHopper";
+            case AutonomousRoutine::KillerHopper:
+                return "KillerHopper";
             default:
                 return "Error. RESTART!";
         }
@@ -69,6 +71,9 @@ namespace frc973 {
                 break;
             case AutonomousRoutine::SpartanHopper:
                 SpartanHopperAuto();
+                break;
+            case AutonomousRoutine::KillerHopper:
+                KillerHopperAuto();
                 break;
         }
     }

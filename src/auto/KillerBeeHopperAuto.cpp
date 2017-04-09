@@ -5,10 +5,14 @@
 namespace frc973 {
 
 /**
- * This auto routine must start with the hopper touching the wall.
+ * This auto routine must start with the hopper away from the wall
+ * because we move forward.
  */
-void Robot::SpartanHopperAuto(){
-    double initial_dist = 6.0;
+int didPixy = 0;
+double angle = -99;
+
+void Robot::KillerHopperAuto(){
+    double initial_dist = 51.0;
 
     if(m_alliance == Alliance::Red){
         initial_dist += 0.0;
@@ -23,42 +27,41 @@ void Robot::SpartanHopperAuto(){
             m_ballIntake->ExpandHopper();
             m_shooter->SetFlywheelSpeed(3030);
             m_gearIntake->SetPickUpManual();
-            m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
+            m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
             m_shooter->StopAgitator();
             m_shooter->StartConveyor(0.0);
             m_drive
-                ->TrapDrive(DriveBase::RelativeTo::SetPoint, -114.0,
-                            m_autoDirection * 45.0)
-                ->SetHalt(true, true)
-                ->SetConstraints(70.0, 96.0);
+                ->TrapDrive(DriveBase::RelativeTo::Now, initial_dist, 0.0)
+                ->SetHalt(true, false)
+                ->SetConstraints(70.0, 70.0);
             m_autoState++;
             break;
         case 1:
             if (GetMsecTime() - m_autoTimer > 250) {
                 m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
             }
-            if (m_drive->OnTarget() || m_drive->GetDist() <= -110.0) {
+            if (m_drive->OnTarget()) {
                 m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
                 using namespace Profiler;
                 TrapProfile<FakeFloat<4 * 12>, FakeFloat<90>,
-                    FakeFloat<70>, FakeFloat<54>,
+                    FakeFloat<70>, FakeFloat<70>,
                     false, true>(0);
                 m_drive
-                    ->TrapDrive(DriveBase::RelativeTo::SetPoint, 30.0,
-                                m_autoDirection * -80.0)
-                    ->SetHalt(true, true)
-                    ->SetConstraints(130.0, 96.0);
-                m_autoState = 90;
+                    ->TrapDrive(DriveBase::RelativeTo::SetPoint, 4.0 * 12.0,
+                                m_autoDirection * 90.0)
+                    ->SetHalt(false, true)
+                    ->SetConstraints(70.0, 70.0);
+                m_autoState++;
             }
             break;
         case 2:
-            if (m_drive->OnTarget()) {
-                m_drive
-                    ->PIDTurn(-60.0 * m_autoDirection,
-                              DriveBase::RelativeTo::Now, 1.0);
+            if (GetMsecTime() - m_autoTimer > 2500 ||
+                    m_drive->OnTarget()) {
+                m_drive->DriveStraight(Drive::RelativeTo::Absolute, 0.4,
+                        m_autoDirection * 90.0);
                 m_ballIntake->BallIntakeStart();
                 m_autoTimer = GetMsecTime();
-                m_autoState = 90;
+                m_autoState++;
             }
             break;
         case 3:
@@ -77,8 +80,10 @@ void Robot::SpartanHopperAuto(){
                 m_ballIntake->BallIntakeStop();
                 double angleOffset = m_boilerPixy->GetXOffset() *
                     BoilerPixy::PIXY_OFFSET_CONSTANT;
+                angle = angleOffset;
                 if (Util::abs(angleOffset) >= 10.0) {
                     m_autoState++;
+                    didPixy = 1;
                 }
                 else {
                     m_drive
@@ -88,6 +93,7 @@ void Robot::SpartanHopperAuto(){
                         ->SetAngleTolerance(30.0, 60.0);
                     m_autoTimer = GetMsecTime();
                     m_autoState++;
+                    didPixy = 2;
                 }
                 m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
                 m_shooter->StartConveyor(0.9);
@@ -108,5 +114,9 @@ void Robot::SpartanHopperAuto(){
         case 7:
             break;
     }
-  }
+
+    DBStringPrintf(DB_LINE2, "auto %d %d %lf",
+            m_autoState, didPixy, angle);
+}
+
 }
