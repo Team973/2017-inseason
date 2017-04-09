@@ -42,7 +42,8 @@ private:
         CitrusKpaGearAuto,
         CitrusHopper,
         SpartanHopper,
-        KillerHopper
+        KillerHopper,
+        MidPegKpa
     };
 
     const char *GetAutoName(AutonomousRoutine routine);
@@ -168,6 +169,7 @@ public:
     void CitrusHopperAuto(void);
     void SpartanHopperAuto(void);
     void KillerHopperAuto(void);
+    void MidPegKpaAuto(void);
     /**
      * Defined in Teleop.h
      */
