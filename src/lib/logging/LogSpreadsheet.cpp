@@ -14,6 +14,7 @@
 #include <cstdarg>
 #include <cerrno>
 #include <cstring>
+#include <time.h>
 
 namespace frc973 {
 
@@ -120,7 +121,7 @@ void LogSpreadsheet::InitializeTable() {
 
 
     snprintf(buffer, sizeof(buffer) - 1,
-             "/home/lvuser/log::%llu.txt", GetFPGATime());
+             "/home/lvuser/log::%u.txt", (unsigned int)time(NULL));
 
 	m_oFile = new std::ofstream(buffer);
 
