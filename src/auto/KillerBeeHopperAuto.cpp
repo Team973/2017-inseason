@@ -10,9 +10,10 @@ namespace frc973 {
  */
 int didPixy = 0;
 double angle = -99;
+double startAngle = 0.0;
 
 void Robot::KillerHopperAuto(){
-    double initial_dist = 51.0;
+    double initial_dist = 50.0;
 
     if(m_alliance == Alliance::Red){
         initial_dist += 0.0;
@@ -23,6 +24,7 @@ void Robot::KillerHopperAuto(){
 
     switch (m_autoState){
         case 0:
+            startAngle = m_drive->GetAngle();
             m_compressor->Disable();
             m_ballIntake->ExpandHopper();
             m_shooter->SetFlywheelSpeed(3030);
@@ -43,11 +45,11 @@ void Robot::KillerHopperAuto(){
             if (m_drive->OnTarget()) {
                 m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
                 using namespace Profiler;
-                TrapProfile<FakeFloat<4 * 12>, FakeFloat<90>,
+                TrapProfile<FakeFloat<53>, FakeFloat<90>,
                     FakeFloat<70>, FakeFloat<70>,
                     false, true>(0);
                 m_drive
-                    ->TrapDrive(DriveBase::RelativeTo::SetPoint, 4.0 * 12.0,
+                    ->TrapDrive(DriveBase::RelativeTo::SetPoint, 53.0,
                                 m_autoDirection * 90.0)
                     ->SetHalt(false, true)
                     ->SetConstraints(70.0, 70.0);
@@ -57,8 +59,8 @@ void Robot::KillerHopperAuto(){
         case 2:
             if (GetMsecTime() - m_autoTimer > 2500 ||
                     m_drive->OnTarget()) {
-                m_drive->DriveStraight(Drive::RelativeTo::Absolute, 0.4,
-                        m_autoDirection * 90.0);
+                m_drive->DriveStraight(Drive::RelativeTo::Now, 0.4,
+                        0.0);
                 m_ballIntake->BallIntakeStart();
                 m_autoTimer = GetMsecTime();
                 m_autoState++;
