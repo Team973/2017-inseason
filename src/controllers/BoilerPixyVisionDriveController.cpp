@@ -33,7 +33,7 @@ namespace frc973{
     double offset = m_boilerPixy->GetXOffset();
 
     if (m_boilerPixy->GetSeesTargetX() == false ||
-        GetMsecTime() - m_lightEnableTimeMs < 1000){
+        GetMsecTime() - m_lightEnableTimeMs < 100){
       m_leftSetpoint = 0.0;
       m_rightSetpoint = 0.0;
     }
