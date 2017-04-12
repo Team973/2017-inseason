@@ -135,6 +135,14 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::RightTrigger:
             if (pressedP) {
+              m_driveMode = DriveMode::PixyDrive;
+            }
+            else {
+              m_driveMode = DriveMode::AssistedArcade;
+            }
+            break;
+        case DualAction::DPadUpVirtBtn:
+            if (pressedP) {
                 g_manualConveyorControl = false;
                 m_shooter->SetShooterState(Shooter::ShootingSequenceState::shooting);
                 m_compressor->Disable();
@@ -145,14 +153,6 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 g_manualConveyorControl = false;
                 m_compressor->Enable();
                 m_shooter->SetShooterState(Shooter::ShootingSequenceState::idle);
-            }
-            break;
-        case DualAction::DPadUpVirtBtn:
-            if (pressedP) {
-              m_driveMode = DriveMode::PixyDrive;
-            }
-            else {
-              m_driveMode = DriveMode::AssistedArcade;
             }
             break;
         case DualAction::DPadDownVirtBtn:
