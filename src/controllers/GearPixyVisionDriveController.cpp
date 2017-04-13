@@ -12,7 +12,7 @@ namespace frc973{
     m_leftSetpoint(0.0),
     m_rightSetpoint(0.0),
     m_gearPixy(gearPixy),
-    m_pid(new PID(8.0, 0.0, 0.0))
+    m_pid(new PID(4.0, 0.0, 0.0))
   {
   }
 
