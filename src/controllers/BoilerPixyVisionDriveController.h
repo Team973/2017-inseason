@@ -35,8 +35,8 @@
       };
 
       void SetJoystickTerm(double throttle, double turn) {
-          m_joyThrottle = throttle * 0.05;
-          m_joyTurn = turn * 0.05;
+          m_joyThrottle = throttle * 0.3;
+          m_joyTurn = turn * 0.3;
       }
 
     private:

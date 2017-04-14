@@ -166,7 +166,8 @@ public:
     void KpaAndGearAuto(void);
     void HaltAuto(void);
     void CitrusKpaAndGearAuto(void);
-    void CitrusHopperAuto(void);
+    void LiteralCitrusHopperAuto(void);
+    void ModifiedCitrusHopperAuto(void);
     void SpartanHopperAuto(void);
     void KillerHopperAuto(void);
     void MidPegKpaAuto(void);
