@@ -69,7 +69,7 @@ namespace frc973 {
                 CitrusKpaAndGearAuto();
                 break;
             case AutonomousRoutine::CitrusHopper:
-                CitrusHopperAuto();
+                ModifiedCitrusHopperAuto();
                 break;
             case AutonomousRoutine::SpartanHopper:
                 SpartanHopperAuto();
