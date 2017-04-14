@@ -3,6 +3,8 @@
 
 namespace frc973 {
 
+//double offgear;
+
 void Robot::KpaAndGearAuto(){
   switch(m_autoState){
     case 0:
@@ -10,7 +12,7 @@ void Robot::KpaAndGearAuto(){
       m_drive->PIDDrive(-55.5, 0.0, DriveBase::RelativeTo::Now, 1.0);
       m_gearIntake->SetPickUpManual();
       m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
-      m_shooter->SetFlywheelSpeed(2850);
+      m_shooter->SetFlywheelSpeed(2920);
       m_shooter->StopAgitator();
       m_shooter->StartConveyor(0.0);
       m_autoTimer = GetMsecTime();
@@ -70,20 +72,15 @@ void Robot::KpaAndGearAuto(){
     case 5:
       if(m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500){
         m_drive->PIDDrive(-50.0, 0.0, DriveBase::RelativeTo::Now, 1.0);
+        m_autoTimer = GetMsecTime();
         m_autoState++;
       }
       break;
     case 6:
-        if (m_drive->OnTarget()) {
-          m_drive->PIDTurn(-60.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0);
-          m_autoState++;
-        }
-        break;
-    case 7:
         if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500) {
             double gearOffset = m_pixyR->GetOffset() *
                 PixyThread::GEAR_DEGREES_PER_PIXEL;
-
+            //offgear = gearOffset;
             if (Util::abs(gearOffset) >= 10.0) {
                 m_autoState++;
             }
@@ -92,20 +89,20 @@ void Robot::KpaAndGearAuto(){
                   ->PIDTurn(m_drive->GetAngle() - gearOffset,
                              DriveBase::RelativeTo::Absolute, 1.0)
                   ->SetDistTolerance(15.0, 25.0)
-                  ->SetAngleTolerance(30.0, 60.0);
+                  ->SetAngleTolerance(4.0, 4.0);
               m_autoTimer = GetMsecTime();
               m_autoState++;
             }
         }
         break;
-    case 8:
+    case 7:
         if (m_drive->OnTarget()) {
             m_autoTimer = GetMsecTime();
             m_drive->ArcadeDrive(-0.3, 0.0);
             m_autoState++;
         }
         break;
-    case 9:
+    case 8:
         if (m_gearIntake->IsGearReady()) {
             //hit the gear, continue normally
             m_drive->PIDDrive(30.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
@@ -119,7 +116,7 @@ void Robot::KpaAndGearAuto(){
             m_autoState = 6;
         }
         break;
-    case 10:
+    case 9:
         //should be done scoring gear... make hair merry red left
         if (m_drive->OnTarget()) {
             m_drive->PIDTurn(-90.0 * m_autoDirection, DriveBase::RelativeTo::SetPoint, 0.8);
@@ -129,6 +126,8 @@ void Robot::KpaAndGearAuto(){
     default:
         break;
   }
+  //DBStringPrintf(DB_LINE2,"off %2.2lf state %d", offgear,
+    //      m_autoState);
 }
 
 }

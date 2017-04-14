@@ -4,7 +4,7 @@
 namespace frc973 {
 
 double offangle = -10000000000.0;
-
+double offgear;
 void Robot::CitrusKpaAndGearAuto(){
 
   switch(m_autoState){
@@ -72,7 +72,7 @@ void Robot::CitrusKpaAndGearAuto(){
         break;
     case 5:
       if(m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500){
-        m_drive->PIDDrive(-76.0, 0.0, DriveBase::RelativeTo::SetPoint, 1.0);
+        m_drive->PIDDrive(-85.0, 0.0, DriveBase::RelativeTo::SetPoint, 1.0);
         m_autoTimer = GetMsecTime();
         m_compressor->Enable();
         m_autoState++;
@@ -87,10 +87,15 @@ void Robot::CitrusKpaAndGearAuto(){
         }
         break;
     case 7:
+        if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2000) {
+          m_drive->PIDDrive(-10.0, 0.0, DriveBase::RelativeTo::Now, 1.0);
+          m_autoTimer = GetMsecTime();
+        }
+    case 8:
         if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500) {
             double gearOffset = m_pixyR->GetOffset() *
                 PixyThread::GEAR_DEGREES_PER_PIXEL;
-
+            offgear = gearOffset;
             if (Util::abs(gearOffset) >= 10.0) {
                 m_autoState++;
             }
@@ -105,14 +110,14 @@ void Robot::CitrusKpaAndGearAuto(){
             }
         }
         break;
-    case 8:
+    case 9:
         if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500) {
             m_autoTimer = GetMsecTime();
             m_drive->ArcadeDrive(-0.3, 0.0);
             m_autoState++;
         }
         break;
-    case 9:
+    case 10:
         if (m_gearIntake->IsGearReady()) {
             //hit the gear, continue normally
             m_drive->PIDDrive(30.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
@@ -126,7 +131,7 @@ void Robot::CitrusKpaAndGearAuto(){
             m_autoState = 6;
         }
         break;
-    case 10:
+    case 11:
         //should be done scoring gear... make hair merry red left
         if (m_drive->OnTarget()) {
             m_drive->PIDTurn(-90.0 * m_autoDirection, DriveBase::RelativeTo::SetPoint, 0.8);
@@ -136,7 +141,7 @@ void Robot::CitrusKpaAndGearAuto(){
     default:
         break;
   }
-  DBStringPrintf(DB_LINE2,"off %2.2lf state %d", offangle,
+  DBStringPrintf(DB_LINE2,"off %2.2lf state %d", offgear,
           m_autoState);
   }
 
