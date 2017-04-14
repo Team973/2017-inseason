@@ -3,11 +3,13 @@
 
 namespace frc973 {
 
+double off;
+
 void Robot::MidPegKpaAuto(){
   switch(m_autoState){
     case 0:
       m_boilerPixy->Enable();
-      m_drive->DriveStraight(Drive::RelativeTo::Now, -0.3,
+      m_drive->DriveStraight(Drive::RelativeTo::Now, -0.5,
               0.0);
       m_gearIntake->SetPickUpManual();
       m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
@@ -21,9 +23,9 @@ void Robot::MidPegKpaAuto(){
       if (GetMsecTime() - m_autoTimer > 250) {
           m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
       }
-      if(m_gearIntake->IsGearReady() || GetMsecTime() - m_autoTimer >= 5000){
+      if(m_gearIntake->IsGearReady() || GetMsecTime() - m_autoTimer >= 3000){
           m_drive
-              ->TrapDrive(DriveBase::RelativeTo::Now, 90.0, -75.0 * m_autoDirection)
+              ->TrapDrive(DriveBase::RelativeTo::Now, 93.0, -78.0 * m_autoDirection)
               ->SetHalt(true, true)
               ->SetConstraints(70.0, 70.0);
           m_autoTimer = GetMsecTime();
@@ -31,9 +33,10 @@ void Robot::MidPegKpaAuto(){
       }
       break;
     case 2:
-        if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2000) {
+        if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 4000) {
             double boilerOffset = m_boilerPixy->GetXOffset() *
                 BoilerPixy::PIXY_OFFSET_CONSTANT;
+            off = boilerOffset;
             if (Util::abs(boilerOffset) >= 10.0) {
                 //it's too big so screw it
                 m_autoState++;
@@ -63,6 +66,8 @@ void Robot::MidPegKpaAuto(){
     default:
         break;
   }
+  DBStringPrintf(DB_LINE2,"off %2.2lf state %d", off,
+          m_autoState);
 }
 
 }
