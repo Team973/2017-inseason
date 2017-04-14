@@ -30,7 +30,7 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
         m_flywheelPow(0.0),
         m_flywheelSpeedSetpt(0.0),
         m_kickerSpeedSetpt(0.0),
-        m_flywheelOnTargetFilter(0.5),
+        m_flywheelOnTargetFilter(0.2),
         m_drive(drive),
         m_boilerPixy(boilerPixy)
 {
@@ -88,9 +88,9 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
     m_leftAgitator->SetCurrentLimit(40);
     m_rightAgitator->SetCurrentLimit(40);
     m_ballConveyor->SetCurrentLimit(40);
-    m_leftAgitator->SetVoltageRampRate(60.0);
-    m_rightAgitator->SetVoltageRampRate(60.0);
-    m_ballConveyor->SetVoltageRampRate(60.0);
+    m_leftAgitator->SetVoltageRampRate(120.0);
+    m_rightAgitator->SetVoltageRampRate(120.0);
+    m_ballConveyor->SetVoltageRampRate(120.0);
 
     m_scheduler->RegisterTask("Shooter", this, TASK_PERIODIC);
     m_flywheelRate = new LogCell("FlywheelRate", 32);
@@ -176,7 +176,7 @@ void Shooter::StartAgitator(double speed, Side side){
 
 void Shooter::SetShooterState(ShootingSequenceState state){
   m_shootingSequenceState = state;
-  m_flywheelOnTargetFilter.Update(false);
+  //m_flywheelOnTargetFilter.Update(false);
 }
 
 void Shooter::StopAgitator(){
