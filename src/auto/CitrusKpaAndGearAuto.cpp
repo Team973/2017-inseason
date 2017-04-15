@@ -31,7 +31,7 @@ void Robot::CitrusKpaAndGearAuto(){
       }
       break;
     case 2:
-      if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2000) {
+      if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2500) {
           double boilerOffset = m_boilerPixy->GetXOffset() *
               BoilerPixy::PIXY_OFFSET_CONSTANT;
           offangle = boilerOffset;
@@ -51,18 +51,19 @@ void Robot::CitrusKpaAndGearAuto(){
       break;
     case 3:
         if ((m_drive->OnTarget() && m_shooter->OnTarget()) ||
-                GetMsecTime() - m_autoTimer > 1500) {
+                GetMsecTime() - m_autoTimer > 2500) {
             m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
             m_shooter->StartAgitator(1.0, Shooter::Side::right);
             m_shooter->StartAgitator(1.0, Shooter::Side::left);
             m_shooter->StartConveyor(0.7);
             m_autoTimer = GetMsecTime();
             m_autoState++;
-          }
+        }
+        break;
     case 4:
         if(GetMsecTime() - m_autoTimer >= 1500){
           m_drive->PIDTurn(0.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0)
-              ->SetAngleTolerance(10.0, 3.0);
+              ->SetAngleTolerance(8.0, 2.0);
           m_shooter->StopAgitator();
           m_shooter->StartConveyor(0.0);
           m_shooter->SetFlywheelStop();
@@ -71,15 +72,15 @@ void Robot::CitrusKpaAndGearAuto(){
         }
         break;
     case 5:
-      if(m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500){
-        m_drive->PIDDrive(-85.0, 0.0, DriveBase::RelativeTo::SetPoint, 1.0);
+      if(m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2500){
+        m_drive->PIDDrive(-80.0, 0.0, DriveBase::RelativeTo::SetPoint, 1.0);
         m_autoTimer = GetMsecTime();
         m_compressor->Enable();
         m_autoState++;
       }
       break;
     case 6:
-        if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2000) {
+        if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2500) {
           m_drive->PIDTurn(-60.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0)
               ->SetAngleTolerance(10.0, 3.0);
           m_autoTimer = GetMsecTime();
@@ -87,15 +88,18 @@ void Robot::CitrusKpaAndGearAuto(){
         }
         break;
     case 7:
-        if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2000) {
+        if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2500) {
           m_drive->PIDDrive(-10.0, 0.0, DriveBase::RelativeTo::Now, 1.0);
           m_autoTimer = GetMsecTime();
+          m_autoState++;
         }
+        break;
     case 8:
         if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500) {
             double gearOffset = m_pixyR->GetOffset() *
                 PixyThread::GEAR_DEGREES_PER_PIXEL;
             offgear = gearOffset;
+            /*
             if (Util::abs(gearOffset) >= 10.0) {
                 m_autoState++;
             }
@@ -108,6 +112,9 @@ void Robot::CitrusKpaAndGearAuto(){
               m_autoTimer = GetMsecTime();
               m_autoState++;
             }
+            */
+            m_autoTimer = GetMsecTime();
+            m_autoState++;
         }
         break;
     case 9:
@@ -123,11 +130,13 @@ void Robot::CitrusKpaAndGearAuto(){
             m_drive->PIDDrive(30.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
             m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
             m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
+            m_autoTimer = GetMsecTime();
             m_autoState++;
         }
         else if (GetMsecTime() - m_autoTimer > 3000) {
             //we did not hit it after 3 seconds so back up and try again
             m_drive->PIDDrive(20.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
+            m_autoTimer = GetMsecTime();
             m_autoState = 6;
         }
         break;
@@ -135,6 +144,7 @@ void Robot::CitrusKpaAndGearAuto(){
         //should be done scoring gear... make hair merry red left
         if (m_drive->OnTarget()) {
             m_drive->PIDTurn(-90.0 * m_autoDirection, DriveBase::RelativeTo::SetPoint, 0.8);
+            m_autoTimer = GetMsecTime();
             m_autoState++;
         }
         break;
