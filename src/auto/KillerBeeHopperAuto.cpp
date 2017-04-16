@@ -13,7 +13,7 @@ double angle = -99;
 double startAngle = 0.0;
 
 void Robot::KillerHopperAuto(){
-    double initial_dist = 48.0;
+    double initial_dist = 50.0;
 
     if(m_alliance == Alliance::Red){
         initial_dist += 0.0;
@@ -50,18 +50,16 @@ void Robot::KillerHopperAuto(){
                     false, true>(0);
                 m_drive
                     ->TrapDrive(DriveBase::RelativeTo::SetPoint, 53.0,
-                                m_autoDirection * 90.0)
+                                m_autoDirection * 91.0)
                     ->SetHalt(false, true)
                     ->SetConstraints(70.0, 70.0);
                 m_autoState++;
             }
             break;
         case 2:
-            if (GetMsecTime() - m_autoTimer > 2500 ||
-                    m_drive->OnTarget()) {
-                m_drive->DriveStraight(Drive::RelativeTo::Now, 0.4,
-                        0.0);
+            if (m_drive->OnTarget()) {
                 m_ballIntake->BallIntakeStart();
+                m_drive->DriveStraight(Drive::RelativeTo::Now, 0.6, 0.0);
                 m_autoTimer = GetMsecTime();
                 m_autoState++;
             }
