@@ -99,7 +99,7 @@ void Robot::CitrusKpaAndGearAuto(){
             double gearOffset = m_pixyR->GetOffset() *
                 PixyThread::GEAR_DEGREES_PER_PIXEL;
             offgear = gearOffset;
-            /*
+
             if (Util::abs(gearOffset) >= 10.0) {
                 m_autoState++;
             }
@@ -112,7 +112,6 @@ void Robot::CitrusKpaAndGearAuto(){
               m_autoTimer = GetMsecTime();
               m_autoState++;
             }
-            */
             m_autoTimer = GetMsecTime();
             m_autoState++;
         }

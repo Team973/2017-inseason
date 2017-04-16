@@ -103,15 +103,11 @@ void Robot::KillerHopperAuto(){
             break;
         case 5:
             if (m_drive->OnTarget() || (GetMsecTime() - m_autoTimer >= 1000 )) {
-              m_autoTimer = GetMsecTime();
+              m_ballIntake->RetractHopper();
               m_autoState++;
             }
             break;
-        case 6:
-              m_ballIntake->RetractHopper();
-              m_autoState++;
-            break;
-        case 7:
+        default:
             break;
     }
 
