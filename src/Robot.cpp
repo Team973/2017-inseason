@@ -31,7 +31,7 @@ Robot::Robot(void
     m_autoState(0),
     m_autoTimer(0),
     m_teleopTimer(0),
-    m_autoRoutine(AutonomousRoutine::HopperThenShootFuel),
+    m_autoRoutine(AutonomousRoutine::KillerHopper),
     m_speedSetpt(2900),
     m_flailSetpt(1.0),
     m_alliance(Alliance::Red),

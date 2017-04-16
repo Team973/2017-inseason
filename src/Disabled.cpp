@@ -39,9 +39,11 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             port, button, pressedP);
     switch (button) {
         case DualAction::BtnA:
+            /*
             if (pressedP) {
                 m_autoRoutine = AutonomousRoutine::SpartanHopper;
             }
+            */
             break;
         case DualAction::BtnB:
             if (pressedP) {
@@ -59,9 +61,11 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             }
             break;
         case DualAction::RightBumper:
+            /*
             if (pressedP) {
                 m_autoRoutine = AutonomousRoutine::HopperThenShootFuel;
             }
+            */
             break;
         case DualAction::DPadUpVirtBtn:
             if (pressedP) {
@@ -99,14 +103,18 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             }
             break;
         case DualAction::Start:
+            /*
             if (pressedP) {
                 m_autoRoutine = AutonomousRoutine::MadtownHopperThenShootFuel;
             }
+            */
             break;
         case DualAction::Back:
+            /*
             if (pressedP) {
                 m_austinGyro->Calibrate();
             }
+            */
             break;
     }
 }
