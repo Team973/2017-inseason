@@ -27,6 +27,7 @@ class BallIntake;
 class GreyCompressor;
 class BoilerPixy;
 class Lights;
+class SPIGyro;
 
 class Robot:
         public CoopMTRobot,
@@ -38,8 +39,14 @@ private:
         MadtownHopperThenShootFuel,
         KpaGearAuto,
         NoAuto,
-        CitrusKpaGearAuto
+        CitrusKpaGearAuto,
+        CitrusHopper,
+        SpartanHopper,
+        KillerHopper,
+        MidPegKpa
     };
+
+    const char *GetAutoName(AutonomousRoutine routine);
 
     enum Alliance{
       Red,
@@ -76,6 +83,7 @@ private:
     CANTalon		*m_rightDriveTalonA;
     CANTalon		*m_rightDriveTalonB;
     CANTalon        *m_leftAgitatorTalon;
+    ADXRS450_Gyro        *m_austinGyro;
     Drive			*m_drive;
 
     /**
@@ -102,10 +110,11 @@ private:
     uint32_t 					m_autoTimer;
     uint32_t 					m_teleopTimer;
     AutonomousRoutine m_autoRoutine;
-    int						m_speedSetpt;
+    int						    m_speedSetpt;
     double						m_flailSetpt;
     Alliance          m_alliance;
     double						m_conveyorSetpt;
+    int               m_kickerSetpt;
     DriveMode         m_driveMode;
     BumperMode        m_bumperMode;
 
@@ -126,6 +135,8 @@ private:
     LogCell *m_autoSelectLog;
     LogCell *m_boilerOffset;
     LogCell *m_gearOffset;
+    LogCell *m_austinGyroLog;
+    LogCell *m_austinGyroRateLog;
 
     PixyThread *m_pixyR;
 public:
@@ -153,8 +164,13 @@ public:
     void HopperThenShoot(void);
     void MadtownHopperThenShoot(void);
     void KpaAndGearAuto(void);
+    void HaltAuto(void);
     void CitrusKpaAndGearAuto(void);
-
+    void LiteralCitrusHopperAuto(void);
+    void ModifiedCitrusHopperAuto(void);
+    void SpartanHopperAuto(void);
+    void KillerHopperAuto(void);
+    void MidPegKpaAuto(void);
     /**
      * Defined in Teleop.h
      */

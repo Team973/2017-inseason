@@ -27,7 +27,15 @@ set(SOURCE_FILES
     src/subsystems/BallIntake.cpp
     src/subsystems/GearIntake.cpp
     src/subsystems/Lights.cpp
+    src/auto/HaltAuto.cpp src/auto/MadtownHopperThenshoot.cpp
+    src/auto/KpaAndGearAuto.cpp src/auto/HopperThenshoot.cpp
+    src/auto/CitrusKpaAndGearAuto.cpp src/auto/KillerBeeHopperAuto.cpp
+    src/auto/CitrusHopperAuto.cpp src/auto/SpartanHopperAuto.cpp
+    src/auto/MidPegKpaAuto.cpp
     src/controllers/PIDDrive.cpp
+    src/controllers/StraightDriveController.cpp
+    src/controllers/TrapDriveController.cpp
+    src/lib/TrapProfile.cpp
     src/controllers/GearPixyVisionDriveController.cpp
     src/lib/filters/MedianFilter.cpp src/lib/filters/MovingAverageFilter.cpp
     src/lib/filters/PID.cpp src/lib/filters/RampedOutput.cpp

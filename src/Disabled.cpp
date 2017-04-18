@@ -27,46 +27,10 @@ void Robot::DisabledContinuous(void) {
       m_autoDirection = 1.0;
   }
 
-  if (m_autoRoutine == AutonomousRoutine::MadtownHopperThenShootFuel){
-    DBStringPrintf(DBStringPos::DB_LINE0,
-                      "%c MadtownHopper",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-    m_autoSelectLog->LogPrintf(
-                      "%c MadtownHopper",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-  }
-  else if (m_autoRoutine == AutonomousRoutine::HopperThenShootFuel){
-    DBStringPrintf(DBStringPos::DB_LINE0,
-                      "%c HopperThenShoot Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-    m_autoSelectLog->LogPrintf(
-                      "%c HopperThenShoot Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-  }
-  else if (m_autoRoutine == AutonomousRoutine::KpaGearAuto){
-    DBStringPrintf(DBStringPos::DB_LINE0,
-                      "%c KpaGear Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-    m_autoSelectLog->LogPrintf(
-                      "%c KpaGear Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-  }
-  else if (m_autoRoutine == AutonomousRoutine::NoAuto){
-    DBStringPrintf(DBStringPos::DB_LINE0,
-                      "%c No Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-    m_autoSelectLog->LogPrintf(
-                      "%c No Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-  }
-  if (m_autoRoutine == AutonomousRoutine::CitrusKpaGearAuto){
-    DBStringPrintf(DBStringPos::DB_LINE0,
-                      "%c CitrusKpaGear Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-    m_autoSelectLog->LogPrintf(
-                      "%c CitrusKpaGear Auto",
-                      (m_alliance == Alliance::Red) ? 'R' : 'B');
-  }
+  DBStringPrintf(DBStringPos::DB_LINE0,
+                 "%c %s",
+                 (m_alliance == Alliance::Red) ? 'R' : 'B',
+                 GetAutoName(m_autoRoutine));
 }
 
 void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
@@ -75,18 +39,20 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             port, button, pressedP);
     switch (button) {
         case DualAction::BtnA:
+            /*
             if (pressedP) {
-                //m_autoRoutine = AutonomousRoutine::GearLeftPeg;
+                m_autoRoutine = AutonomousRoutine::SpartanHopper;
             }
+            */
             break;
         case DualAction::BtnB:
             if (pressedP) {
-                //m_autoRoutine = AutonomousRoutine::GearMiddlePeg;
+                m_autoRoutine = AutonomousRoutine::KillerHopper;
             }
             break;
         case DualAction::BtnX:
             if (pressedP) {
-                //m_autoRoutine = AutonomousRoutine::GearRightPeg;
+                m_autoRoutine = AutonomousRoutine::MidPegKpa;
             }
             break;
         case DualAction::BtnY:
@@ -95,9 +61,11 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             }
             break;
         case DualAction::RightBumper:
+            /*
             if (pressedP) {
                 m_autoRoutine = AutonomousRoutine::HopperThenShootFuel;
             }
+            */
             break;
         case DualAction::DPadUpVirtBtn:
             if (pressedP) {
@@ -116,7 +84,7 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             break;
         case DualAction::DPadLeftVirtBtn:
             if (pressedP) {
-            //  m_autoRoutine = AutonomousRoutine::AimedAtBoilerAuto;
+                m_autoRoutine = AutonomousRoutine::CitrusHopper;
             }
             break;
         case DualAction::LeftBumper:
@@ -135,13 +103,18 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             }
             break;
         case DualAction::Start:
+            /*
             if (pressedP) {
                 m_autoRoutine = AutonomousRoutine::MadtownHopperThenShootFuel;
             }
+            */
             break;
         case DualAction::Back:
+            /*
             if (pressedP) {
+                m_austinGyro->Calibrate();
             }
+            */
             break;
     }
 }

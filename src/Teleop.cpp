@@ -6,6 +6,7 @@
 #include "lib/GreyCompressor.h"
 #include "subsystems/BallIntake.h"
 #include "controllers/PIDDrive.h"
+#include "controllers/TrapDriveController.h"
 #include "lib/JoystickHelper.h"
 #include "lib/WrapDash.h"
 
@@ -82,10 +83,8 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::LJoystickBtn:
             if (pressedP) {
-              m_driveMode = DriveMode::PixyDrive;
             }
-            else {
-              m_driveMode = DriveMode::AssistedArcade;
+            else{
             }
             break;
         case DualAction::BtnB:
@@ -136,6 +135,14 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::RightTrigger:
             if (pressedP) {
+              m_driveMode = DriveMode::PixyDrive;
+            }
+            else {
+              m_driveMode = DriveMode::AssistedArcade;
+            }
+            break;
+        case DualAction::DPadUpVirtBtn:
+            if (pressedP) {
                 g_manualConveyorControl = false;
                 m_shooter->SetShooterState(Shooter::ShootingSequenceState::shooting);
                 m_compressor->Disable();
@@ -146,12 +153,6 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 g_manualConveyorControl = false;
                 m_compressor->Enable();
                 m_shooter->SetShooterState(Shooter::ShootingSequenceState::idle);
-            }
-            break;
-        case DualAction::DPadUpVirtBtn:
-            if (pressedP) {
-            }
-            else{
             }
             break;
         case DualAction::DPadDownVirtBtn:
@@ -318,7 +319,7 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 break;
             case DualAction::DPadLeftVirtBtn:
                 if (pressedP) {
-                    m_flailSetpt -= 0.1;
+                  //  m_flailSetpt -= 0.1;
                 }
                 break;
             case DualAction::RightTrigger:
@@ -364,43 +365,44 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             case DualAction::BtnA:
                 if (pressedP) {
                     g_manualDriveControl = false;
-                    m_drive->PIDDrive(12 * 2, 0,
-                            Drive::RelativeTo::Now, 1.0);
+                    m_drive
+                        ->TrapDrive(DriveBase::RelativeTo::Now, -8.0 * 12.0, 0.0)
+                        ->SetHalt(true, true)
+                        ->SetConstraints(48.0, 36.0);
                 }
                 break;
             case DualAction::BtnB:
                 if (pressedP) {
-                    g_manualDriveControl = true;
-                    m_drive->ArcadeDrive(0.0, 0.0);
+                    g_manualDriveControl = false;
+                    m_drive->DriveStraight(DriveBase::RelativeTo::Now,
+                            0.2, 0.0);
                 }
                 break;
             case DualAction::BtnX:
                 if (pressedP) {
                     g_manualDriveControl = false;
-                    m_drive->PIDDrive(0.0, 45,
-                            Drive::RelativeTo::Now, 1.0);
+                    m_drive
+                        ->TrapDrive(DriveBase::RelativeTo::Now, 3.0 * 12.0, 45.0)
+                        ->SetHalt(true, true)
+                        ->SetConstraints(48.0, 24.0);
                 }
                 break;
             case DualAction::BtnY:
                 if (pressedP) {
-                    g_manualDriveControl = false;
-                    m_lights->EnableLights();
                     /*
                     g_manualDriveControl = false;
-                    m_drive->PIDDrive(120, 0,
-                            Drive::RelativeTo::Now, 0.1);
-                            */
-                }
-                else {
-                    g_manualDriveControl = true;
-                    m_lights->DisableLights();
+                    m_drive
+                        ->TrapDrive(DriveBase::RelativeTo::Now, 8.0 * 12.0, 0.0)
+                        ->SetHalt(true, true)
+                        ->SetConstraints(48.0, 36.0);
+                        */
+                    m_boilerPixy->Enable();
                 }
                 break;
             case DualAction::Start:
               if (pressedP) {
-                  g_manualDriveControl = false;
-                  m_drive->PIDDrive(-12 * 2, 0,
-                          Drive::RelativeTo::Now, 1.0);
+                  g_manualDriveControl = true;
+                  m_drive->ArcadeDrive(0.0, 0.0);
               }
               break;
             case DualAction::Back:

@@ -23,12 +23,14 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
         m_flywheelMotorPrimary(new CANTalon(FLYWHEEL_PRIMARY_CAN_ID,
                                             FLYWHEEL_CONTROL_PERIOD_MS)),
         m_flywheelMotorReplica(new CANTalon(FLYWHEEL_REPLICA_CAN_ID)),
+        m_kicker(new CANTalon(KICKER_CAN_ID)),
         m_leftAgitator(leftAgitator),
         m_rightAgitator(new CANTalon(RIGHT_AGITATOR_CAN_ID, 50)),
         m_ballConveyor(new CANTalon(BALL_CONVEYOR_CAN_ID, 50)),
         m_flywheelPow(0.0),
         m_flywheelSpeedSetpt(0.0),
-        m_flywheelOnTargetFilter(0.5),
+        m_kickerSpeedSetpt(0.0),
+        m_flywheelOnTargetFilter(0.2),
         m_drive(drive),
         m_boilerPixy(boilerPixy)
 {
@@ -58,6 +60,24 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
     m_flywheelMotorReplica->SetClosedLoopOutputDirection(true);
     m_flywheelMotorReplica->SetNominalClosedLoopVoltage(12.0);
 
+    m_kicker->SetFeedbackDevice(CANTalon::FeedbackDevice::CtreMagEncoder_Relative);
+    m_kicker->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
+    m_kicker->SetClosedLoopOutputDirection(false);
+    m_kicker->SetNominalClosedLoopVoltage(12.0);
+    m_kicker->ConfigLimitSwitchOverrides(false, false);
+    m_kicker->SetSensorDirection(false);
+    m_kicker->SetControlMode(CANSpeedController::ControlMode::kSpeed);
+    m_kicker->SelectProfileSlot(0);
+    m_kicker->ConfigNominalOutputVoltage(0, 0);
+    m_kicker->ConfigPeakOutputVoltage(12, 0.0);
+    m_kicker->SetP(0.1);
+    m_kicker->SetI(0.0);
+    m_kicker->SetD(0.0);
+    m_kicker->SetF(0.018);
+    m_kicker->SetIzone(1000);
+    m_kicker->SetVelocityMeasurementPeriod(CANTalon::Period_10Ms);
+    m_kicker->SetVelocityMeasurementWindow(32);
+
     m_leftAgitator->SetControlMode(CANSpeedController::ControlMode::kVoltage);
     m_rightAgitator->SetControlMode(CANSpeedController::ControlMode::kVoltage);
     m_ballConveyor->SetControlMode(CANSpeedController::ControlMode::kVoltage);
@@ -65,12 +85,12 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
     m_leftAgitator->EnableCurrentLimit(true);
     m_rightAgitator->EnableCurrentLimit(true);
     m_ballConveyor->EnableCurrentLimit(true);
-    m_leftAgitator->SetCurrentLimit(10);
-    m_rightAgitator->SetCurrentLimit(10);
-    m_ballConveyor->SetCurrentLimit(10);
-    m_leftAgitator->SetVoltageRampRate(60.0);
-    m_rightAgitator->SetVoltageRampRate(60.0);
-    m_ballConveyor->SetVoltageRampRate(60.0);
+    m_leftAgitator->SetCurrentLimit(40);
+    m_rightAgitator->SetCurrentLimit(40);
+    m_ballConveyor->SetCurrentLimit(40);
+    m_leftAgitator->SetVoltageRampRate(120.0);
+    m_rightAgitator->SetVoltageRampRate(120.0);
+    m_ballConveyor->SetVoltageRampRate(120.0);
 
     m_scheduler->RegisterTask("Shooter", this, TASK_PERIODIC);
     m_flywheelRate = new LogCell("FlywheelRate", 32);
@@ -106,6 +126,8 @@ void Shooter::SetFlywheelSpeed(double speed){
     m_flywheelState = FlywheelState::speed;
     m_flywheelSpeedSetpt = speed;
     m_flywheelMotorPrimary->Set(m_flywheelSpeedSetpt);
+    m_kicker->Set(3000);
+    m_kickerSpeedSetpt = 3000;
 }
 
 void Shooter::SetFlywheelStop(){
@@ -114,6 +136,8 @@ void Shooter::SetFlywheelStop(){
     m_flywheelMotorPrimary->Set(0.0);
     m_flywheelState = FlywheelState::notRunning;
     m_flywheelOnTargetFilter.Update(false);
+    m_kicker->Set(0.0);
+    m_kickerSpeedSetpt = 0.0;
 }
 
 double Shooter::GetFlywheelRate(){
@@ -129,7 +153,7 @@ void Shooter::StartConveyor(double speed) {
     m_ballConveyor->Set(speed * 12.0);
 
     //printf("%lf pow on %d - conveyor\n", speed, BALL_CONVEYOR_CAN_ID);
-    DBStringPrintf(DB_LINE3, "conv pow %lf", speed);
+    //DBStringPrintf(DB_LINE3, "conv pow %lf", speed);
 }
 
 void Shooter::StopConveyor() {
@@ -152,12 +176,16 @@ void Shooter::StartAgitator(double speed, Side side){
 
 void Shooter::SetShooterState(ShootingSequenceState state){
   m_shootingSequenceState = state;
-  m_flywheelOnTargetFilter.Update(false);
+  //m_flywheelOnTargetFilter.Update(false);
 }
 
 void Shooter::StopAgitator(){
     m_leftAgitator->Set(0.0);
     m_rightAgitator->Set(0.0);
+}
+
+double Shooter::GetKickerRate(){
+  return m_kicker->GetSpeed();
 }
 
 void Shooter::TaskPeriodic(RobotMode mode) {
@@ -171,6 +199,8 @@ void Shooter::TaskPeriodic(RobotMode mode) {
     m_rightAgitatorLog->LogDouble(m_rightAgitator->GetOutputCurrent());
     DBStringPrintf(DB_LINE5,"s_rate %2.1lf g %2.1lf", GetFlywheelRate(),
             m_flywheelSpeedSetpt);
+    DBStringPrintf(DB_LINE3,"k_rate %2.1lf g %2.1lf", GetKickerRate(),
+            m_kickerSpeedSetpt);
     /*DBStringPrintf(DB_LINE5,"flail %2.1lf conv %2.1lf",
                 (m_leftAgitator->GetOutputCurrent() + m_rightAgitator->GetOutputCurrent()) / 2.0,
                 m_ballConveyor->GetOutputCurrent());*/
@@ -183,7 +213,7 @@ void Shooter::TaskPeriodic(RobotMode mode) {
         StopConveyor();
         break;
       case shooting:
-        SetFlywheelSpeed(2960);
+        SetFlywheelSpeed(DEFAULT_FLYWHEEL_SPEED_SETPOINT);
         if (OnTarget()) {
           m_drive->ArcadeDrive(0.0,0.0);
           StartAgitator(1.0, Side::right);
