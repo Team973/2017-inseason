@@ -13,7 +13,7 @@ double angle = -99;
 double startAngle = 0.0;
 
 void Robot::KillerHopperAuto(){
-    double initial_dist = 50.0;
+    double initial_dist = 47.0;
 
     if(m_alliance == Alliance::Red){
         initial_dist += 0.0;
@@ -27,7 +27,7 @@ void Robot::KillerHopperAuto(){
             startAngle = m_drive->GetAngle();
             m_compressor->Disable();
             m_ballIntake->ExpandHopper();
-            m_shooter->SetFlywheelSpeed(3030);
+            m_shooter->SetFlywheelSpeed(3070);
             m_gearIntake->SetPickUpManual();
             m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
             m_shooter->StopAgitator();
