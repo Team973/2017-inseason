@@ -184,6 +184,11 @@ void Shooter::StopAgitator(){
     m_rightAgitator->Set(0.0);
 }
 
+void Shooter::SetKickerRate(double speed){
+  m_kicker->Set(speed);
+  m_kickerSpeedSetpt = speed;
+}
+
 double Shooter::GetKickerRate(){
   return m_kicker->GetSpeed();
 }

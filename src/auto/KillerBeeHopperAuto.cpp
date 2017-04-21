@@ -27,7 +27,8 @@ void Robot::KillerHopperAuto(){
             startAngle = m_drive->GetAngle();
             m_compressor->Disable();
             m_ballIntake->ExpandHopper();
-            m_shooter->SetFlywheelSpeed(3070);
+            m_shooter->SetFlywheelSpeed(3060);
+            m_shooter->SetKickerRate(3060);
             m_gearIntake->SetPickUpManual();
             m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
             m_shooter->StopAgitator();
