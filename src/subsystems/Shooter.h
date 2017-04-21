@@ -34,6 +34,7 @@ public:
     void SetFlywheelPow(double pow);
     void SetFlywheelStop();
     void SetFlywheelSpeed(double speed);
+    void SetKickerRate(double speed);
 
     enum ShootingSequenceState{
       idle,
@@ -57,7 +58,7 @@ public:
     double GetFlywheelRate();
     double GetKickerRate();
 
-    static constexpr int DEFAULT_FLYWHEEL_SPEED_SETPOINT = 2950;
+    static constexpr int DEFAULT_FLYWHEEL_SPEED_SETPOINT = 2970;
 
     enum FlywheelState {
         power,
