@@ -115,7 +115,6 @@ void Drive::AssistedArcadeDrive(double throttle, double turn){
 }
 
 void Drive::SetBoilerPixyTargeting(){
-  printf("got here fam\n");
   this->SetDriveController(m_boilerPixyDriveController);
 }
 
@@ -179,8 +178,8 @@ double Drive::GetRate() const {
 }
 
 double Drive::GetDriveCurrent() const {
-    return (m_rightMotor->GetOutputCurrent() +
-            m_leftMotor->GetOutputCurrent()) / 2.0;
+    return (Util::abs(m_rightMotor->GetOutputCurrent()) +
+            Util::abs(m_leftMotor->GetOutputCurrent())) / 2.0;
 }
 
 double Drive::GetAngle() const {

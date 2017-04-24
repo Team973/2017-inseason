@@ -79,7 +79,7 @@ void Robot::KillerHopperAuto(){
         case 4:
             if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 3000) {
                 m_ballIntake->BallIntakeStop();
-                double angleOffset = m_boilerPixy->GetXOffset() *
+                /*double angleOffset = m_boilerPixy->GetXOffset() *
                     BoilerPixy::PIXY_OFFSET_CONSTANT;
                 angle = angleOffset;
                 if (Util::abs(angleOffset) >= 10.0) {
@@ -95,11 +95,13 @@ void Robot::KillerHopperAuto(){
                     m_autoTimer = GetMsecTime();
                     m_autoState++;
                     didPixy = 2;
-                }
+                }*/
                 m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
                 m_shooter->StartConveyor(0.9);
                 m_shooter->StartAgitator(1.0, Shooter::Side::right);
                 m_shooter->StartAgitator(1.0, Shooter::Side::left);
+                m_autoTimer = GetMsecTime();
+                m_autoState++;
             }
             break;
         case 5:
