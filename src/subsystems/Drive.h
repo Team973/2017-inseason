@@ -4,7 +4,6 @@
 #include "RobotInfo.h"
 #include "WPILib.h"
 #include "CANTalon.h"
-#include "PigeonImu.h"
 #include "BoilerPixy.h"
 #include "PixyThread.h"
 
@@ -172,7 +171,6 @@ public:
 private:
     void TaskPeriodic(RobotMode mode) override;
 
-    PigeonImu *m_gyro;
     ADXRS450_Gyro *m_austinGyro;
     double m_angle, m_angleRate;
     double m_gyroZero = 0.0;
