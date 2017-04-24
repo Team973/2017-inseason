@@ -29,7 +29,6 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
             ADXRS450_Gyro *gyro
             )
          : DriveBase(scheduler, this, this, nullptr)
-         , m_gyro(new PigeonImu(spareTalon))
          , m_austinGyro(gyro)
          , m_angle(0.0)
          , m_angleRate(0.0)
@@ -88,7 +87,7 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
 }
 
 void Drive::Zero() {
-    if (m_gyro) {
+    if (m_austinGyro) {
         m_gyroZero = m_austinGyro->GetAngle();
     }
     if (m_leftMotor) {
