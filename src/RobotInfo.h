@@ -58,7 +58,7 @@ constexpr int DRIVE_RIGHT_A_CAN = 1;
 constexpr int DRIVE_RIGHT_B_CAN = 2;
 
 constexpr int HANGER_CAN_ID = 4;
-constexpr int HANGER_CAN_ID_B = 13;
+constexpr int HANGER_CAN_ID_B = 62;
 
 constexpr int FLYWHEEL_PRIMARY_CAN_ID = 14;
 constexpr int FLYWHEEL_REPLICA_CAN_ID = 3;

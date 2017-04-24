@@ -15,7 +15,7 @@ namespace frc973{
     m_joyThrottle(0),
     m_joyTurn(0),
     m_boilerPixy(boilerPixy),
-    m_pid(new PID(0.50, 0.0, 0.025))
+    m_pid(new PID(0.55, 0.0, 0.025))
   {
   }
 
