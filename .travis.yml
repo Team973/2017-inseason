@@ -1,0 +1,13 @@
+language: cpp
+before_install:
+    - curl -sSl http://inabaudongein.reisen/frc/repo/go | sudo sh
+    - sudo add-apt-repository ppa:wpilib/toolchain
+    - sudo apt-get update
+install:
+    - sudo apt-get install frc-toolchain wpilib-cpp ctre-toolsuite doxygen build-essential libboost-test-dev
+script:
+    - mkdir build
+    - cd build
+    - cmake -DCMAKE_TOOLCHAIN_FILE=toolchain.cmake ..
+    - make
+compiler: gcc
