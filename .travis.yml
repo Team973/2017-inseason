@@ -10,4 +10,6 @@ script:
     - cd build
     - cmake -DCMAKE_TOOLCHAIN_FILE=toolchain.cmake ..
     - make
+    - make doxygen
+    - make check
 compiler: gcc
