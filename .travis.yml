@@ -1,15 +1,22 @@
 language: cpp
-before_install:
-    - curl -sSl http://inabaudongein.reisen/frc/repo/go | sudo sh
-    - sudo add-apt-repository ppa:wpilib/toolchain
-    - sudo apt-get update
-install:
-    - sudo apt-get install frc-toolchain wpilib-cpp ctre-toolsuite doxygen build-essential libboost-test-dev
-script:
-    - mkdir build
-    - cd build
-    - cmake -DCMAKE_TOOLCHAIN_FILE=toolchain.cmake ..
-    - make
-    - make doxygen
-    - make check
+dist: trusty
+sudo: required
 compiler: gcc
+
+before_script:
+- sudo bash -c 'echo "deb http://inabaudongein.reisen/frc/repo unstable main" >> /etc/apt/sources.list'
+- sudo add-apt-repository ppa:wpilib/toolchain -y
+- sudo apt-get update -q
+- sudo apt-get install -y --force-yes frc-toolchain wpilib-cpp ctre-toolsuite doxygen build-essential libboost-test-dev
+
+script:
+- mkdir build
+- cd build
+- cmake -DCMAKE_TOOLCHAIN_FILE=toolchain.cmake ..
+- make
+- make doxygen
+- make check
+
+notifications:
+  slack:
+    secure: X7t93Eo6RRM45rhCh0lzEemwsRJlIRmTJ73MV4ob86SzHcSCMdwc+/VC5QAFvutjjmnsCgh4hlAnOdwJ0Kivbn1p0chAfsoO10HDIePVv3cyNm3qqSzb8Grmo1mpVvMV+UoCRdVvYY/kQjCsI0OVnKvhuq091NuCgkFl0KBT53uKiXcIBfmFUo9Fx5NIBXheSkzXlbtc1NKp7SjHQlBvbGjoTv7eIIToSyh/a1QbAyU4g2lnMS+fW5JIwQKx4ZkXmr7sHIWPtfCIgMPRkQFVBO1KgvN2cKwHIxmbFhg1jARzp0gmfw2vD3Hxu0Szv53PK0McT2rWHWi6oiDETMALVNHIg5t7b4wKhkxBvaBro7CKlxpsxFvw9GM5lmTUAgj56pRxeBd45A+Rs5uUhLnidQvD9ORNsZu1ME80Km/ur3fJY7AM647QbfvXKojADflw9LRxewAnBhqwx0P7bjdHMhlhFP5Lpgt4zsAqpYo+LjdXa7k/z4hB9OZ18UVxKOSL5766nxXTCPZADwnDOYOImRj2Wm4x1WWjIraiS1oqJW2/wpnk3o8/YtVPFoOUoL/158itYI/7fCK3dS6sC7Eqwjh4gsfg2sk/YJl2ZmE33cgq6oGV3LMxwMNVwVp5LGipCTmTuNUGAV5c41m8zFPOa7ttmdPKEmwYqrqp7d8hN0I=
