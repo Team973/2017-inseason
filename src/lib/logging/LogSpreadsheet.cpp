@@ -121,7 +121,7 @@ void LogSpreadsheet::InitializeTable() {
 
 
     snprintf(buffer, sizeof(buffer) - 1,
-             "/home/lvuser/log::%llu.txt", GetFPGATime());
+             "/home/lvuser/log-%llu.txt", GetFPGATime());
 
 	m_oFile = new std::ofstream(buffer);
 
