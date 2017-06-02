@@ -4,7 +4,6 @@
 #include "RobotInfo.h"
 #include "WPILib.h"
 #include "CANTalon.h"
-#include "PigeonImu.h"
 #include "BoilerPixy.h"
 #include "PixyThread.h"
 
@@ -21,9 +20,12 @@ class BoilerPixyVisionDriveController;
 class GearPixyVisionDriveController;
 class OpenloopArcadeDriveController;
 class AssistedArcadeDriveController;
+class StraightDriveController;
+class TrapDriveController;
 class VelocityTurnPID;
 class LogSpreadsheet;
 class LogCell;
+class SPIGyro;
 
 /*
  * Drive provides an interface to control the drive-base (to do both
@@ -50,7 +52,8 @@ public:
             CANTalon *spareTalon,
             LogSpreadsheet *logger,
             BoilerPixy *BoilerPixy,
-            PixyThread *gearPixy
+            PixyThread *gearPixy,
+            ADXRS450_Gyro *gyro
             );
 
     virtual ~Drive() {}
@@ -91,7 +94,12 @@ public:
      */
     void OpenloopArcadeDrive(double throttle, double turn);
 
+    /**
+     * Set a drive to use the mostly open loop arcade controller plus
+     * some gyro velocity help
+     */
     void AssistedArcadeDrive(double throttle, double turn);
+
     /**
      * Set a target distance to be achieved by pid
      *
@@ -110,33 +118,41 @@ public:
     PIDDriveController *PIDTurn(double angle, RelativeTo relativity,
             double powerCap);
 
-    void VelocityPIDTurn(double angle, RelativeTo relativity);
-
-    void RampPIDDrive(double dist, RelativeTo relativity);
-    void RampPIDTurn(double angle, RelativeTo relativity);
-
     void SetBoilerJoystickTerm(double throttle, double turn);
+
+    void DriveStraight(RelativeTo relativeTo,
+            double throttle, double angle);
+
+    /**
+     * Use the trap profile drive controller
+     */
+    TrapDriveController *TrapDrive(RelativeTo relativeTo,
+            double dist, double angle);
+
+    const TrapDriveController *GetTrapDriveController() {
+        return m_trapDriveController;
+    }
 
     void SetDriveControlMode(CANSpeedController::ControlMode mode) override;
     /**
      * All distances given in inches
      * All velocities given in inches/second
      */
-    double GetLeftDist() override;
-    double GetRightDist() override;
-    double GetLeftRate() override;
-    double GetRightRate() override;
-    double GetDist() override;
-    double GetRate() override;
+    double GetLeftDist() const override;
+    double GetRightDist() const override;
+    double GetLeftRate() const override;
+    double GetRightRate() const override;
+    double GetDist() const override;
+    double GetRate() const override;
 
-    double GetDriveCurrent();
+    double GetDriveCurrent() const;
 
     /**
      * All angles given in degrees
      * All angular rates given in degrees/second
      */
-    double GetAngle() override;
-    double GetAngularRate() override;
+    double GetAngle() const override;
+    double GetAngularRate() const override;
 
     /*
      * Used by the DriveController to set motor values
@@ -155,7 +171,8 @@ public:
 private:
     void TaskPeriodic(RobotMode mode) override;
 
-    PigeonImu *m_gyro;
+    ADXRS450_Gyro *m_austinGyro;
+    double m_angle, m_angleRate;
     double m_gyroZero = 0.0;
 
     double m_leftCommand;
@@ -171,10 +188,9 @@ private:
     ArcadeDriveController *m_arcadeDriveController;
     OpenloopArcadeDriveController *m_openloopArcadeDriveController;
     AssistedArcadeDriveController *m_assistedArcadeDriveController;
-    CheesyDriveController *m_cheesyDriveController;
     PIDDriveController *m_pidDriveController;
-    RampPIDDriveController *m_rampPidDriveController;
-    VelocityTurnPID *m_velocityTurnController;
+    TrapDriveController *m_trapDriveController;
+    StraightDriveController *m_straightDriveController;
 
     LogSpreadsheet *m_spreadsheet;
     BoilerPixyVisionDriveController *m_boilerPixyDriveController;

@@ -30,7 +30,7 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
         m_flywheelPow(0.0),
         m_flywheelSpeedSetpt(0.0),
         m_kickerSpeedSetpt(0.0),
-        m_flywheelOnTargetFilter(0.5),
+        m_flywheelOnTargetFilter(0.2),
         m_drive(drive),
         m_boilerPixy(boilerPixy)
 {
@@ -85,12 +85,12 @@ Shooter::Shooter(TaskMgr *scheduler, LogSpreadsheet *logger,
     m_leftAgitator->EnableCurrentLimit(true);
     m_rightAgitator->EnableCurrentLimit(true);
     m_ballConveyor->EnableCurrentLimit(true);
-    m_leftAgitator->SetCurrentLimit(10);
-    m_rightAgitator->SetCurrentLimit(10);
-    m_ballConveyor->SetCurrentLimit(10);
-    m_leftAgitator->SetVoltageRampRate(60.0);
-    m_rightAgitator->SetVoltageRampRate(60.0);
-    m_ballConveyor->SetVoltageRampRate(60.0);
+    m_leftAgitator->SetCurrentLimit(40);
+    m_rightAgitator->SetCurrentLimit(40);
+    m_ballConveyor->SetCurrentLimit(40);
+    m_leftAgitator->SetVoltageRampRate(120.0);
+    m_rightAgitator->SetVoltageRampRate(120.0);
+    m_ballConveyor->SetVoltageRampRate(120.0);
 
     m_scheduler->RegisterTask("Shooter", this, TASK_PERIODIC);
     m_flywheelRate = new LogCell("FlywheelRate", 32);
@@ -126,6 +126,8 @@ void Shooter::SetFlywheelSpeed(double speed){
     m_flywheelState = FlywheelState::speed;
     m_flywheelSpeedSetpt = speed;
     m_flywheelMotorPrimary->Set(m_flywheelSpeedSetpt);
+    m_kicker->Set(3000);
+    m_kickerSpeedSetpt = 3000;
 }
 
 void Shooter::SetFlywheelStop(){
@@ -134,6 +136,8 @@ void Shooter::SetFlywheelStop(){
     m_flywheelMotorPrimary->Set(0.0);
     m_flywheelState = FlywheelState::notRunning;
     m_flywheelOnTargetFilter.Update(false);
+    m_kicker->Set(0.0);
+    m_kickerSpeedSetpt = 0.0;
 }
 
 double Shooter::GetFlywheelRate(){
@@ -172,7 +176,7 @@ void Shooter::StartAgitator(double speed, Side side){
 
 void Shooter::SetShooterState(ShootingSequenceState state){
   m_shootingSequenceState = state;
-  m_flywheelOnTargetFilter.Update(false);
+  //m_flywheelOnTargetFilter.Update(false);
 }
 
 void Shooter::StopAgitator(){
@@ -180,7 +184,7 @@ void Shooter::StopAgitator(){
     m_rightAgitator->Set(0.0);
 }
 
-void Shooter::StartKicker(double speed){
+void Shooter::SetKickerRate(double speed){
   m_kicker->Set(speed);
   m_kickerSpeedSetpt = speed;
 }
@@ -214,7 +218,7 @@ void Shooter::TaskPeriodic(RobotMode mode) {
         StopConveyor();
         break;
       case shooting:
-        SetFlywheelSpeed(DEFAULT_FLYWHEEL_SPEED_SETPOINT); 
+        SetFlywheelSpeed(2970);
         if (OnTarget()) {
           m_drive->ArcadeDrive(0.0,0.0);
           StartAgitator(1.0, Side::right);

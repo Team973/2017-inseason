@@ -6,6 +6,7 @@
 #include "lib/GreyCompressor.h"
 #include "lib/logging/LogSpreadsheet.h"
 #include "lib/WrapDash.h"
+#include "lib/SPIGyro.h"
 #include "subsystems/Drive.h"
 #include "subsystems/Hanger.h"
 #include "subsystems/BallIntake.h"
@@ -30,7 +31,7 @@ Robot::Robot(void
     m_autoState(0),
     m_autoTimer(0),
     m_teleopTimer(0),
-    m_autoRoutine(AutonomousRoutine::HopperThenShootFuel),
+    m_autoRoutine(AutonomousRoutine::KillerHopper),
     m_speedSetpt(2900),
     m_flailSetpt(1.0),
     m_alliance(Alliance::Red),
@@ -118,7 +119,7 @@ Robot::Robot(void
     m_rightDriveTalonB->SetCurrentLimit(50);
     m_rightDriveTalonB->SetVoltageRampRate(95.0);
 
-    m_leftAgitatorTalon = new CANTalon(LEFT_AGITATOR_CAN_ID, 50);
+    m_leftAgitatorTalon = new CANTalon(LEFT_AGITATOR_CAN_ID, 5);
     fprintf(stderr, "Initialized drive controllers\n");
 
     m_logger = new LogSpreadsheet(this);
@@ -129,9 +130,11 @@ Robot::Robot(void
     m_lights = new Lights(this);
     m_boilerPixy = new BoilerPixy(this, m_lights, m_logger);
     m_pixyR = new PixyThread(*this);
+    m_austinGyro = new ADXRS450_Gyro();
     m_drive = new Drive(this,
             m_leftDriveTalonA, m_rightDriveTalonA, m_leftAgitatorTalon,
-            m_logger, m_boilerPixy, m_pixyR);
+            m_logger, m_boilerPixy, m_pixyR,
+            m_austinGyro);
 
     m_battery = new LogCell("Battery voltage");
     m_state = new LogCell("Game State");
@@ -145,6 +148,9 @@ Robot::Robot(void
     m_boilerOffset = new LogCell("AngleOffset", 32, true);
     m_gearOffset = new LogCell("GearOffset", 32, true);
 
+    m_austinGyroLog = new LogCell("Austin Gyro Angle");
+    m_austinGyroRateLog = new LogCell("Austin Gyro Angular Rate");
+
     m_logger->RegisterCell(m_battery);
     m_logger->RegisterCell(m_state);
     m_logger->RegisterCell(m_messages);
@@ -156,6 +162,8 @@ Robot::Robot(void
     m_logger->RegisterCell(m_autoSelectLog);
     m_logger->RegisterCell(m_boilerOffset);
     m_logger->RegisterCell(m_gearOffset);
+    m_logger->RegisterCell(m_austinGyroLog);
+    m_logger->RegisterCell(m_austinGyroRateLog);
 
     m_hanger = new Hanger(this, m_logger);
     m_ballIntake = new BallIntake(this, m_logger);
@@ -177,6 +185,7 @@ Robot::~Robot(void) {
 void Robot::Initialize(void) {
     printf("gonna initialize logger\n");
     m_logger->InitializeTable();
+    m_austinGyro->Calibrate();
     printf("initialized\n");
  }
 
@@ -185,6 +194,10 @@ void Robot::AllStateContinuous(void) {
             DriverStation::GetInstance().GetBatteryVoltage());
     m_time->LogDouble(GetSecTime());
     m_state->LogPrintf("%s", GetRobotModeString());
+
+    m_autoSelectLog->LogPrintf("%c %s",
+            (m_alliance == Alliance::Red) ? 'R' : 'B',
+            GetAutoName(m_autoRoutine));
 
     m_xAccel->LogDouble(m_accel.GetX());
     m_yAccel->LogDouble(m_accel.GetY());
@@ -204,7 +217,12 @@ void Robot::AllStateContinuous(void) {
                    */
     DBStringPrintf(DB_LINE8,
             "g %d %lf %d",
-            m_pixyR->GetDataFresh(), m_pixyR->GetOffset() * PixyThread::GEAR_DEGREES_PER_PIXEL, m_gearIntake->IsGearReady());
+            m_pixyR->GetDataFresh(),
+            m_pixyR->GetOffset() * PixyThread::GEAR_DEGREES_PER_PIXEL,
+            m_gearIntake->IsGearReady());
+
+    m_austinGyroLog->LogDouble(m_austinGyro->GetAngle());
+    m_austinGyroRateLog->LogDouble(m_austinGyro->GetRate());
 }
 
 void Robot::ObserveJoystickStateChange(uint32_t port, uint32_t button,

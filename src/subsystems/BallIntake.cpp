@@ -55,6 +55,7 @@ namespace frc973{
 
   void BallIntake::ExpandHopper(){
     m_hopperSolenoid->Set(true);
+    printf("actuate hopper");
   }
 
   void BallIntake::RetractHopper(){

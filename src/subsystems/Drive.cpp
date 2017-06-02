@@ -17,21 +17,26 @@
 #include "controllers/PIDDrive.h"
 #include "controllers/BoilerPixyVisionDriveController.h"
 #include "controllers/GearPixyVisionDriveController.h"
+#include "controllers/TrapDriveController.h"
+#include "controllers/StraightDriveController.h"
+#include "lib/SPIGyro.h"
 
 namespace frc973 {
 
 Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
             CANTalon *spareTalon,
-            LogSpreadsheet *logger, BoilerPixy *boilerPixy, PixyThread *gearPixy
+            LogSpreadsheet *logger, BoilerPixy *boilerPixy, PixyThread *gearPixy,
+            ADXRS450_Gyro *gyro
             )
          : DriveBase(scheduler, this, this, nullptr)
-         , m_gyro(new PigeonImu(spareTalon))
+         , m_austinGyro(gyro)
+         , m_angle(0.0)
+         , m_angleRate(0.0)
          , m_leftCommand(0.0)
          , m_rightCommand(0.0)
          , m_leftMotor(left)
          , m_rightMotor(right)
          , m_controlMode(CANSpeedController::ControlMode::kPercentVbus)
-         , m_arcadeDriveController(nullptr)
          , m_spreadsheet(logger)
          , m_boilerPixyDriveController(
                  new BoilerPixyVisionDriveController(boilerPixy))
@@ -56,6 +61,8 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
     m_openloopArcadeDriveController = new OpenloopArcadeDriveController();
     m_assistedArcadeDriveController = new AssistedArcadeDriveController();
     m_pidDriveController = new PIDDriveController();
+    m_trapDriveController = new TrapDriveController(this, logger);
+    m_straightDriveController = new StraightDriveController();
     this->SetDriveController(m_arcadeDriveController);
     this->SetDriveControlMode(m_controlMode);
 
@@ -80,8 +87,8 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
 }
 
 void Drive::Zero() {
-    if (m_gyro) {
-        m_gyroZero = m_gyro->GetFusedHeading();
+    if (m_austinGyro) {
+        m_gyroZero = m_austinGyro->GetAngle();
     }
     if (m_leftMotor) {
         m_leftPosZero = m_leftMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION;
@@ -107,7 +114,6 @@ void Drive::AssistedArcadeDrive(double throttle, double turn){
 }
 
 void Drive::SetBoilerPixyTargeting(){
-  printf("got here fam\n");
   this->SetDriveController(m_boilerPixyDriveController);
 }
 
@@ -140,12 +146,12 @@ PIDDriveController *Drive::PIDTurn(double turn, RelativeTo relativity,
 /**
  * reported in inches
  */
-double Drive::GetLeftDist() {
+double Drive::GetLeftDist() const {
     return m_leftMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION -
         m_leftPosZero;
 }
 
-double Drive::GetRightDist() {
+double Drive::GetRightDist() const {
     return -m_rightMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION -
         m_rightPosZero;
 }
@@ -154,36 +160,33 @@ double Drive::GetRightDist() {
  * Reported in inches per second
  * As per manual 17.2.1, GetSpeed reports RPM
  */
-double Drive::GetLeftRate() {
+double Drive::GetLeftRate() const {
     return m_leftMotor->GetSpeed() * DRIVE_IPS_FROM_RPM;
 }
 
-double Drive::GetRightRate() {
+double Drive::GetRightRate() const {
     return -m_rightMotor->GetSpeed() * DRIVE_IPS_FROM_RPM;
 }
 
-double Drive::GetDist() {
+double Drive::GetDist() const {
     return (GetLeftDist() + GetRightDist()) / 2.0;
 }
 
-double Drive::GetRate() {
+double Drive::GetRate() const {
     return (GetLeftRate() + GetRightRate()) / 2.0;
 }
 
-double Drive::GetDriveCurrent() {
-    return (m_rightMotor->GetOutputCurrent() +
-            m_leftMotor->GetOutputCurrent()) / 2.0;
+double Drive::GetDriveCurrent() const {
+    return (Util::abs(m_rightMotor->GetOutputCurrent()) +
+            Util::abs(m_leftMotor->GetOutputCurrent())) / 2.0;
 }
 
-double Drive::GetAngle() {
-    return m_gyro->GetFusedHeading() - m_gyroZero;
+double Drive::GetAngle() const {
+    return -(m_angle - m_gyroZero);
 }
 
-double Drive::GetAngularRate() {
-    double xyz_dps[4];
-    m_gyro->GetRawGyro(xyz_dps);
-//    printf("a %lf b %lf c %lf\n", xyz_dps[0], xyz_dps[1], xyz_dps[2]);
-    return xyz_dps[2];
+double Drive::GetAngularRate() const {
+    return -m_angleRate;
 }
 
 void Drive::SetDriveOutput(double left, double right) {
@@ -216,6 +219,20 @@ void Drive::SetDriveControlMode(CANSpeedController::ControlMode mode){
 }
 
 void Drive::TaskPeriodic(RobotMode mode) {
+    m_angle = m_austinGyro->GetAngle();
+
+    /*
+    double xyz_dps[4];
+    m_gyro->GetRawGyro(xyz_dps);
+    m_angleRate = xyz_dps[2];
+    */
+    double currRate = m_austinGyro->GetRate();
+    if(currRate == 0){
+    }
+    else{
+      m_angleRate = currRate;
+    }
+
     DBStringPrintf(DB_LINE9, "l %2.1lf r %2.1lf g %2.1lf",
             this->GetLeftDist(),
             this->GetRightDist(),
@@ -251,6 +268,19 @@ void Drive::TaskPeriodic(RobotMode mode) {
 
 void Drive::SetBoilerJoystickTerm(double throttle, double turn) {
     m_boilerPixyDriveController->SetJoystickTerm(throttle, turn);
+}
+
+void Drive::DriveStraight(RelativeTo relativeTo,
+        double dist, double angle) {
+    this->SetDriveController(m_straightDriveController);
+    m_straightDriveController->SetTarget(relativeTo, dist, angle, this);
+}
+
+TrapDriveController *Drive::TrapDrive(RelativeTo relativeTo,
+        double dist, double angle) {
+    this->SetDriveController(m_trapDriveController);
+    m_trapDriveController->SetTarget(relativeTo, dist, angle);
+    return m_trapDriveController;
 }
 
 }

@@ -53,12 +53,10 @@ public:
     void StartConveyor(double speed);
     void StopConveyor();
     void SetShooterState(ShootingSequenceState state);
-    void StartKicker(double speed);
+    void SetKickerRate(double speed);
 
     double GetFlywheelRate();
     double GetKickerRate();
-
-    static constexpr int DEFAULT_FLYWHEEL_SPEED_SETPOINT = 2960;
 
     enum FlywheelState {
         power,

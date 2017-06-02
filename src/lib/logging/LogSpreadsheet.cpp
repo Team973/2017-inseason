@@ -14,6 +14,7 @@
 #include <cstdarg>
 #include <cerrno>
 #include <cstring>
+#include <time.h>
 
 namespace frc973 {
 
@@ -120,12 +121,12 @@ void LogSpreadsheet::InitializeTable() {
 
 
     snprintf(buffer, sizeof(buffer) - 1,
-             "/home/lvuser/log::%llu.txt", GetFPGATime());
+             "/home/lvuser/log-%llu.txt", GetFPGATime());
 
 	m_oFile = new std::ofstream(buffer);
 
 	if (m_oFile->fail()) {
-		printf("Could not open file `%s` for writing.  Errno %d (%s)\n",
+		fprintf(stderr, "Could not open file `%s` for writing.  Errno %d (%s)\n",
                buffer, errno, strerror(errno));
 		return;
 	}

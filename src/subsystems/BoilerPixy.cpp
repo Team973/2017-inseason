@@ -85,7 +85,8 @@ namespace frc973{
     }
 
     double BoilerPixy::GetXOffset(){
-        return m_pixyXFilter->Update(m_pixyXOffset->GetVoltage() - 1.9);
+        double offset = 1.9; // comp bot offset 1.9; pbot = 1.78
+        return m_pixyXFilter->Update(m_pixyXOffset->GetVoltage() - offset);
     }
 
     double BoilerPixy::GetHeight(){
