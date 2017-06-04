@@ -47,6 +47,11 @@ namespace frc973{
     m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
   }
 
+  /**
+   * Sets ball intake power (open loop)
+   *
+   * @param power to be sent from -1.0 to 1.0
+   */
   void BallIntake::SetIntakePower(double power){
     m_ballIntakePow = power;
     m_ballIntakeState = BallIntakeState::manual;

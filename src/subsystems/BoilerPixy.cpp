@@ -84,27 +84,57 @@ namespace frc973{
         m_lights->DisableLights();
     }
 
+    /**
+     * Relates pixy analog x input to angle offset
+     *
+     * @return x offset of target
+     */
     double BoilerPixy::GetXOffset(){
         double offset = 1.9; // comp bot offset 1.9; pbot = 1.78
         return m_pixyXFilter->Update(m_pixyXOffset->GetVoltage() - offset);
     }
 
+    /**
+     * Relates pixy analog y input to height offset
+     *
+     * @return height of target in inches
+     */
     double BoilerPixy::GetHeight(){
         return m_pixyYFilter->Update(1.25 * (m_pixyYOffset->GetVoltage() - 0.8));
     }
 
+    /**
+     * Relates height seen by pixy from GetHeight to Horizontal dist in XDist InterpLookupTable
+     *
+     * @return Horizontal distance of bumper to target
+     */
     double BoilerPixy::GetXDistance(){
       return m_interpTable->LookupPoint(m_pixyYFilter->Update(m_pixyYOffset->GetVoltage()));
     }
 
+    /**
+     * Relates XDistance to RPM through RPM InterpLookupTable
+     *
+     * @return RPM that corresponds to XDistance
+     */
     double BoilerPixy:: GetShooterRPM(){
       return m_rpmInterpTable->LookupPoint(GetXDistance());
     }
 
+    /**
+     * Checks if x-pixy sees target with DigitalInput
+     *
+     * @return pixy sees target or not
+     */
     bool BoilerPixy::GetSeesTargetX(){
         return m_seesTargetX->Get();
     }
 
+    /**
+     * Checks if x-pixy sees target with DigitalInput
+     *
+     * @return pixy sees target or not
+     */
     bool BoilerPixy::GetSeesTargetY(){
         return m_seesTargetY->Get();
     }
