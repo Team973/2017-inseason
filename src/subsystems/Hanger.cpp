@@ -57,20 +57,25 @@ namespace frc973 {
         m_scheduler->UnregisterTask(this);
     }
 
+    /**
+     *  Allows drivers to hang
+     *
+     *  @param hangerState  desired hanger state
+     */
     void Hanger::SetHangerState(HangerState hangerState){
         switch (hangerState) {
-            case start:
+            case start: //start open loop hanging
                 m_hangerState = HangerState::start;
                 m_crankMotor->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
                 break;
-            case armed:
+            case armed: //defined as period for waiting to attach rope
                 m_hangerState = HangerState::armed;
                 m_crankMotor->ConfigPeakOutputVoltage(3, -3);
                 m_crankMotor->EnableCurrentLimit(true);
                 m_crankMotor->SetCurrentLimit(10.0);
                 m_crankMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
                 break;
-            case autoHang:
+            case autoHang: //hanging period
                 m_hangerState = HangerState::autoHang;
                 m_crankMotor->EnableCurrentLimit(true);
                 m_crankMotor->SetCurrentLimit(30.0);

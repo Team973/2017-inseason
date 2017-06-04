@@ -50,7 +50,7 @@ namespace frc973{
   /**
    * Sets ball intake power (open loop)
    *
-   * @param power to be sent from -1.0 to 1.0
+   * @param power power to be sent from -1.0 to 1.0
    */
   void BallIntake::SetIntakePower(double power){
     m_ballIntakePow = power;

@@ -1,8 +1,13 @@
+/**
+ * This auto routine must start with the hopper touching the wall.
+ * Frequently used in Regionals, premature version of KillerBee when we still did not have spline drive
+ */
+
 #include "Robot.h"
 #include "AutoCommon.h"
 
 namespace frc973 {
-    
+
 void Robot::HopperThenShoot(){
     printf("HopperThenShoot auto\n");
     double dist;
