@@ -21,7 +21,7 @@ set(SOURCE_FILES
     src/lib/filters/BullshitFilter.cpp src/lib/filters/CascadingFilter.cpp
     src/lib/filters/DelaySwitch.cpp src/lib/filters/FilterBase.cpp
     src/lib/SingleThreadTaskMgr.cpp src/lib/SmartPixy.cpp
-    src/lib/InterpLookupTable.cpp
+    src/lib/InterpLookupTable.cpp src/lib/GreyTalon.cpp
     src/subsystems/PixyThread.cpp
     src/subsystems/BoilerPixy.cpp
     src/subsystems/BallIntake.cpp
