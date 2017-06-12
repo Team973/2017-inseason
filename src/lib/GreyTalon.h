@@ -5,6 +5,7 @@
 #include "lib/WrapDash.h"
 #include "lib/TaskMgr.h"
 #include "lib/CoopTask.h"
+#include "lib/filters/MovingAverageFilter.h"
 
 using namespace frc;
 
@@ -21,6 +22,9 @@ namespace frc973{
 
            void SetCurrentLimit(double currentLim);
            void ConfigureFoldbackCurrentLimit(double peakCurrent, uint32_t maxPeakCurrentDuration, double foldbackCurrent, uint32_t maxFoldbackCurrentDuration);
+           void SetLegacyMode();
+           void SetPeakCurrentMode();
+           void SetFoldbackMode();
            void TaskPrePeriodic(RobotMode mode) override;
 
            enum LimitingMode{
@@ -38,6 +42,7 @@ namespace frc973{
            double     m_foldbackCurrent;
            uint32_t   m_maxFoldbackCurrentDuration;
            uint32_t   m_currentDuration;
+           MovingAverageFilter  m_currentFilter;
      };
 
 }

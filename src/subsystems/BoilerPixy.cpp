@@ -16,7 +16,9 @@ namespace frc973{
       m_lights(lights),
       m_interpTable(new InterpLookupTable()),
       m_rpmInterpTable(new InterpLookupTable()),
-      m_lightEnabled(false)
+      m_lightEnabled(false),
+      m_filteredXOffset(0.0),
+      m_filteredYOffset(0.0)
     {
         m_scheduler->RegisterTask("Boiler pixy", this, TASK_PERIODIC);
         m_lights->DisableLights();
@@ -90,8 +92,7 @@ namespace frc973{
      * @return x offset of target
      */
     double BoilerPixy::GetXOffset(){
-        double offset = 1.9; // comp bot offset 1.9; pbot = 1.78
-        return m_pixyXFilter->Update(m_pixyXOffset->GetVoltage() - offset);
+        return m_filteredXOffset;
     }
 
     /**
@@ -100,7 +101,7 @@ namespace frc973{
      * @return height of target in inches
      */
     double BoilerPixy::GetHeight(){
-        return m_pixyYFilter->Update(1.25 * (m_pixyYOffset->GetVoltage() - 0.8));
+        return m_filteredYOffset;
     }
 
     /**
@@ -117,7 +118,7 @@ namespace frc973{
      *
      * @return RPM that corresponds to XDistance
      */
-    double BoilerPixy:: GetShooterRPM(){
+    double BoilerPixy::GetShooterRPM(){
       return m_rpmInterpTable->LookupPoint(GetXDistance());
     }
 
@@ -148,5 +149,8 @@ namespace frc973{
         m_pixyXOffsetLog->LogDouble(GetXOffset());
         m_pixyYOffsetLog->LogDouble(m_pixyYOffset->GetVoltage());
         m_lightLog->LogInt(m_lightEnabled);
+        double offset = 1.9; // comp bot offset 1.9; pbot = 1.78
+        m_filteredXOffset = m_pixyXFilter->Update(m_pixyXOffset->GetVoltage() - offset);
+        m_filteredYOffset = m_pixyYFilter->Update(1.25 * (m_pixyYOffset->GetVoltage() - 0.8));
     }
 }
