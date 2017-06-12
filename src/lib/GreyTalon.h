@@ -42,7 +42,7 @@ namespace frc973{
            double     m_foldbackCurrent;
            uint32_t   m_maxFoldbackCurrentDuration;
            uint32_t   m_currentDuration;
-           MovingAverageFilter  m_currentFilter;
+           MovingAverageFilter  *m_currentFilter;
      };
 
 }

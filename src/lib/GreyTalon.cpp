@@ -1,4 +1,5 @@
 #include "GreyTalon.h"
+#include "CANTalon.h"
 
 namespace frc973{
   GreyTalon::GreyTalon(double canId, double controlPeriod, TaskMgr *scheduler):
@@ -35,7 +36,7 @@ namespace frc973{
     m_limitingMode = LimitingMode::PeakCurrentMode;
     m_foldbackEnabled = true;
     SetPeakCurrentMode();
-    this->SetCurrentLimit(m_peakCurrent);
+    this->CANTalon::SetCurrentLimit(m_peakCurrent);
   }
 
   void GreyTalon::SetLegacyMode(){
@@ -48,7 +49,7 @@ namespace frc973{
 
   void GreyTalon::SetFoldbackMode(){
     m_limitingMode = LimitingMode::FoldbackCurrentMode;
-    this->SetCurrentLimit(m_foldbackCurrent);
+    this->CANTalon::SetCurrentLimit(m_foldbackCurrent);
   }
 
   void GreyTalon::TaskPrePeriodic(RobotMode mode){
