@@ -34,7 +34,6 @@ public:
     void SetFlywheelPow(double pow);
     void SetFlywheelStop();
     void SetFlywheelSpeed(double speed);
-    void SetKickerRate(double speed);
 
     enum ShootingSequenceState{
       idle,
@@ -54,6 +53,7 @@ public:
     void StartConveyor(double speed);
     void StopConveyor();
     void SetShooterState(ShootingSequenceState state);
+    void SetKickerRate(double speed);
 
     double GetFlywheelRate();
     double GetKickerRate();
