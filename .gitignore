@@ -1,4 +1,4 @@
 *.swp
 build/*
 test/build/*
-.DS_Store # Dang Mac Users!
+.DS_Store
