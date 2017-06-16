@@ -6,8 +6,8 @@ namespace frc973{
     super(canId, controlPeriod),
     m_scheduler(scheduler),
     m_limitingMode(LimitingMode::PeakCurrentMode),
-    m_foldbackEnabled(false),
     m_peakCurrent(0.0),
+    m_outputCurrent(0.0),
     m_maxPeakCurrentDuration(0),
     m_foldbackCurrent(0.0),
     m_maxFoldbackCurrentDuration(0),
@@ -23,9 +23,7 @@ namespace frc973{
   }
 
   void GreyTalon::SetCurrentLimit(double currentLim){
-    SetLegacyMode();
-    m_foldbackEnabled = false;
-    //SetCurrentLimit method from parent class invokes currentLim
+    SetLegacyMode(currentLim);
   }
 
   void GreyTalon::ConfigureFoldbackCurrentLimit(double peakCurrent, uint32_t maxPeakCurrentDuration, double foldbackCurrent, uint32_t maxFoldbackCurrentDuration){
@@ -34,34 +32,39 @@ namespace frc973{
     m_foldbackCurrent = foldbackCurrent;
     m_maxFoldbackCurrentDuration = maxFoldbackCurrentDuration;
     m_limitingMode = LimitingMode::PeakCurrentMode;
-    m_foldbackEnabled = true;
     SetPeakCurrentMode();
-    this->CANTalon::SetCurrentLimit(m_peakCurrent);
   }
 
-  void GreyTalon::SetLegacyMode(){
+  void GreyTalon::SetLegacyMode(double currentLim){
     m_limitingMode = LimitingMode::LegacyMode;
+    this->CANTalon::SetCurrentLimit(currentLim);
   }
 
   void GreyTalon::SetPeakCurrentMode(){
     m_limitingMode = LimitingMode::PeakCurrentMode;
+    this->CANTalon::SetCurrentLimit(m_peakCurrent);
   }
 
   void GreyTalon::SetFoldbackMode(){
+    m_currentDuration = GetMsecTime();
     m_limitingMode = LimitingMode::FoldbackCurrentMode;
     this->CANTalon::SetCurrentLimit(m_foldbackCurrent);
   }
 
+  double GreyTalon::GetFilteredOutputCurrent(){
+    return m_outputCurrent;
+  }
+
   void GreyTalon::TaskPrePeriodic(RobotMode mode){
+    m_outputCurrent = m_currentFilter->Update(this->GetOutputCurrent());
     switch (m_limitingMode) {
       case LegacyMode:
        break;
       case PeakCurrentMode:
-        if (m_currentFilter->Update(this->GetOutputCurrent()) <= m_peakCurrent) {
+        if (m_outputCurrent <= m_peakCurrent) {
           m_currentDuration = -1;
         }
-        if (m_currentFilter->Update(this->GetOutputCurrent()) > m_peakCurrent){
-          m_currentDuration = -1;
+        if (m_outputCurrent > m_peakCurrent){
           if (m_currentDuration == -1 ){
             m_currentDuration = GetMsecTime();
           }
@@ -72,12 +75,9 @@ namespace frc973{
         }
        break;
        case FoldbackCurrentMode:
-         m_currentDuration = GetMsecTime();
          if (GetMsecTime() - m_currentDuration > m_maxFoldbackCurrentDuration) {
            SetPeakCurrentMode();
          }
-         break;
-       default:
          break;
     }
   }

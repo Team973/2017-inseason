@@ -22,9 +22,10 @@ namespace frc973{
 
            void SetCurrentLimit(double currentLim);
            void ConfigureFoldbackCurrentLimit(double peakCurrent, uint32_t maxPeakCurrentDuration, double foldbackCurrent, uint32_t maxFoldbackCurrentDuration);
-           void SetLegacyMode();
+           void SetLegacyMode(double currentLim);
            void SetPeakCurrentMode();
            void SetFoldbackMode();
+           double GetFilteredOutputCurrent();
            void TaskPrePeriodic(RobotMode mode) override;
 
            enum LimitingMode{
@@ -36,12 +37,12 @@ namespace frc973{
            TaskMgr       *m_scheduler;
            LimitingMode  m_limitingMode;
 
-           bool       m_foldbackEnabled;
            double     m_peakCurrent;
+           double     m_outputCurrent;
            uint32_t   m_maxPeakCurrentDuration;
            double     m_foldbackCurrent;
            uint32_t   m_maxFoldbackCurrentDuration;
-           uint32_t   m_currentDuration;
+           int64_t    m_currentDuration;
            MovingAverageFilter  *m_currentFilter;
      };
 
