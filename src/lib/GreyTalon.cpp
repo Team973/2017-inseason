@@ -42,6 +42,7 @@ namespace frc973{
 
   void GreyTalon::SetPeakCurrentMode(){
     m_limitingMode = LimitingMode::PeakCurrentMode;
+    m_currentDuration = -1;
     this->CANTalon::SetCurrentLimit(m_peakCurrent);
   }
 
