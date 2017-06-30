@@ -45,10 +45,8 @@ void Robot::TeleopContinuous(void) {
         m_drive->AssistedArcadeDrive(y, x);
       }
       else if (m_driveMode == DriveMode::PixyDrive) {
-        /*m_drive->SetBoilerJoystickTerm(y, x);
+        m_drive->SetBoilerJoystickTerm(y, x);
         m_drive->SetBoilerPixyTargeting();
-        */
-        m_drive->AssistedArcadeDrive(y/2.0, x/2.0);
       }
     }
     /*

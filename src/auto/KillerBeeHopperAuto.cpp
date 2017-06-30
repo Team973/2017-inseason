@@ -2,7 +2,7 @@
  * This auto routine must start with the hopper away from the wall.
  * Most used in worlds, best auto ever 💯🔥
  */
- 
+
 #include "Robot.h"
 #include "AutoCommon.h"
 #include "lib/TrapProfile.h"
