@@ -1,16 +1,16 @@
 # 2017-inseason
-##Steamworks code of FRC Team 973: Greybots
-####Presenting our 2017 Houston World Championship Robot: [Bloodhound] {https://www.youtube.com/watch?v=vJeKOW3ZpIk}
+## Steamworks code of FRC Team 973: Greybots
+#### Presenting our 2017 Houston World Championship Robot: [Bloodhound] {https://www.youtube.com/watch?v=vJeKOW3ZpIk}
 
 [![Build Status](https://travis-ci.com/Team973/2017-inseason.svg?token=PMQ4h4i9r3eRUJnsCJBt&branch=master)](https://travis-ci.com/Team973/2017-inseason)
 
-##Structure
+## Structure
 
 `src`: Actual robot code
 `lib`: Code that is shared between all robots, Modified WPILib to suit our robot
 `test`: Code used to run a test
 
-##Building the Code
+## Building the Code
 
 We use cmake to build our code. To get it, follow the instructions in the `greybots-skeleton` repo.
 `cd repo-name/build
@@ -18,14 +18,14 @@ make`
 To deploy to the robot, make sure you're connected to the robot and do
 `make deploy`
 
-##Contributing
+## Contributing
 
 Here's how to get your code into the main robot repository:
 
-###If you've just joined the team:
+### If you've just joined the team:
 1. Make an account on GitHub.
 2. Ask the robot programming lead to add your account to the frc1678 robot programming team.
-""If it's the first time you've contributed to this repo:""
+**If it's the first time you've contributed to this repo:**
 
 3. Clone this repo
 4. Log onto github and navigate to the repo 2017-inseason.
@@ -34,14 +34,14 @@ Here's how to get your code into the main robot repository:
 Any time you want to make a change:
 
 Create and checkout a new branch.
-`git checkout -b <your_branch_name>`, where <your_branch_name> is a descriptive name for your branch. Use dashes in the branch name, not underscores. ""Do not create a new branch unless a same branch has already been made.""
+`git checkout -b <your_branch_name>`, where <your_branch_name> is a descriptive name for your branch. Use dashes in the branch name, not underscores. **Do not create a new branch unless a same branch has already been made.**
 Make whatever code changes you want/need to make. Be sure to write tests for your changes!
 Commit your work locally.
 Try to make your commits as atomic (small) as possible. For example, moving functions around should be different from adding features, and changes to one subsystem should be in a different commit than changes to another subsystem.
 Follow the conventions for commit messages.
 If your change is anything more than a few lines or small fixes, don't skip the extended description. If you are always using git commit with the -m option, stop doing that.
 
-""To push to a specific branch of the repo.""
+**To push to a specific branch of the repo.**
 `git push origin <your_branch_name>`
 Submit a pull request.
 Log into github.
