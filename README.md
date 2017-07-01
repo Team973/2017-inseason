@@ -1,6 +1,6 @@
 # 2017-inseason
 ## Steamworks code of FRC Team 973: Greybots
-#### Presenting our 2017 Houston World Championship Robot: [Bloodhound] (https://www.youtube.com/watch?v=vJeKOW3ZpIk)
+#### Presenting our 2017 Houston World Championship Robot: [Bloodhound](https://www.youtube.com/watch?v=vJeKOW3ZpIk)
 
 [![Build Status](https://travis-ci.com/Team973/2017-inseason.svg?token=PMQ4h4i9r3eRUJnsCJBt&branch=master)](https://travis-ci.com/Team973/2017-inseason)
 
@@ -63,9 +63,8 @@ If there are any concerns about your pull request, fix them.
 To update your PR, just push to the branch on your forked repo.
 Merge your changes into master
 
-""If there are no conflicts, push the "Squash and merge" button, write a good commit message, and merge the changes.""
+**If there are no conflicts, push the "Squash and merge" button, write a good commit message, and merge the changes.**
 
-""If there are conflicts, fix them locally on your branch, push them, wait for Travis to pass, and then squash and merge.""
+**If there are conflicts, fix them locally on your branch, push them, wait for Travis to pass, and then squash and merge.**
 
-
-""Questions? Email jacks8211@gmail.com""
+**Questions? Email jacks8211@gmail.com**
