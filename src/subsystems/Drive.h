@@ -22,6 +22,7 @@ class OpenloopArcadeDriveController;
 class AssistedArcadeDriveController;
 class StraightDriveController;
 class TrapDriveController;
+class SplineDriveController;
 class VelocityTurnPID;
 class LogSpreadsheet;
 class LogCell;
@@ -133,6 +134,13 @@ public:
         return m_trapDriveController;
     }
 
+    SplineDriveController *SplineDrive(RelativeTo relativeTo,
+            double dist, double angle);
+
+    const SplineDriveController *GetSplineDriveController(){
+        return m_splineDriveController;
+    }
+
     void SetDriveControlMode(CANSpeedController::ControlMode mode) override;
     /**
      * All distances given in inches
@@ -191,6 +199,7 @@ private:
     PIDDriveController *m_pidDriveController;
     TrapDriveController *m_trapDriveController;
     StraightDriveController *m_straightDriveController;
+    SplineDriveController *m_splineDriveController;
 
     LogSpreadsheet *m_spreadsheet;
     BoilerPixyVisionDriveController *m_boilerPixyDriveController;

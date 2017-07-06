@@ -19,6 +19,7 @@
 #include "controllers/GearPixyVisionDriveController.h"
 #include "controllers/TrapDriveController.h"
 #include "controllers/StraightDriveController.h"
+#include "controllers/SplineDriveController.h"
 #include "lib/SPIGyro.h"
 
 namespace frc973 {
@@ -63,6 +64,7 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
     m_pidDriveController = new PIDDriveController();
     m_trapDriveController = new TrapDriveController(this, logger);
     m_straightDriveController = new StraightDriveController();
+    m_splineDriveController = new SplineDriveController(this, logger);
     this->SetDriveController(m_arcadeDriveController);
     this->SetDriveControlMode(m_controlMode);
 
@@ -377,6 +379,13 @@ TrapDriveController *Drive::TrapDrive(RelativeTo relativeTo,
     this->SetDriveController(m_trapDriveController);
     m_trapDriveController->SetTarget(relativeTo, dist, angle);
     return m_trapDriveController;
+}
+
+SplineDriveController *Drive::SplineDrive(RelativeTo relativeTo,
+        double dist, double angle) {
+    this->SetDriveController(m_splineDriveController);
+    m_splineDriveController->SetTarget(relativeTo, dist, angle);
+    return m_splineDriveController;
 }
 
 }
