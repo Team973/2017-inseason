@@ -98,10 +98,6 @@ SplineDriveController *SplineDriveController::SetConstraints(
         double max_vel, double max_acc, double start_vel, double end_vel) {
   m_max_vel = max_vel;
   m_max_acc = max_acc;
-  return this;
-}
-
-SplineDriveController *SplineDriveController::SetBounds(double start_vel, double end_vel){
   m_start_vel = start_vel;
   m_end_vel = end_vel;
   return this;

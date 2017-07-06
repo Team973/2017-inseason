@@ -19,7 +19,6 @@ public:
           double dist, double angle);
 
 	SplineDriveController *SetConstraints(double max_vel, double max_acc, double start_vel, double end_vel);
-	SplineDriveController *SetBounds(double start_vel, double end_vel);
 
 	void CalcDriveOutput(DriveStateProvider *state,
 			DriveControlSignalReceiver *out) override;

@@ -5,7 +5,7 @@
 
 #include "Robot.h"
 #include "AutoCommon.h"
-#include "lib/TrapProfile.h"
+#include "lib/MotionProfile.h"
 
 namespace frc973 {
 
@@ -39,9 +39,8 @@ void Robot::KillerHopperAuto(){
             m_shooter->StopAgitator();
             m_shooter->StartConveyor(0.0);
             m_drive
-                ->TrapDrive(DriveBase::RelativeTo::Now, initial_dist, 0.0)
-                ->SetHalt(true, false)
-                ->SetConstraints(70.0, 70.0);
+                ->SplineDrive(DriveBase::RelativeTo::Now, initial_dist, 0.0)
+                ->SetConstraints(70.0, 70.0, 0.0, 60.0);
             m_autoState++;
             break;
         case 1:
@@ -51,14 +50,13 @@ void Robot::KillerHopperAuto(){
             if (m_drive->OnTarget()) {
                 m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
                 using namespace Profiler;
-                TrapProfile<FakeFloat<53>, FakeFloat<90>,
+                /*MotionProfile<FakeFloat<53>, FakeFloat<90>,
                     FakeFloat<70>, FakeFloat<70>,
-                    false, true>(0);
+                    FakeFloat<0>, FakeFloat<60>>(0);*/
                 m_drive
-                    ->TrapDrive(DriveBase::RelativeTo::SetPoint, 53.0,
+                    ->SplineDrive(DriveBase::RelativeTo::SetPoint, 53.0,
                                 m_autoDirection * 91.0)
-                    ->SetHalt(false, true)
-                    ->SetConstraints(70.0, 70.0);
+                    ->SetConstraints(70.0, 70.0, 60.0, 0.0);
                 m_autoState++;
             }
             break;
@@ -73,10 +71,9 @@ void Robot::KillerHopperAuto(){
         case 3:
             if (GetMsecTime() - m_autoTimer > 2500) {
                 m_drive
-                    ->TrapDrive(DriveBase::RelativeTo::Now, -24.0,
+                    ->SplineDrive(DriveBase::RelativeTo::Now, -24.0,
                                 m_autoDirection * 65.0)
-                    ->SetHalt(true, true)
-                    ->SetConstraints(60.0, 38.0);
+                    ->SplineDriveController::SetConstraints(60.0, 38.0, 0.0, 0.0);
                 m_autoTimer = GetMsecTime();
                 m_autoState++;
             }
