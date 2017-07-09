@@ -40,7 +40,8 @@ void Robot::KillerHopperAuto(){
             m_shooter->StartConveyor(0.0);
             m_drive
                 ->SplineDrive(DriveBase::RelativeTo::Now, initial_dist, 0.0)
-                ->SetConstraints(70.0, 70.0, 0.0, 60.0);
+                ->SetMaxVelAccel(70.0, 70.0)
+                ->SetStartEndVel(0.0, 70.0);
             m_autoState++;
             break;
         case 1:
@@ -56,7 +57,8 @@ void Robot::KillerHopperAuto(){
                 m_drive
                     ->SplineDrive(DriveBase::RelativeTo::SetPoint, 53.0,
                                 m_autoDirection * 91.0)
-                    ->SetConstraints(70.0, 70.0, 60.0, 0.0);
+                                ->SetMaxVelAccel(70.0, 70.0)
+                                ->SetStartEndVel(70.0, 60.0);
                 m_autoState++;
             }
             break;
@@ -73,7 +75,8 @@ void Robot::KillerHopperAuto(){
                 m_drive
                     ->SplineDrive(DriveBase::RelativeTo::Now, -24.0,
                                 m_autoDirection * 65.0)
-                    ->SplineDriveController::SetConstraints(60.0, 38.0, 0.0, 0.0);
+                    ->SetMaxVelAccel(60.0, 38.0)
+                    ->SetStartEndVel(0.0, 0.0);
                 m_autoTimer = GetMsecTime();
                 m_autoState++;
             }

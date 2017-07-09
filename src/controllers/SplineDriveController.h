@@ -18,7 +18,8 @@ public:
   void SetTarget(DriveBase::RelativeTo relativeTo,
           double dist, double angle);
 
-	SplineDriveController *SetConstraints(double max_vel, double max_acc, double start_vel, double end_vel);
+	SplineDriveController *SetMaxVelAccel(double max_vel, double max_acc);
+	SplineDriveController *SetStartEndVel(double start_vel, double end_vel);
 
 	void CalcDriveOutput(DriveStateProvider *state,
 			DriveControlSignalReceiver *out) override;
@@ -47,10 +48,8 @@ private:
     bool m_done;
     bool m_needSetControlMode;
 
-		Profiler::NewWaypoint m_goal;
-
     static constexpr double MAX_VELOCITY = 130;     //in/sec
-    static constexpr double MAX_ACCELERATION = 10.0; //in/sec^2
+    static constexpr double MAX_ACCELERATION = 70.0; //in/sec^2
 
     LogCell *m_l_pos_setpt_log;
     LogCell *m_l_pos_real_log;
@@ -63,6 +62,8 @@ private:
     LogCell *m_max_acc_log;
     LogCell *m_dist_endgoal_log;
     LogCell *m_angle_endgoal_log;
+		LogCell *m_left_output;
+		LogCell *m_right_output;
 };
 
 }
