@@ -84,6 +84,7 @@ void Robot::KillerHopperAuto(){
         case 4:
             if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 3000) {
                 m_ballIntake->BallIntakeStop();
+                m_autoTimer = GetMsecTime();
                 double angleOffset = m_boilerPixy->GetXOffset() *
                     BoilerPixy::PIXY_OFFSET_CONSTANT;
                 angle = angleOffset;
@@ -113,6 +114,9 @@ void Robot::KillerHopperAuto(){
             if (m_drive->OnTarget() || (GetMsecTime() - m_autoTimer >= 1000 )) {
               m_ballIntake->RetractHopper();
               m_autoState++;
+            }
+            if (m_endMode && GetMsecTime() - m_autoTimer >= 6500) {
+              m_drive->OpenloopArcadeDrive(-1.0, 0.0);
             }
             break;
         default:

@@ -37,6 +37,7 @@ Robot::Robot(void
     m_alliance(Alliance::Red),
     m_conveyorSetpt(1.0),
     m_kickerSetpt(3000),
+    m_endMode(false),
     m_driveMode(DriveMode::AssistedArcade),
     m_bumperMode(BumperMode::LowGear)
 {
