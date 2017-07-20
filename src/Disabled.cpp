@@ -28,8 +28,9 @@ void Robot::DisabledContinuous(void) {
   }
 
   DBStringPrintf(DBStringPos::DB_LINE0,
-                 "%c %s",
+                 "%c %s %s",
                  (m_alliance == Alliance::Red) ? 'R' : 'B',
+                 (m_endMode) ? "DriveBack" : "Stay",
                  GetAutoName(m_autoRoutine));
 }
 
