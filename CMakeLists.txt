@@ -21,7 +21,8 @@ set(SOURCE_FILES
     src/lib/filters/BullshitFilter.cpp src/lib/filters/CascadingFilter.cpp
     src/lib/filters/DelaySwitch.cpp src/lib/filters/FilterBase.cpp
     src/lib/SingleThreadTaskMgr.cpp src/lib/SmartPixy.cpp
-    src/lib/InterpLookupTable.cpp
+    src/lib/InterpLookupTable.cpp src/lib/GreyTalon.cpp
+    src/lib/MotionProfile.cpp
     src/subsystems/PixyThread.cpp
     src/subsystems/BoilerPixy.cpp
     src/subsystems/BallIntake.cpp
@@ -35,6 +36,7 @@ set(SOURCE_FILES
     src/controllers/PIDDrive.cpp
     src/controllers/StraightDriveController.cpp
     src/controllers/TrapDriveController.cpp
+    src/controllers/SplineDriveController.cpp
     src/lib/TrapProfile.cpp
     src/controllers/GearPixyVisionDriveController.cpp
     src/lib/filters/MedianFilter.cpp src/lib/filters/MovingAverageFilter.cpp

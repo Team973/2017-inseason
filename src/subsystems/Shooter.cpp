@@ -1,10 +1,3 @@
-/*
- * Shooter.cpp
- *
- *  Created on: Oct 9, 2015
- *      Author: Andrew
- */
-
 #include "RobotInfo.h"
 #include "lib/util/Util.h"
 #include "lib/WrapDash.h"
@@ -115,12 +108,22 @@ Shooter::~Shooter() {
     m_scheduler->UnregisterTask(this);
 }
 
+/**
+ * Sets flywheel on with open loop
+ *
+ * @param pow the amount of flywheel power from 1.0 to -1.0
+ */
 void Shooter::SetFlywheelPow(double pow){
     m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kPercentVbus);
     m_flywheelState = FlywheelState::power;
     m_flywheelPow = pow;
 }
 
+/**
+ * Sets flywheel on with closed loop
+ *
+ * @param pow the flywheel speed; preferably less than 5000 RPM
+ */
 void Shooter::SetFlywheelSpeed(double speed){
     m_flywheelMotorPrimary->SetControlMode(CANSpeedController::ControlMode::kSpeed);
     m_flywheelState = FlywheelState::speed;
@@ -140,15 +143,30 @@ void Shooter::SetFlywheelStop(){
     m_kickerSpeedSetpt = 0.0;
 }
 
+/**
+ * Returns flywheel rate through encoder translation
+ *
+ * @return the flywheel rate
+ */
 double Shooter::GetFlywheelRate(){
     return m_flywheelMotorPrimary->GetSpeed();// * (1.0 / 24576.0);
 }
 
+/**
+ * Returns if flywheel rate is in the 200 range or up to speed
+ *
+ * @return tif flywheel rate is up to speed
+ */
 bool Shooter::OnTarget() {
     return m_flywheelOnTargetFilter.Update(
             abs(GetFlywheelRate() - m_flywheelSpeedSetpt) < 200.0);
 }
 
+/**
+ * Sets conveyor power in open loop
+ *
+ * @param speed desired conveyor speed from -1.0 to 1.0
+ */
 void Shooter::StartConveyor(double speed) {
     m_ballConveyor->Set(speed * 12.0);
 
@@ -162,7 +180,12 @@ void Shooter::StopConveyor() {
     //DBStringPrintf(DB_LINE3, "conv pow %lf", 0.0);
 }
 
-//side: true = right; false = left
+/**
+ * Starts agitator by side (needs to call method twice in order to turn on each agitator)
+ *
+ * @param speed  desired agitator speed from -1.0 to 1.0
+ * @param side   desired side
+ */
 void Shooter::StartAgitator(double speed, Side side){
     if (side == Side::left) {
         m_leftAgitator->Set(speed * 12.0);
@@ -174,6 +197,11 @@ void Shooter::StartAgitator(double speed, Side side){
     }
 }
 
+/**
+ * Sets shooter state either manual, idle, or shooting
+ *
+ * @param state  desired shooting state
+ */
 void Shooter::SetShooterState(ShootingSequenceState state){
   m_shootingSequenceState = state;
   //m_flywheelOnTargetFilter.Update(false);
@@ -184,11 +212,21 @@ void Shooter::StopAgitator(){
     m_rightAgitator->Set(0.0);
 }
 
+/**
+ * Sets kicker rate in closed loop
+ *
+ * @param speed desired kicker speed (preferably close to main shooter RPM)
+ */
 void Shooter::SetKickerRate(double speed){
   m_kicker->Set(speed);
   m_kickerSpeedSetpt = speed;
 }
 
+/**
+ * Return kicker rate through encoder translation
+ *
+ * @return kicker speed
+ */
 double Shooter::GetKickerRate(){
   return m_kicker->GetSpeed();
 }
@@ -204,8 +242,8 @@ void Shooter::TaskPeriodic(RobotMode mode) {
     m_rightAgitatorLog->LogDouble(m_rightAgitator->GetOutputCurrent());
     DBStringPrintf(DB_LINE5,"s_rate %2.1lf g %2.1lf", GetFlywheelRate(),
             m_flywheelSpeedSetpt);
-    DBStringPrintf(DB_LINE3,"k_rate %2.1lf g %2.1lf", GetKickerRate(),
-            m_kickerSpeedSetpt);
+    /*DBStringPrintf(DB_LINE3,"k_rate %2.1lf g %2.1lf", GetKickerRate(),
+            m_kickerSpeedSetpt);*/
     /*DBStringPrintf(DB_LINE5,"flail %2.1lf conv %2.1lf",
                 (m_leftAgitator->GetOutputCurrent() + m_rightAgitator->GetOutputCurrent()) / 2.0,
                 m_ballConveyor->GetOutputCurrent());*/
@@ -213,11 +251,11 @@ void Shooter::TaskPeriodic(RobotMode mode) {
 //            m_flywheelMotorPrimary->GetOutputVoltage());
 
     switch(m_shootingSequenceState){
-      case idle:
+      case idle: //no shooter subsystem movement
         StopAgitator();
         StopConveyor();
         break;
-      case shooting:
+      case shooting: //auto shooting score sequence
         SetFlywheelSpeed(2970);
         if (OnTarget()) {
           m_drive->ArcadeDrive(0.0,0.0);
@@ -230,13 +268,13 @@ void Shooter::TaskPeriodic(RobotMode mode) {
         break;
     }
     switch(m_flywheelState){
-        case power:
+        case power: //open loop
             m_flywheelMotorPrimary->Set(m_flywheelPow);
             break;
         case notRunning:
             m_flywheelMotorPrimary->Set(0.0);
             break;
-        case speed:
+        case speed: //closed loop
             m_flywheelMotorPrimary->Set(m_flywheelSpeedSetpt);
             break;
     };

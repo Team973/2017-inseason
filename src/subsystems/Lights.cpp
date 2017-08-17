@@ -19,6 +19,9 @@ namespace frc973{
       m_scheduler->UnregisterTask(this);
     }
 
+    /**
+     * Turns on pixy lights through PCM
+     */
     void Lights::EnableLights(){
       m_pixyLight->Set(true);
       m_lightMode = on;
@@ -29,6 +32,12 @@ namespace frc973{
       m_lightMode = off;
     }
 
+    /**
+     * Allows pixy lights to blink/flash for a certain number of times
+     *
+     * @param n     number times to flash
+     * @param time  duration between each flash
+     */
     void Lights::NotifyFlash(int n, uint32_t time){
       m_lightMode = LightMode::blinkingOn;
       m_flashOrder = n;
@@ -38,7 +47,7 @@ namespace frc973{
 
     void Lights::TaskPeriodic(RobotMode mode){
       switch(m_lightMode){
-        case on:
+        case on: //both pixy anf flashlight on
           m_pixyLight->Set(true);
           m_flashLight->Set(true);
           break;
@@ -46,7 +55,7 @@ namespace frc973{
           m_pixyLight->Set(true);
           m_flashLight->Set(true);
           break;
-        case blinkingOn:
+        case blinkingOn: //pixy light blink no flashlight
           m_pixyLight->Set(true);
           m_flashLight->Set(false);
           if(GetMsecTime() - m_lightsTimer >= m_timeFlash){
@@ -54,7 +63,7 @@ namespace frc973{
             m_lightMode = LightMode::blinkingOff;
           }
           break;
-        case blinkingOff:
+        case blinkingOff: //only flashlight
           m_pixyLight->Set(false);
           m_flashLight->Set(true);
           if (GetMsecTime() - m_lightsTimer >= m_timeFlash){

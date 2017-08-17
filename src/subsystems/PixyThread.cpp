@@ -1,3 +1,8 @@
+/**
+ *  Never used this thread for worlds because I2C was not cooperating
+ *  We were never gonna use gear pixy anyway
+ */
+
 #include "WPILib.h"
 #include "lib/SmartPixy.h"
 #include "lib/util/Util.h"
