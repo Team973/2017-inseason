@@ -1,3 +1,9 @@
+/**
+ * This auto routine must start with the hopper touching the wall diagonally
+ * parallel with boiler one wiffle ball away from touching like Citrus and the rest.
+ * Attempted to do this, did not use this for competition and failed miserably
+ */
+
 #include "Robot.h"
 #include "AutoCommon.h"
 

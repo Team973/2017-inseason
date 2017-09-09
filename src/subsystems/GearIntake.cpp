@@ -57,6 +57,11 @@ namespace frc973{
     m_scheduler->UnregisterTask(this);
   }
 
+  /**
+   * Defines and sets the gear intake state either released, grabbed, floating(special case, we never used it)
+   *
+   * @param gearIntakeState desired gear intake state
+   */
   void GearIntake::SetGearIntakeState(GearIntakeState gearIntakeState){
     switch (gearIntakeState){
       case released:
@@ -77,6 +82,11 @@ namespace frc973{
     }
   }
 
+  /**
+   * Sets desired gear position either up or down
+   *
+   * @param gearPosition  desired gear position
+   */
   void GearIntake::SetGearPos(GearPosition gearPosition){
     switch (gearPosition){
       case up:
@@ -91,6 +101,12 @@ namespace frc973{
     }
   }
 
+  /**
+   * Sets desired indexer(car wheels) mode either intaking, indexing,
+   *  hold, or stop
+   *
+   * @param indexerMode  desired indexer mode
+   */
   void GearIntake::SetIndexerMode(Indexer indexerMode){
     switch (indexerMode) {
       case intaking:
@@ -106,7 +122,7 @@ namespace frc973{
         m_rightIndexer->SetCurrentLimit(100);
         m_leftIndexer->SetCurrentLimit(100);
         break;
-      case indexing:
+      case indexing: //(supposed to be a rearrangement of gear for peg alignment)
         m_leftIndexer->SetCurrentLimit(10);
         m_rightIndexer->SetCurrentLimit(10);
         m_rightIndexer->Set(-1.0);
@@ -125,10 +141,18 @@ namespace frc973{
     }
   }
 
+  /**
+   * Seeks if gear is ready to be placed and peg is aligned (uses VEX button sensors)
+   *
+   * @return  if gear is ready (1 of the 3 buttons are pressed)
+   */
   bool GearIntake::IsGearReady(){
     return (m_pushTopLeft->Get() + m_pushTopRight->Get() + m_pushBottom->Get() <= 2);
   }
 
+  /**
+   * @param request driver wants manual control of gear claw(no button sensors)
+   */
   void GearIntake::SetReleaseManualEnable(bool request){
       m_manualReleaseRequest = request;
   }
@@ -137,10 +161,16 @@ namespace frc973{
     m_pickUpState = PickUp::manual;
   }
 
+  /**
+   * @param driverInput driver wants auto score gear(with button sensors)
+   */
   void GearIntake::SetReleaseAutoEnable(bool driverInput){
     m_autoReleaseRequest = driverInput;
   }
 
+  /**
+   * @param request driver seeks for gear(intaking)
+   */
   void GearIntake::SetSeeking(bool request){
     m_seekingRequest = request;
   }
@@ -159,7 +189,7 @@ namespace frc973{
           m_pickUpState = PickUp::seeking;
         }
         break;
-      case seeking:
+      case seeking: //defined as intaking with extra functionality
         this->SetIndexerMode(GearIntake::Indexer::intaking);
         this->SetGearPos(GearIntake::GearPosition::down);
         this->SetGearIntakeState(GearIntake::GearIntakeState::grabbed);
@@ -173,7 +203,7 @@ namespace frc973{
             m_pickUpState = PickUp::idle;
         }
         break;
-      case chewing:
+      case chewing: //gear is now in possession
         this->SetIndexerMode(GearIntake::Indexer::indexing);
         if (GetMsecTime() - m_gearTimer >= 500) {
             if (m_rightIndexer->GetOutputCurrent() >= 9 ||
@@ -189,7 +219,7 @@ namespace frc973{
             m_pickUpState = GearIntake::PickUp::digesting;
         }
         break;
-      case digesting:
+      case digesting: //period between gear is intaked and before scoring
         this->SetIndexerMode(GearIntake::Indexer::holding);
         this->SetGearPos(GearIntake::GearPosition::up);
         if ((IsGearReady() == true && m_autoReleaseRequest) ||
@@ -199,7 +229,7 @@ namespace frc973{
           m_pickUpState = PickUp::vomiting;
         }
         break;
-      case vomiting:
+      case vomiting: //scoring gear
         this->SetIndexerMode(GearIntake::Indexer::stop);
         this->SetGearPos(GearPosition::down);
         this->SetGearIntakeState(GearIntake::GearIntakeState::released);
@@ -207,7 +237,7 @@ namespace frc973{
           m_pickUpState = PickUp::postVomit;
         }
         break;
-      case postVomit:
+      case postVomit: //ready for next gear seek
         if (m_seekingRequest) {
           m_pickUpState = PickUp::seeking;
         }
@@ -216,7 +246,7 @@ namespace frc973{
 
         }
         break;
-      case manual:
+      case manual: //manual mode
         if(m_seekingRequest){
           m_pickUpState = PickUp::seeking;
         }

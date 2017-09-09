@@ -21,10 +21,6 @@ namespace frc973 {
 class TaskMgr;
 class LogSpreadsheet;
 
-/**
- * Open loop control on flywheel at the moment... will do fine tuning
- * once it's shown that everything else works
- */
 class Shooter : public CoopTask
 {
 public:

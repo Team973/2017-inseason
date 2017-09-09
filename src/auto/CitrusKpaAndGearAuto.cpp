@@ -1,3 +1,8 @@
+/**
+ * This auto routine must start with the hopper touching the wall.
+ * Used in Sacramento Elims, apparently weird in finals (it was found to be the I2C gear pixy thread)
+ */
+
 #include "Robot.h"
 #include "AutoCommon.h"
 

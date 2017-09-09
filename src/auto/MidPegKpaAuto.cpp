@@ -1,3 +1,8 @@
+/**
+ * This auto routine must start with the hopper touching the wall.
+ * Attempted to do this, did not use this for competition
+ */
+
 #include "Robot.h"
 #include "AutoCommon.h"
 

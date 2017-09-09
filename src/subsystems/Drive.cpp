@@ -19,6 +19,7 @@
 #include "controllers/GearPixyVisionDriveController.h"
 #include "controllers/TrapDriveController.h"
 #include "controllers/StraightDriveController.h"
+#include "controllers/SplineDriveController.h"
 #include "lib/SPIGyro.h"
 
 namespace frc973 {
@@ -63,6 +64,7 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
     m_pidDriveController = new PIDDriveController();
     m_trapDriveController = new TrapDriveController(this, logger);
     m_straightDriveController = new StraightDriveController();
+    m_splineDriveController = new SplineDriveController(this, logger);
     this->SetDriveController(m_arcadeDriveController);
     this->SetDriveControlMode(m_controlMode);
 
@@ -86,6 +88,9 @@ Drive::Drive(TaskMgr *scheduler, CANTalon *left, CANTalon *right,
     fprintf(stderr, "Scheduled task\n");
 }
 
+/**
+ *  Zeroes gyro, left drive pos, and right drive pos
+ */
 void Drive::Zero() {
     if (m_austinGyro) {
         m_gyroZero = m_austinGyro->GetAngle();
@@ -98,29 +103,63 @@ void Drive::Zero() {
     }
 }
 
+/**
+ * Sets Drive controller to ArcadeDrive
+ *
+ * @param throttle  Left joystick y-axis value
+ * @param turn      Right joystick x-axis value
+ */
 void Drive::ArcadeDrive(double throttle, double turn) {
     this->SetDriveController(m_arcadeDriveController);
     m_arcadeDriveController->SetJoysticks(throttle, turn);
 }
 
+/**
+ * Sets Drive controller to OpenLoopArcadeDrive
+ *
+ * @param throttle  Left joystick y-axis value
+ * @param turn      Right joystick x-axis value
+ */
 void Drive::OpenloopArcadeDrive(double throttle, double turn) {
     this->SetDriveController(m_openloopArcadeDriveController);
     m_openloopArcadeDriveController->SetJoysticks(throttle, turn);
 }
 
+/**
+ * Sets Drive controller to AssistedArcadeDrive
+ *
+ * @param throttle  Left joystick y-axis value
+ * @param turn      Right joystick x-axis value
+ */
 void Drive::AssistedArcadeDrive(double throttle, double turn){
   this->SetDriveController(m_assistedArcadeDriveController);
   m_assistedArcadeDriveController->SetJoysticks(throttle, turn);
 }
 
+/**
+ * Sets Drive controller to BoilerPixyVisionDriveController
+ */
 void Drive::SetBoilerPixyTargeting(){
   this->SetDriveController(m_boilerPixyDriveController);
 }
 
+/**
+ * Sets Drive controller to GearPixyVisionDriveController
+ */
 void Drive::SetGearPixyTargeting(){
   this->SetDriveController(m_gearPixyDriveController);
 }
 
+/**
+ * Sets Drive mode to PIDDrive
+ *
+ * @param dist        Desired drive distance
+ * @param turn        Desired turn angle
+ * @param relativity  Calculates relativity of drive distance and current position
+ * @param powerCap    Percentage of drive power; 1.0 = full power
+ *
+ * @return            the PID Drive contoller
+ */
 PIDDriveController *Drive::PIDDrive(double dist, double turn,
         RelativeTo relativity, double powerCap)
 {
@@ -132,6 +171,15 @@ PIDDriveController *Drive::PIDDrive(double dist, double turn,
     return m_pidDriveController;
 }
 
+/**
+ * Sets Drive mode to PIDTurn
+ *
+ * @param turn        Desired turn angle
+ * @param relativity  Calculates relativity of drive distance and current position
+ * @param powerCap    Percentage of drive power; 1.0 = full power
+ *
+ * @return            the PID Drive contoller
+ */
 PIDDriveController *Drive::PIDTurn(double turn, RelativeTo relativity,
         double powerCap)
 {
@@ -144,63 +192,107 @@ PIDDriveController *Drive::PIDTurn(double turn, RelativeTo relativity,
 }
 
 /**
- * reported in inches
+ * Returns Left Drive Distance thorugh encoder translation
+ *
+ * @return  Left Drive Distance reported in inches
  */
 double Drive::GetLeftDist() const {
     return m_leftMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION -
         m_leftPosZero;
 }
 
+/**
+ * Returns Right Drive Distance thorugh encoder translation
+ *
+ * @return  Right Drive Distance reported in inches
+ */
 double Drive::GetRightDist() const {
     return -m_rightMotor->GetPosition() * DRIVE_DIST_PER_REVOLUTION -
         m_rightPosZero;
 }
 
 /**
- * Reported in inches per second
- * As per manual 17.2.1, GetSpeed reports RPM
+ * Returns Left Drive Rate or speed thorugh encoder translation
+ *
+ * @return  Left Drive Rate or Speed reported in inches Reported in inches per second; As per manual 17.2.1, GetSpeed reports RPM
  */
 double Drive::GetLeftRate() const {
     return m_leftMotor->GetSpeed() * DRIVE_IPS_FROM_RPM;
 }
 
+/**
+ * Returns Right Drive Rate or speed thorugh encoder translation
+ *
+ * @return  Right Drive Rate or Speed reported in inches Reported in inches per second; As per manual 17.2.1, GetSpeed reports RPM
+ */
 double Drive::GetRightRate() const {
     return -m_rightMotor->GetSpeed() * DRIVE_IPS_FROM_RPM;
 }
 
+/**
+ * Returns Average Drive Distance thorugh encoder translation
+ *
+ * @return  Average Drive Distance reported in inches
+ */
 double Drive::GetDist() const {
     return (GetLeftDist() + GetRightDist()) / 2.0;
 }
 
+/**
+ * Returns Average Drive Rate or speed thorugh encoder translation
+ *
+ * @return  Average Drive Rate or Speed reported in inches Reported in inches per second; As per manual 17.2.1, GetSpeed reports RPM
+ */
 double Drive::GetRate() const {
     return (GetLeftRate() + GetRightRate()) / 2.0;
 }
 
+/**
+ * Returns Average Drive Current thorugh Talon SRX Output
+ *
+ * @return  Avergage current reported in amperes
+ */
 double Drive::GetDriveCurrent() const {
     return (Util::abs(m_rightMotor->GetOutputCurrent()) +
             Util::abs(m_leftMotor->GetOutputCurrent())) / 2.0;
 }
 
+/**
+ * Returns calculated current angle thorugh gyro translation
+ *
+ * @return  Current angle position with respect to initial position
+ */
 double Drive::GetAngle() const {
     return -(m_angle - m_gyroZero);
 }
 
+/**
+ * Returns calculated current anglular rate thorugh gyro translation
+ *
+ * @return  Current angular rate
+ */
 double Drive::GetAngularRate() const {
     return -m_angleRate;
 }
 
+/**
+ * Calculates Drive Output and sets it from driver input or closed control loop
+ *
+ * @param left  desired left Output
+ * @param right desired right Output
+ */
 void Drive::SetDriveOutput(double left, double right) {
 	m_leftCommand = left;
 	m_rightCommand = right;
 
-    if (m_controlMode == CANSpeedController::ControlMode::kSpeed) {
-        m_leftCommand /= DRIVE_IPS_FROM_RPM;
-        m_rightCommand /= DRIVE_IPS_FROM_RPM;
-    }
-    else if (m_controlMode == CANSpeedController::ControlMode::kPosition) {
-        m_leftCommand /= DRIVE_DIST_PER_REVOLUTION;
-        m_rightCommand /= DRIVE_DIST_PER_REVOLUTION;
-    }
+  if (m_controlMode == CANSpeedController::ControlMode::kSpeed) {
+      m_leftCommand /= DRIVE_IPS_FROM_RPM;
+      m_rightCommand /= DRIVE_IPS_FROM_RPM;
+  }
+  else if (m_controlMode == CANSpeedController::ControlMode::kPosition) {
+      m_leftCommand /= DRIVE_DIST_PER_REVOLUTION;
+      m_rightCommand /= DRIVE_DIST_PER_REVOLUTION;
+  }
 
 	if (isnan(m_leftCommand) || isnan(m_rightCommand)) {
 		m_leftMotor->Set(0.0);
@@ -212,6 +304,9 @@ void Drive::SetDriveOutput(double left, double right) {
 	}
 }
 
+/**
+ * Set Drive Talon control modes
+ */
 void Drive::SetDriveControlMode(CANSpeedController::ControlMode mode){
     m_leftMotor->SetControlMode(mode);
     m_rightMotor->SetControlMode(mode);
@@ -221,11 +316,14 @@ void Drive::SetDriveControlMode(CANSpeedController::ControlMode mode){
 void Drive::TaskPeriodic(RobotMode mode) {
     m_angle = m_austinGyro->GetAngle();
 
+    //CTRE PigeonImu config
     /*
     double xyz_dps[4];
     m_gyro->GetRawGyro(xyz_dps);
     m_angleRate = xyz_dps[2];
     */
+
+    //Austin ADXRS450_Gyro config
     double currRate = m_austinGyro->GetRate();
     if(currRate == 0){
     }
@@ -281,6 +379,13 @@ TrapDriveController *Drive::TrapDrive(RelativeTo relativeTo,
     this->SetDriveController(m_trapDriveController);
     m_trapDriveController->SetTarget(relativeTo, dist, angle);
     return m_trapDriveController;
+}
+
+SplineDriveController *Drive::SplineDrive(RelativeTo relativeTo,
+        double dist, double angle) {
+    this->SetDriveController(m_splineDriveController);
+    m_splineDriveController->SetTarget(relativeTo, dist, angle);
+    return m_splineDriveController;
 }
 
 }

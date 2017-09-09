@@ -13,7 +13,7 @@ Waypoint TrapProfileUnsafe(double time,
         max_velocity / max_acceleration * Util::signum(distance);
 
     double t_0 = 0.0, t_1, t_2, t_3;
-    
+
     if (start_halt) {
         // start with zero velocity
         if (end_halt) {
@@ -150,24 +150,24 @@ Waypoint TrapProfileUnsafe(double time,
         if (end_halt) {
             return Waypoint(time, 0.0, distance, 0.0, angle, true, false);
         }
-            else {
-            double velocity_now;
-            if (start_halt) {
-                velocity_now = Util::min(max_velocity, max_acceleration * t_3);
-            }
-            else {
-                velocity_now = max_velocity;
-            }
+        else {
+          double velocity_now;
+          if (start_halt) {
+              velocity_now = Util::min(max_velocity, max_acceleration * t_3);
+          }
+          else {
+              velocity_now = max_velocity;
+          }
 
-            double angle_vel_now = velocity_now * angle / distance
-                 * Util::signum(distance) * Util::signum(angle);
+          double angle_vel_now = velocity_now * angle / distance
+               * Util::signum(distance) * Util::signum(angle);
 
-            return Waypoint(time,
-                            velocity_now * Util::signum(distance),
-                            distance,
-                            angle_vel_now * Util::signum(angle),
-                            angle,
-                            true, false);
+          return Waypoint(time,
+                          velocity_now * Util::signum(distance),
+                          distance,
+                          angle_vel_now * Util::signum(angle),
+                          angle,
+                          true, false);
         }
     }
 }

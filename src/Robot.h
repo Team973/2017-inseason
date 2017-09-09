@@ -115,6 +115,7 @@ private:
     Alliance          m_alliance;
     double						m_conveyorSetpt;
     int               m_kickerSetpt;
+    bool              m_endMode;
     DriveMode         m_driveMode;
     BumperMode        m_bumperMode;
 

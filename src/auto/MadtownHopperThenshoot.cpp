@@ -1,3 +1,8 @@
+/**
+ * This auto routine must start with the hopper away from the wall.
+ * Attempted to do this, only used in CVR Qual 28
+ */
+
 #include "Robot.h"
 #include "AutoCommon.h"
 

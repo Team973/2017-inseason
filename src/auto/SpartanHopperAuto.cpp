@@ -1,12 +1,14 @@
+/**
+ * This auto routine must start with the hopper touching the wall.
+ * Attempted to do this, failed miserably
+ */
+
 #include "Robot.h"
 #include "AutoCommon.h"
 #include "lib/TrapProfile.h"
 
 namespace frc973 {
 
-/**
- * This auto routine must start with the hopper touching the wall.
- */
 void Robot::SpartanHopperAuto(){
     double initial_dist = 6.0;
 

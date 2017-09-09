@@ -37,6 +37,7 @@ Robot::Robot(void
     m_alliance(Alliance::Red),
     m_conveyorSetpt(1.0),
     m_kickerSetpt(3000),
+    m_endMode(false),
     m_driveMode(DriveMode::AssistedArcade),
     m_bumperMode(BumperMode::LowGear)
 {
@@ -215,11 +216,6 @@ void Robot::AllStateContinuous(void) {
     DBStringPrintf(DB_LINE2, "drive cur %lf",
                    m_drive->GetDriveCurrent());
                    */
-    DBStringPrintf(DB_LINE8,
-            "g %d %lf %d",
-            m_pixyR->GetDataFresh(),
-            m_pixyR->GetOffset() * PixyThread::GEAR_DEGREES_PER_PIXEL,
-            m_gearIntake->IsGearReady());
 
     m_austinGyroLog->LogDouble(m_austinGyro->GetAngle());
     m_austinGyroRateLog->LogDouble(m_austinGyro->GetRate());

@@ -52,5 +52,7 @@ namespace frc973{
       LogCell *m_pixyYOffsetLog;
       LogCell *m_lightLog;
       bool m_lightEnabled;
+      double m_filteredXOffset;
+      double m_filteredYOffset;
   };
 }

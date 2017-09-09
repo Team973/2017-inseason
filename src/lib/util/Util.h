@@ -196,6 +196,10 @@ namespace Util {
 		}
 	}
 
+  inline double square(double n){
+    return n * n;
+  }
+
 	/* returns true if a and b are close (within epsilon) to each other */
 	inline bool close(double a, double b, double epsilon = 0.00001) {
 		return abs(a - b) < epsilon;
