@@ -29,9 +29,7 @@ void Robot::DisabledContinuous(void) {
 
   DBStringPrintf(DBStringPos::DB_LINE0,
                  "%c %s %s",
-                 (m_alliance == Alliance::Red) ? 'R' : 'B',
-                 (m_endMode) ? "DriveBack" : "Stay",
-                 GetAutoName(m_autoRoutine));
+                 (m_alliance == Alliance::Red) ? 'R' : 'B');
 }
 
 void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
@@ -41,7 +39,6 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
     switch (button) {
         case DualAction::BtnA:
             if (pressedP) {
-                m_endMode = false;
             }
             break;
         case DualAction::BtnB:
@@ -56,7 +53,6 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             break;
         case DualAction::BtnY:
             if (pressedP) {
-              m_endMode = true;
             }
             break;
         case DualAction::RightBumper:
@@ -93,7 +89,7 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             break;
         case DualAction::LeftTrigger:
             if (pressedP) {
-              //m_alliance = Alliance::Blue;
+              m_alliance = Alliance::Blue;
             }
             break;
         case DualAction::RightTrigger:

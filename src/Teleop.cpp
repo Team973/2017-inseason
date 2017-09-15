@@ -295,11 +295,11 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         switch (button) {
             case DualAction::DPadUpVirtBtn:
                 if (pressedP) {
-                    /*
+
                     g_manualDriveControl = false;
                     m_drive->SetBoilerPixyTargeting();
-                    */
-                    m_conveyorSetpt += 0.1;
+
+                    //m_conveyorSetpt += 0.1;
                 }
                 break;
             case DualAction::DPadDownVirtBtn:

@@ -115,9 +115,6 @@ void Robot::KillerHopperAuto(){
               m_ballIntake->RetractHopper();
               m_autoState++;
             }
-            if (m_endMode && GetMsecTime() - m_autoTimer >= 6500) {
-              m_drive->OpenloopArcadeDrive(-1.0, 0.0);
-            }
             break;
         default:
             break;
