@@ -94,7 +94,7 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             break;
         case DualAction::LeftTrigger:
             if (pressedP) {
-              //m_alliance = Alliance::Blue;
+              m_alliance = Alliance::Blue;
             }
             break;
         case DualAction::RightTrigger:

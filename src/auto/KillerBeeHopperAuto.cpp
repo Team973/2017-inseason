@@ -21,10 +21,10 @@ void Robot::KillerHopperAuto(){
     double initial_dist = 47.0;
 
     if(m_alliance == Alliance::Red){
-        initial_dist += 0.0;
+        initial_dist += 6.0;
     }
     else{
-        initial_dist += 0.0;
+        initial_dist += 6.0;
     }
 
     switch (m_autoState){
@@ -56,7 +56,7 @@ void Robot::KillerHopperAuto(){
                     false, true>(0);
                 m_drive
                     ->TrapDrive(DriveBase::RelativeTo::SetPoint, 53.0,
-                                m_autoDirection * 91.0)
+                                m_autoDirection * 94.0)
                     ->SetHalt(false, true)
                     ->SetConstraints(70.0, 70.0);
                 m_autoState++;
@@ -84,7 +84,7 @@ void Robot::KillerHopperAuto(){
         case 4:
             if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 3000) {
                 m_ballIntake->BallIntakeStop();
-                double angleOffset = m_boilerPixy->GetXOffset() *
+                /*double angleOffset = m_boilerPixy->GetXOffset() *
                     BoilerPixy::PIXY_OFFSET_CONSTANT;
                 angle = angleOffset;
                 if (Util::abs(angleOffset) >= 10.0) {
@@ -100,7 +100,7 @@ void Robot::KillerHopperAuto(){
                     m_autoTimer = GetMsecTime();
                     m_autoState++;
                     didPixy = 2;
-                }
+                }*/
                 m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
                 m_shooter->StartConveyor(0.9);
                 m_shooter->StartAgitator(1.0, Shooter::Side::right);
