@@ -28,9 +28,8 @@ void Robot::DisabledContinuous(void) {
   }
 
   DBStringPrintf(DBStringPos::DB_LINE0,
-                 "%c %s",
-                 (m_alliance == Alliance::Red) ? 'R' : 'B',
-                 GetAutoName(m_autoRoutine));
+                 "%c %s %s",
+                 (m_alliance == Alliance::Red) ? 'R' : 'B');
 }
 
 void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
@@ -39,11 +38,8 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             port, button, pressedP);
     switch (button) {
         case DualAction::BtnA:
-            /*
             if (pressedP) {
-                m_autoRoutine = AutonomousRoutine::SpartanHopper;
             }
-            */
             break;
         case DualAction::BtnB:
             if (pressedP) {
@@ -57,7 +53,6 @@ void Robot::HandleDisabledButton(uint32_t port, uint32_t button,
             break;
         case DualAction::BtnY:
             if (pressedP) {
-              //  m_autoRoutine = AutonomousRoutine::FuelBallToBoiler;
             }
             break;
         case DualAction::RightBumper:

@@ -5,6 +5,7 @@
 #include "subsystems/BallIntake.h"
 #include "controllers/PIDDrive.h"
 #include "controllers/TrapDriveController.h"
+#include "controllers/SplineDriveController.h"
 
 namespace frc973 {
     static constexpr double DRIVER_STATION_BASE_LINE_DIST = 87.0;

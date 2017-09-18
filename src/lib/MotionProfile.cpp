@@ -4,11 +4,11 @@
 */
 
 #include "lib/MotionProfile.h"
+#include "lib/WrapDash.h"
 #include <cmath>
 namespace frc973 {
 
 namespace Profiler {
-
  NewWaypoint TrapezoidProfileUnsafe(double time, double distance, double angle,
                                   double max_velocity, double acceleration,
                                   double start_velocity, double end_velocity)
@@ -63,10 +63,7 @@ namespace Profiler {
      dist_now = distance;
    }
 
-   /*
-   printf("t0=%lf t1=%lf t2=%lf t3=%lf\n",
-          t0, t1, t2, t3);
-   */
+   DBStringPrintf(DB_LINE2, "dn%0.1lf vn%0.1lf", dist_now, velocity_now);
 
    if (time < t0) {
        // pre mortem
@@ -85,7 +82,7 @@ namespace Profiler {
                        dist_now * Util::signum(distance),
                        angle_vel_now * Util::signum(angle),
                        angle_now * Util::signum(angle),
-                       start_velocity, end_velocity);
+                       false, false);
    }
    else if (t1 <= time && time < t2) {
        // coasting
@@ -100,7 +97,7 @@ namespace Profiler {
                        dist_now * Util::signum(distance),
                        angle_vel_now * Util::signum(angle),
                        angle_now * Util::signum(angle),
-                       start_velocity, end_velocity);
+                       false, false);
    }
    else if (t2 <= time && time < t3) {
        // halting
@@ -113,7 +110,7 @@ namespace Profiler {
                        dist_now * Util::signum(distance),
                        angle_vel_now * Util::signum(angle),
                        angle_now * Util::signum(angle),
-                       start_velocity, end_velocity);
+                       false, false);
    }
    else {
        // t3 <= time
@@ -130,7 +127,7 @@ namespace Profiler {
                          distance,
                          angle_vel_now * Util::signum(angle),
                          angle,
-                         start_velocity, end_velocity);
+                         true, false);
        }
    }
     }
@@ -151,24 +148,22 @@ namespace Profiler {
            velocity_now = acceleration * t_half + Util::abs(start_velocity);
            dist_now = (velocity_now * t_half);
        }
-      else if(time < t_half){
+      else if(time < t_half && time >= t0){
            velocity_now = acceleration * time + Util::abs(start_velocity);
            dist_now = (0.5 * velocity_now * time);
        }
-      else if(time > t_half){
+      else if(time > t_half && time <= t1){
            velocity_now  = Util::abs(cap_velocity) - acceleration * (time - t_half);
-           dist_now = (cap_velocity * t_half) +
-                   (cap_velocity + velocity_now / 2.0) * (time - t_half);
+           dist_now = (cap_velocity * t_half) / 2.0 +
+                   (cap_velocity + velocity_now) / 2.0 * (time - t_half);
        }
       else{
            velocity_now = 0.0;
            dist_now = 0.0;
        }
 
-      /*
-      printf("t0=%lf t1=%lf t2=%lf t3=%lf\n",
-             t0, t1, t2, t3);
-      */
+       DBStringPrintf(DB_LINE2, "vc %0.1lf dn%0.1lf vn%0.1lf", cap_velocity, dist_now, velocity_now);
+
 
       if (time < t0) {
           // pre mortem
@@ -187,7 +182,7 @@ namespace Profiler {
                         dist_now * Util::signum(distance),
                         angle_vel_now * Util::signum(angle),
                         angle_now * Util::signum(angle),
-                        start_velocity, end_velocity);
+                        false, false);
       }
       else if(time == t_half){
         double doneness = dist_now / distance
@@ -201,7 +196,7 @@ namespace Profiler {
                         dist_now * Util::signum(distance),
                         angle_vel_now * Util::signum(angle),
                         angle_now * Util::signum(angle),
-                        start_velocity, end_velocity);
+                        false, false);
       }
       else if (t_half <= time && time < t1) {
         // halting
@@ -214,7 +209,7 @@ namespace Profiler {
                         dist_now * Util::signum(distance),
                         angle_vel_now * Util::signum(angle),
                         angle_now * Util::signum(angle),
-                        start_velocity, end_velocity);
+                        false, false);
       }
       else {
           // post mortem
@@ -230,7 +225,7 @@ namespace Profiler {
                             distance,
                             angle_vel_now * Util::signum(angle),
                             angle,
-                            start_velocity, end_velocity);
+                            true, false);
           }
       }
     }

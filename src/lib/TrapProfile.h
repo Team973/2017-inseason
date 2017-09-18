@@ -41,12 +41,12 @@ struct Waypoint {
  * C++ doesn't support floating point non-type template arguments so
  * this is a little hack to let us do static asserts on floats
  */
-template<int N, int D = 1>
+/*template<int N, int D = 1>
 struct FakeFloat {
     static constexpr int numerator = N;
     static constexpr int denomenator = D;
     static constexpr double value = static_cast<double>(N) / static_cast<double>(D);
-};
+};*/
 
 /**
  * TrapProfileUnsafe does the calculation at runtime like one would expect

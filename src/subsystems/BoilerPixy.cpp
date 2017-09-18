@@ -92,7 +92,9 @@ namespace frc973{
      * @return x offset of target
      */
     double BoilerPixy::GetXOffset(){
-        return m_filteredXOffset;
+      double offset = 1.9; // comp bot offset 1.9; pbot = 1.78
+      m_filteredXOffset = m_pixyXFilter->Update(m_pixyXOffset->GetVoltage() - offset);
+      return m_filteredXOffset;
     }
 
     /**
@@ -149,8 +151,6 @@ namespace frc973{
         m_pixyXOffsetLog->LogDouble(GetXOffset());
         m_pixyYOffsetLog->LogDouble(m_pixyYOffset->GetVoltage());
         m_lightLog->LogInt(m_lightEnabled);
-        double offset = 1.9; // comp bot offset 1.9; pbot = 1.78
-        m_filteredXOffset = m_pixyXFilter->Update(m_pixyXOffset->GetVoltage() - offset);
         m_filteredYOffset = m_pixyYFilter->Update(1.25 * (m_pixyYOffset->GetVoltage() - 0.8));
     }
 }

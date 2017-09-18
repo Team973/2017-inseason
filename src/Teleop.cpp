@@ -7,6 +7,7 @@
 #include "subsystems/BallIntake.h"
 #include "controllers/PIDDrive.h"
 #include "controllers/TrapDriveController.h"
+#include "controllers/SplineDriveController.h"
 #include "lib/JoystickHelper.h"
 #include "lib/WrapDash.h"
 
@@ -295,11 +296,11 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
         switch (button) {
             case DualAction::DPadUpVirtBtn:
                 if (pressedP) {
-                    /*
+
                     g_manualDriveControl = false;
                     m_drive->SetBoilerPixyTargeting();
-                    */
-                    m_conveyorSetpt += 0.1;
+
+                    //m_conveyorSetpt += 0.1;
                 }
                 break;
             case DualAction::DPadDownVirtBtn:
@@ -372,25 +373,27 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
                 if (pressedP) {
                     g_manualDriveControl = false;
                     m_drive
-                        ->TrapDrive(DriveBase::RelativeTo::Now, -8.0 * 12.0, 0.0)
-                        ->SetHalt(true, true)
-                        ->SetConstraints(48.0, 36.0);
+                        ->SplineDrive(DriveBase::RelativeTo::Now, -8.0 * 12.0, 0.0)
+                        ->SetMaxVelAccel(48.0, 36.0)
+                        ->SetStartEndVel(5.0, 20.0);
                 }
                 break;
             case DualAction::BtnB:
                 if (pressedP) {
-                    g_manualDriveControl = false;
-                    m_drive->DriveStraight(DriveBase::RelativeTo::Now,
-                            0.2, 0.0);
+                  g_manualDriveControl = false;
+                  m_drive
+                      ->SplineDrive(DriveBase::RelativeTo::Now, 8.0 * 12.0, 0.0)
+                      ->SetMaxVelAccel(48.0, 36.0)
+                      ->SetStartEndVel(5.0, 20.0);
                 }
                 break;
             case DualAction::BtnX:
                 if (pressedP) {
                     g_manualDriveControl = false;
                     m_drive
-                        ->TrapDrive(DriveBase::RelativeTo::Now, 3.0 * 12.0, 45.0)
-                        ->SetHalt(true, true)
-                        ->SetConstraints(48.0, 24.0);
+                        ->SplineDrive(DriveBase::RelativeTo::Now, 3.0 * 12.0, 0.0)
+                        ->SetMaxVelAccel(48.0, 36.0)
+                        ->SetStartEndVel(5.0, 20.0);
                 }
                 break;
             case DualAction::BtnY:
@@ -413,13 +416,11 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
               break;
             case DualAction::Back:
               if (pressedP) {
-                  g_manualConveyorControl = false;
-                  m_shooter->SetFlywheelSpeed(1000);
-                  m_shooter->StartConveyor(m_conveyorSetpt);
-                  m_shooter->StartAgitator(m_flailSetpt, Shooter::Side::right);
-                  m_shooter->StartAgitator(m_flailSetpt, Shooter::Side::left);
-                  m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
-                  printf("conv %f",m_conveyorSetpt);
+                g_manualDriveControl = false;
+                m_drive
+                    ->SplineDrive(DriveBase::RelativeTo::Now, -3.0 * 12.0, 0.0)
+                    ->SetMaxVelAccel(48.0, 36.0)
+                    ->SetStartEndVel(5.0, 20.0);
               }
         }
     }
