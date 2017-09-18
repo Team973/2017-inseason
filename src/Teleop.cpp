@@ -262,12 +262,15 @@ void Robot::HandleTeleopButton(uint32_t port, uint32_t button,
             break;
         case DualAction::DPadLeftVirtBtn:
             if (pressedP){
-              //m_ballIntake->ExpandHopper();
+              m_ballIntake->AgitateSystem();
+            }
+            else{
+              m_ballIntake->RetractHopper();
             }
             break;
         case DualAction::DPadRightVirtBtn:
             if (pressedP) {
-              //m_ballIntake->RetractHopper();
+              m_ballIntake->RetractHopper();
                 }
             break;
         case DualAction::Back:

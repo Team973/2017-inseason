@@ -12,8 +12,10 @@ namespace frc973{
   m_logger(logger),
   m_ballIntakeMotor(new CANTalon(BALL_INTAKE_CAN_ID, 50)),
   m_ballIntakeState(BallIntakeState::notRunning),
+  m_hopperState(HopperState::close),
   m_hopperSolenoid(new Solenoid(HOPPER_SOLENOID)),
-  m_ballIntakePow(0.0)
+  m_ballIntakePow(0.0),
+  m_agitateTime(0)
   {
     this->m_scheduler->RegisterTask("BallIntake", this, TASK_PERIODIC);
     m_ballIntakeMotor->SetControlMode(CANTalon::ControlMode::kPercentVbus);
@@ -60,11 +62,18 @@ namespace frc973{
 
   void BallIntake::ExpandHopper(){
     m_hopperSolenoid->Set(true);
+    m_hopperState = HopperState::open;
     printf("actuate hopper");
   }
 
   void BallIntake::RetractHopper(){
     m_hopperSolenoid->Set(false);
+    m_hopperState = HopperState::close;
+  }
+
+  void BallIntake::AgitateSystem(){
+    m_hopperState = HopperState::agitateOpen;
+    m_agitateTime = GetMsecTime();
   }
 
   void BallIntake::TaskPeriodic(RobotMode mode){
@@ -82,6 +91,28 @@ namespace frc973{
           break;
         case manual:
           m_ballIntakeMotor->Set(m_ballIntakePow);
+          break;
+      }
+      switch(m_hopperState){
+        case open:
+          this->ExpandHopper();
+          break;
+        case close:
+          this->RetractHopper();
+          break;
+        case agitateOpen:
+          this->ExpandHopper();
+          if (GetMsecTime() - m_agitateTime > 500) {
+            m_agitateTime = GetMsecTime();
+            m_hopperState = HopperState::agitateClose;
+          }
+          break;
+        case agitateClose:
+          this->RetractHopper();
+          if(GetMsecTime() - m_agitateTime > 500){
+            m_agitateTime = GetMsecTime();
+            m_hopperState = HopperState::agitateOpen;
+          }
           break;
       }
   }

@@ -71,7 +71,7 @@ void Robot::KillerHopperAuto(){
             }
             break;
         case 3:
-            if (GetMsecTime() - m_autoTimer > 2500) {
+            if (GetMsecTime() - m_autoTimer > 2800) {
                 m_drive
                     ->TrapDrive(DriveBase::RelativeTo::Now, -24.0,
                                 m_autoDirection * 65.0)

@@ -57,7 +57,7 @@ void Robot::MidPegKpaAuto(){
           m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
           m_gearIntake->SetGearIntakeState(GearIntake::GearIntakeState::released);
           m_drive
-              ->TrapDrive(DriveBase::RelativeTo::Now, 93.0, -78.0 * m_autoDirection)
+              ->TrapDrive(DriveBase::RelativeTo::Now, 93.0, -80.0 * m_autoDirection)
               ->SetHalt(true, true)
               ->SetConstraints(70.0, 70.0);
           m_autoTimer = GetMsecTime();

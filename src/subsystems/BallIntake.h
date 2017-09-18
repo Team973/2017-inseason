@@ -27,6 +27,14 @@ namespace frc973 {
       manual,
       reverse
     };
+
+    enum HopperState{
+      open,
+      close,
+      agitateOpen,
+      agitateClose
+    };
+
     BallIntake(TaskMgr *scheduler, LogSpreadsheet *logger);
     virtual ~BallIntake();
     void BallIntakeStart();
@@ -35,6 +43,7 @@ namespace frc973 {
     void BallIntakeStartReverse();
     void ExpandHopper();
     void RetractHopper();
+    void AgitateSystem();
     void TaskPeriodic(RobotMode mode) override;
 
   private:
@@ -43,11 +52,13 @@ namespace frc973 {
     CANTalon *m_ballIntakeMotor;
 
     BallIntakeState m_ballIntakeState;
+    HopperState m_hopperState;
     Solenoid *m_hopperSolenoid;
     LogCell *m_voltage;
     LogCell *m_current;
 
     double m_ballIntakePow;
+    uint32_t m_agitateTime;
 
     static constexpr int BALL_INTAKE_RUNNING_POW = 0.75;
     static constexpr int BALL_INTAKE_REVERSE_POW = -0.75;

@@ -13,35 +13,35 @@ double offgear;
 void Robot::CitrusKpaAndGearAuto(){
 
   switch(m_autoState){
-    case 0:
+    /*case 0:
       m_autoTimer = GetMsecTime();
       m_autoState++;
-      break;
-    case 1:
+      break;*/
+    case 0:
       if(GetMsecTime() - m_autoTimer > 1000){
-        m_drive->PIDDrive(-38.0, 0.0, DriveBase::RelativeTo::Now, 1.0);
+        m_drive->PIDDrive(-40.0, 0.0, DriveBase::RelativeTo::Now, 1.0);
         m_gearIntake->SetPickUpManual();
         m_compressor->Disable();
         m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
-        m_shooter->SetFlywheelSpeed(2950);
+        m_shooter->SetFlywheelSpeed(3100);//2950
         m_shooter->StopAgitator();
         m_shooter->StartConveyor(0.0);
         m_autoTimer = GetMsecTime();
         m_autoState++;
       }
       break;
-    case 2:
+    case 1:
       if (GetMsecTime() - m_autoTimer > 250) {
           m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
       }
       if(m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2500){
-        m_drive->PIDTurn(-52.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0)
+        m_drive->PIDTurn(-55.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0)
             ->SetAngleTolerance(15.0, 4.0);
         m_autoTimer = GetMsecTime();
         m_autoState++;
       }
       break;
-    case 3:
+    case 2:
       if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2500) {
           double boilerOffset = m_boilerPixy->GetXOffset() *
               BoilerPixy::PIXY_OFFSET_CONSTANT;
@@ -60,7 +60,7 @@ void Robot::CitrusKpaAndGearAuto(){
           }
       }
       break;
-    case 4:
+    case 3:
         if ((m_drive->OnTarget() && m_shooter->OnTarget()) ||
                 GetMsecTime() - m_autoTimer > 2500) {
             m_shooter->SetShooterState(Shooter::ShootingSequenceState::manual);
@@ -71,7 +71,7 @@ void Robot::CitrusKpaAndGearAuto(){
             m_autoState++;
         }
         break;
-    case 5:
+    case 4:
         if(GetMsecTime() - m_autoTimer >= 1500){
           m_drive->PIDTurn(0.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0)
               ->SetAngleTolerance(8.0, 2.0);
@@ -82,15 +82,15 @@ void Robot::CitrusKpaAndGearAuto(){
           m_autoState++;
         }
         break;
-    case 6:
+    case 5:
       if(m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2500){
-        m_drive->PIDDrive(-80.0, 0.0, DriveBase::RelativeTo::SetPoint, 1.0);
+        m_drive->PIDDrive(-83.0, 0.0, DriveBase::RelativeTo::SetPoint, 1.0);
         m_autoTimer = GetMsecTime();
         m_compressor->Enable();
         m_autoState++;
       }
       break;
-    case 7:
+    case 6:
         if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2500) {
           m_drive->PIDTurn(-60.0 * m_autoDirection, DriveBase::RelativeTo::Absolute, 1.0)
               ->SetAngleTolerance(10.0, 3.0);
@@ -98,14 +98,14 @@ void Robot::CitrusKpaAndGearAuto(){
           m_autoState++;
         }
         break;
-    case 8:
+    case 7:
         if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 2500) {
           m_drive->PIDDrive(-10.0, 0.0, DriveBase::RelativeTo::Now, 1.0);
           m_autoTimer = GetMsecTime();
           m_autoState++;
         }
         break;
-    case 9:
+    case 8:
         if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1500) {
             /*double gearOffset = m_pixyR->GetOffset() *
                 PixyThread::GEAR_DEGREES_PER_PIXEL;
@@ -127,14 +127,14 @@ void Robot::CitrusKpaAndGearAuto(){
             m_autoState++;
         }
         break;
-    case 10:
+    case 9:
         if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 1000) {
             m_autoTimer = GetMsecTime();
             m_drive->ArcadeDrive(-0.3, 0.0);
             m_autoState++;
         }
         break;
-    case 11:
+    case 10:
         if (m_gearIntake->IsGearReady()) {
             //hit the gear, continue normally
             m_drive->PIDDrive(30.0, 0.0, DriveBase::RelativeTo::Now, 0.8);
@@ -150,7 +150,7 @@ void Robot::CitrusKpaAndGearAuto(){
             m_autoState = 6;
         }
         break;
-    case 12:
+    case 11:
         //should be done scoring gear... make hair merry red left
         if (m_drive->OnTarget()) {
             m_drive->PIDTurn(-90.0 * m_autoDirection, DriveBase::RelativeTo::SetPoint, 0.8);
