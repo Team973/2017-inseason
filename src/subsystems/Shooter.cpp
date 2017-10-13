@@ -242,8 +242,8 @@ void Shooter::TaskPeriodic(RobotMode mode) {
     m_rightAgitatorLog->LogDouble(m_rightAgitator->GetOutputCurrent());
     DBStringPrintf(DB_LINE5,"s_rate %2.1lf g %2.1lf", GetFlywheelRate(),
             m_flywheelSpeedSetpt);
-    DBStringPrintf(DB_LINE3,"k_rate %2.1lf g %2.1lf", GetKickerRate(),
-            m_kickerSpeedSetpt);
+    /*DBStringPrintf(DB_LINE3,"k_rate %2.1lf g %2.1lf", GetKickerRate(),
+            m_kickerSpeedSetpt);*/
     /*DBStringPrintf(DB_LINE5,"flail %2.1lf conv %2.1lf",
                 (m_leftAgitator->GetOutputCurrent() + m_rightAgitator->GetOutputCurrent()) / 2.0,
                 m_ballConveyor->GetOutputCurrent());*/

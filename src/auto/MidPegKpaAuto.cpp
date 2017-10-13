@@ -26,23 +26,7 @@ void Robot::MidPegKpaAuto(){
     case 1:
        if (GetMsecTime() - m_autoTimer > 250) {
            m_gearIntake->SetGearPos(GearIntake::GearPosition::up);
-       }
-       if (m_drive->OnTarget() || GetMsecTime() - m_autoTimer >= 3500) {
-          double gearOffset = m_pixyR->GetOffset() *
-              PixyThread::GEAR_DEGREES_PER_PIXEL;
-          //offgear = gearOffset;
-          if (Util::abs(gearOffset) >= 10.0) {
-            m_autoState++;
-          }
-          else {
-            m_drive
-                ->PIDTurn(m_drive->GetAngle() - gearOffset,
-                           DriveBase::RelativeTo::Absolute, 1.0)
-                ->SetDistTolerance(30.0, 25.0)
-                ->SetAngleTolerance(4.0, 4.0);
-            m_autoTimer = GetMsecTime();
-            m_autoState++;
-          }
+           m_autoState++;
        }
        break;
     case 2:
