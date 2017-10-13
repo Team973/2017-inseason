@@ -21,10 +21,10 @@ void Robot::KillerHopperAuto(){
     double initial_dist = 47.0;
 
     if(m_alliance == Alliance::Red){
-        initial_dist += 6.0;
+        initial_dist += 3.0;
     }
     else{
-        initial_dist += 6.0;
+        initial_dist += 12.0;
     }
 
     switch (m_autoState){
@@ -32,8 +32,8 @@ void Robot::KillerHopperAuto(){
             startAngle = m_drive->GetAngle();
             m_compressor->Disable();
             m_ballIntake->ExpandHopper();
-            m_shooter->SetFlywheelSpeed(3060);
-            m_shooter->SetKickerRate(3060);
+            m_shooter->SetFlywheelSpeed(3040);
+            m_shooter->SetKickerRate(3040);
             m_gearIntake->SetPickUpManual();
             m_gearIntake->SetGearPos(GearIntake::GearPosition::down);
             m_shooter->StopAgitator();
@@ -74,7 +74,7 @@ void Robot::KillerHopperAuto(){
             if (GetMsecTime() - m_autoTimer > 2800) {
                 m_drive
                     ->TrapDrive(DriveBase::RelativeTo::Now, -24.0,
-                                m_autoDirection * 65.0)
+                                m_autoDirection * 64.0)
                     ->SetHalt(true, true)
                     ->SetConstraints(60.0, 38.0);
                 m_autoTimer = GetMsecTime();
