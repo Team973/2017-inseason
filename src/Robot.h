@@ -5,6 +5,7 @@
 #include "RobotInfo.h"
 #include "stdio.h"
 #include "lib/WrapDash.h"
+#include "lib/VisionServer.h"
 
 using namespace frc;
 #include "WPILib.h"
@@ -140,6 +141,7 @@ private:
     LogCell *m_austinGyroRateLog;
 
     PixyThread *m_pixyR;
+    VisionServer *m_visionServer;
 public:
     /**
      * Defined in Robot.cpp

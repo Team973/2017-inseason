@@ -7,6 +7,7 @@
 #include "lib/filters/MovingAverageFilter.h"
 #include "lib/InterpLookupTable.h"
 #include "lib/logging/LogSpreadsheet.h"
+#include "lib/VisionServer.h"
 
 using namespace frc;
 
@@ -14,12 +15,14 @@ namespace frc973{
   class TaskMgr;
   class Lights;
 
-  class BoilerPixy : public CoopTask{
+  class BoilerPixy : public CoopTask, public VisionUpdateReceiver {
     public:
       static constexpr double PIXY_OFFSET_CONSTANT = 42.0;
 
       BoilerPixy(TaskMgr *scheduler, Lights *lights, LogSpreadsheet *logger);
       virtual ~BoilerPixy();
+
+      virtual void GotUpdate(const Json::Value &val);
 
       /**
        * Turn the flashlight on or off

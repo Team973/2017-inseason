@@ -131,6 +131,8 @@ Robot::Robot(void
     m_lights = new Lights(this);
     m_boilerPixy = new BoilerPixy(this, m_lights, m_logger);
     m_pixyR = new PixyThread(*this);
+    m_visionServer = new VisionServer(*this);
+    m_visionServer->AddUpdateReceiver(m_boilerPixy);
     m_austinGyro = new ADXRS450_Gyro();
     m_drive = new Drive(this,
             m_leftDriveTalonA, m_rightDriveTalonA, m_leftAgitatorTalon,

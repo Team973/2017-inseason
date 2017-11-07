@@ -3,6 +3,7 @@
 #include "Lights.h"
 #include "stdio.h"
 #include "lib/InterpLookupTable.h"
+#include <iostream>
 
 namespace frc973{
     BoilerPixy::BoilerPixy(TaskMgr *scheduler, Lights *lights, LogSpreadsheet *logger) :
@@ -72,6 +73,10 @@ namespace frc973{
 
     BoilerPixy::~BoilerPixy(){
         m_scheduler->UnregisterTask(this);
+    }
+
+    void BoilerPixy::GotUpdate(const Json::Value &value) {
+        std::cout << value << std::endl;
     }
 
     void BoilerPixy::Enable() {

@@ -22,6 +22,8 @@ set(SOURCE_FILES
     src/lib/filters/DelaySwitch.cpp src/lib/filters/FilterBase.cpp
     src/lib/SingleThreadTaskMgr.cpp src/lib/SmartPixy.cpp
     src/lib/InterpLookupTable.cpp src/lib/GreyTalon.cpp
+    src/lib/AdbBridge.cpp
+    src/lib/VisionServer.cpp
     src/lib/MotionProfile.cpp
     src/subsystems/PixyThread.cpp
     src/subsystems/BoilerPixy.cpp
