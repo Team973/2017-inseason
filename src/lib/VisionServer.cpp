@@ -14,11 +14,15 @@
 
 namespace frc973 {
     
-VisionServer::VisionServer(RobotStateInterface &stateProvider) :
-    m_thread(new SingleThreadTaskMgr(stateProvider, 1/100.0, false)),
-    m_updateReceiverMutex(PTHREAD_MUTEX_INITIALIZER),
-    m_lastMessageReceivedTime(0.0)
+VisionServer::VisionServer(RobotStateInterface &stateProvider)
+    : m_thread(new SingleThreadTaskMgr(stateProvider, 1/100.0, false))
+    , m_adbBridge()
+    , m_restartAppRequested(false)
+    , m_updateReceiverMutex(PTHREAD_MUTEX_INITIALIZER)
+    , m_lastMessageReceivedTimeSec(0.0)
 {
+    m_adbBridge.Start();
+    m_adbBridge.ReversePortForward(SERVER_LISTEN_PORT, SERVER_LISTEN_PORT);
     if (StartListenSocket()) {
         fprintf(stderr, "Could not start up vision server");
         return;
@@ -32,7 +36,16 @@ VisionServer::~VisionServer() {
 }
 
 bool VisionServer::IsConnected() {
-    return GetSecTime() - m_lastMessageReceivedTime < CONNECTION_TIMEOUT_SEC;
+    return GetSecTime() - m_lastMessageReceivedTimeSec < CONNECTION_TIMEOUT_SEC;
+}
+
+void VisionServer::RequestAppRestart() {
+    m_restartAppRequested = true;
+}
+
+void VisionServer::RestartAdb() {
+    m_adbBridge.RestartAdb();
+    m_adbBridge.ReversePortForward(SERVER_LISTEN_PORT, SERVER_LISTEN_PORT);
 }
 
 void VisionServer::AddUpdateReceiver(VisionUpdateReceiver *receiver) {
@@ -181,7 +194,8 @@ void VisionServer::TaskPeriodic(RobotMode mode) {
         high_fd = std::max(high_fd, sock_fd);
     }
 
-    int res = select(high_fd + 1, &m_fdset, NULL, NULL, NULL);
+    struct timeval timeout = {0, 100000}; /* 100ms */
+    int res = select(high_fd + 1, &m_fdset, NULL, NULL, &timeout);
 
     if (res < 0) {
         perror("select");
@@ -197,10 +211,11 @@ void VisionServer::TaskPeriodic(RobotMode mode) {
 
         vector<int> clients_to_remove;
         for (auto it = m_connections.begin();
-                it != m_connections.end();
-                it++) {
+             it != m_connections.end();
+             it++) {
             Client_t *client = *it;
             if (FD_ISSET(client->GetSockFd(), &m_fdset)) {
+                m_lastMessageReceivedTimeSec = GetSecTime();
                 if (HandleClientMessage(client)) {
                     clients_to_remove.insert(clients_to_remove.begin(),
                                              client->GetSockFd());
@@ -209,10 +224,18 @@ void VisionServer::TaskPeriodic(RobotMode mode) {
         }
 
         for (auto it = clients_to_remove.begin();
-                it != clients_to_remove.end();
-                it++) {
+             it != clients_to_remove.end();
+             it++) {
             RemoveClient(*it);
         }
+    }
+
+    double timeSinceLastRestartSec = GetSecTime() - m_lastRestartTimeSec;
+    if ((!IsConnected() || m_restartAppRequested)
+            && timeSinceLastRestartSec > 1.0) {
+        RestartAdb();
+        m_restartAppRequested = false;
+        m_lastRestartTimeSec = GetSecTime();
     }
 }
 

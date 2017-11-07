@@ -8,6 +8,7 @@
 #include <sys/socket.h>
 #include "lib/json/json.h"
 #include "lib/SingleThreadTaskMgr.h"
+#include "lib/AdbBridge.h"
 
 using std::vector;
 
@@ -59,9 +60,12 @@ private:
     int RemoveClient(int target_sock_fd);
 
     SingleThreadTaskMgr *m_thread;
+    AdbBridge m_adbBridge;
+    bool m_restartAppRequested;
     vector<VisionUpdateReceiver*> m_updateReceivers;
 	pthread_mutex_t	m_updateReceiverMutex;
-    double m_lastMessageReceivedTime;
+    double m_lastMessageReceivedTimeSec;
+    double m_lastRestartTimeSec;
 
     int m_serversock;
     vector<Client_t*> m_connections;
