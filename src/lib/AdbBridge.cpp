@@ -8,11 +8,11 @@ AdbBridge::AdbBridge() {
 }
 
 void AdbBridge::Start() {
-    RunCommand("start");
+    RunCommand("start-server");
 }
 
 void AdbBridge::Stop() {
-    RunCommand("stop");
+    RunCommand("stop-server");
 }
 
 void AdbBridge::RestartAdb() {
@@ -21,13 +21,21 @@ void AdbBridge::RestartAdb() {
 
 void AdbBridge::PortForward(int local_port, int remote_port) {
     char buff[80];
-    snprintf(buff, 79, "forward tcp: %d tcp %d", local_port, remote_port);
+    snprintf(buff, 79, "forward --remove-all");
+    RunCommand(buff);
+    snprintf(buff, 79, "reverse --remove-all");
+    RunCommand(buff);
+    snprintf(buff, 79, "forward tcp:%d tcp:%d", local_port, remote_port);
     RunCommand(buff);
 }
 
 void AdbBridge::ReversePortForward(int remote_port, int local_port) {
     char buff[80];
-    snprintf(buff, 79, "reverse tcp: %d tcp %d", remote_port, local_port);
+    snprintf(buff, 79, "forward --remove-all");
+    RunCommand(buff);
+    snprintf(buff, 79, "reverse --remove-all");
+    RunCommand(buff);
+    snprintf(buff, 79, "reverse tcp:%d tcp:%d", remote_port, local_port);
     RunCommand(buff);
 }
 
@@ -39,6 +47,8 @@ void AdbBridge::RestartApp() {
 
 bool AdbBridge::RunCommand(const std::string &command) {
     std::string prefixed_command = ADB_PATH + " " + command;
+
+    printf("Command to be run: \n%s\n", prefixed_command.c_str());
 
     int res = system(prefixed_command.c_str());
 

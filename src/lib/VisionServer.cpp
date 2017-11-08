@@ -27,6 +27,7 @@ VisionServer::VisionServer(RobotStateInterface &stateProvider)
         fprintf(stderr, "Could not start up vision server");
         return;
     }
+    m_thread->RegisterTask("VisionServer", this, TASK_PERIODIC);
     m_thread->Start();
 }
 
@@ -46,6 +47,7 @@ void VisionServer::RequestAppRestart() {
 void VisionServer::RestartAdb() {
     m_adbBridge.RestartAdb();
     m_adbBridge.ReversePortForward(SERVER_LISTEN_PORT, SERVER_LISTEN_PORT);
+    m_adbBridge.RestartApp();
 }
 
 void VisionServer::AddUpdateReceiver(VisionUpdateReceiver *receiver) {
@@ -100,6 +102,7 @@ int VisionServer::StartListenSocket() {
 }
 
 int VisionServer::AddClient() {
+    printf("Adding client\n");
     struct sockaddr_in client_addr;
     memset(&client_addr, 0, sizeof(client_addr));
     socklen_t client_len = sizeof(client_addr);
@@ -135,6 +138,7 @@ int VisionServer::RemoveClient(int target_sock_fd) {
 
 int VisionServer::HandleClientMessage(Client_t *client) {
     int res = client->DoRecv();
+    printf("Received input from the camera\n");
 
     if (res < 0) {
         if (errno == EAGAIN || errno == EWOULDBLOCK) {
@@ -185,6 +189,7 @@ int VisionServer::SendHeartbeat(Client_t *client) {
 }
 
 void VisionServer::TaskPeriodic(RobotMode mode) {
+    printf("Camera TaskPeriodic\n");
     int high_fd = m_serversock;
     FD_ZERO(&m_fdset);
     FD_SET(m_serversock, &m_fdset);
@@ -194,13 +199,11 @@ void VisionServer::TaskPeriodic(RobotMode mode) {
         high_fd = std::max(high_fd, sock_fd);
     }
 
-    struct timeval timeout = {0, 100000}; /* 100ms */
+    struct timeval timeout = {0, 1000000}; /* 100ms */
     int res = select(high_fd + 1, &m_fdset, NULL, NULL, &timeout);
 
     if (res < 0) {
         perror("select");
-    }
-    if (res <= 0) {
         fprintf(stderr, "Error in select.  Return code %d\n", res);
     }
 
@@ -253,6 +256,7 @@ int Client_t::DoRecv() {
 
     int res = recv(m_sock_fd, m_recv_buff + m_recv_buff_cursor,
                    RECV_BUFF_SIZE - m_recv_buff_cursor - 1, 0);
+    printf("Received %d bytes from the camera\n", res);
 
     if (res > 0) {
         m_recv_buff_cursor += res;
